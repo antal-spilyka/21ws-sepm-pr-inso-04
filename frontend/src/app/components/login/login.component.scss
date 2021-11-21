@@ -1,0 +1,103 @@
+.login-container {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .background-video {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.login-form {
+  max-width: 600px;
+  width: 100%;
+  max-height: 420px;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 1rem 1rem 4rem;
+  position: relative;
+  box-shadow: 2px 2px 6px 1px #00000072;
+  background-color: rgba(255, 255, 255, 0.9);
+
+  .title {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    border-bottom: 1px solid #00000072;
+    margin-bottom: 1rem;
+  }
+
+  .title-locked {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    border-bottom: 1px solid #00000072;
+    margin-bottom: 15rem;
+  }
+
+  .text-locked {
+    position: absolute;
+    bottom: 13rem;
+  }
+
+  mat-form-field {
+    flex: 1;
+  }
+
+  .small-control {
+    max-width: 102px;
+  }
+
+  .big-control {
+    max-width: 100%;
+    width: 570px;
+  }
+
+  .half-control {
+    min-width: 200px;
+  }
+
+  mat-checkbox {
+    padding-top: 1rem;
+    padding-bottom: -1rem;
+    margin-right: 2rem;
+    margin-left: 2rem;
+  }
+
+  .next-button {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .forgot-password-button {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 3rem;
+  }
+
+  .not-registered-button {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 1rem;
+  }
+
+  .back-button {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+}
+
+

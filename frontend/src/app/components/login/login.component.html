@@ -1,56 +1,54 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Authentication problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">-->
+ <strong>Authentication problems!</strong> {{ errorMessage }}-->
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">-->
+    <span aria-hidden="true">&times;</span>-->
   </button>
 </div>
 
-<div class="pt-5">
-  <div class="row">
-    <div class="col-md-6 mx-auto">
-      <span class="anchor" id="formLogin"></span>
+<div class="login-container">
+  <video autoplay muted loop class="background-video">
+    <source src="assets/video.mp4" type="video/mp4">
+  </video>
+  <form class="login-form" [formGroup]="loginForm" *ngIf="passwordCounter < 5">
+    <span class="title">Log Into Your Account!</span>
 
-      <div class="card rounded-0">
-        <div class="card-header">
-          <h3 class="mb-0">Login</h3>
-        </div>
-
-        <div class="card-body">
-          <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()">
-
-            <div class="form-group">
-              <label for="inputUsername">Username</label>
-              <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                     aria-describedby="usernameHelp" placeholder="Enter username">
-              <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
-                  required!
-                </small>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                     placeholder="Password">
-              <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
-                  is
-                  required!
-                </small>
-                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.minlength">Your password
-                  must be at least 8 characters long!
-                </small>
-              </div>
-            </div>
-
-            <button type="button" (click)="loginUser()" class="btn btn-success float-right">Login</button>
-
-          </form>
-        </div>
-
-      </div>
-
+    <div>
+    <mat-form-field appearance="fill" class="big-control">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" required>
+      <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
     </div>
-  </div>
+
+    <div>
+    <mat-form-field appearance="fill" class="big-control">
+      <mat-label>Enter your password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordControl" required>
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+    </div>
+
+    <div>
+    <button mat-button class="forgot-password-button" routerLink="/register">Forgot password? Get reset e-mail!</button>
+    <button mat-button class="not-registered-button" routerLink="/register">Not a memeber yet? Join us!</button>
+    <button mat-raised-button color="primary" class="next-button"
+            (click)="loginUser()"
+            [disabled]="!credentialsFilledOut()">Login</button>
+    </div>
+  </form>
+
+  <form class="login-form" [formGroup]="loginForm" *ngIf="passwordCounter >= 5">
+    <span class="title-locked">Your account has been locked!</span>
+    <span class="text-locked">
+      <div>
+        We are sorry!
+      </div>
+      You have entered the wrong password <strong>5 times in a row</strong>, your account has been locked for security reasons.
+      Please contact your administrator for further help!</span>
+    <button mat-raised-button color="primary" class="next-button" routerLink="/register">Register</button>
+  </form>
 </div>
+

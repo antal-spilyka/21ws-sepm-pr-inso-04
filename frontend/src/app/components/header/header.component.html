@@ -15,5 +15,8 @@
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
       <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </ul>
+    <ul class="navbar-nav mr-5" *ngIf="!authService.isLoggedIn()">
+      <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+    </ul>
   </div>
 </nav>
