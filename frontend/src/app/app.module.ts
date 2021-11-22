@@ -19,6 +19,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
+import {RegisterComponent} from './components/register/register.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {MatButtonModule} from '@angular/material/button';
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    RegisterComponent,
     MessageComponent,
   ],
   imports: [
