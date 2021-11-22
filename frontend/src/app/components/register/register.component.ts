@@ -1,5 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';;
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {countries} from '../../utils';
+import {RegisterRequest} from '../../dtos/register-request';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
+import {UserService} from "../../services/user.service";
+
+;
 
 @Component({
   selector: 'app-register',
@@ -13,9 +20,9 @@ export class RegisterComponent implements OnInit {
   lastNameControl = new FormControl('', [Validators.required]);
   phoneControl = new FormControl('', [Validators.required]);
   cityControl = new FormControl('', [Validators.required]);
-  stateControl = new FormControl('', [Validators.required]);
   zipControl = new FormControl('', [Validators.required]);
   countryControl = new FormControl('', [Validators.required]);
+  streetControl = new FormControl('', [Validators.required]);
   salutationControl = new FormControl('mr', [Validators.required]);
   disabledControl = new FormControl(false);
 
@@ -23,9 +30,13 @@ export class RegisterComponent implements OnInit {
   secondPageOptions: FormGroup;
 
   next = false;
+  error = false;
   hide = true;
+  submitted = false;
+  errorMessage = '';
+  countries = countries;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, private userService: UserService, private router: Router) {
     this.firstPageOptions = fb.group({
       email: this.emailControl,
       password: this.passwordControl,
@@ -40,7 +51,7 @@ export class RegisterComponent implements OnInit {
       city: this.cityControl,
       zip: this.zipControl,
       country: this.countryControl,
-      state: this.stateControl,
+      street: this.streetControl,
     });
   }
 
@@ -54,7 +65,33 @@ export class RegisterComponent implements OnInit {
   }
 
   registerUser() {
+    this.submitted = true;
+    if (this.firstPageOptions.valid && this.secondPageOptions.valid) {
+      const registerRequest = new RegisterRequest(this.emailControl.value, this.passwordControl.value,
+        this.firstNameControl.value, this.lastNameControl.value, this.phoneControl.value, this.salutationControl.value,
+        this.disabledControl.value, this.cityControl.value, this.zipControl.value, this.countryControl.value,
+        this.streetControl.value);
 
+      console.log('Try to authenticate user: ' + registerRequest.email);
+      this.userService.createUser(registerRequest).subscribe(
+        () => {
+          console.log('Successfully logged in user: ' + registerRequest.email);
+          this.router.navigate(['/message']);
+        },
+        error => {
+          console.log('Could not log in due to:');
+          console.log(error);
+          this.error = true;
+          if (typeof error.error === 'object') {
+            this.errorMessage = error.error.error;
+          } else {
+            this.errorMessage = error.error;
+          }
+        }
+      );
+    } else {
+      console.log('Invalid input');
+    }
   }
 
   getErrorMessage() {

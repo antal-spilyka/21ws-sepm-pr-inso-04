@@ -30,18 +30,6 @@ export class AuthService {
   }
 
   /**
-   * Register the user. If it was successful, a valid JWT token will be stored
-   *
-   * @param authRequest User data
-   */
-  registerUser(authRequest: AuthRequest): Observable<string> {
-    return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
-      .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
-      );
-  }
-
-  /**
    * Check if a valid JWT token is saved in the localStorage
    */
   isLoggedIn() {

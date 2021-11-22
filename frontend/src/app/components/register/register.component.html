@@ -45,7 +45,7 @@
 
     <mat-form-field appearance="fill" class="big-control">
       <mat-label>Enter your password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'">
+      <input [formControl]="passwordControl" matInput [type]="hide ? 'password' : 'text'">
       <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -59,17 +59,13 @@
   </form>
 
   <form class="register-form" [formGroup]="secondPageOptions" *ngIf="next">
-    <span class="title">Join us now!</span>
-    <mat-form-field appearance="fill">
-      <mat-label>Enter your city</mat-label>
-      <input matInput placeholder="Musterstadt" [formControl]="cityControl" required>
-      <mat-error *ngIf="cityControl.invalid">{{getErrorMessage()}}</mat-error>
-    </mat-form-field>
+    <span class="title">Where do you live?</span>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Enter your state</mat-label>
-      <input matInput placeholder="State" [formControl]="stateControl" required>
-      <mat-error *ngIf="stateControl.invalid">{{getErrorMessage()}}</mat-error>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-select placeholder="Country" [formControl]="countryControl" required>
+        <mat-option *ngFor="let country of countries" [value]="country.code">{{country.name}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="countryControl.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -77,16 +73,21 @@
       <input matInput placeholder="Zip" [formControl]="zipControl" required>
       <mat-error *ngIf="zipControl.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your city</mat-label>
+      <input matInput placeholder="Musterstadt" [formControl]="cityControl" required>
+      <mat-error *ngIf="cityControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Enter your country</mat-label>
-      <input matInput placeholder="Country" [formControl]="countryControl" required>
-      <mat-error *ngIf="countryControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-label>Enter your street</mat-label>
+      <input matInput placeholder="Street" [formControl]="streetControl" required>
+      <mat-error *ngIf="streetControl.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
 
     <button mat-button class="sign-in-button" routerLink="/login">Already have an Account?</button>
     <button mat-button class="back-button" *ngIf="next" (click)="goBack()">&lt; Back</button>
-    <button mat-raised-button color="primary" class="next-button">Sign Up</button>
+    <button mat-raised-button color="primary" class="next-button" [disabled]="!secondPageOptions.valid" (click)="registerUser()">Sign Up</button>
   </form>
 </div>
 
