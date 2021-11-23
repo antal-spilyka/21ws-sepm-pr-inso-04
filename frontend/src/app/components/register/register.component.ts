@@ -16,7 +16,8 @@ export class RegisterComponent implements OnInit {
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
   firstNameControl = new FormControl('', [Validators.required]);
   lastNameControl = new FormControl('', [Validators.required]);
-  phoneControl = new FormControl('', [Validators.required]);
+  phoneControl = new FormControl('', [Validators.required,
+    Validators.pattern(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im)]);
   cityControl = new FormControl('', [Validators.required]);
   zipControl = new FormControl('', [Validators.required]);
   countryControl = new FormControl('', [Validators.required]);
@@ -100,11 +101,20 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  getErrorMessage() {
-    if (this.emailControl.hasError('required')) {
+  getErrorMessage(control) {
+    if (control.hasError('required')) {
       return 'You must enter a value';
     }
-    return this.emailControl.hasError('email') ? 'Not a valid email' : '';
+    if (control.hasError('email')) {
+      return 'Not a valid email';
+    }
+    if (control.hasError('minlength')) {
+      return 'Not a valid length';
+    }
+    if (control.hasError('pattern')) {
+      return 'Not a valid pattern';
+    }
+    return '';
   }
 
   goNext() {
