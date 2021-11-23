@@ -57,6 +57,8 @@ export class RegisterComponent implements OnInit {
    * Error flag will be deactivated, which clears the error message
    */
   vanishError() {
+    this.error = false;
+    this.errorMessage = null;
   }
 
   ngOnInit() {
@@ -78,26 +80,18 @@ export class RegisterComponent implements OnInit {
           }).subscribe(() => {
               console.log('Successfully logged in user: ' + registerRequest.email);
               this.router.navigate(['/']);
-          },
+            },
             error => {
               console.log('Could not log in due to:');
               console.log(error);
-              this.error = true;
-              if (typeof error.error === 'object') {
-                this.errorMessage = error.error.error;
-              } else {
-                this.errorMessage = error.error;
-              }
             });
         },
         error => {
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;
-          if (typeof error.error === 'object') {
-            this.errorMessage = error.error.error;
-          } else {
-            this.errorMessage = error.error;
+          if (error.status === 409) {
+            this.errorMessage = 'Email already exists!';
           }
         }
       );

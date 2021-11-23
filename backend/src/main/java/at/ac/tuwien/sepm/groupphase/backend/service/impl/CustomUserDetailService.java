@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -64,8 +66,13 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void createUser(UserDto user) {
         LOGGER.debug("Create application user");
-        userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
-            false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
-            user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip()));
+        ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
+        if (foundUser == null) {
+            userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
+                false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
+                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip()));
+        } else {
+            throw new ServiceException("email already used");
+        }
     }
 }
