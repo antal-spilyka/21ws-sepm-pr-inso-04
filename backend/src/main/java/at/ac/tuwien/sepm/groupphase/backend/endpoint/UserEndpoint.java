@@ -37,12 +37,4 @@ public class UserEndpoint {
         LOGGER.info("POST /api/v1/users");
         userService.createUser(user);
     }
-
-    @PermitAll
-    @PostMapping("/login")
-    public void login(@RequestBody UserDto user) {
-        LOGGER.info("POST api/v1/users/login");
-        userService.loadU
-    serByUsername(user.getEmail());
-    }
 }

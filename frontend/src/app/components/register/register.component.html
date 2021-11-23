@@ -1,10 +1,3 @@
-<!--<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">-->
-<!--  <strong>Authentication problems!</strong> {{ errorMessage }}-->
-<!--  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">-->
-<!--    <span aria-hidden="true">&times;</span>-->
-<!--  </button>-->
-<!--</div>-->
-
 <div class="register-container">
   <video autoplay muted loop class="background-video">
     <source src="assets/video.mp4" type="video/mp4">
@@ -16,31 +9,31 @@
         <mat-option value="mr">Mr.</mat-option>
         <mat-option value="ms">Ms.</mat-option>
       </mat-select>
-      <mat-error *ngIf="salutationControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="salutationControl.invalid">{{getErrorMessage(salutationControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>first name</mat-label>
       <input matInput placeholder="Max" [formControl]="firstNameControl" required>
-      <mat-error *ngIf="firstNameControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="firstNameControl.invalid">{{getErrorMessage(firstNameControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>last name</mat-label>
       <input matInput placeholder="Mustermann" [formControl]="lastNameControl" required>
-      <mat-error *ngIf="lastNameControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="lastNameControl.invalid">{{getErrorMessage(lastNameControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="half-control">
       <mat-label>Enter your email</mat-label>
       <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" required>
-      <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="emailControl.invalid">{{getErrorMessage(emailControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="half-control">
       <mat-label>Enter your phone</mat-label>
       <input matInput type="tel" placeholder="0664123456" [formControl]="phoneControl" required>
-      <mat-error *ngIf="phoneControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="phoneControl.invalid">{{getErrorMessage(phoneControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="big-control">
@@ -50,6 +43,7 @@
               [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
+      <mat-error *ngIf="passwordControl.invalid">{{getErrorMessage(passwordControl)}}</mat-error>
     </mat-form-field>
 
     <mat-checkbox [formControl]="disabledControl">Disabled</mat-checkbox>
@@ -65,29 +59,36 @@
       <mat-select placeholder="Country" [formControl]="countryControl" required>
         <mat-option *ngFor="let country of countries" [value]="country.code">{{country.name}}</mat-option>
       </mat-select>
-      <mat-error *ngIf="countryControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="countryControl.invalid">{{getErrorMessage(countryControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Enter your zip</mat-label>
       <input matInput placeholder="Zip" [formControl]="zipControl" required>
-      <mat-error *ngIf="zipControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="zipControl.invalid">{{getErrorMessage(zipControl)}}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Enter your city</mat-label>
       <input matInput placeholder="Musterstadt" [formControl]="cityControl" required>
-      <mat-error *ngIf="cityControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="cityControl.invalid">{{getErrorMessage(cityControl)}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Enter your street</mat-label>
       <input matInput placeholder="Street" [formControl]="streetControl" required>
-      <mat-error *ngIf="streetControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-error *ngIf="streetControl.invalid">{{getErrorMessage(streetControl)}}</mat-error>
     </mat-form-field>
 
     <button mat-button class="sign-in-button" routerLink="/login">Already have an Account?</button>
     <button mat-button class="back-button" *ngIf="next" (click)="goBack()">&lt; Back</button>
     <button mat-raised-button color="primary" class="next-button" [disabled]="!secondPageOptions.valid" (click)="registerUser()">Sign Up</button>
+
+    <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Authentication problems!</strong> {{ errorMessage }}
+      <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </form>
 </div>
 
