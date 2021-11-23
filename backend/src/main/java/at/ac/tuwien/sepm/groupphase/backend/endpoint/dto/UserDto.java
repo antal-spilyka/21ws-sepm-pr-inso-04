@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class UserDto {
@@ -11,6 +12,7 @@ public class UserDto {
     private String email;
 
     @NotNull(message = "Password must not be null")
+    @Size(min = 8, message = "Password must not be shorter than 8 digits")
     private String password;
 
     @NotNull(message = "First name must not be null")

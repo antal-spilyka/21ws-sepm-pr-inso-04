@@ -4,9 +4,7 @@ import {countries} from '../../utils';
 import {RegisterRequest} from '../../dtos/register-request';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {UserService} from "../../services/user.service";
-
-;
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -36,7 +34,7 @@ export class RegisterComponent implements OnInit {
   errorMessage = '';
   countries = countries;
 
-  constructor(fb: FormBuilder, private userService: UserService, private router: Router) {
+  constructor(fb: FormBuilder, private userService: UserService, private router: Router, private authService: AuthService) {
     this.firstPageOptions = fb.group({
       email: this.emailControl,
       password: this.passwordControl,
@@ -72,11 +70,25 @@ export class RegisterComponent implements OnInit {
         this.disabledControl.value, this.cityControl.value, this.zipControl.value, this.countryControl.value,
         this.streetControl.value);
 
-      console.log('Try to authenticate user: ' + registerRequest.email);
       this.userService.createUser(registerRequest).subscribe(
         () => {
-          console.log('Successfully logged in user: ' + registerRequest.email);
-          this.router.navigate(['/message']);
+          this.authService.loginUser({
+            email: registerRequest.email,
+            password: registerRequest.password,
+          }).subscribe(() => {
+              console.log('Successfully logged in user: ' + registerRequest.email);
+              this.router.navigate(['/']);
+          },
+            error => {
+              console.log('Could not log in due to:');
+              console.log(error);
+              this.error = true;
+              if (typeof error.error === 'object') {
+                this.errorMessage = error.error.error;
+              } else {
+                this.errorMessage = error.error;
+              }
+            });
         },
         error => {
           console.log('Could not log in due to:');
