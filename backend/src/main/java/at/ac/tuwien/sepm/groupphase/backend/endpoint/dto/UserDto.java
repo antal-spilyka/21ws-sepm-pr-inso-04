@@ -42,6 +42,9 @@ public class UserDto {
     @NotNull(message = "Disabled must not be null")
     private Boolean disabled;
 
+    @NotNull(message = "Locked must not be null")
+    private Boolean locked;
+
     public String getEmail() {
         return email;
     }
@@ -129,6 +132,8 @@ public class UserDto {
     public void setZip(String zip) {
         this.zip = zip;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

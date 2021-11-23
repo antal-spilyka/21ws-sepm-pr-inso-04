@@ -68,18 +68,20 @@ export class RegisterComponent implements OnInit {
       const registerRequest = new RegisterRequest(this.emailControl.value, this.passwordControl.value,
         this.firstNameControl.value, this.lastNameControl.value, this.phoneControl.value, this.salutationControl.value,
         this.disabledControl.value, this.cityControl.value, this.zipControl.value, this.countryControl.value,
-        this.streetControl.value);
+        this.streetControl.value, false);
 
-      this.userService.createUser(registerRequest).subscribe(
-        () => {
+      this.userService.createUser(registerRequest).subscribe({
+        next: () => {
           this.authService.loginUser({
             email: registerRequest.email,
             password: registerRequest.password,
-          }).subscribe(() => {
-              console.log('Successfully logged in user: ' + registerRequest.email);
-              this.router.navigate(['/']);
-          },
-            error => {
+            locked: false // on default, user is not locked
+          }).subscribe({
+            next: () => {
+                console.log('Successfully logged in user: ' + registerRequest.email);
+                this.router.navigate(['/']);
+              },
+            error: (error) => {
               console.log('Could not log in due to:');
               console.log(error);
               this.error = true;
@@ -88,9 +90,9 @@ export class RegisterComponent implements OnInit {
               } else {
                 this.errorMessage = error.error;
               }
-            });
+            }});
         },
-        error => {
+        error: (error) => {
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;
@@ -99,8 +101,7 @@ export class RegisterComponent implements OnInit {
           } else {
             this.errorMessage = error.error;
           }
-        }
-      );
+        }});
     } else {
       console.log('Invalid input');
     }

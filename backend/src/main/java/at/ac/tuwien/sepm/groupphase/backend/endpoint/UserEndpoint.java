@@ -29,12 +29,20 @@ public class UserEndpoint {
     }
 
     /**
-     * the registration route for the user.
+     * The registration route for the user.
      */
     @PermitAll
     @PostMapping("")
     public void create(@RequestBody UserDto user) {
         LOGGER.info("POST /api/v1/users");
         userService.createUser(user);
+    }
+
+    @PermitAll
+    @PostMapping("/login")
+    public void login(@RequestBody UserDto user) {
+        LOGGER.info("POST api/v1/users/login");
+        userService.loadU
+    serByUsername(user.getEmail());
     }
 }

@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
   // Counts the number of wrong tries for the password
   passwordCounter = 0;
 
+  // Display error message if the login was not successful
+  wrongLogin = false;
+
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: this.emailControl,
@@ -40,12 +43,9 @@ export class LoginComponent implements OnInit {
   loginUser() {
     this.submitted = true;
     if (this.loginForm.valid) {
-      const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.email.value, this.loginForm.controls.password.value);
+      const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.email.value, this.loginForm.controls.password.value, false);
       this.authenticateUser(authRequest);
-      // Resetting the number of wrong passwords
-      this.passwordCounter = 0;
     } else {
-      this.passwordCounter ++;
       console.log('Invalid input');
     }
   }
@@ -56,14 +56,20 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
+    console.log(this.passwordCounter);
     console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
         next: () => {
+          // Resetting the number of wrong passwords
+          this.passwordCounter = 0;
+          this.wrongLogin = false;
+
           console.log('Successfully logged in user: ' + authRequest.email);
           this.router.navigate(['/message']);
         },
         error: (error) => {
-          this.passwordCounter += 1;
+          this.wrongLogin = true;
+          this.passwordCounter ++;
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;
@@ -75,17 +81,6 @@ export class LoginComponent implements OnInit {
         }
       }
     );
-  }
-
-  /**
-   * Check if both the e-mail address and the password have been filled out
-   */
-  credentialsFilledOut() {
-    if (this.emailControl != null && this.passwordControl != null && this.emailControl.value !== '' && this.passwordControl.value !== '') {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**

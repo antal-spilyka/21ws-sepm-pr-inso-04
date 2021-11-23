@@ -10,7 +10,8 @@ export class RegisterRequest {
     public city: string,
     public zip: string,
     public country: string,
-    public street: string
+    public street: string,
+    public locked: boolean
   ) {
   }
 }

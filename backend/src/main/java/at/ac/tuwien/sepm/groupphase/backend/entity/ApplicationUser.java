@@ -48,6 +48,9 @@ public class ApplicationUser {
     @Column(nullable = false)
     private Boolean disabled;
 
+    @Column (nullable = false)
+    private Boolean locked;
+
     public ApplicationUser() {
     }
 

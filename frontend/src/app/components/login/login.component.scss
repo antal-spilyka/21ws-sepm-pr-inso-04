@@ -51,6 +51,15 @@
     bottom: 13rem;
   }
 
+  .text-wrong-login {
+    color: red;
+    opacity: 70%;
+    font-family: Roboto;
+    position: absolute;
+    right: 1.5rem;
+    bottom: 5rem;
+  }
+
   mat-form-field {
     flex: 1;
   }
