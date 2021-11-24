@@ -4,12 +4,15 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +44,12 @@ public class UserEndpoint {
      */
     @PermitAll
     @PostMapping("")
-    public ResponseEntity<String> create(@RequestBody UserDto user) {
+    public ResponseEntity<String> create(@RequestBody @Validated UserDto user, BindingResult bindingResult) {
         LOGGER.info("POST /api/v1/users");
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
         try {
             userService.createUser(user);
         } catch (ServiceException e) {
