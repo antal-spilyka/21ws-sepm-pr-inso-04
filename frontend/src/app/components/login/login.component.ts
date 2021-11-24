@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
           this.userService.get(this.emailControl.value).subscribe({
             next: (user: User) => {
               this.passwordCounter = user.lockedCounter;
-              this.passwordCounter++;
             },
             error: (err) => {
               console.log(err);
@@ -89,11 +88,7 @@ export class LoginComponent implements OnInit {
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;
-          if (typeof error.error === 'object') {
-            this.errorMessage = error.error.error;
-          } else {
-            this.errorMessage = error.error;
-          }
+          this.errorMessage = 'Bad credentials';
         }
       }
     );

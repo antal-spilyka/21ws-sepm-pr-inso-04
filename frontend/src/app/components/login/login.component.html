@@ -23,13 +23,8 @@
     <div>
       <mat-form-field appearance="fill" class="big-control">
         <mat-label>Enter your password</mat-label>
-<<<<<<< HEAD
-        <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordControl" required>
-        <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-=======
         <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordControl" name="password" required>
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
->>>>>>> ca98fad0a4586d31a96e82f87e8cc2c3eacfd98f
                 [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>

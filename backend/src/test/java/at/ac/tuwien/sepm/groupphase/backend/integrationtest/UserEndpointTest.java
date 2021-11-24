@@ -53,7 +53,7 @@ public class UserEndpointTest implements TestData {
         .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
         .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
         .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
-    
+
     @BeforeEach
     public void beforeEach() {
         userRepository.deleteAll();
@@ -106,7 +106,7 @@ public class UserEndpointTest implements TestData {
             UserDto.UserDtoBuilder user = UserDto.UserDtoBuilder.aUserDto();
             for (int j = 0; j < 10; j++) {
                 if (j != i) {
-                    switch (j) {
+                    /*switch (j) {
                         case 0 -> user.withEmail("testUserFields@email.com");
                         case 1 -> user.withPassword("password");
                         case 2 -> user.withCity("Wien");
@@ -117,7 +117,7 @@ public class UserEndpointTest implements TestData {
                         case 7 -> user.withPhone("0664 123 456");
                         case 8 -> user.withStreet("street 1");
                         case 9 -> user.withZip("1010");
-                    }
+                    }*/
                 }
             }
             String body = objectMapper.writeValueAsString(user.build());
