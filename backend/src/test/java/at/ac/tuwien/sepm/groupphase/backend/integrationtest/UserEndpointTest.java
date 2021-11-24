@@ -59,7 +59,7 @@ public class UserEndpointTest implements TestData {
             .withEmail("test@email.com")
             .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
-            .withSalutation("mr").withStreet("street 1").withZip("1010").withLocked(false).withLockedCounter(0).build();
+            .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
 
         String body = objectMapper.writeValueAsString(user);
 
@@ -132,7 +132,7 @@ public class UserEndpointTest implements TestData {
             .withEmail("test2@email.com")
             .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
-            .withSalutation("mr").withStreet("street 1").withZip("1010").withLocked(false).withLockedCounter(0).build();
+            .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
 
         String body = objectMapper.writeValueAsString(user);
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
