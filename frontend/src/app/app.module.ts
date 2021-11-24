@@ -13,24 +13,18 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import { AddNewsComponent } from './components/add-news/add-news.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatInputModule} from '@angular/material/input';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { CreateEventPlaceComponent } from './create-event/create-event-place/create-event-place.component';
 import { CreateArtistComponent } from './create-event/create-artist/create-artist.component';
 import { CreateActualEventComponent } from './create-event/create-actual-event/create-actual-event.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
-
+import { AddNewsComponent } from './components/add-news/add-news.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +35,7 @@ import {RegisterComponent} from './components/register/register.component';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
+    AddNewsComponent,
     AddNewsComponent,
     CreateEventComponent,
     CreateEventPlaceComponent,
@@ -60,13 +55,9 @@ import {RegisterComponent} from './components/register/register.component';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    MatTooltipModule,
-    MatAutocompleteModule,
+    MatButtonModule,
     MatInputModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    ReactiveFormsModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
