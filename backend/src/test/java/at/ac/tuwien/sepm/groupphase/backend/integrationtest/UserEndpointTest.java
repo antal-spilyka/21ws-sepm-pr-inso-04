@@ -96,39 +96,33 @@ public class UserEndpointTest implements TestData {
 
     @Test
     public void createUserWithoutFields_shouldThrowException() throws Exception {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             UserDto.UserDtoBuilder user = UserDto.UserDtoBuilder.aUserDto();
             for (int j = 0; j < 10; j++) {
-//                if (j != i) {
-                switch (j) {
-                    case 0 -> user.withEmail("testUserFields@email.com");
-                    case 1 -> user.withPassword("password");
-                    case 2 -> user.withCity("Wien");
-                    case 3 -> user.withCountry("AL");
-                    case 4 -> user.withDisabled(false);
-                    case 5 -> user.withFirstName("Gucci");
-                    case 6 -> user.withLastName("King");
-                    case 7 -> user.withPhone("0664 123 456");
-                    case 8 -> user.withStreet("street 1");
-                    case 9 -> user.withZip("1010");
+                if (j != i) {
+                    switch (j) {
+                        case 0 -> user.withEmail("testUserFields@email.com");
+                        case 1 -> user.withPassword("password");
+                        case 2 -> user.withCity("Wien");
+                        case 3 -> user.withCountry("AL");
+                        case 4 -> user.withDisabled(false);
+                        case 5 -> user.withFirstName("Gucci");
+                        case 6 -> user.withLastName("King");
+                        case 7 -> user.withPhone("0664 123 456");
+                        case 8 -> user.withStreet("street 1");
+                        case 9 -> user.withZip("1010");
+                    }
                 }
-//                }
             }
-            System.out.println("testtestt1");
             String body = objectMapper.writeValueAsString(user.build());
-            System.out.println("testtestt2");
-
             MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
                 .andDo(print())
                 .andReturn();
-            System.out.println("testtestt3");
 
             MockHttpServletResponse response = mvcResult.getResponse();
-            System.out.println("testtestt4");
-
-            assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+            assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
         }
     }
 

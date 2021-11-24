@@ -41,12 +41,6 @@ public class UserDto {
     @NotNull(message = "Disabled must not be null")
     private Boolean disabled;
 
-    @NotNull(message = "Locked must not be null")
-    private Boolean locked;
-
-    @NotNull(message = "LockedCounter must not be null")
-    private int lockedCounter;
-
     public String getEmail() {
         return email;
     }
@@ -133,22 +127,6 @@ public class UserDto {
 
     public void setZip(String zip) {
         this.zip = zip;
-    }
-
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
-    }
-
-    public int getLockedCounter() {
-        return lockedCounter;
-    }
-
-    public void setLockedCounter(int lockedCounter) {
-        this.lockedCounter = lockedCounter;
     }
 
     @Override
@@ -254,16 +232,6 @@ public class UserDto {
             return this;
         }
 
-        public UserDto.UserDtoBuilder withLocked(Boolean locked) {
-            this.locked = locked;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withLockedCounter(int lockedCounter) {
-            this.lockedCounter = lockedCounter;
-            return this;
-        }
-
         public UserDto build() {
             UserDto userDto = new UserDto();
             userDto.setEmail(email);
@@ -277,8 +245,6 @@ public class UserDto {
             userDto.setStreet(street);
             userDto.setDisabled(disabled);
             userDto.setZip(zip);
-            userDto.setLocked(locked);
-            userDto.setLockedCounter(lockedCounter);
             return userDto;
         }
     }
