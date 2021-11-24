@@ -36,11 +36,13 @@
     </div>
 
     <div>
-      <button mat-button class="forgot-password-button" routerLink="/register">Forgot password? Get reset e-mail!</button>
+      <button mat-button class="forgot-password-button" routerLink="/register">Forgot password? Get reset e-mail!
+      </button>
       <button mat-button class="not-registered-button" routerLink="/register">Not a memeber yet? Join us!</button>
       <button mat-raised-button color="primary" class="next-button"
               (click)="loginUser()"
-              [disabled]="!loginForm.valid">Login</button>
+              [disabled]="!loginForm.valid">Login
+      </button>
     </div>
   </form>
 

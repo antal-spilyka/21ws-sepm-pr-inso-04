@@ -48,6 +48,8 @@ export class LoginComponent implements OnInit {
     } else {
       console.log('Invalid input');
     }
+
+    console.log("now this is the counter: " + this.passwordCounter);
   }
 
   /**
@@ -68,7 +70,7 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.wrongLogin = true;
-          this.passwordCounter ++;
+          this.passwordCounter++;
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;

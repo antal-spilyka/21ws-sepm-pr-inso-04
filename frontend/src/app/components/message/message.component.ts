@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, TemplateRef} from '@angular/core';
 import {MessageService} from '../../services/message.service';
 import {Message} from '../../dtos/message';
 import {NgbModal, NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, NgForm} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 
 @Component({

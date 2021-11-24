@@ -22,9 +22,4 @@ export class UserService {
   createUser(authRequest: AuthRequest): Observable<string> {
     return this.httpClient.post(this.registerBaseUri, authRequest, {responseType: 'text'});
   }
-
-
-  login(authRequest: AuthRequest): Observable<string> {
-    return this.httpClient.post(this.registerBaseUri + '/login', authRequest, {responseType: 'text'});
-  }
 }

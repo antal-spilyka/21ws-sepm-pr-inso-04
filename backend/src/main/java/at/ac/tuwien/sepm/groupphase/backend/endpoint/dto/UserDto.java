@@ -42,9 +42,6 @@ public class UserDto {
     @NotNull(message = "Disabled must not be null")
     private Boolean disabled;
 
-    @NotNull(message = "Locked must not be null")
-    private Boolean locked;
-
     @NotNull(message = "LockedCounter must not be null")
     private int lockedCounter;
 
@@ -134,14 +131,6 @@ public class UserDto {
 
     public void setZip(String zip) {
         this.zip = zip;
-    }
-
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
     }
 
     public int getLockedCounter() {

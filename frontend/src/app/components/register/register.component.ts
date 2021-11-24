@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {countries} from '../../utils';
 import {RegisterRequest} from '../../dtos/register-request';
 import {AuthService} from '../../services/auth.service';
@@ -82,9 +82,9 @@ export class RegisterComponent implements OnInit {
             //locked: false // on default, user is not locked
           }).subscribe({
             next: () => {
-                console.log('Successfully logged in user: ' + registerRequest.email);
-                this.router.navigate(['/']);
-              },
+              console.log('Successfully logged in user: ' + registerRequest.email);
+              this.router.navigate(['/']);
+            },
             error: (error) => {
               console.log('Could not log in due to:');
               console.log(error);
@@ -94,7 +94,8 @@ export class RegisterComponent implements OnInit {
               } else {
                 this.errorMessage = error.error;
               }
-            }});
+            }
+          });
         },
         error: (error) => {
           console.log('Could not log in due to:');
@@ -103,7 +104,8 @@ export class RegisterComponent implements OnInit {
           if (error.status === 409) {
             this.errorMessage = 'Email already exists!';
           }
-        }});
+        }
+      });
     } else {
       console.log('Invalid input');
     }

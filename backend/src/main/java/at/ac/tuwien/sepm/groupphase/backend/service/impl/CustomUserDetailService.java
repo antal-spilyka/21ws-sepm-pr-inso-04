@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -57,6 +56,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findUserByEmail(email);
+        userRepository.save(applicationUser);
         if (applicationUser != null) {
             return applicationUser;
         }
@@ -70,9 +70,25 @@ public class CustomUserDetailService implements UserService {
         if (foundUser == null) {
             userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
-                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), user.getLocked(), user.getLockedCounter()));
+                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), user.getLockedCounter()));
         } else {
             throw new ServiceException("email already used");
         }
+    }
+
+    @Override
+    public void updateLockedCounter(String email) {
+        LOGGER.debug("Update the locker counter of the user");
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        user.setLockedCounter(user.getLockedCounter() + 1);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void resetLockedCounter(String email) {
+        LOGGER.debug("Reset the locker counter of the user");
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        user.setLockedCounter(0);
+        userRepository.save(user);
     }
 }
