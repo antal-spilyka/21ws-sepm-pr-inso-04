@@ -33,11 +33,11 @@ public class UserDataGenerator {
             userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail("admin@email.com")
                 .withPassword(passwordEncoder.encode("password")).withAdmin(true).withId(1L).withCity("Wien")
                 .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
-                .withSalutation("mr").withStreet("street 1").withZip("1010").withLocked(false).withLockedCounter(0).build());
+                .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build());
             userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail("user@email.com")
                 .withPassword(passwordEncoder.encode("password")).withAdmin(false).withId(2L).withCity("Wien")
                 .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
-                .withSalutation("mr").withStreet("street 1").withZip("1010").withLocked(false).withLockedCounter(0).build());
+                .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build());
         }
     }
 

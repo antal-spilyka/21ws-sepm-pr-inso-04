@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+    private final UserService userService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.userService = userService;
         setFilterProcessesUrl(securityProperties.getLoginUri());
     }
 
@@ -40,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserLoginDto user = null;
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
-            //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
+            // Compares the user with CustomUserDetailService#loadUserByUsername and checks if the credentials are correct
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 user.getPassword()));
@@ -49,6 +52,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (BadCredentialsException e) {
             if (user != null && user.getEmail() != null) {
                 LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
+                // Increase the lockedCounter of the user
+                userService.updateLockedCounter(user.getEmail());
             }
             throw e;
         }
@@ -76,6 +81,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .collect(Collectors.toList());
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
+
+        // Reset the lockedCounter of a user
+        userService.resetLockedCounter(user.getUsername());
         LOGGER.info("Successfully authenticated user {}", user.getUsername());
     }
 }

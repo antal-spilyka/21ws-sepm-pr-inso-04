@@ -51,10 +51,6 @@ public class ApplicationUser {
     private Boolean disabled;
 
     @Column(nullable = false)
-    @Value("${locked:false}")
-    private Boolean locked;
-
-    @Column(nullable = false)
     @Value("$lockedCounter:0")
     private int lockedCounter;
 
@@ -63,7 +59,7 @@ public class ApplicationUser {
 
     public ApplicationUser(String email, String password, Boolean admin, String firstName, String lastName,
                            String salutation, String phone, String country, String city, String street,
-                           Boolean disabled, String zip, Boolean locked, int lockedCounter) {
+                           Boolean disabled, String zip, int lockedCounter) {
         this.email = email;
         this.password = password;
         this.admin = admin;
@@ -76,7 +72,6 @@ public class ApplicationUser {
         this.street = street;
         this.disabled = disabled;
         this.zip = zip;
-        this.locked = locked;
         this.lockedCounter = lockedCounter;
     }
 
@@ -184,6 +179,8 @@ public class ApplicationUser {
         this.zip = zip;
     }
 
+<<<<<<< HEAD
+=======
     public Boolean getLocked() {
         return locked;
     }
@@ -192,6 +189,7 @@ public class ApplicationUser {
         this.locked = locked;
     }
 
+>>>>>>> 39483d0f50e6649848093c38422a8ee64306ec66
     public int getLockedCounter() {
         return lockedCounter;
     }
@@ -235,7 +233,6 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
-        private Boolean locked;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -310,11 +307,6 @@ public class ApplicationUser {
             return this;
         }
 
-        public ApplicationUserBuilder withLocked(Boolean locked) {
-            this.locked = locked;
-            return this;
-        }
-
         public ApplicationUserBuilder withLockedCounter(int lockedCounter) {
             this.lockedCounter = lockedCounter;
             return this;
@@ -335,7 +327,6 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
-            applicationUser.setLocked(locked);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

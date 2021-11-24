@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.wrongLogin = true;
-          this.passwordCounter ++;
+          this.passwordCounter++;
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;

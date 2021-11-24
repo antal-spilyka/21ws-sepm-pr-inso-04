@@ -11,7 +11,6 @@ export class RegisterRequest {
     public zip: string,
     public country: string,
     public street: string,
-    //public locked: boolean
   ) {
   }
 }
