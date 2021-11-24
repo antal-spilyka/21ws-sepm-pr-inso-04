@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class UserDto {
-
     @NotNull(message = "Email must not be null")
     @Email
     private String email;
@@ -176,6 +175,112 @@ public class UserDto {
             + "email='" + email + '\''
             + ", password='" + password + '\''
             + '}';
+    }
+
+    public static final class UserDtoBuilder {
+        private String email;
+        private String password;
+        private String firstName;
+        private String lastName;
+        private String salutation;
+        private String phone;
+        private String country;
+        private String zip;
+        private String city;
+        private String street;
+        private Boolean disabled;
+        private Boolean locked;
+        private int lockedCounter;
+
+        private UserDtoBuilder() {
+        }
+
+        public static UserDto.UserDtoBuilder aUserDto() {
+            return new UserDto.UserDtoBuilder();
+        }
+
+        public UserDto.UserDtoBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withSalutation(String salutation) {
+            this.salutation = salutation;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withPhone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withCountry(String country) {
+            this.country = country;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withStreet(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withDisabled(Boolean disabled) {
+            this.disabled = disabled;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withZip(String zip) {
+            this.zip = zip;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withLocked(Boolean locked) {
+            this.locked = locked;
+            return this;
+        }
+
+        public UserDto.UserDtoBuilder withLockedCounter(int lockedCounter) {
+            this.lockedCounter = lockedCounter;
+            return this;
+        }
+
+        public UserDto build() {
+            UserDto userDto = new UserDto();
+            userDto.setEmail(email);
+            userDto.setPassword(password);
+            userDto.setFirstName(firstName);
+            userDto.setLastName(lastName);
+            userDto.setSalutation(salutation);
+            userDto.setPhone(phone);
+            userDto.setCountry(country);
+            userDto.setCity(city);
+            userDto.setStreet(street);
+            userDto.setDisabled(disabled);
+            userDto.setZip(zip);
+            userDto.setLocked(locked);
+            userDto.setLockedCounter(lockedCounter);
+            return userDto;
+        }
     }
 }
 
