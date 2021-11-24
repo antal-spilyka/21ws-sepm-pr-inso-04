@@ -1,0 +1,96 @@
+package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
+
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureMockMvc
+public class UserEndpointTest implements TestData {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    private final ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
+        .withEmail("test@email.com")
+        .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
+        .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
+        .withSalutation("mr").withStreet("street 1").withZip("1010").withLocked(false).withLockedCounter(0).build();
+
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+    }
+
+    @Test
+    public void createUserShouldEnableLoginAndBeAbleToAccessRoute() throws Exception {
+        String body = objectMapper.writeValueAsString(user);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        String body2 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user.getEmail()).withPassword(user.getPassword()).build());
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post(AUTHENTICATION_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body2))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        // this should be changed to the event list route in the future
+        MvcResult mvcResult3 = this.mockMvc.perform(get(MESSAGE_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body)
+            .header(securityProperties.getAuthHeader(), response2.getContentAsString()))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.OK.value(), response3.getStatus());
+    }
+
+}

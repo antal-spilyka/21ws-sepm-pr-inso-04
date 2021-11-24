@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import net.bytebuddy.implementation.bind.annotation.Default;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class ApplicationUser {
@@ -181,9 +184,13 @@ public class ApplicationUser {
         this.zip = zip;
     }
 
-    public Boolean getLocked() {return locked;}
+    public Boolean getLocked() {
+        return locked;
+    }
 
-    public void setLocked(Boolean locked) {this.locked = locked;}
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public int getLockedCounter() {
         return lockedCounter;
@@ -191,6 +198,27 @@ public class ApplicationUser {
 
     public void setLockedCounter(int lockedCounter) {
         this.lockedCounter = lockedCounter;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{"
+            + "id=" + id
+            + ", email='" + email + '\''
+            + ", password='" + password + '\''
+            + ", admin=" + admin
+            + ", firstName='" + firstName + '\''
+            + ", lastName='" + lastName + '\''
+            + ", salutation='" + salutation + '\''
+            + ", phone='" + phone + '\''
+            + ", country='" + country + '\''
+            + ", city='" + city + '\''
+            + ", street='" + street + '\''
+            + ", zip='" + zip + '\''
+            + ", disabled=" + disabled
+            + ", locked=" + locked
+            + ", lockedCounter=" + lockedCounter
+            + '}';
     }
 
     public static final class ApplicationUserBuilder {

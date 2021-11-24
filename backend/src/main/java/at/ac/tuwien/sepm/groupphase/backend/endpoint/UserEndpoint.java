@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +39,7 @@ public class UserEndpoint {
      */
     @PermitAll
     @PostMapping("")
-    public void create(@RequestBody UserDto user) {
+    public ResponseEntity<String> create(@RequestBody UserDto user) {
         LOGGER.info("POST /api/v1/users");
         try {
             userService.createUser(user);
@@ -46,6 +47,7 @@ public class UserEndpoint {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
         }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PermitAll
