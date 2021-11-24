@@ -54,12 +54,12 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("")
-    public ApplicationUser get(@RequestParam String email) {
+    public ApplicationUser getUsers(@RequestParam String email) {
         try {
             return userService.findApplicationUserByEmail(email);
-        } catch (NotFoundException e) {
+        } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
         }
     }
 }

@@ -179,17 +179,6 @@ public class ApplicationUser {
         this.zip = zip;
     }
 
-<<<<<<< HEAD
-=======
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
-    }
-
->>>>>>> 39483d0f50e6649848093c38422a8ee64306ec66
     public int getLockedCounter() {
         return lockedCounter;
     }
@@ -214,7 +203,6 @@ public class ApplicationUser {
             + ", street='" + street + '\''
             + ", zip='" + zip + '\''
             + ", disabled=" + disabled
-            + ", locked=" + locked
             + ", lockedCounter=" + lockedCounter
             + '}';
     }

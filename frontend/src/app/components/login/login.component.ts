@@ -3,6 +3,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 
 @Component({
@@ -30,7 +32,10 @@ export class LoginComponent implements OnInit {
   // Display error message if the login was not successful
   wrongLogin = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private userService: UserService,
+              private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: this.emailControl,
       password: this.passwordControl
@@ -67,8 +72,20 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/message']);
         },
         error: (error) => {
+          // Hide error message in the form
           this.wrongLogin = true;
-          this.passwordCounter++;
+
+          // Load the number of wrong password tries for the user
+          this.userService.get(this.emailControl.value).subscribe({
+            next: (user: User) => {
+              this.passwordCounter = user.lockedCounter;
+              this.passwordCounter++;
+            },
+            error: (err) => {
+              console.log(err);
+            }
+          });
+
           console.log('Could not log in due to:');
           console.log(error);
           this.error = true;
