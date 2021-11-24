@@ -79,7 +79,6 @@ export class RegisterComponent implements OnInit {
           this.authService.loginUser({
             email: registerRequest.email,
             password: registerRequest.password,
-            //locked: false // on default, user is not locked
           }).subscribe({
             next: () => {
               console.log('Successfully logged in user: ' + registerRequest.email);
