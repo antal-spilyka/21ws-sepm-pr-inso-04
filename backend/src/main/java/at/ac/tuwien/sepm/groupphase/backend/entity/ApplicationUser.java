@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import net.bytebuddy.implementation.bind.annotation.Default;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.persistence.*;
 
 @Entity
 public class ApplicationUser {
@@ -48,15 +47,20 @@ public class ApplicationUser {
     @Column(nullable = false)
     private Boolean disabled;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
+    @Value("${locked:false}")
     private Boolean locked;
+
+    @Column(nullable = false)
+    @Value("$lockedCounter:0")
+    private int lockedCounter;
 
     public ApplicationUser() {
     }
 
     public ApplicationUser(String email, String password, Boolean admin, String firstName, String lastName,
                            String salutation, String phone, String country, String city, String street,
-                           Boolean disabled, String zip) {
+                           Boolean disabled, String zip, Boolean locked, int lockedCounter) {
         this.email = email;
         this.password = password;
         this.admin = admin;
@@ -69,6 +73,8 @@ public class ApplicationUser {
         this.street = street;
         this.disabled = disabled;
         this.zip = zip;
+        this.locked = locked;
+        this.lockedCounter = lockedCounter;
     }
 
     public Long getId() {
@@ -175,6 +181,18 @@ public class ApplicationUser {
         this.zip = zip;
     }
 
+    public Boolean getLocked() {return locked;}
+
+    public void setLocked(Boolean locked) {this.locked = locked;}
+
+    public int getLockedCounter() {
+        return lockedCounter;
+    }
+
+    public void setLockedCounter(int lockedCounter) {
+        this.lockedCounter = lockedCounter;
+    }
+
     public static final class ApplicationUserBuilder {
         private Long id;
         private String email;
@@ -189,6 +207,8 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
+        private Boolean locked;
+        private int lockedCounter;
 
         private ApplicationUserBuilder() {
         }
@@ -262,6 +282,16 @@ public class ApplicationUser {
             return this;
         }
 
+        public ApplicationUserBuilder withLocked(Boolean locked) {
+            this.locked = locked;
+            return this;
+        }
+
+        public ApplicationUserBuilder withLockedCounter(int lockedCounter) {
+            this.lockedCounter = lockedCounter;
+            return this;
+        }
+
         public ApplicationUser build() {
             ApplicationUser applicationUser = new ApplicationUser();
             applicationUser.setId(id);
@@ -277,6 +307,8 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
+            applicationUser.setLocked(locked);
+            applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }
     }

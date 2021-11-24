@@ -45,6 +45,9 @@ public class UserDto {
     @NotNull(message = "Locked must not be null")
     private Boolean locked;
 
+    @NotNull(message = "LockedCounter must not be null")
+    private int lockedCounter;
+
     public String getEmail() {
         return email;
     }
@@ -133,7 +136,21 @@ public class UserDto {
         this.zip = zip;
     }
 
+    public Boolean getLocked() {
+        return locked;
+    }
 
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public int getLockedCounter() {
+        return lockedCounter;
+    }
+
+    public void setLockedCounter(int lockedCounter) {
+        this.lockedCounter = lockedCounter;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -161,3 +178,4 @@ public class UserDto {
             + '}';
     }
 }
+

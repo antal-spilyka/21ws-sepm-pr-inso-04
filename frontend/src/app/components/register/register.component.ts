@@ -67,19 +67,19 @@ export class RegisterComponent implements OnInit {
 
   registerUser() {
     this.submitted = true;
+    console.log(this.firstNameControl.value);
     if (this.firstPageOptions.valid && this.secondPageOptions.valid) {
       const registerRequest = new RegisterRequest(this.emailControl.value, this.passwordControl.value,
         this.firstNameControl.value, this.lastNameControl.value, this.phoneControl.value, this.salutationControl.value,
         this.disabledControl.value, this.cityControl.value, this.zipControl.value, this.countryControl.value,
-        this.streetControl.value, false);
+        this.streetControl.value);
 
       this.userService.createUser(registerRequest).subscribe({
         next: () => {
           this.authService.loginUser({
             email: registerRequest.email,
             password: registerRequest.password,
-<<<<<<< HEAD
-            locked: false // on default, user is not locked
+            //locked: false // on default, user is not locked
           }).subscribe({
             next: () => {
                 console.log('Successfully logged in user: ' + registerRequest.email);
@@ -95,16 +95,6 @@ export class RegisterComponent implements OnInit {
                 this.errorMessage = error.error;
               }
             }});
-=======
-          }).subscribe(() => {
-              console.log('Successfully logged in user: ' + registerRequest.email);
-              this.router.navigate(['/']);
-            },
-            error => {
-              console.log('Could not log in due to:');
-              console.log(error);
-            });
->>>>>>> 835cdd702b8388d7a675571bb46b426b61b2b31b
         },
         error: (error) => {
           console.log('Could not log in due to:');

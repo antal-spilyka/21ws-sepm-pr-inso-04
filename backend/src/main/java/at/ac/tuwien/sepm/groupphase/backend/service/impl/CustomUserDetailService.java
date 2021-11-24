@@ -70,7 +70,7 @@ public class CustomUserDetailService implements UserService {
         if (foundUser == null) {
             userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
-                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip()));
+                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), user.getLocked(), user.getLockedCounter()));
         } else {
             throw new ServiceException("email already used");
         }
