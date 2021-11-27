@@ -1,6 +1,9 @@
 ### PDF-Files ###
 *.pdf
 
+.DS_Store
+.idea\ 2
+
 ### Log-Files ###
 log/
 
@@ -17,6 +20,10 @@ gradle-app.setting
 
 ### Maven ###
 target/
+pom_BACKUP_19595.xml
+pom_BASE_19595.xml
+pom_LOCAL_19595.xml
+pom_REMOTE_19595.xml
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

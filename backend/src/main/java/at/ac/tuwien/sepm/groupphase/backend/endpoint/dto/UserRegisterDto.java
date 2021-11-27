@@ -5,11 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-public class UserDto {
-
-    @NotNull(message = "ID must not be null")
-    private Long id;
-
+public class UserRegisterDto {
     @NotNull(message = "Email must not be null")
     @Email
     private String email;
@@ -44,14 +40,6 @@ public class UserDto {
 
     @NotNull(message = "Disabled must not be null")
     private Boolean disabled;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -149,9 +137,9 @@ public class UserDto {
         if (!(o instanceof UserRegisterDto)) {
             return false;
         }
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(email, userDto.email)
-            && Objects.equals(password, userDto.password);
+        UserRegisterDto userRegisterDto = (UserRegisterDto) o;
+        return Objects.equals(email, userRegisterDto.email)
+            && Objects.equals(password, userRegisterDto.password);
     }
 
     @Override
@@ -161,13 +149,13 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{"
+        return "UserRegisterDto{"
             + "email='" + email + '\''
             + ", password='" + password + '\''
             + '}';
     }
 
-    public static final class UserDtoBuilder {
+    public static final class UserRegisterDtoBuilder {
         private String email;
         private String password;
         private String firstName;
@@ -182,70 +170,70 @@ public class UserDto {
         private Boolean locked;
         private int lockedCounter;
 
-        private UserDtoBuilder() {
+        private UserRegisterDtoBuilder() {
         }
 
-        public static UserDto.UserDtoBuilder aUserDto() {
-            return new UserDto.UserDtoBuilder();
+        public static UserRegisterDtoBuilder aUserRegisterDto() {
+            return new UserRegisterDto.UserRegisterDtoBuilder();
         }
 
-        public UserDto.UserDtoBuilder withEmail(String email) {
+        public UserRegisterDtoBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withPassword(String password) {
+        public UserRegisterDtoBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withFirstName(String firstName) {
+        public UserRegisterDtoBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withLastName(String lastName) {
+        public UserRegisterDtoBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withSalutation(String salutation) {
+        public UserRegisterDtoBuilder withSalutation(String salutation) {
             this.salutation = salutation;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withPhone(String phone) {
+        public UserRegisterDtoBuilder withPhone(String phone) {
             this.phone = phone;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withCountry(String country) {
+        public UserRegisterDtoBuilder withCountry(String country) {
             this.country = country;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withCity(String city) {
+        public UserRegisterDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withStreet(String street) {
+        public UserRegisterDtoBuilder withStreet(String street) {
             this.street = street;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withDisabled(Boolean disabled) {
+        public UserRegisterDtoBuilder withDisabled(Boolean disabled) {
             this.disabled = disabled;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withZip(String zip) {
+        public UserRegisterDtoBuilder withZip(String zip) {
             this.zip = zip;
             return this;
         }
 
-        public UserDto build() {
-            UserDto userDto = new UserDto();
+        public UserRegisterDto build() {
+            UserRegisterDto userDto = new UserRegisterDto();
             userDto.setEmail(email);
             userDto.setPassword(password);
             userDto.setFirstName(firstName);
@@ -261,3 +249,4 @@ public class UserDto {
         }
     }
 }
+

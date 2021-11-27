@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -103,7 +103,7 @@ public class UserEndpointTest implements TestData {
     @Test
     public void createUserWithoutFields_shouldThrowException() throws Exception {
         for (int i = 0; i < 10; i++) {
-            UserDto.UserDtoBuilder user = UserDto.UserDtoBuilder.aUserDto();
+            UserRegisterDto.UserRegisterDtoBuilder user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto();
             for (int j = 0; j < 10; j++) {
                 if (j != i) {
                     /*switch (j) {

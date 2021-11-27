@@ -21,6 +21,7 @@ export class UserService {
    * @param authRequest User data
    */
   createUser(authRequest: AuthRequest): Observable<string> {
+    console.log(authRequest);
     return this.httpClient.post(this.registerBaseUri, authRequest, {responseType: 'text'});
   }
 
