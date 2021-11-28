@@ -47,25 +47,34 @@
 
       <td><mat-form-field appearance="fill" class="half-control">
         <mat-label>ZIP</mat-label>
-        <input matInput type="tel" placeholder="0664123456" [formControl]="zipControl" required>
+        <input matInput type="tel" placeholder="" [formControl]="zipControl" required>
         <mat-error *ngIf="zipControl.invalid">{{getErrorMessage(zipControl)}}</mat-error>
       </mat-form-field></td>
 
       <td><mat-form-field appearance="fill" class="half-control">
         <mat-label>City</mat-label>
-        <input matInput type="tel" placeholder="0664123456" [formControl]="cityControl" required>
+        <input matInput type="tel" placeholder="" [formControl]="cityControl" required>
         <mat-error *ngIf="cityControl.invalid">{{getErrorMessage(cityControl)}}</mat-error>
       </mat-form-field></td>
 
       <td><mat-form-field appearance="fill" class="half-control">
         <mat-label>Street</mat-label>
-        <input matInput type="tel" placeholder="0664123456" [formControl]="streetControl" required>
+        <input matInput type="tel" placeholder="" [formControl]="streetControl" required>
         <mat-error *ngIf="streetControl.invalid">{{getErrorMessage(streetControl)}}</mat-error>
       </mat-form-field></td>
     </tr></table>
   </form>
 </mat-card>
 <br>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>credit_card</mat-icon>
+    </mat-panel-title>
+    <mat-panel-description>
+      Add credit card information
+    </mat-panel-description>
+  </mat-expansion-panel-header>
 <mat-card>
   <mat-card-title> Payment Information</mat-card-title>
   <div class="horizontal">
@@ -85,7 +94,7 @@
         <input matInput [formControl]="creditCardExperationMonthControl" required>
         <mat-error *ngIf="creditCardExperationMonthControl.invalid">{{getErrorMessage(creditCardExperationMonthControl)}}</mat-error>
       </mat-form-field>
-      
+
       <mat-form-field appearance="fill" class="half-control">
         <mat-label>Year</mat-label>
         <input matInput [formControl]="creditCardExperationYearControl" required>
@@ -103,5 +112,5 @@
     </mat-card>
   </div>
 </mat-card>
-
+</mat-expansion-panel>
 

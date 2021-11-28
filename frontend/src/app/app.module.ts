@@ -22,6 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import {MatCardModule} from "@angular/material/card";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {MatCardModule} from "@angular/material/card";
         MatFormFieldModule,
         MatSelectModule,
         MatButtonModule,
-        MatCardModule
+        MatCardModule,
+        MatExpansionModule
     ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
