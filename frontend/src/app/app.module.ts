@@ -29,6 +29,8 @@ import { CreateActualEventComponent } from './create-event/create-actual-event/c
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {RegisterComponent} from './components/register/register.component';
+
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    RegisterComponent,
     MessageComponent,
     AddNewsComponent,
     CreateEventComponent,
