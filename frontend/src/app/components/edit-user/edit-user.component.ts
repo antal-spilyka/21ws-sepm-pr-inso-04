@@ -30,7 +30,7 @@ export class EditUserComponent implements OnInit {
   creditCardExperationMonthControl = new FormControl('', [Validators.required,
     Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
   creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
-
+  creditCardCsvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
   disabledControl = new FormControl(false);
 
   errorMessage = '';
