@@ -20,6 +20,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import {RegisterComponent} from './components/register/register.component';
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule,
+    MatAutocompleteModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
