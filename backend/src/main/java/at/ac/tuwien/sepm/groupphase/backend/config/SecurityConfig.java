@@ -44,8 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
             .csrf().disable()
-            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer))
+            .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer, userService))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties));
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Override
