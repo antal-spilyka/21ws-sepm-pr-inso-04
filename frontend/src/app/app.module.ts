@@ -20,6 +20,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -30,22 +32,24 @@ import {RegisterComponent} from './components/register/register.component';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
+    EditUserComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    HttpClientModule,
-    NgbModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        HttpClientModule,
+        NgbModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatCardModule
+    ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
