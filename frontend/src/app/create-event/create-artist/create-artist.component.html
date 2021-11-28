@@ -1,0 +1,53 @@
+<div>
+    <form [formGroup]="form">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <h2>Artist</h2>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" [matAutocomplete]="auto">
+            </mat-form-field>
+            <mat-checkbox [checked]="isNewArtist" (change)="handleNewArtist()">
+                Create new Artist
+            </mat-checkbox>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <textarea cdkTestareaAutosize matInput formControlName="description" cdkAutosizeMinRows="3"
+                    cdkAutosizeMaxRows="5"></textarea>
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <hr class="line">
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <h2>Category</h2>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="categoryName" [matAutocomplete]="autoCategory">
+            </mat-form-field>
+            <mat-checkbox [checked]="isNewCategory" (change)="handleNewCategory()">
+                Create new Category
+            </mat-checkbox>
+        </div>
+    </form>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <button mat-raised-button color="primary" (click)="nextStep()">Next</button>
+    </div>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
+        <mat-option *ngFor="let artist of artists | async" [value]="artist">
+            {{artist.firstName}}
+        </mat-option>
+    </mat-autocomplete>
+    <mat-autocomplete #autoCategory="matAutocomplete" (optionSelected)="onSelectCategory($event.option.value)">
+        <mat-option *ngFor="let category of categories | async" [value]="category">
+            {{category.name}}
+        </mat-option>
+    </mat-autocomplete>
+</div>
