@@ -10,7 +10,6 @@ import {AuthService} from '../../services/auth.service';
 })
 export class UserListComponent implements OnInit {
   userList: any;
-  resultList: any;
   searchEmail = null;
   filterToggled = false;
 
@@ -20,27 +19,14 @@ export class UserListComponent implements OnInit {
   constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.getAllUsers();
     this.findUsers();
-  }
-
-  getAllUsers() {
-    this.userService.findUsers(null).subscribe({
-      next: (result: User[]) => {
-        this.userList = result;
-      },
-      error: (error) => {
-        this.errorMessage = error.error;
-        this.error = true;
-      }
-    });
   }
 
   findUsers() {
     this.userService.findUsers(this.searchEmail).subscribe({
       next: (result: User[]) => {
-        this.resultList = result;
-        console.log('Initializing list of users with length: ' + this.resultList.length);
+        this.userList = result;
+        console.log('Initializing list of users with length: ' + this.userList.length);
       },
       error: (error) => {
         this.errorMessage = error.error;
@@ -79,6 +65,8 @@ export class UserListComponent implements OnInit {
 
   toggleFilter() {
     if (this.filterToggled) {
+      this.searchEmail = null;
+      this.findUsers();
       this.filterToggled = false;
     } else {
       this.filterToggled = true;

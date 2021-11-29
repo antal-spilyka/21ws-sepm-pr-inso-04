@@ -1,4 +1,5 @@
-<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert"
+     xmlns="http://www.w3.org/1999/html">
   <strong>Error! </strong> {{errorMessage}}
   <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -8,24 +9,19 @@
 <h1 *ngIf="isAdmin()">Users</h1>
 
 <div *ngIf="isAdmin()">
-<table *ngIf="this.resultList && this.resultList.length > 0" class="table table-striped">
+<table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
   <thead>
   <tr>
     <th class="column">
-      <div class="select-container" *ngIf="filterToggled">
-      <mat-form-field *ngIf="filterToggled" appearance="fill" class="filter-select">
-      <mat-label *ngIf="filterToggled">Select user e-mail</mat-label>
-        <mat-select *ngIf="filterToggled" id="searchEmail" [(ngModel)]="this.searchEmail" (selectionChange)="findUsers()">
-          <mat-option value=""><em>All users</em></mat-option>
-          <mat-option *ngFor="let user of this.userList"  value="{{user.email}}">{{user.email}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      </div>
+        <mat-form-field class="filter-select" *ngIf="filterToggled">
+          <input placeholder="Enter E-Mail Address" matNativeControl (input)="findUsers()" [(ngModel)]="searchEmail">
+        </mat-form-field>
+      <mat-icon *ngIf="filterToggled" (click)="findUsers()">search</mat-icon>
       <span *ngIf="!filterToggled"> E-Mail </span>
       <mat-icon *ngIf="!filterToggled" (click)="toggleFilter()">filter_list</mat-icon>
       <mat-icon *ngIf="filterToggled" (click)="toggleFilter()">close</mat-icon>
-
     </th>
+
     <th class="column">
       <div style="margin-left: 200px">
         Role
@@ -39,7 +35,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let user of resultList">
+  <tr *ngFor="let user of userList">
     <td class="column"> {{getEmail(user)}} </td>
     <td class="column"> {{getRole(user)}} </td>
     <td class="column"> {{getPhone(user)}} </td>

@@ -23,5 +23,5 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
      * @param email address to search for
      * @return list of users
      */
-    List<ApplicationUser> findAllByEmail(String email);
+    List<ApplicationUser> findByEmailContains(String email);
 }

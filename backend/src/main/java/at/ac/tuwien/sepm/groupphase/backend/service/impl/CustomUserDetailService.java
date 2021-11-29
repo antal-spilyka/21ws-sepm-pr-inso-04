@@ -72,7 +72,7 @@ public class CustomUserDetailService implements UserService {
         if (email == null || email.length() <= 0 || email.equals(" ") || email.equals("null")) {
             users = userRepository.findAll();
         } else {
-            users = userRepository.findAllByEmail(email);
+            users = userRepository.findByEmailContains(email);
         }
         if (users == null || users.size() <= 0) {
             throw new NotFoundException("No user found in the repository");
