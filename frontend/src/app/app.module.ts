@@ -22,6 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,

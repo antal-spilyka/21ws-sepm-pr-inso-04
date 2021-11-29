@@ -65,6 +65,20 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public List<ApplicationUser> findAllUsers() {
+        LOGGER.debug("Find all application users");
+        List<ApplicationUser> users = userRepository.findAll();
+        if (users == null || users.size() <= 0) {
+            throw new NotFoundException("No user found in the repository");
+        } else {
+            for (ApplicationUser user : users) {
+                userRepository.save(user);
+            }
+            return users;
+        }
+    }
+
+    @Override
     public void createUser(UserDto user) {
         LOGGER.debug("Create application user");
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());

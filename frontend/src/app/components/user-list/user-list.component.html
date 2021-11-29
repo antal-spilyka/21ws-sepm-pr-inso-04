@@ -1,0 +1,40 @@
+<div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error! </strong> {{errorMessage}}
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<h1>Here you can see every registered user</h1>
+
+<div>
+<table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
+  <thead>
+  <tr>
+    <th>
+      <div style="margin-left: 50px">
+        E-Mail
+      </div>
+    </th>
+    <th>
+      <div style="margin-left: 200px">
+        Role
+      </div>
+    </th>
+    <th>
+      <div style="margin-left: 50px">
+        Phone (if given)
+      </div>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of userList">
+    <td style="text-align: center"> {{getEmail(user)}} </td>
+    <td style="text-align: center"> {{getRole(user)}} </td>
+    <td style="text-align: center"> {{getPhone(user)}} </td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
