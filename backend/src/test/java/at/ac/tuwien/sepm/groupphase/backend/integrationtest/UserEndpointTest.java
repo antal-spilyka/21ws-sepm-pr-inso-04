@@ -204,4 +204,13 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
+    @Test
+    public void getAllUsersWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(USER_BASE_URI))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+    }
+
 }
