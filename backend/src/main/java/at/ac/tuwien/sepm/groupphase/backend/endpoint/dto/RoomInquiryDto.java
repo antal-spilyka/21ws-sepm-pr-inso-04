@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class RoomInquiryDto {
     String eventPlaceName;
 
     @NotNull()
+    @NotBlank
     public String getName() {
         return name;
     }

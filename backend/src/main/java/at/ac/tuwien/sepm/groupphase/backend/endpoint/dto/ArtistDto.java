@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class ArtistDto {
     Long id;
-    String firstName;
-    String lastName;
     String bandName;
     String description;
 
@@ -13,32 +13,18 @@ public class ArtistDto {
         return id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
     public String getDescription() {
         return description;
     }
 
+    @NotNull()
+    @NotBlank
     public String getBandName() {
         return bandName;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public void setDescription(String description) {
@@ -58,20 +44,18 @@ public class ArtistDto {
             return false;
         }
         ArtistDto artistDto = (ArtistDto) o;
-        return Objects.equals(id, artistDto.id) && Objects.equals(firstName, artistDto.firstName) && Objects.equals(lastName, artistDto.lastName) && Objects.equals(description, artistDto.description);
+        return Objects.equals(id, artistDto.id) && Objects.equals(description, artistDto.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, description);
+        return Objects.hash(id, description);
     }
 
     @Override
     public String toString() {
         return "ArtistDto{" +
             "id=" + id +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
             ", description='" + description + '\'' +
             '}';
     }
@@ -105,8 +89,6 @@ public class ArtistDto {
         public ArtistDto build() {
             ArtistDto artistDto = new ArtistDto();
             artistDto.setId(id);
-            artistDto.setFirstName(firstName);
-            artistDto.setLastName(lastName);
             artistDto.setDescription(description);
             return artistDto;
         }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Locale;
 import java.util.Objects;
 

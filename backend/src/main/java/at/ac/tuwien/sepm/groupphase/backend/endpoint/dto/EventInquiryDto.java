@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,11 +17,13 @@ public class EventInquiryDto {
     Long artistId;
 
     @NotNull(message = "Event must have a name!")
+    @NotBlank
     public String getName() {
         return name;
     }
 
     @NotNull(message = "Event must have a duration!")
+    @Positive
     public Integer getDuration() {
         return duration;
     }
@@ -28,6 +33,7 @@ public class EventInquiryDto {
     }
 
     @NotNull(message = "Event must have a date!")
+    @Future
     public LocalDateTime getDateTime() {
         return dateTime;
     }

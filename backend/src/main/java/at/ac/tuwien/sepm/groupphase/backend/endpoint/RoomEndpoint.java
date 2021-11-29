@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -27,7 +28,7 @@ public class RoomEndpoint {
         this.roomService = roomService;
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Find room by search parameters.")
     public ResponseEntity findRooms(RoomSearchDto roomSearchDto) {
@@ -40,7 +41,7 @@ public class RoomEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new room.")
     public ResponseEntity saveRoom(@RequestBody RoomInquiryDto roomInquiryDto) {

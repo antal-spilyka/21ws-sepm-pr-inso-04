@@ -22,7 +22,6 @@ export class RoomService {
    * @returns Observable List of Rooms matching query
    */
   findRoom(roomSearch: RoomSearch): Observable<Room[]> {
-    console.log(roomSearch);
     let params = new HttpParams();
     params = params.set('name', roomSearch.name);
     params = params.set('eventPlaceName', roomSearch.eventPlaceName);
@@ -36,6 +35,7 @@ export class RoomService {
    * @returns Observable
    */
   createRoom(roomInquiry: RoomInquiry): Observable<Room> {
+    console.log(roomInquiry);
     return this.httpClient.post<Room>(this.messageBaseUri, roomInquiry);
   }
 }

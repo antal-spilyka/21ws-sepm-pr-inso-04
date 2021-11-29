@@ -31,7 +31,7 @@ public class EventMapper {
         Event event = new Event();
         event.setName(eventInquiryDto.getName());
         event.setDuration(eventInquiryDto.getDuration());
-        event.setContent(event.getContent());
+        event.setContent(eventInquiryDto.getContent());
         event.setDateTime(eventInquiryDto.getDateTime());
         event.setCategory(category);
         event.setRoom(room);

@@ -6,8 +6,6 @@ import java.util.Objects;
 @Entity
 public class Artist {
     Long id;
-    String firstName;
-    String lastName;
     String bandName;
     String description;
 
@@ -15,16 +13,6 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
-    }
-
-    @Column(name = "first_name", length = 100)
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @Column(name = "last_name", length = 100)
-    public String getLastName() {
-        return lastName;
     }
 
     @Column(length = 100)
@@ -39,14 +27,6 @@ public class Artist {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public void setBandName(String bandName) {
@@ -66,20 +46,18 @@ public class Artist {
             return false;
         }
         Artist artist = (Artist) o;
-        return Objects.equals(id, artist.id) && Objects.equals(firstName, artist.firstName) && Objects.equals(lastName, artist.lastName) && Objects.equals(bandName, artist.bandName) && Objects.equals(description, artist.description);
+        return Objects.equals(id, artist.id) && Objects.equals(bandName, artist.bandName) && Objects.equals(description, artist.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, bandName, description);
+        return Objects.hash(id, bandName, description);
     }
 
     @Override
     public String toString() {
         return "Artist{" +
             "id=" + id +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
             ", bandName='" + bandName + '\'' +
             ", description='" + description + '\'' +
             '}';

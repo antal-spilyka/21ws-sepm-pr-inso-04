@@ -12,12 +12,10 @@ public class RoomDto {
         return id;
     }
 
-    @NotNull(message = "Room must have a name!")
     public String getName() {
         return name;
     }
 
-    @NotNull(message = "Room must have an event place!")
     public EventPlaceDto getEventPlaceDto() {
         return eventPlaceDto;
     }

@@ -15,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -28,7 +29,7 @@ public class ArtistEndpoint {
         this.artistService = artistService;
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Find artist by search parameters.")
     public ResponseEntity findArtists(ArtistSearchDto artistSearchDto) {
@@ -41,7 +42,7 @@ public class ArtistEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new artist.", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity saveArtist(@RequestBody ArtistDto artistDto) {

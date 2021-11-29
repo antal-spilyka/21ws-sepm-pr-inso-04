@@ -17,8 +17,6 @@ public class ArtistMapper {
         LOGGER.trace("Mapping {}", artist);
         ArtistDto artistDto = new ArtistDto();
         artistDto.setId(artist.getId());
-        artistDto.setFirstName(artist.getFirstName());
-        artistDto.setLastName(artist.getLastName());
         artistDto.setBandName(artist.getBandName());
         artistDto.setDescription(artist.getDescription());
         return artistDto;
@@ -28,8 +26,6 @@ public class ArtistMapper {
         LOGGER.trace("Mapping {}", artistDto);
         Artist artist = new Artist();
         artist.setId(artistDto.getId());
-        artist.setFirstName(artistDto.getFirstName());
-        artist.setLastName(artistDto.getLastName());
         artist.setBandName(artistDto.getBandName());
         artist.setDescription(artistDto.getDescription());
         return artist;

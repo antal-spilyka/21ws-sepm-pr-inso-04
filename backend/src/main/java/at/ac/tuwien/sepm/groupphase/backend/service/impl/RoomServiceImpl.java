@@ -69,7 +69,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto save(RoomInquiryDto roomInquiryDto) {
         LOGGER.debug("Handeling in Service {}", roomInquiryDto);
         try {
-            EventPlace eventPlace = eventPlaceRepository.getById(roomInquiryDto.getName());
+            EventPlace eventPlace = eventPlaceRepository.getById(roomInquiryDto.getEventPlaceName());
             if (eventPlace == null) {
                 throw new ContextException("EventPlace does not exist");
             }

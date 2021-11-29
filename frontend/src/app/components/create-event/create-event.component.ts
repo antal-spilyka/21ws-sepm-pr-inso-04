@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Artist } from '../dtos/artist';
-import { Category } from '../dtos/category';
-import { EventPlace } from '../dtos/eventPlace';
-import { Room } from '../dtos/room';
+import { Artist } from '../../dtos/artist';
+import { Category } from '../../dtos/category';
+import { EventPlace } from '../../dtos/eventPlace';
+import { Room } from '../../dtos/room';
 import { Step } from './state';
 
 @Component({
@@ -18,6 +18,7 @@ export class CreateEventComponent implements OnInit {
   room: Room;
   artist: Artist;
   category: Category;
+  error = false;
 
   constructor() { }
 
@@ -26,6 +27,14 @@ export class CreateEventComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  setErrorFlag = () => {
+    this.error = true;
+  };
+
+  vanishError() {
+    this.error = false;
   }
 
   handleNext = (values: any) => {

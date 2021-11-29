@@ -8,13 +8,13 @@
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <mat-form-field>
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name">
+                <input matInput required formControlName="name">
             </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <mat-form-field>
-                <mat-label>Description</mat-label>
-                <textarea cdkTestareaAutosize matInput formControlName="content" cdkAutosizeMinRows="3"
+                <mat-label>Content</mat-label>
+                <textarea cdkTestareaAutosize required matInput formControlName="content" cdkAutosizeMinRows="3"
                     cdkAutosizeMaxRows="5"></textarea>
             </mat-form-field>
         </div>
@@ -29,12 +29,15 @@
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <mat-form-field>
                 <mat-label>Date and Time</mat-label>
-                <input matInput type="datetime-local" formControlName="dateTime">
+                <input matInput min="today" type="datetime-local" formControlName="dateTime">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Duration (minutes)</mat-label>
-                <input matInput type="number" formControlName="duration">
+                <input matInput required type="number" formControlName="duration">
             </mat-form-field>
         </div>
     </form>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <button mat-raised-button color="primary" (click)="nextStep()">Create</button>
+    </div>
 </div>
