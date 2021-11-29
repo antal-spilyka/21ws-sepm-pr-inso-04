@@ -10,6 +10,9 @@ public class UserEditDto {
     @Email
     private String email;
 
+    @Email
+    private String newEmail;
+
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
     private String password;
@@ -44,6 +47,14 @@ public class UserEditDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
     }
 
     public String getPassword() {

@@ -92,7 +92,7 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setSalutation(updatedUser.getSalutation());
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());
-            toUpdateUser.setEmail(updatedUser.getEmail());
+            toUpdateUser.setEmail(updatedUser.getNewEmail());
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");

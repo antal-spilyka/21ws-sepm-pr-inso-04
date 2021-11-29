@@ -23,6 +23,8 @@ import {RegisterComponent} from './components/register/register.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatExpansionModule} from "@angular/material/expansion";
+import { EditEmailDialogComponent } from './components/edit-user/edit-email-dialog/edit-email-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -34,24 +36,26 @@ import {MatExpansionModule} from "@angular/material/expansion";
     RegisterComponent,
     MessageComponent,
     EditUserComponent,
+    EditEmailDialogComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        HttpClientModule,
-        NgbModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatCardModule,
-        MatExpansionModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatDialogModule
+  ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })

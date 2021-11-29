@@ -6,6 +6,9 @@ import {countries} from '../../utils';
 import {User} from "../../dtos/user";
 import {Router} from "@angular/router";
 import {UpdateUserRequest} from "../../dtos/updateUser-request";
+import {AuthService} from "../../services/auth.service";
+import {MatDialog} from "@angular/material/dialog";
+import {EditEmailDialogComponent} from "./edit-email-dialog/edit-email-dialog.component";
 
 
 @Component({
@@ -41,7 +44,7 @@ export class EditUserComponent implements OnInit {
 
   user: User;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(public dialog: MatDialog, private router: Router, private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getUser();
@@ -97,12 +100,27 @@ export class EditUserComponent implements OnInit {
   }
 
   updateUser() {
-    const updatedUser: UpdateUserRequest = {email: this.emailControl.value, firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value, salutation: this.salutationControl.value,
+    const updatedUser: UpdateUserRequest = {email: this.user.email, newEmail: this.emailControl.value, firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value, salutation: this.salutationControl.value,
     street: this.streetControl.value, zip: this.zipControl.value, country: this.countryControl.value, city: this.cityControl.value, password: this.user.password};
 
-    this.userService.updateUser(updatedUser).subscribe(user => this.user,
-      error => window.alert('Error during updating User: ' + error.error.message),
-      () => {window.alert('Successfully edited the User'); this.router.navigate(['/']);});
+    if (this.emailControl.dirty) {     //email has changed
+      const dialogRef = this.dialog.open(EditEmailDialogComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+        const change = result;
+        console.log(`Dialog result: ${result}`);
+        if (result) {
+          this.authService.logoutUser();
+          this.userService.updateUser(updatedUser).subscribe(user => this.user,
+            error => window.alert('Error during updating User: ' + error.error.message),
+            () => {window.alert('Successfully edited the User'); this.router.navigate(['/login']);});
+        }
+      });
+    } else {
+      this.userService.updateUser(updatedUser).subscribe(user => this.user,
+        error => window.alert('Error during updating User: ' + error.error.message),
+        () => {window.alert('Successfully edited the User'); this.router.navigate(['/']);});
+    }
   }
 
   getToken() {
@@ -123,3 +141,5 @@ export class EditUserComponent implements OnInit {
     }
   }
 }
+
+
