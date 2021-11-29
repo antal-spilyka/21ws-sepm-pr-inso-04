@@ -5,11 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-public class UserDto {
-
-    @NotNull(message = "ID must not be null")
-    private Long id;
-
+public class UserEditDto {
     @NotNull(message = "Email must not be null")
     @Email
     private String email;
@@ -41,17 +37,6 @@ public class UserDto {
 
     @NotNull(message = "Street must not be null")
     private String street;
-
-    @NotNull(message = "Disabled must not be null")
-    private Boolean disabled;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -125,14 +110,6 @@ public class UserDto {
         this.street = street;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
-    }
-
     public String getZip() {
         return zip;
     }
@@ -149,9 +126,9 @@ public class UserDto {
         if (!(o instanceof UserRegisterDto)) {
             return false;
         }
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(email, userDto.email)
-            && Objects.equals(password, userDto.password);
+        UserEditDto userEditDto = (UserEditDto) o;
+        return Objects.equals(email, userEditDto.email)
+            && Objects.equals(password, userEditDto.password);
     }
 
     @Override
@@ -161,13 +138,14 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{"
+        return "UserEditDto{"
             + "email='" + email + '\''
             + ", password='" + password + '\''
+            + ", street='" + street + '\''
             + '}';
     }
 
-    public static final class UserDtoBuilder {
+    public static final class UserEditDtoBuilder {
         private String email;
         private String password;
         private String firstName;
@@ -178,86 +156,77 @@ public class UserDto {
         private String zip;
         private String city;
         private String street;
-        private Boolean disabled;
-        private Boolean locked;
-        private int lockedCounter;
 
-        private UserDtoBuilder() {
+        private UserEditDtoBuilder() {
         }
 
-        public static UserDto.UserDtoBuilder aUserDto() {
-            return new UserDto.UserDtoBuilder();
+        public static UserEditDtoBuilder aUserDto() {
+            return new UserEditDtoBuilder();
         }
 
-        public UserDto.UserDtoBuilder withEmail(String email) {
+        public UserEditDtoBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withPassword(String password) {
+        public UserEditDtoBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withFirstName(String firstName) {
+        public UserEditDtoBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withLastName(String lastName) {
+        public UserEditDtoBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withSalutation(String salutation) {
+        public UserEditDtoBuilder withSalutation(String salutation) {
             this.salutation = salutation;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withPhone(String phone) {
+        public UserEditDtoBuilder withPhone(String phone) {
             this.phone = phone;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withCountry(String country) {
+        public UserEditDtoBuilder withCountry(String country) {
             this.country = country;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withCity(String city) {
+        public UserEditDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withStreet(String street) {
+        public UserEditDtoBuilder withStreet(String street) {
             this.street = street;
             return this;
         }
 
-        public UserDto.UserDtoBuilder withDisabled(Boolean disabled) {
-            this.disabled = disabled;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withZip(String zip) {
+        public UserEditDtoBuilder withZip(String zip) {
             this.zip = zip;
             return this;
         }
 
-        public UserDto build() {
-            UserDto userDto = new UserDto();
-            userDto.setEmail(email);
-            userDto.setPassword(password);
-            userDto.setFirstName(firstName);
-            userDto.setLastName(lastName);
-            userDto.setSalutation(salutation);
-            userDto.setPhone(phone);
-            userDto.setCountry(country);
-            userDto.setCity(city);
-            userDto.setStreet(street);
-            userDto.setDisabled(disabled);
-            userDto.setZip(zip);
-            return userDto;
+        public UserEditDto build() {
+            UserEditDto userEditDto = new UserEditDto();
+            userEditDto.setEmail(email);
+            userEditDto.setPassword(password);
+            userEditDto.setFirstName(firstName);
+            userEditDto.setLastName(lastName);
+            userEditDto.setSalutation(salutation);
+            userEditDto.setPhone(phone);
+            userEditDto.setCountry(country);
+            userEditDto.setCity(city);
+            userEditDto.setStreet(street);
+            userEditDto.setZip(zip);
+            return userEditDto;
         }
     }
 }

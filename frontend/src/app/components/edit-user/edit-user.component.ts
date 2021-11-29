@@ -4,6 +4,8 @@ import jwt_decode from "jwt-decode";
 import {UserService} from "../../services/user.service";
 import {countries} from '../../utils';
 import {User} from "../../dtos/user";
+import {Router} from "@angular/router";
+import {UpdateUserRequest} from "../../dtos/updateUser-request";
 
 
 @Component({
@@ -39,7 +41,7 @@ export class EditUserComponent implements OnInit {
 
   user: User;
 
-  constructor(private userService: UserService) { }
+  constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.getUser();
@@ -57,11 +59,18 @@ export class EditUserComponent implements OnInit {
     if (this.getToken() != null) {
       const decoded: any = jwt_decode(this.getToken());
       const email: string = decoded.sub;
-      console.log('email: ' + email);
-      //const email = 'ma%40asdg.avfd';
       this.userService.get(email).subscribe(
         (user: User) => {
           this.user = user;
+          this.cityControl.setValue(user.city);
+          this.streetControl.setValue(user.street);
+          this.zipControl.setValue(user.zip);
+          this.countryControl.setValue(user.country);
+          this.firstNameControl.setValue(user.firstName);
+          this.lastNameControl.setValue(user.lastName);
+          this.salutationControl.setValue(user.salutation);
+          this.phoneControl.setValue(user.phone);
+          this.emailControl.setValue(user.email);
           console.log(this.user);
         },
         error => {
@@ -85,6 +94,15 @@ export class EditUserComponent implements OnInit {
       return 'Not a valid pattern';
     }
     return '';
+  }
+
+  updateUser() {
+    const updatedUser: UpdateUserRequest = {email: this.emailControl.value, firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value, salutation: this.salutationControl.value,
+    street: this.streetControl.value, zip: this.zipControl.value, country: this.countryControl.value, city: this.cityControl.value, password: this.user.password};
+
+    this.userService.updateUser(updatedUser).subscribe(user => this.user,
+      error => window.alert('Error during updating User: ' + error.error.message),
+      () => {window.alert('Successfully edited the User'); this.router.navigate(['/']);});
   }
 
   getToken() {

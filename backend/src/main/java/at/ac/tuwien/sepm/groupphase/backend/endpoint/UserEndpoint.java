@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -62,11 +62,11 @@ public class UserEndpoint {
     }
 
     /**
-     * Updates a existing user.
+     * Updates an existing user.
      */
     @PermitAll
     @PutMapping("")
-    public ResponseEntity<String> update(@RequestBody @Validated UserDto user, BindingResult bindingResult) {
+    public ResponseEntity<String> update(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
         LOGGER.info("PUT /api/v1/users" + user.toString());
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());

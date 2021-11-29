@@ -1,9 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -82,23 +80,20 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void updateUser(UserDto updatedUser) {
+    public void updateUser(UserEditDto updatedUser) {
         LOGGER.trace("Update existing user");
-        Optional<ApplicationUser> toUpdateUser = userRepository.findById(updatedUser.getId());
+        ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());
 
-        if (toUpdateUser.isPresent()) {
-            toUpdateUser.map(user -> {
-                user.setCity(updatedUser.getCity());
-                user.setCountry(updatedUser.getCountry());
-                user.setDisabled(updatedUser.getDisabled());
-                user.setStreet(updatedUser.getStreet());
-                user.setZip(updatedUser.getZip());
-                user.setSalutation(updatedUser.getSalutation());
-                user.setFirstName(updatedUser.getFirstName());
-                user.setLastName(updatedUser.getLastName());
-                user.setEmail(updatedUser.getEmail());
-                return userRepository.save(user);
-            });
+        if (toUpdateUser != null) {
+            toUpdateUser.setCity(updatedUser.getCity());
+            toUpdateUser.setCountry(updatedUser.getCountry());
+            toUpdateUser.setStreet(updatedUser.getStreet());
+            toUpdateUser.setZip(updatedUser.getZip());
+            toUpdateUser.setSalutation(updatedUser.getSalutation());
+            toUpdateUser.setFirstName(updatedUser.getFirstName());
+            toUpdateUser.setLastName(updatedUser.getLastName());
+            toUpdateUser.setEmail(updatedUser.getEmail());
+            userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");
         }
