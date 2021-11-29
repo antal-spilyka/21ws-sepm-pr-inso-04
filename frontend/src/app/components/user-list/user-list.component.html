@@ -5,29 +5,33 @@
   </button>
 </div>
 
-<h1>Users</h1>
+<h1 *ngIf="isAdmin()">Users</h1>
 
-<div>
+<div *ngIf="isAdmin()">
 <table *ngIf="this.resultList && this.resultList.length > 0" class="table table-striped">
   <thead>
   <tr>
-    <th style="text-align: right">
-      <div style="margin-left: 50px">
-        <div>
-        E-Mail
-        </div>
-        <select id="searchEmail" [(ngModel)]="this.searchEmail" (change)="findUsers()">
-          <option value="" selected>All users</option>
-          <option *ngFor="let user of this.userList"  value="{{user.email}}">{{user.email}}</option>
-        </select>
+    <th class="column">
+      <div class="select-container" *ngIf="filterToggled">
+      <mat-form-field *ngIf="filterToggled" appearance="fill" class="filter-select">
+      <mat-label *ngIf="filterToggled">Select user e-mail</mat-label>
+        <mat-select *ngIf="filterToggled" id="searchEmail" [(ngModel)]="this.searchEmail" (selectionChange)="findUsers()">
+          <mat-option value=""><em>All users</em></mat-option>
+          <mat-option *ngFor="let user of this.userList"  value="{{user.email}}">{{user.email}}</mat-option>
+        </mat-select>
+      </mat-form-field>
       </div>
+      <span *ngIf="!filterToggled"> E-Mail </span>
+      <mat-icon *ngIf="!filterToggled" (click)="toggleFilter()">filter_list</mat-icon>
+      <mat-icon *ngIf="filterToggled" (click)="toggleFilter()">close</mat-icon>
+
     </th>
-    <th style="text-align: right">
+    <th class="column">
       <div style="margin-left: 200px">
         Role
       </div>
     </th>
-    <th style="text-align: right">
+    <th class="column">
       <div style="margin-left: 50px">
         Phone (if given)
       </div>
@@ -36,9 +40,9 @@
   </thead>
   <tbody>
   <tr *ngFor="let user of resultList">
-    <td style="text-align: right"> {{getEmail(user)}} </td>
-    <td style="text-align: right"> {{getRole(user)}} </td>
-    <td style="text-align: right"> {{getPhone(user)}} </td>
+    <td class="column"> {{getEmail(user)}} </td>
+    <td class="column"> {{getRole(user)}} </td>
+    <td class="column"> {{getPhone(user)}} </td>
   </tr>
   </tbody>
 </table>

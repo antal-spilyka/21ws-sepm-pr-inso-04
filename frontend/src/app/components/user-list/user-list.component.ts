@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-list',
@@ -11,11 +12,12 @@ export class UserListComponent implements OnInit {
   userList: any;
   resultList: any;
   searchEmail = null;
+  filterToggled = false;
 
   error = false;
   errorMessage = '';
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getAllUsers();
@@ -73,6 +75,26 @@ export class UserListComponent implements OnInit {
     } else {
       return currentUser.phone;
     }
+  }
+
+  toggleFilter() {
+    if (this.filterToggled) {
+      this.filterToggled = false;
+    } else {
+      this.filterToggled = true;
+    }
+  }
+
+  /**
+   * Returns true if the authenticated user is an admin
+   */
+  isAdmin(): boolean {
+    const isAdmin = this.authService.getUserRole() === 'ADMIN';
+    if (!isAdmin) {
+      this.errorMessage = 'This functionality is only available for users with admin roles. Please contact your administrator!';
+      this.error = true;
+    }
+    return isAdmin;
   }
 
   /**

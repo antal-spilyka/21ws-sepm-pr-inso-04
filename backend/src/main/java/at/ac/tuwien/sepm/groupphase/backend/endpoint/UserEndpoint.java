@@ -59,7 +59,7 @@ public class UserEndpoint {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //@Secured("ROLE_ADMIN")
+    @Secured("ROLE_ADMIN")
     @PermitAll
     @GetMapping
     public List<ApplicationUser> findUsers(String email) {
