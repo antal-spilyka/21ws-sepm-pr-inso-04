@@ -9,6 +9,8 @@ import {User} from '../../dtos/user';
 })
 export class UserListComponent implements OnInit {
   userList: any;
+  resultList: any;
+  searchEmail = null;
 
   error = false;
   errorMessage = '';
@@ -16,21 +18,33 @@ export class UserListComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
+    this.getAllUsers();
     this.findUsers();
   }
 
-  findUsers() {
-    this.userService.findUsers().subscribe({
+  getAllUsers() {
+    this.userService.findUsers(null).subscribe({
       next: (result: User[]) => {
         this.userList = result;
-        console.log('Initializing list of users with length: ' + this.userList.length);
       },
       error: (error) => {
         this.errorMessage = error.error;
         this.error = true;
       }
     });
+  }
 
+  findUsers() {
+    this.userService.findUsers(this.searchEmail).subscribe({
+      next: (result: User[]) => {
+        this.resultList = result;
+        console.log('Initializing list of users with length: ' + this.resultList.length);
+      },
+      error: (error) => {
+        this.errorMessage = error.error;
+        this.error = true;
+      }
+    });
   }
 
   getEmail(currentUser: User) {

@@ -62,10 +62,10 @@ public class UserEndpoint {
     //@Secured("ROLE_ADMIN")
     @PermitAll
     @GetMapping
-    public List<ApplicationUser> getAll() {
-        LOGGER.info("GET " + BASE_URL);
+    public List<ApplicationUser> findUsers(String email) {
+        LOGGER.info("GET " + BASE_URL + "?email=" + email);
         try {
-            return userService.findAllUsers();
+            return userService.findUsers(email);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found in the repository");

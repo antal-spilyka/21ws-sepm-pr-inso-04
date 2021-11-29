@@ -32,11 +32,12 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByEmail(String email);
 
     /**
-     * Find all application users in the repository.
+     * Find all application users in the repository with the given email address.
      *
+     * @param email address to search for
      * @return list of application users
      */
-    List<ApplicationUser> findAllUsers();
+    List<ApplicationUser> findUsers(String email);
 
     /**
      * Create an application user.

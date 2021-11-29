@@ -5,23 +5,29 @@
   </button>
 </div>
 
-<h1>Here you can see every registered user</h1>
+<h1>Users</h1>
 
 <div>
-<table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
+<table *ngIf="this.resultList && this.resultList.length > 0" class="table table-striped">
   <thead>
   <tr>
-    <th>
+    <th style="text-align: right">
       <div style="margin-left: 50px">
+        <div>
         E-Mail
+        </div>
+        <select id="searchEmail" [(ngModel)]="this.searchEmail" (change)="findUsers()">
+          <option value="" selected>All users</option>
+          <option *ngFor="let user of this.userList"  value="{{user.email}}">{{user.email}}</option>
+        </select>
       </div>
     </th>
-    <th>
+    <th style="text-align: right">
       <div style="margin-left: 200px">
         Role
       </div>
     </th>
-    <th>
+    <th style="text-align: right">
       <div style="margin-left: 50px">
         Phone (if given)
       </div>
@@ -29,10 +35,10 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let user of userList">
-    <td style="text-align: center"> {{getEmail(user)}} </td>
-    <td style="text-align: center"> {{getRole(user)}} </td>
-    <td style="text-align: center"> {{getPhone(user)}} </td>
+  <tr *ngFor="let user of resultList">
+    <td style="text-align: right"> {{getEmail(user)}} </td>
+    <td style="text-align: right"> {{getRole(user)}} </td>
+    <td style="text-align: right"> {{getPhone(user)}} </td>
   </tr>
   </tbody>
 </table>

@@ -39,8 +39,10 @@ export class UserService {
   /**
    * Finds the users with the given email. If no email is entered, all the users will be returned.
    */
-  findUsers(): Observable<User[]> {
-    console.log('Get all users');
-    return this.httpClient.get<User[]>(this.registerBaseUri);
+  findUsers(email: string): Observable<User[]> {
+    let params = new HttpParams();
+    params = params.set('email', email);
+    console.log('Get users with email address ', params);
+    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
   }
 }
