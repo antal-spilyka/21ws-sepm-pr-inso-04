@@ -9,6 +9,7 @@ import {UpdateUserRequest} from "../../dtos/updateUser-request";
 import {AuthService} from "../../services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EditEmailDialogComponent} from "./edit-email-dialog/edit-email-dialog.component";
+import {EditPasswordDialogComponent} from "./edit-password-dialog/edit-password-dialog.component";
 
 
 @Component({
@@ -121,6 +122,14 @@ export class EditUserComponent implements OnInit {
         error => window.alert('Error during updating User: ' + error.error.message),
         () => {window.alert('Successfully edited the User'); this.router.navigate(['/']);});
     }
+  }
+
+  changePassword() {
+      const dialogRef = this.dialog.open(EditPasswordDialogComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.user.password = result;
+      });
   }
 
   getToken() {

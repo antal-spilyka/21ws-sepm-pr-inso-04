@@ -62,7 +62,11 @@
         <input matInput type="tel" placeholder="" [formControl]="streetControl" required>
         <mat-error *ngIf="streetControl.invalid">{{getErrorMessage(streetControl)}}</mat-error>
       </mat-form-field></td>
-    </tr></table>
+    </tr>
+      <tr>
+        <button mat-raised-button (click)="changePassword()">Change Password</button>
+      </tr>
+    </table>
   </form>
 </mat-card>
 <br>
@@ -112,5 +116,5 @@
   </div>
 </mat-expansion-panel>
 
-<button style="margin-top: 50px; align-content: center" (click)="updateUser()" mat-raised-button color="primary">Primary</button>
+<button style="margin-top: 50px; align-content: center" (click)="updateUser()" mat-raised-button color="primary">Save</button>
 
