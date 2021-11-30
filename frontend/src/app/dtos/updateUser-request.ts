@@ -13,6 +13,7 @@ export class UpdateUserRequest {
     public zip: string,
     public country: string,
     public street: string,
+    public disabled: boolean,
     public paymentInformation: PaymentInformation
   ) {
   }

@@ -43,6 +43,9 @@ public class UserEditDto {
     @NotNull(message = "Street must not be null")
     private String street;
 
+    @NotNull(message = "Disabled must not be null")
+    private Boolean disabled;
+
     private PaymentInformationDto paymentInformation;
 
     public String getEmail() {
@@ -139,6 +142,14 @@ public class UserEditDto {
 
     public void setPaymentInformation(PaymentInformationDto paymentInformation) {
         this.paymentInformation = paymentInformation;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
     }
 
     @Override

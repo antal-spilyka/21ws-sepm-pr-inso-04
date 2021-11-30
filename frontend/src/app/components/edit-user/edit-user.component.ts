@@ -43,7 +43,7 @@ export class EditUserComponent implements OnInit {
     Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
   creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
   creditCardCvvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
-  disabledControl = new FormControl(false);
+  disabledControl = new FormControl();
 
   errorMessage = '';
   error = false;
@@ -81,6 +81,7 @@ export class EditUserComponent implements OnInit {
           this.salutationControl.setValue(user.salutation);
           this.phoneControl.setValue(user.phone);
           this.emailControl.setValue(user.email);
+          this.disabledControl.setValue(user.disabled);
           if (user.paymentInformation != null) {
             this.creditCardNameControl.setValue(user.paymentInformation.creditCardName);
             this.creditCardCvvControl.setValue(user.paymentInformation.creditCardCvv);
@@ -126,7 +127,7 @@ export class EditUserComponent implements OnInit {
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,
-    paymentInformation};
+      disabled: this.disabledControl.value, paymentInformation};
 
     if (this.emailControl.dirty) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);

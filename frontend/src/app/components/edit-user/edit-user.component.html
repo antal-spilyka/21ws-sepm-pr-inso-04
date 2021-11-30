@@ -48,6 +48,9 @@
             <mat-error *ngIf="phoneControl.invalid">{{getErrorMessage(phoneControl)}}</mat-error>
           </mat-form-field>
         </td>
+
+        <td><mat-checkbox style="margin-left: 25px" [formControl]="disabledControl">Disabled</mat-checkbox></td>
+
       </tr>
     </table>
 
