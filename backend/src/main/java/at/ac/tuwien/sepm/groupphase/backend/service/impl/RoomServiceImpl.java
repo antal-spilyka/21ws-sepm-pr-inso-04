@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RoomMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
@@ -10,7 +11,6 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RoomRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
