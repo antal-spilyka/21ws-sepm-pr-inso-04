@@ -21,10 +21,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
-import {MatCardModule} from "@angular/material/card";
-import {MatExpansionModule} from "@angular/material/expansion";
+import {MatCardModule} from '@angular/material/card';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { EditEmailDialogComponent } from './components/edit-user/edit-email-dialog/edit-email-dialog.component';
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatDialogModule} from '@angular/material/dialog';
 import { EditPasswordDialogComponent } from './components/edit-user/edit-password-dialog/edit-password-dialog.component';
 
 @NgModule({
