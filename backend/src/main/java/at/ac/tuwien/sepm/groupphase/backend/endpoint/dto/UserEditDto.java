@@ -191,6 +191,7 @@ public class UserEditDto {
         private String zip;
         private String city;
         private String street;
+        private Boolean disabled;
 
         private UserEditDtoBuilder() {
         }
@@ -249,6 +250,11 @@ public class UserEditDto {
             return this;
         }
 
+        public UserEditDtoBuilder withDisabled(Boolean disabled) {
+            this.disabled = disabled;
+            return this;
+        }
+
         public UserEditDto build() {
             UserEditDto userEditDto = new UserEditDto();
             userEditDto.setEmail(email);
@@ -261,6 +267,7 @@ public class UserEditDto {
             userEditDto.setCity(city);
             userEditDto.setStreet(street);
             userEditDto.setZip(zip);
+            userEditDto.setDisabled(disabled);
             return userEditDto;
         }
     }
