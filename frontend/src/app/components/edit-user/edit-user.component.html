@@ -95,6 +95,14 @@
     </table>
   </form>
 </mat-card>
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{ errorMessage }}</strong>
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
 <br>
 <mat-expansion-panel>
   <mat-expansion-panel-header>

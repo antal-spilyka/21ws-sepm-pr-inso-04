@@ -94,7 +94,9 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setCountry(updatedUser.getCountry());
             toUpdateUser.setStreet(updatedUser.getStreet());
             toUpdateUser.setZip(updatedUser.getZip());
-            toUpdateUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            if (!updatedUser.getPassword().equals(toUpdateUser.getPassword())) {
+                toUpdateUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
             toUpdateUser.setSalutation(updatedUser.getSalutation());
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());

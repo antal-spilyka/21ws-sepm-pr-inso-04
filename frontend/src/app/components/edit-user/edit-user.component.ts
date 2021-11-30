@@ -11,6 +11,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
+import {AuthRequest} from '../../dtos/auth-request';
 
 export interface DialogData {
   email: string;
@@ -133,16 +134,16 @@ export class EditUserComponent implements OnInit {
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
 
       dialogRef.afterClosed().subscribe(result => {
-        const change = result;
         console.log(`Dialog result: ${result}`);
-        if (result) {
+        if (result && this.checkEmailAvailability(this.emailControl.value)) {
           this.authService.logoutUser();
           this.userService.updateUser(updatedUser).subscribe(user => this.user,
             error => window.alert('Error during updating User: ' + error.error.message),
             () => {
-            window.alert('Successfully edited the User'); this.router.navigate(['/login']);
+            window.alert('Successfully edited the User'); this.router.navigate(['/']);
           });
         }
+        this.emailControl.setValue(this.user.email);
       });
     } else {
       this.userService.updateUser(updatedUser).subscribe(user => this.user,
@@ -165,8 +166,30 @@ export class EditUserComponent implements OnInit {
       });
   }
 
+  checkEmailAvailability(email: string): boolean {
+    this.userService.get(email).subscribe({
+      next: () => {
+        this.errorMessage = 'New Email is not available';
+        this.error = true;
+        console.log('Email is not available');
+        return false;
+      },
+      error: (error) => {
+        if (error.status === 409) {
+          console.log('Email is available');
+          return true;
+        }
+      }
+    });
+    return false;
+  }
+
   getToken() {
     return localStorage.getItem('authToken');
+  }
+
+  setToken(authResponse: string) {
+    localStorage.setItem('authToken', authResponse);
   }
 
   defaultServiceErrorHandling(error: any) {
