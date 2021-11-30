@@ -30,6 +30,12 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
+import { SearchComponent } from './components/search/search.component';
+import { SearchArtistComponent } from './components/search-artist/search-artist.component';
+import { SearchLocationComponent } from './components/search-location/search-location.component';
+import { SearchEventsComponent } from './components/search-events/search-events.component';
+import { SearchTimeComponent } from './components/search-time/search-time.component';
+
 
 
 @NgModule({
@@ -46,6 +52,12 @@ import {RegisterComponent} from './components/register/register.component';
     CreateEventPlaceComponent,
     CreateArtistComponent,
     CreateActualEventComponent,
+    SearchComponent,
+    SearchArtistComponent,
+    SearchLocationComponent,
+    SearchEventsComponent,
+    SearchTimeComponent
+
   ],
   imports: [
     BrowserModule,
