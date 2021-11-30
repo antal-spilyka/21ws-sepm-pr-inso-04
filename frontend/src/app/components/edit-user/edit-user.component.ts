@@ -34,6 +34,7 @@ export class EditUserComponent implements OnInit {
   salutationControl = new FormControl('mr', [Validators.required]);
 
   creditCardNumberControl = new FormControl('', [Validators.required,
+    // eslint-disable-next-line max-len
     Validators.pattern(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/im)]);
 
   creditCardExperationMonthControl = new FormControl('', [Validators.required,
@@ -104,8 +105,10 @@ export class EditUserComponent implements OnInit {
   }
 
   updateUser() {
-    const updatedUser: UpdateUserRequest = {email: this.user.email, newEmail: this.emailControl.value, firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value, salutation: this.salutationControl.value,
-    street: this.streetControl.value, zip: this.zipControl.value, country: this.countryControl.value, city: this.cityControl.value, password: this.user.password};
+    const updatedUser: UpdateUserRequest = {email: this.user.email, newEmail: this.emailControl.value,
+      firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
+      salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
+      country: this.countryControl.value, city: this.cityControl.value, password: this.user.password};
 
     if (this.emailControl.dirty) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
@@ -117,13 +120,17 @@ export class EditUserComponent implements OnInit {
           this.authService.logoutUser();
           this.userService.updateUser(updatedUser).subscribe(user => this.user,
             error => window.alert('Error during updating User: ' + error.error.message),
-            () => {window.alert('Successfully edited the User'); this.router.navigate(['/login']);});
+            () => {
+            window.alert('Successfully edited the User'); this.router.navigate(['/login']);
+          });
         }
       });
     } else {
       this.userService.updateUser(updatedUser).subscribe(user => this.user,
         error => window.alert('Error during updating User: ' + error.error.message),
-        () => {window.alert('Successfully edited the User'); this.router.navigate(['/']);});
+        () => {
+          window.alert('Successfully edited the User'); this.router.navigate(['/']);
+      });
     }
   }
 
@@ -133,7 +140,7 @@ export class EditUserComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log("result " + result);
+        console.log('result ' + result);
         this.user.password = result;
       });
   }

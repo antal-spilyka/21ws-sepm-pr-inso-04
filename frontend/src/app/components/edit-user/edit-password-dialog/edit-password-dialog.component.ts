@@ -1,10 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormControl, Validators} from "@angular/forms";
-import {AuthRequest} from "../../../dtos/auth-request";
-import {User} from "../../../dtos/user";
-import {AuthService} from "../../../services/auth.service";
-import {DialogData} from "../edit-user.component";
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormControl, Validators} from '@angular/forms';
+import {AuthRequest} from '../../../dtos/auth-request';
+import {AuthService} from '../../../services/auth.service';
+import {DialogData} from '../edit-user.component';
 
 @Component({
   selector: 'app-edit-password-dialog',
@@ -38,9 +37,6 @@ export class EditPasswordDialogComponent implements OnInit {
     if (control.hasError('required')) {
       return 'You must enter a value';
     }
-    if (control.hasError('email')) {
-      return 'Not a valid email';
-    }
     if (control.hasError('minlength')) {
       return 'Not a valid length';
     }
@@ -63,7 +59,7 @@ export class EditPasswordDialogComponent implements OnInit {
   }
 
   /**
-   * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the message page
+   * Send authentication data to the authService. If the authentication was successfully, the password will be changed to a new pwassword
    *
    * @param authRequest authentication data from the user login form
    */
@@ -71,16 +67,15 @@ export class EditPasswordDialogComponent implements OnInit {
     console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
         next: () => {
-          console.log('Successfully logged in user: ' + authRequest.email);
+          console.log('Right old PW');
           this.dialogRef.close(this.newPasswordControl.value);
         },
         error: (error) => {
-          console.log("falsches PW")
+          console.log('falsches PW');
           this.error = true;
           this.errorMessage = 'Wrong old Password';
         }
       }
     );
   }
-
 }
