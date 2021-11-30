@@ -47,7 +47,7 @@ public class UserEndpoint {
     @PermitAll
     @PostMapping("")
     public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult) {
-        LOGGER.info("POST /api/v1/users");
+        LOGGER.info("POST /api/v1/users" + user.toString());
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }

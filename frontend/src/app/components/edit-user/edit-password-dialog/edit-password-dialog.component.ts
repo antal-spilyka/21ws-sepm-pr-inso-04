@@ -1,6 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormControl, Validators} from "@angular/forms";
+import {AuthRequest} from "../../../dtos/auth-request";
+import {User} from "../../../dtos/user";
+import {AuthService} from "../../../services/auth.service";
+import {DialogData} from "../edit-user.component";
 
 @Component({
   selector: 'app-edit-password-dialog',
@@ -9,12 +13,15 @@ import {FormControl, Validators} from "@angular/forms";
 })
 export class EditPasswordDialogComponent implements OnInit {
 
-  passwordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  newPasswordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  oldPasswordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+
   hide = true;
   errorMessage = '';
   error = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: string) { }
+  constructor(private authService: AuthService, public dialogRef: MatDialogRef<EditPasswordDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public dialogData: DialogData) { }
 
   ngOnInit(): void {
   }
@@ -41,6 +48,39 @@ export class EditPasswordDialogComponent implements OnInit {
       return 'Not a valid pattern';
     }
     return '';
+  }
+
+  /**
+   * Form validation will start after the method is called, additionally an AuthRequest will be sent
+   */
+  save(): void {
+    if (this.oldPasswordControl.valid) {
+      const authRequest: AuthRequest = new AuthRequest(this.dialogData.email, this.oldPasswordControl.value);
+      this.authenticateUser(authRequest);
+    } else {
+      console.log('Invalid input');
+    }
+  }
+
+  /**
+   * Send authentication data to the authService. If the authentication was successfully, the user will be forwarded to the message page
+   *
+   * @param authRequest authentication data from the user login form
+   */
+  authenticateUser(authRequest: AuthRequest): void {
+    console.log('Try to authenticate user: ' + authRequest.email);
+    this.authService.loginUser(authRequest).subscribe({
+        next: () => {
+          console.log('Successfully logged in user: ' + authRequest.email);
+          this.dialogRef.close(this.newPasswordControl.value);
+        },
+        error: (error) => {
+          console.log("falsches PW")
+          this.error = true;
+          this.errorMessage = 'Wrong old Password';
+        }
+      }
+    );
   }
 
 }

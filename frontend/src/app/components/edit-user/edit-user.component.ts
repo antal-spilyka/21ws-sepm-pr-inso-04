@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
-import jwt_decode from "jwt-decode";
-import {UserService} from "../../services/user.service";
+import {FormControl, Validators} from '@angular/forms';
+import jwt_decode from 'jwt-decode';
+import {UserService} from '../../services/user.service';
 import {countries} from '../../utils';
-import {User} from "../../dtos/user";
-import {Router} from "@angular/router";
-import {UpdateUserRequest} from "../../dtos/updateUser-request";
-import {AuthService} from "../../services/auth.service";
-import {MatDialog} from "@angular/material/dialog";
-import {EditEmailDialogComponent} from "./edit-email-dialog/edit-email-dialog.component";
-import {EditPasswordDialogComponent} from "./edit-password-dialog/edit-password-dialog.component";
+import {User} from '../../dtos/user';
+import {Router} from '@angular/router';
+import {UpdateUserRequest} from '../../dtos/updateUser-request';
+import {AuthService} from '../../services/auth.service';
+import {MatDialog} from '@angular/material/dialog';
+import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
+import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 
+export interface DialogData {
+  email: string;
+}
 
 @Component({
   selector: 'app-edit-user',
@@ -125,9 +128,12 @@ export class EditUserComponent implements OnInit {
   }
 
   changePassword() {
-      const dialogRef = this.dialog.open(EditPasswordDialogComponent);
+      const dialogRef = this.dialog.open(EditPasswordDialogComponent,  {
+        data: {email: this.user.email},
+      });
 
       dialogRef.afterClosed().subscribe(result => {
+        console.log("result " + result);
         this.user.password = result;
       });
   }

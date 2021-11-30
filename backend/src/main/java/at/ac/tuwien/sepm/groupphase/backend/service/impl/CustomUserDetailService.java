@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
+import at.ac.tuwien.sepm.groupphase.backend.util.EmailServiceImpl;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.security.SecureRandom;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -89,11 +91,11 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setCountry(updatedUser.getCountry());
             toUpdateUser.setStreet(updatedUser.getStreet());
             toUpdateUser.setZip(updatedUser.getZip());
+            toUpdateUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             toUpdateUser.setSalutation(updatedUser.getSalutation());
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());
             toUpdateUser.setEmail(updatedUser.getNewEmail());
-            toUpdateUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");
