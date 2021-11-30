@@ -22,6 +22,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {RegisterComponent} from './components/register/register.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { SearchComponent } from './components/search/search.component';
+import { SearchArtistComponent } from './components/search-artist/search-artist.component';
+import { SearchLocationComponent } from './components/search-location/search-location.component';
+import { SearchEventsComponent } from './components/search-events/search-events.component';
+import { SearchTimeComponent } from './components/search-time/search-time.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
+    SearchComponent,
+    SearchArtistComponent,
+    SearchLocationComponent,
+    SearchEventsComponent,
+    SearchTimeComponent,
   ],
   imports: [
     BrowserModule,
