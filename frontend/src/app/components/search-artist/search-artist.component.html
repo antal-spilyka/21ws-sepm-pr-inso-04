@@ -1,36 +1,25 @@
 <div class="modal-body">
 
   <div class="form-group">
-    <span>Artist Information</span>
     <label for="artistName">Artist Name</label>
     <input type="text" name="artistName" class="form-control" id="artistName"
-           aria-describedby="titleHelp" placeholder="Enter Artist Name" [(ngModel)]="searchQuery.artistName">
+           aria-describedby="titleHelp" placeholder="Enter Artist Name" [(ngModel)]="artistName">
   </div>
-  <!--div>
-    <span>Location</span>
-    <div class="form-group">
-      <label for="denotation">Denotation</label>
-      <textarea rows="3" name="summary" class="form-control" id="denotation"
-                aria-describedby="summaryHelp" placeholder="Enter denotation"
-                [(ngModel)]="searchQuery.denotationLocation"
-                [readOnly]="searchQuery.denotationLocation"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="">Text</label>
-      <textarea rows="6" name="text" class="form-control" id="inputText" required
-                aria-describedby="textHelp" placeholder="Enter text" [(ngModel)]="currentMessage.text"
-                [readOnly]="currentMessage.id"></textarea>
-      <div *ngIf="submitted && messageForm.controls.text.errors" class="error">
-        <small class="form-text text-warning" *ngIf="messageForm.controls.text.errors.required">Your text is
-          required!
-        </small>
-      </div>
-    </div>
+  <input type="submit" value="Search" (click)="onSubmit()" class="btn-primary">
+  <div *ngIf="artistList !== []">
+    <table class="table table-hover">
+      <thead>
+      <th>Artists</th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let artist of artistList">
+        <td>
+          <div class="flex"><span>Name: {{artist.bandName}}</span>
+            <span>Description: {{artist.description}}</span>
+            </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-  <button type="button" (click)="addMessage(messageForm)" id="add-msg" class="btn btn-success float-right"
-          *ngIf="!currentMessage.id">Add message
-  </button>
-
-  </form-->
 </div>

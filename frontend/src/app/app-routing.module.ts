@@ -5,7 +5,7 @@ import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
-import { CreateEventComponent } from './components/create-event/create-event.component';
+import {CreateEventComponent} from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
 import {SearchComponent} from './components/search/search.component';
 import {SearchArtistComponent} from './components/search-artist/search-artist.component';
