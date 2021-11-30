@@ -1,3 +1,5 @@
+import {PaymentInformation} from "./paymentInformation";
+
 export class UpdateUserRequest {
   constructor(
     public email: string,
@@ -11,6 +13,7 @@ export class UpdateUserRequest {
     public zip: string,
     public country: string,
     public street: string,
+    public paymentInformation: PaymentInformation
   ) {
   }
 }

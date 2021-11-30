@@ -3,7 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -17,11 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.security.SecureRandom;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -29,11 +30,13 @@ public class CustomUserDetailService implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     @Override
@@ -81,6 +84,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(UserEditDto updatedUser) {
         LOGGER.trace("Update existing user");
         ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());
@@ -95,6 +99,22 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());
             toUpdateUser.setEmail(updatedUser.getNewEmail());
+            if (updatedUser.getPaymentInformation() != null) {
+                PaymentInformation paymentInformation;
+                if (toUpdateUser.getPaymentInformation() == null) {
+                    paymentInformation = new PaymentInformation();
+                } else {
+                    paymentInformation = paymentInformationRepository.findByUser(toUpdateUser);
+                }
+                paymentInformation.setUser(toUpdateUser);
+                paymentInformation.setCreditCardName(updatedUser.getPaymentInformation().getCreditCardName());
+                paymentInformation.setCreditCardCvv(updatedUser.getPaymentInformation().getCreditCardCvv());
+                paymentInformation.setCreditCardExpirationDate(updatedUser.getPaymentInformation().getCreditCardExpirationDate());
+                paymentInformation.setCreditCardNr(updatedUser.getPaymentInformation().getCreditCardNr());
+                LOGGER.info("update existing info" + paymentInformation.toString());
+
+                paymentInformationRepository.save(paymentInformation);
+            }
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");

@@ -10,6 +10,7 @@ import {AuthService} from '../../services/auth.service';
 import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
+import {PaymentInformation} from '../../dtos/paymentInformation';
 
 export interface DialogData {
   email: string;
@@ -37,10 +38,11 @@ export class EditUserComponent implements OnInit {
     // eslint-disable-next-line max-len
     Validators.pattern(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/im)]);
 
+  creditCardNameControl = new FormControl('', [Validators.required]);
   creditCardExperationMonthControl = new FormControl('', [Validators.required,
     Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
   creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
-  creditCardCsvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
+  creditCardCvvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
   disabledControl = new FormControl(false);
 
   errorMessage = '';
@@ -79,6 +81,13 @@ export class EditUserComponent implements OnInit {
           this.salutationControl.setValue(user.salutation);
           this.phoneControl.setValue(user.phone);
           this.emailControl.setValue(user.email);
+          if (user.paymentInformation != null) {
+            this.creditCardNameControl.setValue(user.paymentInformation.creditCardName);
+            this.creditCardCvvControl.setValue(user.paymentInformation.creditCardCvv);
+            this.creditCardExperationMonthControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(0,2));
+            this.creditCardExperationYearControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(2));
+            this.creditCardNumberControl.setValue(user.paymentInformation.creditCardNr);
+          }
           console.log(this.user);
         },
         error => {
@@ -105,10 +114,19 @@ export class EditUserComponent implements OnInit {
   }
 
   updateUser() {
+    let paymentInformation: PaymentInformation = null;
+    if (this.creditCardCvvControl.valid && this.creditCardNumberControl.valid && this.creditCardExperationYearControl.valid &&
+      this.creditCardExperationMonthControl.valid && this.creditCardNameControl.valid) {
+      paymentInformation = {creditCardName: this.creditCardNameControl.value,
+        creditCardCvv: this.creditCardCvvControl.value, creditCardNr: this.creditCardNumberControl.value,
+      creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value};
+    }
+
     const updatedUser: UpdateUserRequest = {email: this.user.email, newEmail: this.emailControl.value,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
-      country: this.countryControl.value, city: this.cityControl.value, password: this.user.password};
+      country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,
+    paymentInformation};
 
     if (this.emailControl.dirty) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
@@ -140,8 +158,9 @@ export class EditUserComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log('result ' + result);
-        this.user.password = result;
+        if (result != null) {
+          this.user.password = result;
+        }
       });
   }
 

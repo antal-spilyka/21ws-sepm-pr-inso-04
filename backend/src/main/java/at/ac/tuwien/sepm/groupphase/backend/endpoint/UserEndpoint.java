@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -36,9 +39,12 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String BASE_URL = "/api/v1/users";
 
+    private final UserMapper userMapper;
+
     @Autowired
-    public UserEndpoint(UserService userService) {
+    public UserEndpoint(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -83,9 +89,10 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("")
-    public ApplicationUser getUsers(@RequestParam String email) {
+    public UserDto getUsers(@RequestParam String email) {
+        LOGGER.info("GET /api/v1/user " + email);
         try {
-            return userService.findApplicationUserByEmail(email);
+            return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);

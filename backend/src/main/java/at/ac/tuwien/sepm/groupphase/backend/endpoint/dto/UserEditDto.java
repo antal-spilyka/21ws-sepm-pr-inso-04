@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -40,6 +42,8 @@ public class UserEditDto {
 
     @NotNull(message = "Street must not be null")
     private String street;
+
+    private PaymentInformationDto paymentInformation;
 
     public String getEmail() {
         return email;
@@ -129,6 +133,14 @@ public class UserEditDto {
         this.zip = zip;
     }
 
+    public PaymentInformationDto getPaymentInformation() {
+        return paymentInformation;
+    }
+
+    public void setPaymentInformation(PaymentInformationDto paymentInformation) {
+        this.paymentInformation = paymentInformation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -153,6 +165,7 @@ public class UserEditDto {
             + "email='" + email + '\''
             + ", password='" + password + '\''
             + ", street='" + street + '\''
+            + ", paymentInfo='" + paymentInformation + '\''
             + '}';
     }
 

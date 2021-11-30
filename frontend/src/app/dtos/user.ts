@@ -1,3 +1,5 @@
+import {PaymentInformation} from './paymentInformation';
+
 export class User {
   constructor(
     public email: string,
@@ -12,7 +14,8 @@ export class User {
     public zip: string,
     public country: string,
     public street: string,
-    public lockedCounter: number
+    public lockedCounter: number,
+    public paymentInformation: PaymentInformation
   ) {
   }
 }

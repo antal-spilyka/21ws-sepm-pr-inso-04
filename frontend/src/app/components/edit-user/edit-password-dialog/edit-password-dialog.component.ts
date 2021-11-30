@@ -50,7 +50,7 @@ export class EditPasswordDialogComponent implements OnInit {
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
   save(): void {
-    if (this.oldPasswordControl.valid) {
+    if (this.oldPasswordControl.valid && this.newPasswordControl.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.dialogData.email, this.oldPasswordControl.value);
       this.authenticateUser(authRequest);
     } else {
