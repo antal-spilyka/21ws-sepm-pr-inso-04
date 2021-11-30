@@ -6,16 +6,15 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -32,28 +31,21 @@ public class ArtistEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Find artist by search parameters.")
-    public ResponseEntity findArtists(ArtistSearchDto artistSearchDto) {
-        try {
-            ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto).stream(), HttpStatus.OK);
-            return response;
-        } catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unknown error occured.");
-        }
+    public ResponseEntity findArtists(@Validated ArtistSearchDto artistSearchDto) {
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto).stream(), HttpStatus.OK);
+        return response;
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new artist.", security = @SecurityRequirement(name = "apiKey"))
-    public ResponseEntity saveArtist(@RequestBody ArtistDto artistDto) {
+    public ResponseEntity saveArtist(@RequestBody @Validated ArtistDto artistDto) {
         try {
             ResponseEntity response = new ResponseEntity(artistService.save(artistDto), HttpStatus.CREATED);
             return response;
         } catch (ContextException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Artist with same id already exists.");
-        } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unknown error occured.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Artist already exists:  " + e.getLocalizedMessage(), e);
         }
     }
 }

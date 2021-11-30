@@ -16,18 +16,6 @@ export class AddNewsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.events = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filter(value)),
-    );
-  }
-
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.events.filter(event => event.toLowerCase().includes(filterValue));
-  }
-
   setStars(stars: number) {
     this.stars = stars;
   }
@@ -54,5 +42,17 @@ export class AddNewsComponent implements OnInit {
         tap(value => el.scrollLeft += (pixelsToMove * stepArray[value])),
       )
       .subscribe();
+  }
+
+  ngOnInit(): void {
+    this.events = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filter(value)),
+    );
+  }
+
+  private filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.events.filter(event => event.toLowerCase().includes(filterValue));
   }
 }

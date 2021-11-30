@@ -17,7 +17,7 @@ export class CreateActualEventComponent implements OnInit {
   @Input() artist: Artist;
   @Input() room: Room;
   @Input() category: Category;
-  @Input() setErrorFlag: () => void;
+  @Input() setErrorFlag: (message?: string) => void;
 
   disableTyping = true;
   now = new Date().toISOString().split(':');
@@ -55,6 +55,10 @@ export class CreateActualEventComponent implements OnInit {
       eventInquiry.roomId = this.room.id;
       eventInquiry.artistId = this.artist.id;
       eventInquiry.categoryName = this.category.name;
+      if(eventInquiry.dateTime <= new Date()) {
+        this.setErrorFlag('The Date of the event must be in the future');
+        return;
+      }
       console.log(eventInquiry);
       this.eventService.createEvent(eventInquiry).subscribe({
         next: next => {

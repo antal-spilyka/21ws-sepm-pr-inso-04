@@ -101,6 +101,7 @@ export class CreateEventPlaceComponent implements OnInit {
       if(this.form.controls.roomName) {
         this.form.controls.roomName.setValue(null);
       }
+      this.selectedRoom = null;
     }
   }
 
@@ -108,11 +109,15 @@ export class CreateEventPlaceComponent implements OnInit {
     if(!this.form.valid) {
       return;
     }
-    if(this.isNewEventPlace || !(this.selectedRoom)) {
+    console.log(this.isNewRoom, this.isNewEventPlace, this.selectedEventPlace);
+    if(this.isNewEventPlace && !(this.selectedRoom)) {
+      console.log(1);
       await this.submitChanges();
     } else if(this.isNewRoom && this.selectedEventPlace) {
+      console.log(2);
       await this.submitRoomChanges(this.selectedEventPlace.name);
     } else if(!this.isNewRoom && this.selectedEventPlace) {
+      console.log(3);
       await this.submitRoomChanges(this.selectedEventPlace.name);
     } else {
       return;

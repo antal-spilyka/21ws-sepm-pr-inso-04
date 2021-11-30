@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.RoomRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

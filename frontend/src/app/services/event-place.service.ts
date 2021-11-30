@@ -32,6 +32,7 @@ export class EventPlaceService {
    * @returns Observable
    */
   createEventPlace(eventPlace: EventPlace): Observable<EventPlace> {
+    console.log(eventPlace);
     return this.httpClient.post<EventPlace>(this.messageBaseUri, eventPlace);
   }
 }

@@ -14,7 +14,7 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CreateArtistComponent implements OnInit {
 
   @Input() handleNext: (values: any) => void;
-  @Input() setErrorFlag: () => void;
+  @Input() setErrorFlag: (message?: string) => void;
 
   artists: Observable<Artist[]>;
   categories: Observable<Category[]>;
@@ -76,19 +76,26 @@ export class CreateArtistComponent implements OnInit {
     }
   }
 
-  nextStep() {
+  async nextStep() {
     if(!this.form.valid) {
       return;
     }
     if(this.isNewArtist) {
-      this.submitArtistChanges();
+      await this.submitArtistChanges();
     } else {
       this.artistSubmitted = true;
     }
     if(this.isNewCategory) {
-      this.submitCategoryChanges();
+      await this.submitCategoryChanges();
     } else {
       this.categorySubmitted = true;
+    }
+    if(!this.isNewArtist && !this.isNewCategory) {
+      if(!this.selectedArtist || !this.selectedCategory) {
+        this.setErrorFlag('Please Select Artist and Category from Dropdown or create new ones.');
+      } else {
+        this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
+      }
     }
   }
 

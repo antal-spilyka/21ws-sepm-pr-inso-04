@@ -65,7 +65,7 @@ public class EventInquiryDto {
         this.content = content;
     }
 
-    public void setDate(LocalDateTime dateTime) {
+    public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

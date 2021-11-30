@@ -55,6 +55,10 @@ public class EventServiceImpl implements EventService {
             Room room = roomRepository.getById(eventInquiryDto.getRoomId());
             Artist artist = artistRepository.getById(eventInquiryDto.getArtistId());
 
+            if (category == null) {
+                throw new ContextException("Category doesn't exist.");
+            }
+
             Event event = eventMapper.inquiryDtoToEntity(eventInquiryDto, room, category, artist);
             Event persistedEvent =  eventRepository.save(event);
             return eventMapper.entityToDto(persistedEvent);
