@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 
+import java.util.List;
+
 /**
  * Service for working with Event.
  */
@@ -18,4 +20,6 @@ public interface EventService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException when entity already exists
      */
     EventDto createEvent(EventInquiryDto eventInquiryDto);
+
+    List<Event> findEvent(String name);
 }

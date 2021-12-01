@@ -42,6 +42,7 @@ public class EventMapper {
     public EventDto entityToDto(Event event) {
         LOGGER.trace("Mapping {}", event);
         EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
         eventDto.setName(event.getName());
         eventDto.setDuration(event.getDuration());
         eventDto.setContent(event.getContent());
@@ -50,5 +51,19 @@ public class EventMapper {
         eventDto.setRoom(roomMapper.entityToDto(event.getRoom()));
         eventDto.setArtist(artistMapper.entityToDto(event.getArtist()));
         return eventDto;
+    }
+
+    public Event dtoToEntity(EventDto eventDto) {
+        LOGGER.trace("Mapping {}", eventDto);
+        Event event = new Event();
+        event.setId(eventDto.getId());
+        event.setName(eventDto.getName());
+        event.setDuration(eventDto.getDuration());
+        event.setContent(eventDto.getContent());
+        event.setDateTime(eventDto.getDateTime());
+        event.setCategory(categoryMapper.dtoToEntity(eventDto.getCategory()));
+        event.setRoom(roomMapper.dtoToEntity(eventDto.getRoom()));
+        event.setArtist(artistMapper.dtoToEntity(eventDto.getArtist()));
+        return event;
     }
 }

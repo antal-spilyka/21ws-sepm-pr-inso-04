@@ -7,11 +7,9 @@
 .event-image {
   width: 40em;
   max-width: 70%;
-  border: lightgray solid thin;
 }
 
 .div-content {
-  border: red solid thin;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 2em;
@@ -19,7 +17,6 @@
 
 .div-info {
   margin: 1em;
-  border: blue solid thin;
   flex: 1;
   min-width: 20em;
 
@@ -32,7 +29,6 @@
   }
 
   .div-additional-info {
-    border: lawngreen thin solid;
     display: table;
     width: 100%;
     height: 45%;
@@ -88,7 +84,7 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  border-radius: 100px;
+  border-radius: 30px;
   .card {
     display: inline;
   }
@@ -110,11 +106,24 @@
 .additional-events {
   display: flex;
   align-items: center;
+  position: static;
 }
 
 .space-div {
   background: gray;
+  border-radius: 20px;
   height: 50px;
   margin: 2rem auto;
 }
 
+.arrow-left {
+  position: absolute;
+  left: 2rem;
+  background: rgba(128,128,128, 0.5);
+}
+
+.arrow-right {
+  position: absolute;
+  right: 2rem;
+  background: rgba(128,128,128, 0.5);
+}
