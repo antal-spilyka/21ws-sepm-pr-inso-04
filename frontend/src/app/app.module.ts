@@ -31,6 +31,12 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { EditEmailDialogComponent } from './components/edit-user/edit-email-dialog/edit-email-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { EditPasswordDialogComponent } from './components/edit-user/edit-password-dialog/edit-password-dialog.component';
 
 
 @NgModule({
@@ -42,6 +48,9 @@ import {RegisterComponent} from './components/register/register.component';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
+    EditUserComponent,
+    EditEmailDialogComponent,
+    EditPasswordDialogComponent,
     UserListComponent,
     AddNewsComponent,
     CreateEventComponent,
@@ -61,6 +70,10 @@ import {RegisterComponent} from './components/register/register.component';
     MatCheckboxModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatDialogModule
     MatButtonModule,
     MatTooltipModule,
     MatAutocompleteModule,

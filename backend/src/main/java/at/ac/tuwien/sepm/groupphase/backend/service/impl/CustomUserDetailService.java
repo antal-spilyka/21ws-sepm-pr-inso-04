@@ -1,14 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -17,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +32,13 @@ public class CustomUserDetailService implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     @Override
@@ -83,7 +90,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void createUser(UserDto user) {
+    public void createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
         if (foundUser == null) {
@@ -92,6 +99,55 @@ public class CustomUserDetailService implements UserService {
                 user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), 0));
         } else {
             throw new ServiceException("E-mail already used");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(UserEditDto updatedUser) {
+        LOGGER.trace("Update existing user");
+        ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());
+
+        if (updatedUser.getNewEmail() != null) {
+            if (userRepository.findUserByEmail(updatedUser.getNewEmail()) != null && !updatedUser.getNewEmail().equals(updatedUser.getEmail())) {
+                throw new ServiceException("E-mail already used");
+            }
+        }
+
+        if (toUpdateUser != null) {
+            toUpdateUser.setCity(updatedUser.getCity());
+            toUpdateUser.setCountry(updatedUser.getCountry());
+            toUpdateUser.setStreet(updatedUser.getStreet());
+            toUpdateUser.setZip(updatedUser.getZip());
+            if (!updatedUser.getPassword().equals(toUpdateUser.getPassword())) {
+                toUpdateUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+            toUpdateUser.setSalutation(updatedUser.getSalutation());
+            toUpdateUser.setFirstName(updatedUser.getFirstName());
+            toUpdateUser.setLastName(updatedUser.getLastName());
+            if (updatedUser.getNewEmail() == null) {
+                toUpdateUser.setEmail(updatedUser.getEmail());
+            } else {
+                toUpdateUser.setEmail(updatedUser.getNewEmail());
+            }
+            toUpdateUser.setDisabled(updatedUser.getDisabled());
+            if (updatedUser.getPaymentInformation() != null) {
+                PaymentInformation paymentInformation;
+                if (toUpdateUser.getPaymentInformation() == null) {
+                    paymentInformation = new PaymentInformation();
+                } else {
+                    paymentInformation = paymentInformationRepository.findByUser(toUpdateUser);
+                }
+                paymentInformation.setUser(toUpdateUser);
+                paymentInformation.setCreditCardName(updatedUser.getPaymentInformation().getCreditCardName());
+                paymentInformation.setCreditCardCvv(updatedUser.getPaymentInformation().getCreditCardCvv());
+                paymentInformation.setCreditCardExpirationDate(updatedUser.getPaymentInformation().getCreditCardExpirationDate());
+                paymentInformation.setCreditCardNr(updatedUser.getPaymentInformation().getCreditCardNr());
+                paymentInformationRepository.save(paymentInformation);
+            }
+            userRepository.save(toUpdateUser);
+        } else {
+            throw new ServiceException("No User found");
         }
     }
 

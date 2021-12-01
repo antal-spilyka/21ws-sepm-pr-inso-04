@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {User} from '../dtos/user';
+import {UpdateUserRequest} from '../dtos/updateUser-request';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class UserService {
    * @param authRequest User data
    */
   createUser(authRequest: AuthRequest): Observable<string> {
+    console.log(authRequest);
     return this.httpClient.post(this.registerBaseUri, authRequest, {responseType: 'text'});
   }
 
@@ -30,8 +32,10 @@ export class UserService {
    * @param email of the user
    */
   get(email: string): Observable<User> {
+    let params = new HttpParams();
+    params = params.set('email', email);
     console.log('Get user with email address ', email);
-    return this.httpClient.get<User>(this.registerBaseUri + '/' + email);
+    return this.httpClient.get<User>(this.registerBaseUri + '/', {params});
   }
 
   /**
@@ -42,5 +46,15 @@ export class UserService {
     params = params.set('email', email);
     console.log('Get users with email address ', params);
     return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
+  }
+
+  /**
+   * Updates User
+   *
+   * @param User object with updated data
+   */
+  updateUser(user: UpdateUserRequest): Observable<string> {
+    console.log('Update user with email ' + user.email);
+    return this.httpClient.put(this.registerBaseUri, user, {responseType: 'text'});
   }
 }

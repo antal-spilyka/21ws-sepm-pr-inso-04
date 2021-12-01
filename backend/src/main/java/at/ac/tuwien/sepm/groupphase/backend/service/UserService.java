@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,7 +45,14 @@ public interface UserService extends UserDetailsService {
      *
      * @param user that should be registered
      */
-    void createUser(UserDto user);
+    void createUser(UserRegisterDto user);
+
+    /**
+     * Updates an existing user.
+     *
+     * @param user that should be updated with new/old data
+     */
+    void updateUser(UserEditDto user);
 
     /**
      * Increase the lockedCounter of a user.
