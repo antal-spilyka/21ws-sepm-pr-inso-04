@@ -44,7 +44,7 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     EventPlace save(EventPlace eventPlace);
 
     /**
-     * Returns true if entity with id exists
+     * Returns true if entity with id exists.
      *
      * @param name of the eventplace
      * @return boolean

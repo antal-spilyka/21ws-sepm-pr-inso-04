@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
@@ -57,16 +58,28 @@ public class EventServiceImpl implements EventService {
             Category category = categoryRepository.getByName(eventInquiryDto.getCategoryName());
             Room room = roomRepository.getById(eventInquiryDto.getRoomId());
             Artist artist = artistRepository.getById(eventInquiryDto.getArtistId());
-
             if (category == null) {
                 throw new ContextException("Category doesn't exist.");
             }
-
             Event event = eventMapper.inquiryDtoToEntity(eventInquiryDto, room, category, artist);
             Event persistedEvent =  eventRepository.save(event);
             return eventMapper.entityToDto(persistedEvent);
         } catch (EntityExistsException e) {
             throw new ContextException(e);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<EventDto> findEvents(EventSearchDto eventSearchDto) {
+        LOGGER.debug("Handeling in Service {}", eventSearchDto);
+        try {
+            List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getContent(),
+                eventSearchDto.getCategoryName(), eventSearchDto.getDescription(), PageRequest.of(0, 10));
+            return events.stream().map(event ->
+                eventMapper.entityToDto(event)
+            ).collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
