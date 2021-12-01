@@ -61,6 +61,9 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     public EventPlaceDto save(EventPlaceDto eventPlaceDto) {
         LOGGER.debug("Handeling in Service {}", eventPlaceDto);
         try {
+            if(eventPlaceRepository.existsById(eventPlaceDto.getName())) {
+                throw new ContextException("Event with same name already exists.");
+            }
             AddressDto addressDto = eventPlaceDto.getAddressDto();
             if (addressDto == null) {
                 throw new ContextException("Address invalid");

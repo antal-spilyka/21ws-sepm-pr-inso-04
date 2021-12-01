@@ -34,8 +34,8 @@ public class AddressMapper {
         address.setCountry(addressDto.getCountry());
         address.setState(addressDto.getState());
         address.setZip(addressDto.getZip());
-        address.setDescription(address.getDescription());
-        address.setStreet(address.getStreet());
+        address.setDescription(addressDto.getDescription());
+        address.setStreet(addressDto.getStreet());
         return address;
     }
 }

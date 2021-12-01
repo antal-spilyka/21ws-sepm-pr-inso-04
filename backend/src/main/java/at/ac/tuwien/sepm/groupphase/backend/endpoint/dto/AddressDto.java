@@ -20,6 +20,7 @@ public class AddressDto {
         this.description = description;
     }
 
+    @NotNull()
     public String getStreet() {
         return street;
     }
