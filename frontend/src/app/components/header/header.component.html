@@ -16,10 +16,12 @@
 </div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navigationBar">
   <a class="navbar-brand ml-lg-5" href="">SEPM Group Phase</a>
-  <a *ngIf="authService.isLoggedIn()" class="navbar-brand ml-lg-5"  routerLink="/news/add" routerLinkActive="active">Add News</a>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news/add" routerLinkActive="active">Add News</a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
       </li>
@@ -33,7 +35,7 @@
 
     <ul class="navbar-nav mr-5">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a routerLink="/" (click)="authService.logoutUser()">Logout</a>
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </ul>
 
     <ul class="navbar-nav mr-5" *ngIf="!authService.isLoggedIn()">

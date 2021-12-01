@@ -238,7 +238,7 @@ public class UserEndpointTest implements TestData {
     @Test
     public void updateUserWithExistingEmail_shouldThrowException() throws Exception {
         ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
-            .withEmail("test2@email.com")
+            .withEmail("test@email.com")
             .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
             .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
@@ -250,7 +250,7 @@ public class UserEndpointTest implements TestData {
             .withSalutation("mr").withStreet("street 1").withZip("1010").build();
 
         // Post first user
-        String body = objectMapper.writeValueAsString(this.user);
+        String body = objectMapper.writeValueAsString(user);
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
@@ -260,7 +260,7 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
 
         // Post second User
-        body = objectMapper.writeValueAsString(user);
+        body = objectMapper.writeValueAsString(toUpdateUser);
         mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
