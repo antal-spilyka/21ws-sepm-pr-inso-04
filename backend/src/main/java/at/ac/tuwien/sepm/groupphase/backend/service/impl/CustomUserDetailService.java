@@ -69,7 +69,7 @@ public class CustomUserDetailService implements UserService {
     public List<ApplicationUser> findUsers(String email) {
         LOGGER.debug("Find all application users");
         List<ApplicationUser> users;
-        if (email == null || email.length() <= 0 || email.equals(" ") || email.equals("null")) {
+        if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
             users = userRepository.findAll();
         } else {
             users = userRepository.findByEmailContains(email);

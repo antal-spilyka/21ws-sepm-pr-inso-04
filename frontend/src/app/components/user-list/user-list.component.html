@@ -16,7 +16,6 @@
         <mat-form-field class="filter-select" *ngIf="filterToggled">
           <input placeholder="Enter E-Mail Address" matNativeControl (input)="findUsers()" [(ngModel)]="searchEmail">
         </mat-form-field>
-      <mat-icon *ngIf="filterToggled" (click)="findUsers()">search</mat-icon>
       <span *ngIf="!filterToggled"> E-Mail </span>
       <mat-icon *ngIf="!filterToggled" (click)="toggleFilter()">filter_list</mat-icon>
       <mat-icon *ngIf="filterToggled" (click)="toggleFilter()">close</mat-icon>
