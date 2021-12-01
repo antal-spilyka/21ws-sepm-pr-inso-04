@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
@@ -48,6 +50,7 @@ public class EventEndpoint {
         }
     }
 
+    @PermitAll
     @GetMapping
     @Operation(summary = "find events.")
     public Stream<EventDto> findEvent(String name) {

@@ -1,8 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -30,6 +28,7 @@ import {RegisterComponent} from './components/register/register.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -54,6 +53,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MatIconModule,
     MatCheckboxModule,
@@ -63,7 +63,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatTooltipModule,
     MatAutocompleteModule,
     MatInputModule,
-    ReactiveFormsModule,
     FlexLayoutModule,
     MatDatepickerModule,
     MatNativeDateModule,
