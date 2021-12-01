@@ -32,8 +32,10 @@ export class UserService {
    * @param email of the user
    */
   get(email: string): Observable<User> {
+    let params = new HttpParams();
+    params = params.set('email', email);
     console.log('Get user with email address ', email);
-    return this.httpClient.get<User>(this.registerBaseUri + '/' + email);
+    return this.httpClient.get<User>(this.registerBaseUri + '/', {params});
   }
 
   /**
