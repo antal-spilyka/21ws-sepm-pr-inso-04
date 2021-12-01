@@ -31,6 +31,11 @@
         Phone (if given)
       </div>
     </th>
+    <th class="column">
+      <div style="margin-left: 50px">
+        Set Admin
+      </div>
+    </th>
   </tr>
   </thead>
   <tbody>
@@ -38,6 +43,10 @@
     <td class="column"> {{getEmail(user)}} </td>
     <td class="column"> {{getRole(user)}} </td>
     <td class="column"> {{getPhone(user)}} </td>
+    <td class="column">
+      <mat-slide-toggle class="slider" (change)="setAdmin(user)" [(ngModel)]="user.admin">
+      </mat-slide-toggle>
+    </td>
   </tr>
   </tbody>
 </table>

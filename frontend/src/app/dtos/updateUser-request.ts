@@ -4,6 +4,7 @@ export class UpdateUserRequest {
   constructor(
     public email: string,
     public newEmail: string,
+    public admin: boolean,
     public password: string,
     public firstName: string,
     public lastName: string,

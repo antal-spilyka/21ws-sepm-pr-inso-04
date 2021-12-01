@@ -203,9 +203,9 @@ public class UserEndpointTest implements TestData {
         paymentInformation.setCreditCardCvv("123");
         paymentInformation.setCreditCardName("Test");
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 13; i++) {
             UserEditDto.UserEditDtoBuilder user = UserEditDto.UserEditDtoBuilder.aUserDto();
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < 13; j++) {
                 if (j != i) {
                     switch (j) {
                         case 0: user.withEmail("testUserFields@email.com");
@@ -220,6 +220,7 @@ public class UserEndpointTest implements TestData {
                         case 9: user.withZip("1010");
                         case 10: user.withPaymentInformation(paymentInformation);
                         case 11: user.withNewEmail("testNewEmail@email.com");
+                        case 12: user.withAdmin(false);
                     }
                 }
             }
@@ -239,13 +240,13 @@ public class UserEndpointTest implements TestData {
     public void updateUserWithExistingEmail_shouldThrowException() throws Exception {
         ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
             .withEmail("test@email.com")
-            .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
+            .withPassword("password").withAdmin(false).withId(1L).withCity("Wien")
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
             .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
 
         UserEditDto toUpdateUser = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("test2@email.com").withNewEmail("test@email.com")
-            .withPassword("password").withCity("Wien")
+            .withPassword("password").withAdmin(false).withCity("Wien")
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
             .withSalutation("mr").withStreet("street 1").withZip("1010").build();
 

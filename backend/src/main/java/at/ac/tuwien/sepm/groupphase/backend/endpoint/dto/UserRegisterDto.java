@@ -10,6 +10,9 @@ public class UserRegisterDto {
     @Email
     private String email;
 
+    @NotNull(message = "Admin must not be null")
+    private Boolean admin;
+
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
     private String password;
@@ -47,6 +50,14 @@ public class UserRegisterDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getPassword() {
@@ -158,6 +169,7 @@ public class UserRegisterDto {
     public static final class UserRegisterDtoBuilder {
         private String email;
         private String password;
+        private Boolean admin;
         private String firstName;
         private String lastName;
         private String salutation;
@@ -179,6 +191,11 @@ public class UserRegisterDto {
 
         public UserRegisterDtoBuilder withEmail(String email) {
             this.email = email;
+            return this;
+        }
+
+        public UserRegisterDtoBuilder withAdmin(Boolean admin) {
+            this.admin = admin;
             return this;
         }
 
@@ -232,9 +249,20 @@ public class UserRegisterDto {
             return this;
         }
 
+        public UserRegisterDtoBuilder withLocked(Boolean locked) {
+            this.locked = locked;
+            return this;
+        }
+
+        public UserRegisterDtoBuilder withLockedCounter(int lockedCounter) {
+            this.lockedCounter = lockedCounter;
+            return this;
+        }
+
         public UserRegisterDto build() {
             UserRegisterDto userDto = new UserRegisterDto();
             userDto.setEmail(email);
+            userDto.setAdmin(admin);
             userDto.setPassword(password);
             userDto.setFirstName(firstName);
             userDto.setLastName(lastName);

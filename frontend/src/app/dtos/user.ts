@@ -9,7 +9,7 @@ export class User {
     public lastName: string,
     public phone: string,
     public salutation: string,
-    public disabled: string,
+    public disabled: boolean,
     public city: string,
     public zip: string,
     public country: string,

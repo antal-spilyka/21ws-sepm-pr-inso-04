@@ -51,9 +51,10 @@ export class UserService {
   /**
    * Updates User
    *
-   * @param User object with updated data
+   * @param user object with updated data
    */
   updateUser(user: UpdateUserRequest): Observable<string> {
+    console.log("new admin: " + user.admin);
     console.log('Update user with email ' + user.email);
     return this.httpClient.put(this.registerBaseUri, user, {responseType: 'text'});
   }

@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UserDto {
-    private Long id;
 
     @NotNull(message = "Email must not be null")
     @Email
@@ -17,6 +16,7 @@ public class UserDto {
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
     private String password;
 
+    @NotNull(message = "Admin must not be null")
     private Boolean admin;
 
     @NotNull(message = "First name must not be null")
@@ -48,14 +48,6 @@ public class UserDto {
     private Boolean disabled;
 
     private int lockedCounter;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;

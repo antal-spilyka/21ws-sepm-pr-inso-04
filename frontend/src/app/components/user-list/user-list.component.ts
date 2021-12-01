@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {AuthService} from '../../services/auth.service';
@@ -16,7 +16,8 @@ export class UserListComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private userService: UserService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.findUsers();
@@ -70,6 +71,45 @@ export class UserListComponent implements OnInit {
       this.filterToggled = false;
     } else {
       this.filterToggled = true;
+    }
+  }
+
+  setAdmin(user: User) {
+    if (user === null) {
+      console.log('error user not found');
+    } else {
+      let newAdmin: boolean;
+      // admin value of user has already been changed through the switcher
+      if (user.admin) {
+        newAdmin = true;
+      } else {
+       newAdmin = false;
+      }
+      const changedUser = {
+        email: user.email,
+        newEmail: user.email,
+        admin: newAdmin,
+        password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        salutation: user.salutation,
+        city: user.city,
+        zip: user.zip,
+        country: user.country,
+        street: user.street,
+        disabled: user.disabled,
+        paymentInformation: user.paymentInformation
+      };
+      this.userService.updateUser(changedUser).subscribe({
+        next: () => {
+          console.log('User with the e-mail ' + user.email + 'changed');
+        },
+        error: (error) => {
+          this.errorMessage = 'Admin settings of the user can not be changed: ' + error.error;
+          this.error = true;
+        }
+      });
     }
   }
 

@@ -125,6 +125,7 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setSalutation(updatedUser.getSalutation());
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());
+            toUpdateUser.setAdmin(updatedUser.getAdmin());
             if (updatedUser.getNewEmail() == null) {
                 toUpdateUser.setEmail(updatedUser.getEmail());
             } else {

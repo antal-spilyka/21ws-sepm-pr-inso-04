@@ -129,6 +129,7 @@ export class EditUserComponent implements OnInit {
 
     const updatedUser: UpdateUserRequest = {
       email: this.user.email, newEmail: this.emailControl.value,
+      admin: this.user.admin,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,

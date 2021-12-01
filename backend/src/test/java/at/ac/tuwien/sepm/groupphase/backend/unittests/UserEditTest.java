@@ -30,8 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 public class UserEditTest implements TestData {
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -41,6 +39,7 @@ public class UserEditTest implements TestData {
         UserRegisterDto user1 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("hallo@test.com")
             .withPassword("testPassword")
+            .withAdmin(false)
             .withFirstName("test")
             .withLastName("person")
             .withSalutation("mr")
@@ -55,6 +54,7 @@ public class UserEditTest implements TestData {
 
         UserRegisterDto user2 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("test@test.com")
+            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("test2")
             .withLastName("person2")
@@ -81,6 +81,7 @@ public class UserEditTest implements TestData {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("hallo@test.com")
             .withNewEmail("hallo@test.com")
+            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("firstName")
             .withLastName("person")
@@ -104,6 +105,7 @@ public class UserEditTest implements TestData {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("hallo@test.com")
             .withNewEmail("test@test.com")
+            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("firstName")
             .withLastName("person")
@@ -123,6 +125,7 @@ public class UserEditTest implements TestData {
     public void updateNotExistingUser () {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("notExitsing@hallo.com")
+            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("firstName")
             .withLastName("person")
@@ -142,6 +145,7 @@ public class UserEditTest implements TestData {
     public void updateUserWithMissingData () {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("hallo@test.com")
+            .withAdmin(false)
             .withPassword("testPassword")
             .withSalutation("mr")
             .withPhone("+430101011010")
