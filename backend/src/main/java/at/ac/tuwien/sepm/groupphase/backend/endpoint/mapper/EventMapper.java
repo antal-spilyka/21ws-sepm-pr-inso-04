@@ -36,6 +36,7 @@ public class EventMapper {
         event.setCategory(category);
         event.setRoom(room);
         event.setArtist(artist);
+        event.setDescription(eventInquiryDto.getDescription());
         return event;
     }
 
@@ -49,6 +50,7 @@ public class EventMapper {
         eventDto.setCategory(categoryMapper.entityToDto(event.getCategory()));
         eventDto.setRoom(roomMapper.entityToDto(event.getRoom()));
         eventDto.setArtist(artistMapper.entityToDto(event.getArtist()));
+        eventDto.setDescription(event.getDescription());
         return eventDto;
     }
 }

@@ -11,6 +11,15 @@ public class EventDto {
     CategoryDto category;
     RoomDto room;
     ArtistDto artist;
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getName() {
         return name;

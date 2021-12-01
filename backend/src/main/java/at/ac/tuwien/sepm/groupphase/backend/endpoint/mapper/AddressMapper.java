@@ -21,6 +21,8 @@ public class AddressMapper {
         addressDto.setCountry(address.getCountry());
         addressDto.setState(address.getState());
         addressDto.setZip(address.getZip());
+        addressDto.setDescription(address.getDescription());
+        addressDto.setStreet(address.getStreet());
         return addressDto;
     }
 
@@ -32,6 +34,8 @@ public class AddressMapper {
         address.setCountry(addressDto.getCountry());
         address.setState(addressDto.getState());
         address.setZip(addressDto.getZip());
+        address.setDescription(address.getDescription());
+        address.setStreet(address.getStreet());
         return address;
     }
 }

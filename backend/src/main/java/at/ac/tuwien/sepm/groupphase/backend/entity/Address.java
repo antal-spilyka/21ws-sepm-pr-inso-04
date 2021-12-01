@@ -14,6 +14,24 @@ public class Address {
     String state;
     Integer zip;
     String country;
+    String description;
+    String street;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
