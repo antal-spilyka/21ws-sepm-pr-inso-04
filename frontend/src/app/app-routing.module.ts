@@ -7,12 +7,13 @@ import {MessageComponent} from './components/message/message.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
+import {UserListComponent} from './components/user-list/user-list.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'message', component: MessageComponent},
+  {path: 'users', canActivate: [AuthGuard], component: UserListComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},

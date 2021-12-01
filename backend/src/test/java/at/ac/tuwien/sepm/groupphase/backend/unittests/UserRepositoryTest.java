@@ -292,29 +292,47 @@ public class UserRepositoryTest implements TestData {
 
     @Test ()
     public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
-        ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        userRepository.save(user);
+        userRepository.save(user1);
 
         assertAll(
             () -> assertEquals(1, userRepository.findAll().size()),
-            () -> assertNotNull(userRepository.findById(user.getId()))
+            () -> assertNotNull(userRepository.findById(user1.getId()))
         );
-
-
     }
 
+    @Test ()
+    public void givenNothing_whenSaveSeveralUsers_thenFindListOfUsers() {
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+        userRepository.save(user4);
+
+        assertAll(
+            () -> assertEquals(4, userRepository.findAll().size())
+        );
+    }
+
+    @Test ()
+    public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserByEmailContains() {
+        userRepository.save(user1);
+
+        assertAll(
+            () -> assertEquals(1, userRepository.findAll().size()),
+            () -> assertNotNull(userRepository.findByEmailContains("test"))
+        );
+    }
+
+    @Test ()
+    public void givenNothing_whenSaveSeveralUsers_thenFindListOfUsersAndProperSearchResults() {
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+        userRepository.save(user4);
+
+        assertAll(
+            () -> assertEquals(4, userRepository.findAll().size()),
+            () -> assertEquals(2, userRepository.findByEmailContains("user").size()),
+            () -> assertEquals(2, userRepository.findByEmailContains("admin").size())
+        );
+    }
 }
