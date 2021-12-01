@@ -3,6 +3,7 @@ import { Category } from './category';
 import { Room } from './room';
 
 export class EventDto {
+    id?: number;
     name: string;
     duration: number;
     content: string;

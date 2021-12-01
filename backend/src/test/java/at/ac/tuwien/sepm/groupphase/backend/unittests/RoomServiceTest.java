@@ -71,13 +71,13 @@ public class RoomServiceTest {
         RoomDto roomDtoExp = new RoomDto();
         roomDtoExp.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
         roomDtoExp.setName(roomInquiryDto.getName());
-        assertEquals(roomDtoExp, roomDtoPers);
+        assertEquals(roomDtoExp.getName(), roomDtoPers.getName());
 
         RoomSearchDto roomSearchDto = new RoomSearchDto();
         roomSearchDto.setName(roomInquiryDto.getName());
         roomSearchDto.setEventPlaceName(eventPlace.getName());
         List<RoomDto> roomDto = roomService.findRoom(roomSearchDto);
-        assertEquals(roomDto.get(0), roomDtoExp);
+        assertEquals(roomDto.get(0).getName(), roomDtoExp.getName());
     }
 
     @Test

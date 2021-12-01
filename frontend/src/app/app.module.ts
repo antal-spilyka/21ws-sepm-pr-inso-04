@@ -12,7 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -73,7 +73,7 @@ import { EditPasswordDialogComponent } from './components/edit-user/edit-passwor
     MatButtonModule,
     MatCardModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
     MatButtonModule,
     MatTooltipModule,
     MatAutocompleteModule,
@@ -81,7 +81,7 @@ import { EditPasswordDialogComponent } from './components/edit-user/edit-passwor
     ReactiveFormsModule,
     FlexLayoutModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -16,7 +16,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -24,7 +23,6 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -70,5 +68,12 @@ public class EventServiceImpl implements EventService {
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Transactional
+    @Override
+    public List<Event> findEvent(String name) {
+        LOGGER.debug("Find events with name {}.", name);
+        return this.eventRepository.findByNameAllIgnoreCaseContaining(name);
     }
 }
