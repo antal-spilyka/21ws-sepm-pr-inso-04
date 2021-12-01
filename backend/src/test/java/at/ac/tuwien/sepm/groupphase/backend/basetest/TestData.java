@@ -96,8 +96,8 @@ public interface TestData {
 
     ApplicationUser lockedUser = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
         .withEmail("test@email.com")
-        .withPassword("password").
-        withAdmin(true)
+        .withPassword("password")
+        .withAdmin(true)
         .withId(1L)
         .withCity("Wien")
         .withCountry("AL")
