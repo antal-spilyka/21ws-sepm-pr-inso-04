@@ -1,4 +1,4 @@
-import {PaymentInformation} from "./paymentInformation";
+import {PaymentInformation} from './paymentInformation';
 
 export class UpdateUserRequest {
   constructor(
