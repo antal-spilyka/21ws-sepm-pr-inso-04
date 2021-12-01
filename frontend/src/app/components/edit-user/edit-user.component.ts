@@ -41,8 +41,8 @@ export class EditUserComponent implements OnInit {
 
   creditCardNameControl = new FormControl('', [Validators.required]);
   creditCardExperationMonthControl = new FormControl('', [Validators.required,
-    Validators.pattern(/^0[1-9]|1[0-2]$/im), Validators.maxLength(2)]);
-  creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im), Validators.maxLength(4)]);
+    Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
+  creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
   creditCardCvvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
   disabledControl = new FormControl();
 
