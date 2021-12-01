@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class EventDto {
+    Long id;
     String name;
     Integer duration;
     String content;
@@ -11,6 +12,14 @@ public class EventDto {
     CategoryDto category;
     RoomDto room;
     ArtistDto artist;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

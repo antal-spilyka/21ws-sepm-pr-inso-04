@@ -88,7 +88,7 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  border-radius: 100px;
+  border-radius: 30px;
   .card {
     display: inline;
   }
@@ -110,11 +110,24 @@
 .additional-events {
   display: flex;
   align-items: center;
+  position: static;
 }
 
 .space-div {
   background: gray;
+  border-radius: 20px;
   height: 50px;
   margin: 2rem auto;
 }
 
+.arrow-left {
+  position: absolute;
+  left: 2rem;
+  background: rgba(128,128,128, 0.5);
+}
+
+.arrow-right {
+  position: absolute;
+  right: 2rem;
+  background: rgba(128,128,128, 0.5);
+}

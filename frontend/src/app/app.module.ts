@@ -12,7 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
@@ -25,6 +25,8 @@ import { CreateArtistComponent } from './create-event/create-artist/create-artis
 import { CreateActualEventComponent } from './create-event/create-actual-event/create-actual-event.component';
 import {RegisterComponent} from './components/register/register.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { AddNewsComponent } from './components/add-news/add-news.component';
     MatButtonModule,
     MatButtonModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatTooltipModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

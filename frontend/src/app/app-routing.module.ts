@@ -13,11 +13,13 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'message', component: MessageComponent},
+  {path: 'news/add', component: AddNewsComponent},
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'createEvent', /*canActivate: [AuthGuard],*/ component: CreateEventComponent}
+  {path: 'createEvent', /*canActivate: [AuthGuard],*/ component: CreateEventComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent}
 ];

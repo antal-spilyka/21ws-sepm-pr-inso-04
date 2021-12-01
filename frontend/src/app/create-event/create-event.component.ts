@@ -11,7 +11,6 @@ import { Step } from './state';
   styleUrls: ['./create-event.component.scss']
 })
 export class CreateEventComponent implements OnInit {
-
   step: Step = Step.eventPlace;
 
   eventPlace: EventPlace;
@@ -41,5 +40,4 @@ export class CreateEventComponent implements OnInit {
       this.step = Step.event;
     }
   };
-
 }
