@@ -182,6 +182,7 @@ public class UserEditDto {
 
     public static final class UserEditDtoBuilder {
         private String email;
+        private String newEmail;
         private String password;
         private String firstName;
         private String lastName;
@@ -191,6 +192,7 @@ public class UserEditDto {
         private String zip;
         private String city;
         private String street;
+        private PaymentInformationDto paymentInformation;
         private Boolean disabled;
 
         private UserEditDtoBuilder() {
@@ -202,6 +204,11 @@ public class UserEditDto {
 
         public UserEditDtoBuilder withEmail(String email) {
             this.email = email;
+            return this;
+        }
+
+        public UserEditDtoBuilder withNewEmail(String newEmail) {
+            this.newEmail = newEmail;
             return this;
         }
 
@@ -255,9 +262,15 @@ public class UserEditDto {
             return this;
         }
 
+        public UserEditDtoBuilder withPaymentInformation(PaymentInformationDto paymentInformation) {
+            this.paymentInformation = paymentInformation;
+            return this;
+        }
+
         public UserEditDto build() {
             UserEditDto userEditDto = new UserEditDto();
             userEditDto.setEmail(email);
+            userEditDto.setNewEmail(newEmail);
             userEditDto.setPassword(password);
             userEditDto.setFirstName(firstName);
             userEditDto.setLastName(lastName);
@@ -268,6 +281,7 @@ public class UserEditDto {
             userEditDto.setStreet(street);
             userEditDto.setZip(zip);
             userEditDto.setDisabled(disabled);
+            userEditDto.setPaymentInformation(paymentInformation);
             return userEditDto;
         }
     }

@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -158,6 +161,93 @@ public class UserEndpointTest implements TestData {
 
         MockHttpServletResponse response2 = mvcResult2.getResponse();
         assertEquals(HttpStatus.CONFLICT.value(), response2.getStatus());
+
+    }
+
+    @Test
+    public void updateUserWithoutFields_shouldThrowException() throws Exception {
+        PaymentInformationDto paymentInformation = new PaymentInformationDto();
+        paymentInformation.setCreditCardNr("1234123412341234");
+        paymentInformation.setCreditCardExpirationDate("202022");
+        paymentInformation.setCreditCardCvv("123");
+        paymentInformation.setCreditCardName("Test");
+
+        for (int i = 0; i < 10; i++) {
+            UserEditDto.UserEditDtoBuilder user = UserEditDto.UserEditDtoBuilder.aUserDto();
+            for (int j = 0; j < 10; j++) {
+                if (j != i) {
+                    switch (j) {
+                        case 0: user.withEmail("testUserFields@email.com");
+                        case 1: user.withPassword("password");
+                        case 2: user.withCity("Wien");
+                        case 3: user.withCountry("AL");
+                        case 4: user.withDisabled(false);
+                        case 5: user.withFirstName("Gucci");
+                        case 6: user.withLastName("King");
+                        case 7: user.withPhone("0664 123 456");
+                        case 8: user.withStreet("street 1");
+                        case 9: user.withZip("1010");
+                        case 10: user.withPaymentInformation(paymentInformation);
+                        case 11: user.withNewEmail("testNewEmail@email.com");
+                    }
+                }
+            }
+            String body = objectMapper.writeValueAsString(user.build());
+            MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body))
+                .andDo(print())
+                .andReturn();
+
+            MockHttpServletResponse response = mvcResult.getResponse();
+            assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
+        }
+    }
+
+    @Test
+    public void updateUserWithExistingEmail_shouldThrowException() throws Exception {
+        ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
+            .withEmail("test2@email.com")
+            .withPassword("password").withAdmin(true).withId(1L).withCity("Wien")
+            .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
+            .withSalutation("mr").withStreet("street 1").withZip("1010").withLockedCounter(0).build();
+
+        UserEditDto toUpdateUser = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail("test2@email.com").withNewEmail("test@email.com")
+            .withPassword("password").withCity("Wien")
+            .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
+            .withSalutation("mr").withStreet("street 1").withZip("1010").build();
+
+        // Post first user
+        String body = objectMapper.writeValueAsString(this.user);
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response1 = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
+
+        // Post second User
+        body = objectMapper.writeValueAsString(user);
+        mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response2.getStatus());
+
+        // Update Second User with Email of first User
+        body = objectMapper.writeValueAsString(toUpdateUser);
+        MvcResult mvcResult2 = this.mockMvc.perform(put(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response3 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.CONFLICT.value(), response3.getStatus());
 
     }
 

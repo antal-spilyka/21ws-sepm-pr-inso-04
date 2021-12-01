@@ -239,6 +239,7 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
+        private PaymentInformation paymentInformation;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -318,6 +319,11 @@ public class ApplicationUser {
             return this;
         }
 
+        public ApplicationUserBuilder withPaymentInformation(PaymentInformation paymentInformation) {
+            this.paymentInformation = paymentInformation;
+            return this;
+        }
+
         public ApplicationUser build() {
             ApplicationUser applicationUser = new ApplicationUser();
             applicationUser.setId(id);
@@ -333,6 +339,7 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
+            applicationUser.setPaymentInformation(paymentInformation);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

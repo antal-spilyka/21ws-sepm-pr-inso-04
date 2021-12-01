@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../../services/user.service';
@@ -52,7 +52,8 @@ export class EditUserComponent implements OnInit {
 
   user: User;
 
-  constructor(public dialog: MatDialog, private router: Router, private userService: UserService, private authService: AuthService) { }
+  constructor(public dialog: MatDialog, private router: Router, private userService: UserService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.getUser();
@@ -86,7 +87,7 @@ export class EditUserComponent implements OnInit {
           if (user.paymentInformation != null) {
             this.creditCardNameControl.setValue(user.paymentInformation.creditCardName);
             this.creditCardCvvControl.setValue(user.paymentInformation.creditCardCvv);
-            this.creditCardExperationMonthControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(0,2));
+            this.creditCardExperationMonthControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(0, 2));
             this.creditCardExperationYearControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(2));
             this.creditCardNumberControl.setValue(user.paymentInformation.creditCardNr);
           }
@@ -119,69 +120,74 @@ export class EditUserComponent implements OnInit {
     let paymentInformation: PaymentInformation = null;
     if (this.creditCardCvvControl.valid && this.creditCardNumberControl.valid && this.creditCardExperationYearControl.valid &&
       this.creditCardExperationMonthControl.valid && this.creditCardNameControl.valid) {
-      paymentInformation = {creditCardName: this.creditCardNameControl.value,
+      paymentInformation = {
+        creditCardName: this.creditCardNameControl.value,
         creditCardCvv: this.creditCardCvvControl.value, creditCardNr: this.creditCardNumberControl.value,
-      creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value};
+        creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value
+      };
     }
 
-    const updatedUser: UpdateUserRequest = {email: this.user.email, newEmail: this.emailControl.value,
+    const updatedUser: UpdateUserRequest = {
+      email: this.user.email, newEmail: this.emailControl.value,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,
-      disabled: this.disabledControl.value, paymentInformation};
-
-    if (this.emailControl.dirty) {     //email has changed
+      disabled: this.disabledControl.value, paymentInformation
+    };
+    if (this.emailControl.dirty && !(this.emailControl.value === this.user.email)) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
-
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
-        if (result && this.checkEmailAvailability(this.emailControl.value)) {
-          this.authService.logoutUser();
-          this.userService.updateUser(updatedUser).subscribe(user => this.user,
-            error => window.alert('Error during updating User: ' + error.error.message),
-            () => {
-            window.alert('Successfully edited the User'); this.router.navigate(['/']);
+        if (result) {
+          this.userService.get(this.emailControl.value).subscribe({    //check if email is available
+            next: () => {
+              this.errorMessage = 'New Email is not available';
+              this.error = true;
+              this.emailControl.setValue(this.user.email);
+              console.log('Email is not available');
+              return false;
+            },
+            error: (error) => {
+              if (error.status === 404) {
+                console.log('Email is available');
+                this.authService.logoutUser();
+                this.userService.updateUser(updatedUser).subscribe({
+                  next: () => {
+                    window.alert('Successfully edited the User');
+                    this.router.navigate(['/']);
+                  },
+                  // eslint-disable-next-line @typescript-eslint/no-shadow
+                  error: (error) => {
+                    window.alert('Error during updating User: ' + error.error.message);
+                  }
+                });
+              }
+            }
           });
+        } else {
+          this.emailControl.setValue(this.user.email);
         }
-        this.emailControl.setValue(this.user.email);
       });
     } else {
       this.userService.updateUser(updatedUser).subscribe(user => this.user,
         error => window.alert('Error during updating User: ' + error.error.message),
         () => {
-          window.alert('Successfully edited the User'); this.router.navigate(['/']);
-      });
+          window.alert('Successfully edited the User');
+          this.router.navigate(['/']);
+        });
     }
   }
 
   changePassword() {
-      const dialogRef = this.dialog.open(EditPasswordDialogComponent,  {
-        data: {email: this.user.email},
-      });
+    const dialogRef = this.dialog.open(EditPasswordDialogComponent, {
+      data: {email: this.user.email},
+    });
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result != null) {
-          this.user.password = result;
-        }
-      });
-  }
-
-  checkEmailAvailability(email: string): boolean {
-    this.userService.get(email).subscribe({
-      next: () => {
-        this.errorMessage = 'New Email is not available';
-        this.error = true;
-        console.log('Email is not available');
-        return false;
-      },
-      error: (error) => {
-        if (error.status === 409) {
-          console.log('Email is available');
-          return true;
-        }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.user.password = result;
       }
     });
-    return false;
   }
 
   getToken() {

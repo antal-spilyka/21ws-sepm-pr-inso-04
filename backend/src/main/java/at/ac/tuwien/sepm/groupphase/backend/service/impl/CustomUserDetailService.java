@@ -12,6 +12,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -89,6 +90,12 @@ public class CustomUserDetailService implements UserService {
         LOGGER.trace("Update existing user");
         ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());
 
+        if (updatedUser.getNewEmail() != null) {
+            if (userRepository.findUserByEmail(updatedUser.getNewEmail()) != null && !updatedUser.getNewEmail().equals(updatedUser.getEmail())) {
+                throw new ServiceException("E-mail already used");
+            }
+        }
+
         if (toUpdateUser != null) {
             toUpdateUser.setCity(updatedUser.getCity());
             toUpdateUser.setCountry(updatedUser.getCountry());
@@ -118,8 +125,6 @@ public class CustomUserDetailService implements UserService {
                 paymentInformation.setCreditCardCvv(updatedUser.getPaymentInformation().getCreditCardCvv());
                 paymentInformation.setCreditCardExpirationDate(updatedUser.getPaymentInformation().getCreditCardExpirationDate());
                 paymentInformation.setCreditCardNr(updatedUser.getPaymentInformation().getCreditCardNr());
-                LOGGER.info("update existing info" + paymentInformation.toString());
-
                 paymentInformationRepository.save(paymentInformation);
             }
             userRepository.save(toUpdateUser);
