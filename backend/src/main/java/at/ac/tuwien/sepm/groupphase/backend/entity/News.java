@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Column;
 
 @Entity
 public class News {
