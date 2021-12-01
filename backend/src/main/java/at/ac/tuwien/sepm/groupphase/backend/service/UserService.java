@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 
     /**
@@ -25,9 +27,17 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
-     * @return a application user
+     * @return the application user with the given address
      */
     ApplicationUser findApplicationUserByEmail(String email);
+
+    /**
+     * Find all application users in the repository with the given email address.
+     *
+     * @param email address to search for
+     * @return list of application users
+     */
+    List<ApplicationUser> findUsers(String email);
 
     /**
      * Create an application user.

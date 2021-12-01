@@ -1,6 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -17,6 +19,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { AddNewsComponent } from './components/add-news/add-news.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { CreateEventPlaceComponent } from './components/create-event/create-event-place/create-event-place.component';
 import { CreateArtistComponent } from './components/create-event/create-artist/create-artist.component';
@@ -25,10 +30,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
-import { AddNewsComponent } from './components/add-news/add-news.component';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {HttpClientModule} from '@angular/common/http';
+import {UserListComponent} from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import {HttpClientModule} from '@angular/common/http';
     LoginComponent,
     RegisterComponent,
     MessageComponent,
-    AddNewsComponent,
+    UserListComponent,
     AddNewsComponent,
     CreateEventComponent,
     CreateEventPlaceComponent,
@@ -53,7 +55,6 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule,
     BrowserAnimationsModule,
     MatIconModule,
     MatCheckboxModule,
@@ -63,9 +64,10 @@ import {HttpClientModule} from '@angular/common/http';
     MatTooltipModule,
     MatAutocompleteModule,
     MatInputModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatNativeDateModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
