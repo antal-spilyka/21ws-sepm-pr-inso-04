@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Column;
+import javax.persistence.CascadeType;
+import java.util.Objects;
 
 @Entity
 public class News {
@@ -71,5 +73,22 @@ public class News {
 
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof News)) {
+            return false;
+        }
+        News news = (News) o;
+        return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk) && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, event, rating, fsk, shortDescription, longDescription);
     }
 }
