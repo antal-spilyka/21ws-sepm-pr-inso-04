@@ -2,11 +2,15 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 public class ApplicationUser {
@@ -46,6 +50,11 @@ public class ApplicationUser {
 
     @Column(nullable = false, length = 100)
     private String zip;
+
+    @OneToOne(cascade = CascadeType.ALL,
+        fetch = FetchType.LAZY,
+        mappedBy = "user")
+    private PaymentInformation paymentInformation;
 
     @Column(nullable = false)
     private Boolean disabled;
@@ -187,6 +196,14 @@ public class ApplicationUser {
         this.lockedCounter = lockedCounter;
     }
 
+    public PaymentInformation getPaymentInformation() {
+        return paymentInformation;
+    }
+
+    public void setPaymentInformation(PaymentInformation paymentInformation) {
+        this.paymentInformation = paymentInformation;
+    }
+
     @Override
     public String toString() {
         return "ApplicationUser{"
@@ -204,6 +221,7 @@ public class ApplicationUser {
             + ", zip='" + zip + '\''
             + ", disabled=" + disabled
             + ", lockedCounter=" + lockedCounter
+            + ", paymentInformation=" + paymentInformation
             + '}';
     }
 
@@ -221,6 +239,7 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
+        private PaymentInformation paymentInformation;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -300,6 +319,11 @@ public class ApplicationUser {
             return this;
         }
 
+        public ApplicationUserBuilder withPaymentInformation(PaymentInformation paymentInformation) {
+            this.paymentInformation = paymentInformation;
+            return this;
+        }
+
         public ApplicationUser build() {
             ApplicationUser applicationUser = new ApplicationUser();
             applicationUser.setId(id);
@@ -315,6 +339,7 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
+            applicationUser.setPaymentInformation(paymentInformation);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }
