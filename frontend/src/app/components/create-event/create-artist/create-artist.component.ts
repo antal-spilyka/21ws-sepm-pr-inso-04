@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
 import { Artist } from 'src/app/dtos/artist';
 import { Category } from 'src/app/dtos/category';
@@ -14,6 +14,7 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CreateArtistComponent implements OnInit {
 
   @Input() handleNext: (values: any) => void;
+  @Input() setErrorFlag: (message?: string) => void;
 
   artists: Observable<Artist[]>;
   categories: Observable<Category[]>;
@@ -21,11 +22,13 @@ export class CreateArtistComponent implements OnInit {
   selectedCategory: Category;
   isNewArtist = false;
   isNewCategory = false;
+  artistSubmitted = false;
+  categorySubmitted = false;
 
   form = this.formBuilder.group({
-    name: [null],
+    name: [null, Validators.required],
     description: [{value: null, disabled: true}],
-    categoryName: [null]
+    categoryName: [null, Validators.required]
   });
 
   constructor(
@@ -73,16 +76,33 @@ export class CreateArtistComponent implements OnInit {
     }
   }
 
-  nextStep() {
-    const selectedArtist = this.selectedArtist;
-    const selectedCategory = this.selectedCategory;
-    this.handleNext({selectedArtist, selectedCategory});
+  async nextStep() {
+    if(!this.form.valid) {
+      return;
+    }
+    if(this.isNewArtist) {
+      await this.submitArtistChanges();
+    } else {
+      this.artistSubmitted = true;
+    }
+    if(this.isNewCategory) {
+      await this.submitCategoryChanges();
+    } else {
+      this.categorySubmitted = true;
+    }
+    if(!this.isNewArtist && !this.isNewCategory) {
+      if(!this.selectedArtist || !this.selectedCategory) {
+        this.setErrorFlag('Please Select Artist and Category from Dropdown or create new ones.');
+      } else {
+        this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
+      }
+    }
   }
 
   onSelectArtist(artist: Artist) {
-    const { firstName, description } = artist;
+    const { bandName, description } = artist;
     this.selectedArtist = artist;
-    this.form.controls.name.setValue(firstName);
+    this.form.controls.name.setValue(bandName);
     this.form.controls.description.setValue(description);
   }
 
@@ -90,6 +110,45 @@ export class CreateArtistComponent implements OnInit {
     const { name } = category;
     this.selectedCategory = category;
     this.form.controls.categoryName.setValue(name);
+  }
+
+  async submitArtistChanges() {
+    const artist = new Artist();
+    artist.bandName = this.form.value.name;
+    artist.description = this.form.value.description;
+    this.artistService.createArtist(artist).subscribe({
+      next: next => {
+        this.selectedArtist = next;
+      },
+      error: error => {
+        this.setErrorFlag();
+      },
+      complete: () => {
+        this.artistSubmitted = true;
+        if(this.categorySubmitted) {
+          this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
+        }
+      }
+    });
+  }
+
+  async submitCategoryChanges() {
+    const category = new Category();
+    category.name = this.form.value.categoryName;
+    this.categoryService.createCategory(category).subscribe({
+      next: next => {
+        this.selectedCategory = next;
+      },
+      error: error => {
+        this.setErrorFlag();
+      },
+      complete: () => {
+        this.categorySubmitted = true;
+        if(this.artistSubmitted) {
+          this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
+        }
+      }
+    });
   }
 
 }

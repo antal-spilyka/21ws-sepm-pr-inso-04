@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
 import { EventPlace } from 'src/app/dtos/eventPlace';
 import { EventPlaceService } from 'src/app/services/event-place.service';
@@ -16,18 +16,19 @@ import { Address } from 'src/app/dtos/address';
 export class CreateEventPlaceComponent implements OnInit {
 
   @Input() handleNext: (values: any) => void;
+  @Input() setErrorFlag: () => void;
 
   eventPlaces: Observable<EventPlace[]>;
   rooms: Observable<Room[]>;
   selectedEventPlace: EventPlace;
   selectedRoom: Room;
   form = this.formBuilder.group({
-    name: [null],
-    country: [{value: null, disabled: true}],
-    state: [{value: null, disabled: true}],
-    city: [{value: null, disabled: true}],
-    zip: [{value: null, disabled: true}],
-    roomName: [null]
+    name: [null, Validators.required],
+    country: [{value: null, disabled: true}, Validators.required],
+    state: [{value: null, disabled: true}, Validators.required],
+    city: [{value: null, disabled: true}, Validators.required],
+    zip: [{value: null, disabled: true}, Validators.required],
+    roomName: [null, Validators.required]
   });
   isNewEventPlace = false;
   isNewRoom = false;
@@ -48,7 +49,7 @@ export class CreateEventPlaceComponent implements OnInit {
     this.rooms = this.form.get('roomName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => this.selectedEventPlace || !this.isNewRoom ?
+      switchMap(name => this.selectedEventPlace && !this.isNewRoom ?
         this.roomService.findRoom({
         name,  eventPlaceName: this.selectedEventPlace.name
       }) :
@@ -100,22 +101,27 @@ export class CreateEventPlaceComponent implements OnInit {
       if(this.form.controls.roomName) {
         this.form.controls.roomName.setValue(null);
       }
+      this.selectedRoom = null;
     }
   }
 
   async nextStep() {
-    const selectedEventPlace = this.selectedEventPlace;
-    const selectedRoom = this.selectedRoom;
-    if(this.isNewEventPlace) {
-      await this.submitChanges();
-    } else if(this.isNewRoom && selectedEventPlace) {
-      await this.submitRoomChanges(selectedEventPlace.name);
+    if(!this.form.valid) {
+      return;
     }
-    this.handleNext({selectedEventPlace, selectedRoom});
-  }
-
-  sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
+    console.log(this.isNewRoom, this.isNewEventPlace, this.selectedEventPlace);
+    if(this.isNewEventPlace && !(this.selectedRoom)) {
+      console.log(1);
+      await this.submitChanges();
+    } else if(this.isNewRoom && this.selectedEventPlace) {
+      console.log(2);
+      await this.submitRoomChanges(this.selectedEventPlace.name);
+    } else if(!this.isNewRoom && this.selectedEventPlace) {
+      console.log(3);
+      await this.submitRoomChanges(this.selectedEventPlace.name);
+    } else {
+      return;
+    }
   }
 
   async submitChanges() {
@@ -130,13 +136,10 @@ export class CreateEventPlaceComponent implements OnInit {
     this.eventPlaceService.createEventPlace(eventPlace).subscribe({
       next: async next => {
         this.selectedEventPlace = next;
-        console.log(next);
-        this.sleep(2000);
         await this.submitRoomChanges(next.name);
       },
       error: error => {
-        //  TODO: implement error
-        console.log('place', error);
+        this.setErrorFlag();
       }
     });
   }
@@ -151,8 +154,10 @@ export class CreateEventPlaceComponent implements OnInit {
         this.selectedRoom = next;
       },
       error: error => {
-        //  TODO: implement error
-        console.log('room', error);
+        this.setErrorFlag();
+      },
+      complete: () => {
+        this.handleNext({selectedEventPlace: this.selectedEventPlace, selectedRoom: this.selectedRoom});
       }
     });
   }

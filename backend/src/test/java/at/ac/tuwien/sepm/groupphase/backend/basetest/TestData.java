@@ -31,5 +31,7 @@ public interface TestData {
             add("ROLE_USER");
         }
     };
+    String ARTIST_BASE_URI = BASE_URI + "/artists";
+    String CATEGORY_BASE_URI = BASE_URI + "/categories";
 
 }

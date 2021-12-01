@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.RoomMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
@@ -69,7 +70,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomDto save(RoomInquiryDto roomInquiryDto) {
         LOGGER.debug("Handeling in Service {}", roomInquiryDto);
         try {
-            EventPlace eventPlace = eventPlaceRepository.getById(roomInquiryDto.getName());
+            EventPlace eventPlace = eventPlaceRepository.getById(roomInquiryDto.getEventPlaceName());
             if (eventPlace == null) {
                 throw new ContextException("EventPlace does not exist");
             }

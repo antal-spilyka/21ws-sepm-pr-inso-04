@@ -3,7 +3,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CategoryRepository;
@@ -52,6 +55,10 @@ public class EventServiceImpl implements EventService {
             Category category = categoryRepository.getByName(eventInquiryDto.getCategoryName());
             Room room = roomRepository.getById(eventInquiryDto.getRoomId());
             Artist artist = artistRepository.getById(eventInquiryDto.getArtistId());
+
+            if (category == null) {
+                throw new ContextException("Category doesn't exist.");
+            }
 
             Event event = eventMapper.inquiryDtoToEntity(eventInquiryDto, room, category, artist);
             Event persistedEvent =  eventRepository.save(event);

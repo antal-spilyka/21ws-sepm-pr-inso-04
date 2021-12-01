@@ -8,7 +8,7 @@
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <mat-form-field>
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name" [matAutocomplete]="auto">
+                <input matInput required formControlName="name" [matAutocomplete]="auto">
             </mat-form-field>
             <mat-checkbox [checked]="isNewArtist" (change)="handleNewArtist()">
                 Create new Artist
@@ -30,7 +30,7 @@
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <mat-form-field>
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="categoryName" [matAutocomplete]="autoCategory">
+                <input matInput required formControlName="categoryName" [matAutocomplete]="autoCategory">
             </mat-form-field>
             <mat-checkbox [checked]="isNewCategory" (change)="handleNewCategory()">
                 Create new Category
@@ -42,7 +42,7 @@
     </div>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
         <mat-option *ngFor="let artist of artists | async" [value]="artist">
-            {{artist.firstName}}
+            {{artist.bandName}}
         </mat-option>
     </mat-autocomplete>
     <mat-autocomplete #autoCategory="matAutocomplete" (optionSelected)="onSelectCategory($event.option.value)">

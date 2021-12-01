@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
@@ -60,7 +61,11 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     public EventPlaceDto save(EventPlaceDto eventPlaceDto) {
         LOGGER.debug("Handeling in Service {}", eventPlaceDto);
         try {
-            Address address = addressRepository.save(addressMapper.dtoToEntity(eventPlaceDto.getAddressDto()));
+            AddressDto addressDto = eventPlaceDto.getAddressDto();
+            if (addressDto == null) {
+                throw new ContextException("Address invalid");
+            }
+            Address address = addressRepository.save(addressMapper.dtoToEntity(addressDto));
             EventPlace persistedEventPlace = eventPlaceRepository.save(eventPlaceMapper.dtoToEntity(eventPlaceDto, address));
             return eventPlaceMapper.entityToDto(persistedEventPlace);
         } catch (EntityExistsException e) {

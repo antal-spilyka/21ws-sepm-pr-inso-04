@@ -23,6 +23,9 @@ import { CreateEventComponent } from './create-event/create-event.component';
 import { CreateEventPlaceComponent } from './create-event/create-event-place/create-event-place.component';
 import { CreateArtistComponent } from './create-event/create-artist/create-artist.component';
 import { CreateActualEventComponent } from './create-event/create-actual-event/create-actual-event.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -57,11 +60,13 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    MatButtonModule,
+    MatTooltipModule,
+    MatAutocompleteModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatTooltipModule
+    FlexLayoutModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
