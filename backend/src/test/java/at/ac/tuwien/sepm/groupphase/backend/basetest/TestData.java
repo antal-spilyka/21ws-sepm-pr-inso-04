@@ -33,6 +33,8 @@ public interface TestData {
             add("ROLE_USER");
         }
     };
+    String ARTIST_BASE_URI = BASE_URI + "/artists";
+    String CATEGORY_BASE_URI = BASE_URI + "/categories";
 
     ApplicationUser user1 = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
         .withEmail("user1@email.com")
