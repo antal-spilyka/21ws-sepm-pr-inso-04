@@ -1,16 +1,38 @@
 <div class="modal-body">
 
-  <!--div>
+  <div>
 
     <div class="form-group">
-      <label for="denotation">Denotation</label>
-      <textarea rows="3" name="summary" class="form-control" id="denotation"
-                aria-describedby="summaryHelp" placeholder="Enter denotation"
-                [(ngModel)]="searchQuery.denotationLocation"
-                [readOnly]="searchQuery.denotationLocation"></textarea>
+      <label for="descriptionLocation">Description</label>
+      <input type="text" name="descriptionLocation" class="form-control" id="descriptionLocation"
+             aria-describedby="titleHelp" placeholder="Enter Description for Location" [(ngModel)]="artistName">
     </div>
 
     <div class="form-group">
+      <label for="street">Street</label>
+      <input type="text" name="street" class="form-control" id="street"
+             aria-describedby="titleHelp" placeholder="Enter Street" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" name="city" class="form-control" id="city"
+             aria-describedby="titleHelp" placeholder="Enter City" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" name="country" class="form-control" id="country"
+             aria-describedby="titleHelp" placeholder="Enter Country" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="zip">ZIP-Code</label>
+      <input type="number" name="zip" class="form-control" id="zip"
+             aria-describedby="titleHelp" placeholder="Enter ZIP-Code" [(ngModel)]="artistName">
+    </div>
+
+    <!--div class="form-group">
       <label for="">Text</label>
       <textarea rows="6" name="text" class="form-control" id="inputText" required
                 aria-describedby="textHelp" placeholder="Enter text" [(ngModel)]="currentMessage.text"
@@ -20,6 +42,6 @@
           required!
         </small>
       </div>
-    </div>
-  </div-->
+    </div-->
+  </div>
 </div>

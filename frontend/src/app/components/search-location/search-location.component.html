@@ -1,1 +1,41 @@
-<p>search-location works!</p>
+<div class="modal-body">
+
+  <div>
+
+    <div class="form-group">
+      <label for="descriptionEvent">Description</label>
+      <input type="text" name="descriptionEvent" class="form-control" id="descriptionEvent"
+             aria-describedby="titleHelp" placeholder="Enter Description for Event" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="type">Type</label>
+      <input type="text" name="type" class="form-control" id="type"
+             aria-describedby="titleHelp" placeholder="Enter Type" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="duration">Duration  (+/- 30 Minutes)</label>
+      <input type="number" name="duration" class="form-control" id="duration"
+             aria-describedby="titleHelp" placeholder="Enter Duration" [(ngModel)]="artistName">
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content of the Event</label>
+      <input type="text" name="content" class="form-control" id="content"
+             aria-describedby="titleHelp" placeholder="Enter Content" [(ngModel)]="artistName">
+    </div>
+
+    <!--div class="form-group">
+      <label for="">Text</label>
+      <textarea rows="6" name="text" class="form-control" id="inputText" required
+                aria-describedby="textHelp" placeholder="Enter text" [(ngModel)]="currentMessage.text"
+                [readOnly]="currentMessage.id"></textarea>
+      <div *ngIf="submitted && messageForm.controls.text.errors" class="error">
+        <small class="form-text text-warning" *ngIf="messageForm.controls.text.errors.required">Your text is
+          required!
+        </small>
+      </div>
+    </div-->
+  </div>
+</div>
