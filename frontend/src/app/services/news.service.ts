@@ -15,6 +15,7 @@ export class NewsService {
 
   /**
    * Create news, which can be shown later.
+   *
    * @param news which will be added to the datastore.
    */
   save(news: News): Observable<string> {
