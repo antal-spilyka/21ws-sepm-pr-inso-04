@@ -32,9 +32,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
-    @Query("SELECT a FROM Event a WHERE a.duration <= :duration+30 AND a.duration >= :duration-30 OR UPPER(a.content) " +
-        "LIKE UPPER(CONCAT( '%', :content, '%')) OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :categoryName, '%'))" +
-        "OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%'))")
+    @Query("SELECT a FROM Event a WHERE (:duration is null OR (a.duration <= :duration+30 AND a.duration >= :duration-30)) " +
+        "AND (:content is null OR :content='' OR UPPER(a.content) LIKE UPPER(CONCAT( '%', :content, '%'))) AND " +
+        "(:categoryName is null OR :categoryName='' OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :categoryName, '%')))" +
+        "AND (:description is null OR :description='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%')))")
     List<Event> findEvents(@Param("duration") Integer duration, @Param("content") String content,
                            @Param("categoryName") String categoryName, @Param("description") String description,
                            Pageable pageable);
