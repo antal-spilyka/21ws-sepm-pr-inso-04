@@ -1,6 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
