@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Column;
 import javax.persistence.CascadeType;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +24,9 @@ public class News {
 
     @Column(nullable = false)
     private Long fsk;
+
+    @Column(nullable = false)
+    private LocalDateTime createDate;
 
     private String shortDescription;
     private String longDescription;
@@ -75,6 +79,14 @@ public class News {
         this.longDescription = longDescription;
     }
 
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,11 +96,12 @@ public class News {
             return false;
         }
         News news = (News) o;
-        return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk) && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription);
+        return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
+            && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, event, rating, fsk, shortDescription, longDescription);
+        return Objects.hash(id, event, rating, fsk, shortDescription, longDescription, createDate);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,9 +28,10 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> getAll() {
+    public List<News> getNewNews() {
         LOGGER.debug("Get all News");
 
-        return newsRepository.findAll();
+        LocalDateTime beforeSevenDays = LocalDateTime.now().minusDays(7);
+        return newsRepository.findByCreateDateAfter(beforeSevenDays);
     }
 }

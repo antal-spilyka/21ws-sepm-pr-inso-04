@@ -19,5 +19,5 @@ public interface NewsService {
      * Persists a new event.
      *
      */
-    List<News> getAll();
+    List<News> getNewNews();
 }

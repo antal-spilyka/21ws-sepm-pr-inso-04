@@ -27,9 +27,10 @@ export class NewsMainPageComponent implements OnInit {
   }
 
   loadNews(): void {
-    this.newsService.getAll().subscribe(
+    this.newsService.getNewNews().subscribe(
       (news: News[]) => {
         this.news = news;
+        console.log(this.news);
         this.formatDate();
       },
       error => {
@@ -40,6 +41,8 @@ export class NewsMainPageComponent implements OnInit {
 
   formatDate(): void {
     for (const val of this.news) {
+      val.createDate = new Date(val.createDate);
+      console.log(val.createDate);
       val.event.dateTime = new Date(val.event.dateTime);
     }
   }

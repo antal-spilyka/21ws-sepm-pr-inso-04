@@ -47,17 +47,17 @@ public class NewsEndpoint {
     }
 
     /**
-     * Get all news stored in the system.
+     * Get all news which were created in the last 7 days.
      *
      * @return observable list of found news.
      */
     @GetMapping
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public List<NewsDto> getAll() {
-        LOGGER.info("GET /api/v1/news");
+    public List<NewsDto> getNewNews() {
+        LOGGER.info("GET /api/v1/news : newNews");
         try {
-            return newsMapper.entityToDto(newsService.getAll());
+            return newsMapper.entityToDto(newsService.getNewNews());
         } catch (NotFoundException e) {
             throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
         }

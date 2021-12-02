@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class NewsDto {
 
@@ -14,6 +15,9 @@ public class NewsDto {
 
     @NotNull(message = "FSK must not be null")
     private Long fsk;
+
+    @NotNull(message = "createDate must not be null")
+    private LocalDateTime createDate;
 
     private String shortDescription;
     private String longDescription;
@@ -64,5 +68,13 @@ public class NewsDto {
 
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 }

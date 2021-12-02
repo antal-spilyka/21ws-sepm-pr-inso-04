@@ -31,6 +31,7 @@ public class NewsMapper {
         news.setFsk(newsDto.getFsk());
         news.setShortDescription(newsDto.getShortDescription());
         news.setLongDescription(newsDto.getLongDescription());
+        news.setCreateDate(newsDto.getCreateDate());
         return news;
     }
 
@@ -43,6 +44,7 @@ public class NewsMapper {
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
         newsDto.setLongDescription(news.getLongDescription());
+        newsDto.setCreateDate(news.getCreateDate());
         return newsDto;
     }
 

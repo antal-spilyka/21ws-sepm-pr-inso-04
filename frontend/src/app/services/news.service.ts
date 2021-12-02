@@ -28,7 +28,7 @@ export class NewsService {
    *
    * @return observable list of found news.
    */
-  getAll(): Observable<News[]> {
+  getNewNews(): Observable<News[]> {
     console.log('Load all news');
     return this.httpClient.get<News[]>(this.newsBaseUri);
   }

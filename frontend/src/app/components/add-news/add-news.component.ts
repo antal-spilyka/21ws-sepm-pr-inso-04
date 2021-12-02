@@ -60,7 +60,8 @@ export class AddNewsComponent implements OnInit {
 
   save() {
     const newsRequest = {event: this.currentEvent, rating: this.form.controls.rating.value, fsk: this.form.controls.fsk.value,
-    shortDescription: this.form.controls.shortDescription.value, longDescription: this.form.controls.longDescription.value} as News;
+    shortDescription: this.form.controls.shortDescription.value, longDescription: this.form.controls.longDescription.value,
+      createDate: new Date()} as News;
     console.log(newsRequest);
     this.newsService.save(newsRequest).subscribe({
       next: () => {
