@@ -6,8 +6,7 @@
         <h2>
             Step {{this.step + 1}}:
             {{ this.step === 0 ? 'Where does the event take place?': step === 1 ? 'What artist is performing?' :
-            'Additional
-            Information' }}
+            'Additional Information' }}
         </h2>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
             <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">

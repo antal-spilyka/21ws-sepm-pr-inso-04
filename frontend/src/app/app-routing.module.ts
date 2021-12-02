@@ -7,6 +7,7 @@ import {MessageComponent} from './components/message/message.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
+import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 
 const routes: Routes = [
@@ -17,8 +18,9 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},
+  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent}
+  {path: 'edit', component: EditUserComponent},
 ];
 
 @NgModule({

@@ -1,6 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -12,13 +16,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
@@ -34,9 +41,12 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String BASE_URL = "/api/v1/users";
 
+    private final UserMapper userMapper;
+
     @Autowired
-    public UserEndpoint(UserService userService) {
+    public UserEndpoint(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -44,14 +54,34 @@ public class UserEndpoint {
      */
     @PermitAll
     @PostMapping("")
-    public ResponseEntity<String> create(@RequestBody @Validated UserDto user, BindingResult bindingResult) {
-        LOGGER.info("POST " + BASE_URL);
+    public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult) {
+        LOGGER.info("POST " + BASE_URL + " " + user.toString());
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
         try {
             userService.createUser(user);
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /**
+     * Updates an existing user.
+     */
+    @PermitAll
+    @PutMapping("")
+    public ResponseEntity<String> update(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
+        LOGGER.info("PUT /api/v1/users" + user.toString());
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        try {
+            userService.updateUser(user);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
@@ -74,10 +104,10 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("/{email}")
-    public ApplicationUser getUser(@PathVariable String email) {
-        LOGGER.info("GET " + BASE_URL + "/{email}");
+    public UserDto getUser(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/" + email);
         try {
-            return userService.findApplicationUserByEmail(email);
+            return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
