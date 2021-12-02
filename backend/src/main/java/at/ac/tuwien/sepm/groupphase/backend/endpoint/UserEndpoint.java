@@ -104,8 +104,8 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("/{email}")
-    public ApplicationUser getUser(@PathVariable String email) {
-        LOGGER.info("GET " + BASE_URL + "/" + email));
+    public UserDto getUser(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/" + email);
         try {
             return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
         } catch (ServiceException e) {
