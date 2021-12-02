@@ -19,8 +19,8 @@ const routes: Routes = [
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},
+  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent}
 ];
 
 @NgModule({
