@@ -65,14 +65,10 @@ public class UserEndpoint {
         }
 
         try {
-            System.out.println("isAdmin: " + request.isUserInRole("ROLE_ADMIN"));
-            userService.createUser(user, request.isUserInRole("ROLE_ADMIN"));
+            userService.createUser(user);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        } catch (AuthorizationServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized to set admin: " + e.getLocalizedMessage(), e);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

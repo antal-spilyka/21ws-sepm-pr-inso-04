@@ -90,7 +90,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void createUser(UserRegisterDto user, Boolean isAdmin) {
+    public void createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         if (user == null) {
             throw new ServiceException("Please fill out all the mandatory fields");
@@ -98,8 +98,6 @@ public class CustomUserDetailService implements UserService {
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
         if (foundUser != null) {
             throw new ServiceException("E-mail already used");
-        } else if (user.getAdmin() && !isAdmin) {
-            throw new AuthorizationServiceException("Not Authorized");
         } else {
             userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),

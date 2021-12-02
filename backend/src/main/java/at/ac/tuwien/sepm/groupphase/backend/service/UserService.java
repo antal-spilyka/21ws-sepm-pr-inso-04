@@ -46,7 +46,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param user that should be registered
      */
-    void createUser(UserRegisterDto user, Boolean isAdmin);
+    void createUser(UserRegisterDto user);
 
     /**
      * Sets the admin attribute of a user.

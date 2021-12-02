@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,9 +9,6 @@ public class UserRegisterDto {
     @NotNull(message = "Email must not be null")
     @Email
     private String email;
-
-    // optional value which can only be set by an admin
-    private Boolean admin;
 
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
@@ -52,14 +47,6 @@ public class UserRegisterDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Boolean getAdmin() {
-        return admin != null ? admin : false;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
     }
 
     public String getPassword() {
@@ -171,7 +158,6 @@ public class UserRegisterDto {
     public static final class UserRegisterDtoBuilder {
         private String email;
         private String password;
-        private Boolean admin;
         private String firstName;
         private String lastName;
         private String salutation;
@@ -193,11 +179,6 @@ public class UserRegisterDto {
 
         public UserRegisterDtoBuilder withEmail(String email) {
             this.email = email;
-            return this;
-        }
-
-        public UserRegisterDtoBuilder withAdmin(Boolean admin) {
-            this.admin = admin;
             return this;
         }
 
@@ -264,7 +245,6 @@ public class UserRegisterDto {
         public UserRegisterDto build() {
             UserRegisterDto userDto = new UserRegisterDto();
             userDto.setEmail(email);
-            userDto.setAdmin(admin);
             userDto.setPassword(password);
             userDto.setFirstName(firstName);
             userDto.setLastName(lastName);

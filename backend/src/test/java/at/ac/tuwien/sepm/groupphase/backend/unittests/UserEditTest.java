@@ -35,7 +35,6 @@ public class UserEditTest implements TestData {
         UserRegisterDto user1 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("hallo@test.com")
             .withPassword("testPassword")
-            .withAdmin(false)
             .withFirstName("test")
             .withLastName("person")
             .withSalutation("mr")
@@ -46,11 +45,10 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .withDisabled(true)
             .build();
-        userService.createUser(user1, false);
+        userService.createUser(user1);
 
         UserRegisterDto user2 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("test@test.com")
-            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("test2")
             .withLastName("person2")
@@ -62,7 +60,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .withDisabled(true)
             .build();
-        userService.createUser(user2, false);
+        userService.createUser(user2);
     }
 
 

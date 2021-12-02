@@ -42,275 +42,10 @@ public class UserServiceTest implements TestData {
     }
 
     @Test
-    public void createUserWithoutEmail_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutPassword_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutFirstName_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutLastName_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutSalutation_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutPhone_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutCountry_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutCity_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutStreet_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withZip("12345")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutZip_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withDisabled(true)
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
-    public void createUserWithoutDisabled_shouldThrowServiceException() {
-        UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
-            .withEmail("test@email.com")
-            .withPassword("testPassword")
-            .withAdmin(false)
-            .withFirstName("test")
-            .withLastName("person")
-            .withSalutation("mr")
-            .withPhone("+430101011010")
-            .withCountry("Austria")
-            .withCity("Vienna")
-            .withStreet("Test Street")
-            .withZip("12345")
-            .build();
-
-        try {
-            userService.createUser(user, false);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
-            // Should be the case
-        }
-    }
-
-    @Test
     public void createUserWithDuplicatedEmail_shouldThrowServiceException() {
         UserRegisterDto user = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail(newUser1.getEmail())
             .withPassword("testPassword")
-            .withAdmin(false)
             .withFirstName("test")
             .withLastName("person")
             .withSalutation("mr")
@@ -322,8 +57,8 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(newUser1, false);
-            userService.createUser(user, false);
+            userService.createUser(newUser1);
+            userService.createUser(user);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -332,7 +67,7 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void createUser_thenFindUser() {
-        userService.createUser(newUser1, false);
+        userService.createUser(newUser1);
 
         assertAll(
             () -> assertEquals(1, userService.findUsers(null).size()),
@@ -342,9 +77,9 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void createSeveralUsers_thenFindAllUser() {
-        userService.createUser(newUser1, false);
-        userService.createUser(newUser2, false);
-        userService.createUser(newUser3, false);
+        userService.createUser(newUser1);
+        userService.createUser(newUser2);
+        userService.createUser(newUser3);
 
         assertAll(
             () -> assertEquals(3, userService.findUsers(null).size()),
@@ -358,8 +93,8 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void changeAdminRights_thenShowCorrectRightsOfUser() {
-        userService.createUser(newUser1, false);
-        userService.createUser(newAdminUser1, true);
+        userService.createUser(newUser1);
+        userService.createUser(newAdminUser1);
         UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
             .withAdminEmail(newAdminUser1.getEmail())
             .withEmail(newUser1.getEmail())
@@ -376,7 +111,7 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void changeOwnRights_shouldThrowServiceException() {
-        userService.createUser(newAdminUser1, true);
+        userService.createUser(newAdminUser1);
         UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
             .withAdminEmail(newAdminUser1.getEmail())
             .withEmail(newAdminUser1.getEmail())
