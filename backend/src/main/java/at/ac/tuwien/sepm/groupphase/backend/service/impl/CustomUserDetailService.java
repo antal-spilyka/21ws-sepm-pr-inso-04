@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,6 +69,23 @@ public class CustomUserDetailService implements UserService {
         } else {
             userRepository.save(applicationUser);
             return applicationUser;
+        }
+    }
+
+    @Override
+    public List<ApplicationUser> findUsers(String email) {
+        LOGGER.debug("Find all application users");
+        List<ApplicationUser> users;
+        if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
+            users = userRepository.findAll();
+        } else {
+            users = userRepository.findByEmailContains(email);
+        }
+        if (users == null || users.size() <= 0) {
+            throw new NotFoundException("No user found in the repository");
+        } else {
+            userRepository.saveAll(users);
+            return users;
         }
     }
 

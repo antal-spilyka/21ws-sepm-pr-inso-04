@@ -1,0 +1,125 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-12-01T16:36:46.407Z",
+    "end": "2021-12-01T16:36:52.335Z",
+    "duration": 5928,
+    "testsRegistered": 2,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "f528b294-f74b-4316-aae6-eb70fc0528a7",
+      "title": "",
+      "fullFile": "cypress/integration/addMessage.js",
+      "file": "cypress/integration/addMessage.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "d751f049-7189-4e1c-87e0-e4ea95b48068",
+          "title": "add message",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "login",
+              "fullTitle": "add message login",
+              "timedOut": null,
+              "duration": 2367,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.loginAdmin();",
+              "err": {},
+              "uuid": "4d2fc893-3618-473e-906a-e99b93bf3f5e",
+              "parentUUID": "d751f049-7189-4e1c-87e0-e4ea95b48068",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "create message",
+              "fullTitle": "add message create message",
+              "timedOut": null,
+              "duration": 3511,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.createMessage(msgText);",
+              "err": {},
+              "uuid": "405aa194-51ad-41f9-94c0-9e2e4630301e",
+              "parentUUID": "d751f049-7189-4e1c-87e0-e4ea95b48068",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "4d2fc893-3618-473e-906a-e99b93bf3f5e",
+            "405aa194-51ad-41f9-94c0-9e2e4630301e"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 5878,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.3.1"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "overwrite": false,
+        "html": false,
+        "json": true,
+        "reportDir": "cypress/reports/html/.jsons"
+      },
+      "version": "5.2.0"
+    }
+  }
+}

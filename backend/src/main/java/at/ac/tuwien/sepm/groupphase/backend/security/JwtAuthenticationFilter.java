@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -41,19 +42,36 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
         UserLoginDto user = null;
+        int counter = 0;
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
             // Compares the user with CustomUserDetailService#loadUserByUsername and checks if the credentials are correct
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                user.getEmail(),
-                user.getPassword()));
+
+            // Locked users can not log in
+            counter = userService.findApplicationUserByEmail(user.getEmail()).getLockedCounter();
+            if (5 <= counter) {
+                throw new BadCredentialsException("The user is locked");
+            } else {
+                return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    user.getEmail(),
+                    user.getPassword()));
+            }
+        } catch (NotFoundException e) {
+            LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
+            throw new BadCredentialsException("No user found with the given e-mail address", e);
         } catch (IOException e) {
+            LOGGER.error("Wrong API request or JSON schema for user {}", user.getEmail());
             throw new BadCredentialsException("Wrong API request or JSON schema", e);
         } catch (BadCredentialsException e) {
-            if (user != null && user.getEmail() != null) {
-                LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
-                // Increase the lockedCounter of the user
-                userService.updateLockedCounter(user.getEmail());
+            if (counter < 5) {
+                if (user != null && user.getEmail() != null) {
+                    LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
+                    // Increase the lockedCounter of the user
+                    userService.updateLockedCounter(user.getEmail());
+                }
+            } else {
+                LOGGER.error("The user is locked");
+                // LockedCounter will not be increased anymore
             }
             throw e;
         }

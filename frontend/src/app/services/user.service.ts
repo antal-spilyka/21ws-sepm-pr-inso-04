@@ -17,7 +17,7 @@ export class UserService {
   }
 
   /**
-   * Create the user. If it was successful, the user will be logged in
+   * Create the user. If it was successful, the user will be logged in.
    *
    * @param authRequest User data
    */
@@ -27,15 +27,23 @@ export class UserService {
   }
 
   /**
-   * Returns the user with the given e-mail address
+   * Returns the user with the given e-mail address.
    *
    * @param email of the user
    */
   get(email: string): Observable<User> {
+    console.log('Get user with email address ', email);
+    return this.httpClient.get<User>(this.registerBaseUri + '/' + email);
+  }
+
+  /**
+   * Finds the users with the given email. If no email is entered, all the users will be returned.
+   */
+  findUsers(email: string): Observable<User[]> {
     let params = new HttpParams();
     params = params.set('email', email);
-    console.log('Search horse with parameters ', params);
-    return this.httpClient.get<User>(this.registerBaseUri + '/', {params});
+    console.log('Get users with email address ', params);
+    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
   }
 
   /**
