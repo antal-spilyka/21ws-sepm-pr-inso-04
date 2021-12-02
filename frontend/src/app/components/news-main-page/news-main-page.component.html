@@ -1,0 +1,42 @@
+<h1>Welcome</h1>
+
+<!--<div class="news">
+  <div class="scrolling-wrapper" #list>-->
+    <mat-grid-list cols="4" rowHeight="4:5">
+      <div *ngFor="let news of news; index as i">
+        <mat-grid-tile>
+          <mat-card class="news-card">
+            <mat-card-header>
+              <mat-card-title>{{news.event.name}}</mat-card-title>
+              <mat-card-subtitle>{{news.event.dateTime}}</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-md-image src="favicon.ico">
+            <mat-card-content>
+              {{news.shortDescription}}
+            </mat-card-content>
+          </mat-card>
+        </mat-grid-tile>
+      </div>
+    </mat-grid-list>
+ <!-- </div>
+  <button mat-icon-button
+          matTooltip="Scroll left"
+          (click)="scrollLeft(list)"
+          class="arrow-left">
+    <mat-icon>arrow_back_ios</mat-icon>
+  </button>
+  <button mat-icon-button
+          matTooltip="Scroll right"
+          (click)="scrollRight(list)"
+          class="arrow-right">
+    <mat-icon>arrow_forward_ios</mat-icon>
+  </button>
+</div>-->
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{ errorMessage }}</strong>
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+

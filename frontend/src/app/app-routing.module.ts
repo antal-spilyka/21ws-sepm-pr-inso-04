@@ -8,9 +8,10 @@ import {AddNewsComponent} from './components/add-news/add-news.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
 import {UserListComponent} from './components/user-list/user-list.component';
+import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: NewsMainPageComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'users', canActivate: [AuthGuard], component: UserListComponent},

@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 
+import java.util.List;
+
 public interface NewsService {
 
     /**
@@ -12,4 +14,10 @@ public interface NewsService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException when entity already exists
      */
     void save(News news);
+
+    /**
+     * Persists a new event.
+     *
+     */
+    List<News> getAll();
 }

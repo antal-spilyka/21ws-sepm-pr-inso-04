@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -23,5 +24,12 @@ public class NewsServiceImpl implements NewsService {
     public void save(News news) {
         LOGGER.debug("Publish new news {}", news);
         newsRepository.save(news);
+    }
+
+    @Override
+    public List<News> getAll() {
+        LOGGER.debug("Get all News");
+
+        return newsRepository.findAll();
     }
 }

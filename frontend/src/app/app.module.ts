@@ -31,6 +31,10 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {RegisterComponent} from './components/register/register.component';
 import {UserListComponent} from './components/user-list/user-list.component';
+import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatListModule} from "@angular/material/list";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
@@ -47,6 +51,7 @@ import {UserListComponent} from './components/user-list/user-list.component';
     CreateEventPlaceComponent,
     CreateArtistComponent,
     CreateActualEventComponent,
+    NewsMainPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,7 +72,10 @@ import {UserListComponent} from './components/user-list/user-list.component';
     ReactiveFormsModule,
     FlexLayoutModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatCardModule,
+    MatListModule,
+    MatGridListModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
