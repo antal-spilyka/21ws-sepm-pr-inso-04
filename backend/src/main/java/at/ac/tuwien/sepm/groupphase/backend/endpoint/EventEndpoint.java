@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -50,8 +51,13 @@ public class EventEndpoint {
     @GetMapping
     @Operation(summary = "Find events by search parameters.")
     public ResponseEntity findEvents(@Validated EventSearchDto eventSearchDto) {
-        ResponseEntity response = new ResponseEntity(eventService.findEvents(eventSearchDto).stream(), HttpStatus.OK);
-        return response;
+        try {
+            ResponseEntity response = new ResponseEntity(eventService.findEvents(eventSearchDto).stream(), HttpStatus.OK);
+            return response;
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
+        }
     }
 
     @Secured("ROLE_USER")

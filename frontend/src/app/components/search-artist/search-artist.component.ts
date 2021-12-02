@@ -10,8 +10,8 @@ import {Artist} from '../../dtos/artist';
 export class SearchArtistComponent implements OnInit {
   artistName: string;
   artistList: Artist[] = [];
-  private error = false;
-  private errorMessage: string;
+  error = false;
+  errorMessage: string;
   constructor(private artistService: ArtistService) { }
 
   ngOnInit(): void {
@@ -28,6 +28,10 @@ export class SearchArtistComponent implements OnInit {
       }
     );
   }
+  vanishError(): void {
+    this.errorMessage = null;
+    this.error = false;
+  }
 
   private handleError(error: any) {
     console.log(error);
@@ -40,4 +44,5 @@ export class SearchArtistComponent implements OnInit {
       this.errorMessage = error.error.message;
     }
   }
+
 }

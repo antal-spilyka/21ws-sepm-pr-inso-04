@@ -23,7 +23,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
      * @return list of fitting artists
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
-    @Query("SELECT a FROM Artist a WHERE :name is null OR :name = '' OR UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
+    @Query("SELECT a FROM Artist a WHERE UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
     List<Artist> findArtist(@Param("name") String name, Pageable pageable);
 
     /**

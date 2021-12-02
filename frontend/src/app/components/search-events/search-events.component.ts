@@ -14,8 +14,8 @@ export class SearchEventsComponent implements OnInit {
     duration: null, content: '', categoryName: '', description: null,
   };
   eventList: EventDto[] = [];
-  private error = false;
-  private errorMessage: string;
+  error = false;
+  errorMessage: string;
 
   constructor(private eventService: EventService) {
   }
@@ -38,7 +38,10 @@ export class SearchEventsComponent implements OnInit {
       );
     }
   }
-
+  vanishError(): void {
+    this.errorMessage = null;
+    this.error = false;
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;

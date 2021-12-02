@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -78,9 +79,16 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDto> findEvents(EventSearchDto eventSearchDto) {
         LOGGER.debug("Handeling in Service {}", eventSearchDto);
+        if (eventSearchDto.getCategoryName() == null && eventSearchDto.getContent() == null
+            && eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null) {
+            throw new NotFoundException("No address was found for this query");
+        }
         try {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getContent(),
                 eventSearchDto.getCategoryName(), eventSearchDto.getDescription(), PageRequest.of(0, 10));
+            if (events.isEmpty()) {
+                throw new NotFoundException("No events were found for this search query");
+            }
             return events.stream().map(event ->
                 eventMapper.entityToDto(event)
             ).collect(Collectors.toList());

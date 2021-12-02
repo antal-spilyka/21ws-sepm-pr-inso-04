@@ -12,8 +12,8 @@ export class SearchLocationComponent implements OnInit {
     id: null, city: '', state: '', zip: '', country: '', description: '', street: '',
 };
   eventLocations: Address[] = [];
-  private error = false;
-  private errorMessage: string;
+  error = false;
+  errorMessage: string;
   constructor(private eventLocationService: EventLocationService) { }
 
   ngOnInit(): void {
@@ -29,7 +29,10 @@ export class SearchLocationComponent implements OnInit {
       }
     );
   }
-
+  vanishError(): void {
+    this.errorMessage = null;
+    this.error = false;
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;
@@ -41,4 +44,5 @@ export class SearchLocationComponent implements OnInit {
       this.errorMessage = error.error.message;
     }
   }
+
 }
