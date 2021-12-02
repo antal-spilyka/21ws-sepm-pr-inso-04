@@ -57,5 +57,11 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
      */
     Room save(Room room);
 
+    /**
+     * Returns all rooms from the database without any filter.
+     *
+     * @param pageable
+     * @return all rooms.
+     */
     List<Room> getAllBy(Pageable pageable);
 }

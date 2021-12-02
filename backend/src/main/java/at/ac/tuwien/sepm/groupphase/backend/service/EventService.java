@@ -23,7 +23,19 @@ public interface EventService {
      */
     EventDto createEvent(EventInquiryDto eventInquiryDto);
 
+    /**
+     * Finds all event which meet the criteria from dto.
+     *
+     * @param eventSearchDto dto for storing the search criteria.
+     * @return all events that meet the search criteria.
+     */
     List<EventDto> findEvents(EventSearchDto eventSearchDto);
 
+    /**
+     * Finds all event which meet the criteria from dto.
+     *
+     * @param eventDateTimeSearchDto dto for storing the search criteria.
+     * @return all events that meet the search criteria.
+     */
     List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto);
 }

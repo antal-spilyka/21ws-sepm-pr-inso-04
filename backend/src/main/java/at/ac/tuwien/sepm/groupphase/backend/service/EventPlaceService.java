@@ -23,6 +23,13 @@ public interface EventPlaceService {
      */
     List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
+
+    /**
+     * FInds eventLocations with matching properties.
+     *
+     * @param eventLocationSearchDto dto for storing the search information.
+     * @return a list with all the addresses that meet search criteria.
+     */
     List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
 

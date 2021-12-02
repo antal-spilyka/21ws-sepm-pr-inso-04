@@ -33,6 +33,16 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param duration
+     * @param content
+     * @param categoryName
+     * @param description
+     * @param pageable
+     * @return all matching events.
+     */
     @Query("SELECT a FROM Event a WHERE (:duration is null OR (a.duration <= :duration+30 AND a.duration >= :duration-30)) " +
         "AND (:content is null OR :content='' OR UPPER(a.content) LIKE UPPER(CONCAT( '%', :content, '%'))) AND " +
         "(:categoryName is null OR :categoryName='' OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :categoryName, '%')))" +
@@ -41,12 +51,28 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                            @Param("categoryName") String categoryName, @Param("description") String description,
                            Pageable pageable);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param dateTimeFrom
+     * @param dateTimeTill
+     * @param event
+     * @param roomId
+     * @return all matching events.
+     */
     @Query("SELECT a FROM Event a WHERE (:dateTime is null OR (a.dateTime <= :dateTimeTill AND a.dateTime >= :dateTimeFrom)) " +
         "AND (:event is null OR :event='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :event, '%'))) AND (:roomId is null " +
         "OR a.room = :roomId)")
     List<Event> findEventsWithDateTime(@Param("dateTimeFrom") LocalDateTime dateTimeFrom, @Param("dateTimeTill") LocalDateTime dateTimeTill,
                                      @Param("event") String event, @Param("roomId") Long roomId);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param event
+     * @param roomId
+     * @return all matching events.
+     */
     @Query("SELECT a FROM Event a WHERE (:event is null OR :event='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :event, '%'))) " +
         "AND (:roomId is null OR a.room = :roomId)")
     List<Event> findEventsWithoutDateTime(@Param("event") String event, @Param("roomId") Long roomId);

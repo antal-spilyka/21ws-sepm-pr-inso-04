@@ -31,6 +31,11 @@ public interface RoomService {
      */
     RoomDto getById(Long id);
 
+    /**
+     * Methode for returning all rooms from database.
+     *
+     * @return all the rooms stored in database
+     */
     List<RoomDto> getAll();
 
     /**
