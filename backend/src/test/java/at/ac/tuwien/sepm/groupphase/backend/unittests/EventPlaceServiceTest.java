@@ -37,7 +37,7 @@ public class EventPlaceServiceTest {
     @Test
     public void insert_eventPlace_and_search() {
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
+        addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");

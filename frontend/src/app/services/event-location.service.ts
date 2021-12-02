@@ -20,23 +20,23 @@ export class EventLocationService {
    */
   findEventLocation(searchAddress: Address): Observable<Address[]> {
     let params = new HttpParams();
-    if(searchAddress.city !== ''){
-      params=params.set('city', searchAddress.city);
+    if(searchAddress.city !== '' && searchAddress.city !== null){
+      params=params.set('city', searchAddress.city.trim());
     }
-    if(searchAddress.state !== ''){
-      params=params.set('state', searchAddress.state);
+    if(searchAddress.state !== '' && searchAddress.state !== null){
+      params=params.set('state', searchAddress.state.trim());
     }
-    if(searchAddress.zip !== null){
-      params=params.set('zip', searchAddress.zip);
+    if(searchAddress.zip !== null && searchAddress.zip !== ''){
+      params=params.set('zip', searchAddress.zip.trim());
     }
-    if(searchAddress.country !== ''){
-      params=params.set('country', searchAddress.country);
+    if(searchAddress.country !== '' && searchAddress.country !== null ){
+      params=params.set('country', searchAddress.country.trim());
     }
-    if(searchAddress.description !== ''){
-      params=params.set('description', searchAddress.description);
+    if(searchAddress.description !== '' && searchAddress.description !== null){
+      params=params.set('description', searchAddress.description.trim());
     }
-    if(searchAddress.street !== ''){
-      params=params.set('street', searchAddress.street);
+    if(searchAddress.street !== '' && searchAddress.street !== null){
+      params=params.set('street', searchAddress.street.trim());
     }
     return this.httpClient.get<Address[]>(this.messageBaseUri, { params });
   }

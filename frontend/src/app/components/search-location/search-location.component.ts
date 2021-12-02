@@ -9,7 +9,7 @@ import {EventLocationService} from '../../services/event-location.service';
 })
 export class SearchLocationComponent implements OnInit {
   searchAddress: Address = {
-    id: null, city: '', state: '', zip: null, country: '', description: '', street: '',
+    id: null, city: '', state: '', zip: '', country: '', description: '', street: '',
 };
   eventLocations: Address[] = [];
   private error = false;

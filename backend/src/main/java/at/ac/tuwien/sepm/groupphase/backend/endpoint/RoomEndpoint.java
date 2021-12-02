@@ -39,6 +39,14 @@ public class RoomEndpoint {
         return response;
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/search")
+    @Operation(summary = "Get the list of all rooms.")
+    public ResponseEntity getAllRooms() {
+        ResponseEntity response = new ResponseEntity(roomService.getAll().stream(), HttpStatus.OK);
+        return response;
+    }
+
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new room.")

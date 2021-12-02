@@ -43,7 +43,7 @@ public class RoomServiceTest {
     @BeforeAll
     public void insertEventPlace() {
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
+        addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");

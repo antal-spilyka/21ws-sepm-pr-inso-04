@@ -38,4 +38,13 @@ export class RoomService {
     console.log(roomInquiry);
     return this.httpClient.post<Room>(this.messageBaseUri, roomInquiry);
   }
+  /**
+   * Get list with all rooms.
+   *
+   * @returns Observable of Room.
+   */
+  getAllRooms(): Observable<Room[]> {
+    console.log('Getting the list of all rooms');
+    return this.httpClient.get<Room[]>(this.messageBaseUri + '/search');
+  }
 }

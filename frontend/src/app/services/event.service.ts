@@ -5,6 +5,7 @@ import { EventDto } from '../dtos/eventDto';
 import { EventInquiry } from '../dtos/eventInquiry';
 import { Globals } from '../global/globals';
 import {Address} from '../dtos/address';
+import {EventSearchDto} from '../dtos/eventSearchDto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,19 +20,19 @@ export class EventService {
     return this.httpClient.post<EventDto>(this.messageBaseUri, eventInquiry);
   }
 
-  findEvent(searchEvent: EventInquiry): Observable<EventDto[]> {
+  findEvent(searchEvent: EventSearchDto): Observable<EventDto[]> {
     let params = new HttpParams();
     if(searchEvent.duration !== null){
       params=params.set('duration', searchEvent.duration);
     }
-    if(searchEvent.content !== ''){
-      params=params.set('content', searchEvent.content);
+    if(searchEvent.content !== '' && searchEvent.content !== null){
+      params=params.set('content', searchEvent.content.trim());
     }
-    if(searchEvent.categoryName !== ''){
-      params=params.set('categoryName', searchEvent.categoryName);
+    if(searchEvent.categoryName !== '' && searchEvent.categoryName !== null){
+      params=params.set('categoryName', searchEvent.categoryName.trim());
     }
-    if(searchEvent.description !== ''){
-      params=params.set('description', searchEvent.description);
+    if(searchEvent.description !== '' && searchEvent.description !== null){
+      params=params.set('description', searchEvent.description.trim());
     }
     return this.httpClient.get<EventDto[]>(this.messageBaseUri, { params });
   }

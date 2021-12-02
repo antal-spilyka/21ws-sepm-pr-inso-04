@@ -36,7 +36,15 @@ public class ArtistEndpoint {
     @GetMapping
     @Operation(summary = "Find artist by search parameters.")
     public ResponseEntity findArtists(@Validated ArtistSearchDto artistSearchDto) {
-        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto).stream(), HttpStatus.OK);
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 2).stream(), HttpStatus.OK);
+        return response;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/search")
+    @Operation(summary = "Search artists by search parameters.")
+    public ResponseEntity searchArtists(@Validated ArtistSearchDto artistSearchDto) {
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
         return response;
     }
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Search} from '../../dtos/search';
 import {ArtistService} from '../../services/artist.service';
 import {Artist} from '../../dtos/artist';
 
@@ -9,12 +8,6 @@ import {Artist} from '../../dtos/artist';
   styleUrls: ['./search-artist.component.scss']
 })
 export class SearchArtistComponent implements OnInit {
-  searchQuery: Search = {
-    artistName: null, denotationLocation: null, street: null, city: null,
-    country: null, denotationType: null, duration: null, type: null,
-    date: null, time: null, price: null
-  };
-
   artistName: string;
   artistList: Artist[] = [];
   private error = false;
@@ -25,7 +18,7 @@ export class SearchArtistComponent implements OnInit {
   }
 
    onSubmit() {
-    this.artistService.findArtist(this.artistName).subscribe(
+    this.artistService.searchArtist(this.artistName).subscribe(
       {
         next: artists => {
           console.log(this.artistList);

@@ -6,7 +6,7 @@ public class EventLocationSearchDto {
     private String country;
     private String description;
     private String street;
-    private Integer zip;
+    private String zip;
 
     public String getCity() {
         return city;
@@ -48,11 +48,11 @@ public class EventLocationSearchDto {
         this.street = street;
     }
 
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 
