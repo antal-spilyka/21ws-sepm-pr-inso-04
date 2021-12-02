@@ -4,46 +4,11 @@
   position: static;
 }
 
-.arrow-left {
-  position: absolute;
-  left: 2rem;
-  background: rgba(128,128,128, 0.5);
-}
-
-.arrow-right {
-  position: absolute;
-  right: 2rem;
-  background: rgba(128,128,128, 0.5);
-}
-
-.scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  border-radius: 30px;
-  .card {
-    display: inline;
-  }
-}
-
-.scrolling-wrapper-flexbox {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: fragments;
-}
-
-.scrolling-wrapper, .scrolling-wrapper-flexbox {
-  -webkit-overflow-scrolling: touch;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 .news-card {
   width: calc(100% - 10px);
   height: calc(100% - 10px);
   margin-bottom: 8px;
-  background-color: aquamarine;
+  background-color: #e8e8e8;
 }
 
 

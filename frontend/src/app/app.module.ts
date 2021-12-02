@@ -33,8 +33,7 @@ import {RegisterComponent} from './components/register/register.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatCardModule} from '@angular/material/card';
-import {MatListModule} from "@angular/material/list";
-import {MatGridListModule} from "@angular/material/grid-list";
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -74,7 +73,6 @@ import {MatGridListModule} from "@angular/material/grid-list";
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
-    MatListModule,
     MatGridListModule
   ],
   providers: [httpInterceptorProviders],
