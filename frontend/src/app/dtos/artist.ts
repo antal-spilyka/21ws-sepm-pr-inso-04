@@ -1,5 +1,5 @@
 export class Artist {
-    id: number;
-    bandName: string;
-    description: string;
+  id: number;
+  bandName: string;
+  description: string;
 }

@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
-import { EventPlace } from 'src/app/dtos/eventPlace';
-import { EventPlaceService } from 'src/app/services/event-place.service';
-import { Room } from 'src/app/dtos/room';
-import { RoomService } from 'src/app/services/room.service';
-import { RoomInquiry } from 'src/app/dtos/RoomInquiry';
-import { Address } from 'src/app/dtos/address';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {debounceTime, distinctUntilChanged, Observable, switchMap} from 'rxjs';
+import {EventPlace} from 'src/app/dtos/eventPlace';
+import {EventPlaceService} from 'src/app/services/event-place.service';
+import {Room} from 'src/app/dtos/room';
+import {RoomService} from 'src/app/services/room.service';
+import {RoomInquiry} from 'src/app/dtos/RoomInquiry';
+import {Address} from 'src/app/dtos/address';
 
 @Component({
   selector: 'app-create-event-place',
@@ -34,16 +34,16 @@ export class CreateEventPlaceComponent implements OnInit {
   isNewRoom = false;
 
   constructor(
-      private formBuilder: FormBuilder,
-      private eventPlaceService: EventPlaceService,
-      private roomService: RoomService
-    ) {
+    private formBuilder: FormBuilder,
+    private eventPlaceService: EventPlaceService,
+    private roomService: RoomService
+  ) {
     this.eventPlaces = this.form.get('name').valueChanges.pipe(
-        distinctUntilChanged(),
-        debounceTime(500),
-        switchMap(name => !this.isNewEventPlace ?
-          this.eventPlaceService.findEventPlace(name) :
-          new Observable<EventPlace[]>()
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap(name => !this.isNewEventPlace ?
+        this.eventPlaceService.findEventPlace(name) :
+        new Observable<EventPlace[]>()
       )
     );
     this.rooms = this.form.get('roomName').valueChanges.pipe(
@@ -51,10 +51,10 @@ export class CreateEventPlaceComponent implements OnInit {
       debounceTime(500),
       switchMap(name => this.selectedEventPlace && !this.isNewRoom ?
         this.roomService.findRoom({
-        name,  eventPlaceName: this.selectedEventPlace.name
-      }) :
-      new Observable<Room[]>()
-    )
+          name, eventPlaceName: this.selectedEventPlace.name
+        }) :
+        new Observable<Room[]>()
+      )
     );
   }
 
@@ -70,22 +70,23 @@ export class CreateEventPlaceComponent implements OnInit {
   }
 
   onSelectRoom(room: Room) {
-    const { name } = room;
+    const {name} = room;
     this.selectedRoom = room;
     this.form.controls.roomName.setValue(name);
   }
 
   handleNewEventPlace() {
     this.isNewEventPlace = !this.isNewEventPlace;
-    if(!this.isNewEventPlace) {
+    if (!this.isNewEventPlace) {
       this.form.controls.country.disable();
       this.form.controls.city.disable();
       this.form.controls.state.disable();
       this.form.controls.zip.disable();
     } else {
-      if(this.form.controls.artist) {
+      if (this.form.controls.artist) {
         this.form.controls.artist.setValue(null);
-      };
+      }
+      ;
       this.form.controls.country.enable();
       this.form.controls.city.enable();
       this.form.controls.state.enable();
@@ -96,9 +97,9 @@ export class CreateEventPlaceComponent implements OnInit {
 
   handleNewRoom() {
     this.isNewRoom = !this.isNewRoom;
-    if(this.isNewRoom) {
+    if (this.isNewRoom) {
       this.selectedRoom = null;
-      if(this.form.controls.roomName) {
+      if (this.form.controls.roomName) {
         this.form.controls.roomName.setValue(null);
       }
       this.selectedRoom = null;
@@ -106,17 +107,17 @@ export class CreateEventPlaceComponent implements OnInit {
   }
 
   async nextStep() {
-    if(!this.form.valid) {
+    if (!this.form.valid) {
       return;
     }
     console.log(this.isNewRoom, this.isNewEventPlace, this.selectedEventPlace);
-    if(this.isNewEventPlace && !(this.selectedRoom)) {
+    if (this.isNewEventPlace && !(this.selectedRoom)) {
       console.log(1);
       await this.submitChanges();
-    } else if(this.isNewRoom && this.selectedEventPlace) {
+    } else if (this.isNewRoom && this.selectedEventPlace) {
       console.log(2);
       await this.submitRoomChanges(this.selectedEventPlace.name);
-    } else if(!this.isNewRoom && this.selectedEventPlace) {
+    } else if (!this.isNewRoom && this.selectedEventPlace) {
       console.log(3);
       await this.submitRoomChanges(this.selectedEventPlace.name);
     } else {

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Globals } from '../global/globals';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Artist } from '../dtos/artist';
+import {Injectable} from '@angular/core';
+import {Globals} from '../global/globals';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Artist} from '../dtos/artist';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ export class ArtistService {
 
   private messageBaseUri: string = this.globals.backendUri + '/artists';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
 
   /**
    * Finds artist by name.
@@ -22,7 +23,7 @@ export class ArtistService {
   findArtist(searchName: string): Observable<Artist[]> {
     let params = new HttpParams();
     params = params.set('misc', searchName);
-    return this.httpClient.get<Artist[]>(this.messageBaseUri, { params });
+    return this.httpClient.get<Artist[]>(this.messageBaseUri, {params});
   }
 
   /**

@@ -48,4 +48,40 @@ public class UserAdminDto {
             + ", admin='" + admin + '\''
             + '}';
     }
+
+    public static final class UserAdminDtoBuilder {
+        private String adminEmail;
+        private String email;
+        private Boolean admin;
+
+        private UserAdminDtoBuilder() {
+        }
+
+        public static UserAdminDto.UserAdminDtoBuilder anUserAdminDto() {
+            return new UserAdminDto.UserAdminDtoBuilder();
+        }
+
+        public UserAdminDto.UserAdminDtoBuilder withAdminEmail(String adminEmail) {
+            this.adminEmail = adminEmail;
+            return this;
+        }
+
+        public UserAdminDto.UserAdminDtoBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserAdminDto.UserAdminDtoBuilder withAdmin(Boolean admin) {
+            this.admin = admin;
+            return this;
+        }
+
+        public UserAdminDto build() {
+            UserAdminDto userAdminDto = new UserAdminDto();
+            userAdminDto.setAdminEmail(adminEmail);
+            userAdminDto.setEmail(email);
+            userAdminDto.setAdmin(admin);
+            return userAdminDto;
+        }
+    }
 }

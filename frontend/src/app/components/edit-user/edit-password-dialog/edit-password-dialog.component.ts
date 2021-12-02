@@ -20,7 +20,8 @@ export class EditPasswordDialogComponent implements OnInit {
   error = false;
 
   constructor(private authService: AuthService, public dialogRef: MatDialogRef<EditPasswordDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public dialogData: DialogData) { }
+              @Inject(MAT_DIALOG_DATA) public dialogData: DialogData) {
+  }
 
   ngOnInit(): void {
   }

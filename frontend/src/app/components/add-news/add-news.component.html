@@ -17,7 +17,8 @@
             <mat-label>Choose Event</mat-label>
             <input type="text" matInput [matAutocomplete]="auto" formControlName="chosenEvent">
             <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let event of events | async" (onSelectionChange)="setChosenEvent(event)" [value]="event.name">
+              <mat-option *ngFor="let event of events | async" (onSelectionChange)="setChosenEvent(event)"
+                          [value]="event.name">
                 {{event.name}}
               </mat-option>
             </mat-autocomplete>
@@ -65,17 +66,17 @@
       <img class="additional-event-image card" src="favicon.ico">
     </div>
     <button mat-icon-button
-              matTooltip="Scroll left"
-              (click)="scrollLeft(list)"
-              class="arrow-left">
-        <mat-icon>arrow_back_ios</mat-icon>
-      </button>
-      <button mat-icon-button
-              matTooltip="Scroll right"
-              (click)="scrollRight(list)"
-              class="arrow-right">
-        <mat-icon>arrow_forward_ios</mat-icon>
-      </button>
+            matTooltip="Scroll left"
+            (click)="scrollLeft(list)"
+            class="arrow-left">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <button mat-icon-button
+            matTooltip="Scroll right"
+            (click)="scrollRight(list)"
+            class="arrow-right">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
   </div>
 
   <div class="space-div"></div>

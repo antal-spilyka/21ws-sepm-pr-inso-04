@@ -5,7 +5,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {User} from '../dtos/user';
 import {UpdateUserRequest} from '../dtos/updateUser-request';
-import {AdminRequest} from "../dtos/admin-request";
+import {AdminRequest} from '../dtos/admin-request';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,8 @@ export class UserService {
       console.log('Get all users');
     } else {
       console.log('Get users with email address ', email);
-    }    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
+    }
+    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
   }
 
   /**

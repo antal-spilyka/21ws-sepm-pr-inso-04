@@ -2,10 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
@@ -135,7 +132,7 @@ public class UserEndpointTest implements TestData {
     }
 
     @Test
-    public void createUserWithSameEmailTwice_shouldThrowException() throws Exception {
+    public void createUserWithSameEmailTwice_shouldReturnHttpStatusConflict() throws Exception {
         String body = objectMapper.writeValueAsString(user1);
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -368,64 +365,16 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // Make user admin
+        String body3 = objectMapper.writeValueAsString(UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
+            .withEmail(user2.getEmail()).withAdminEmail(user1.getEmail()).withAdmin(true).build());
         MvcResult mvcResult3 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
                 .header(securityProperties.getAuthHeader(), response2.getContentAsString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(true)))
+                .content(body3))
             .andDo(print())
             .andReturn();
 
         MockHttpServletResponse response3 = mvcResult3.getResponse();
         assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
-    }
-
-    @Test
-    public void setAdminWithAdminRights_shouldReturnHttpStatusOkAndChangeValue() throws Exception {
-        String body = objectMapper.writeValueAsString(user2);
-
-        // Register user to be changed
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
-            .andDo(print())
-            .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-
-        String body2 = objectMapper.writeValueAsString(user3);
-
-        // Register admin
-        MvcResult mvcResult2 = this.mockMvc.perform(post(USER_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body2))
-            .andDo(print())
-            .andReturn();
-
-        MockHttpServletResponse response2 = mvcResult2.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response2.getStatus());
-        String body3 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
-            .withEmail(user3.getEmail()).withPassword(user3.getPassword()).build());
-
-        // Login
-        MvcResult mvcResult3 = this.mockMvc.perform(post(AUTHENTICATION_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body3))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response3 = mvcResult3.getResponse();
-        assertEquals(HttpStatus.OK.value(), response3.getStatus());
-
-        // Make user admin
-        MvcResult mvcResult4 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
-                .header(securityProperties.getAuthHeader(), response3.getContentAsString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(true)))
-            .andDo(print())
-            .andReturn();
-
-        MockHttpServletResponse response4 = mvcResult4.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response4.getStatus());
     }
 }
