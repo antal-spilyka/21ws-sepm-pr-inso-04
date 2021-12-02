@@ -11,10 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 // This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
@@ -315,7 +312,7 @@ public class UserRepositoryTest implements TestData {
         }
     }
 
-    @Test ()
+    @Test()
     public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
         userRepository.save(user1);
 
@@ -325,7 +322,7 @@ public class UserRepositoryTest implements TestData {
         );
     }
 
-    @Test ()
+    @Test()
     public void givenNothing_whenSaveSeveralUsers_thenFindListOfUsers() {
         userRepository.save(user1);
         userRepository.save(user2);
@@ -337,7 +334,7 @@ public class UserRepositoryTest implements TestData {
         );
     }
 
-    @Test ()
+    @Test()
     public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserByEmailContains() {
         userRepository.save(user1);
 
@@ -347,7 +344,7 @@ public class UserRepositoryTest implements TestData {
         );
     }
 
-    @Test ()
+    @Test()
     public void givenNothing_whenSaveSeveralUsers_thenFindListOfUsersAndProperSearchResults() {
         userRepository.save(user1);
         userRepository.save(user2);
@@ -361,7 +358,7 @@ public class UserRepositoryTest implements TestData {
         );
     }
 
-    @Test ()
+    @Test()
     public void givenNothing_whenChangeAdminRights_thenFindListUserWithChangedRights() {
         userRepository.save(user1);
         ApplicationUser newUser = userRepository.findUserByEmail(user1.getEmail());

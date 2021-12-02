@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import org.springframework.data.repository.query.Param;
-
 import java.util.Objects;
 
 public class ArtistSearchDto {

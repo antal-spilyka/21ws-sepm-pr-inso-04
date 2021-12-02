@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

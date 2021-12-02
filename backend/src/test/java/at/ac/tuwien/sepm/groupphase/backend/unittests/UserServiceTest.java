@@ -372,7 +372,7 @@ public class UserServiceTest implements TestData {
     }
 
     @Test
-    public void changeOwnRights_shouldThrowServiceExpection() {
+    public void changeOwnRights_shouldThrowServiceException() {
         userService.createUser(newAdminUser1);
         UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
             .withAdminEmail(newAdminUser1.getEmail())

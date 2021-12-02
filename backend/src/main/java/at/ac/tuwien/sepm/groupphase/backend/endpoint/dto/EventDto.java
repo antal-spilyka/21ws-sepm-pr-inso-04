@@ -86,13 +86,13 @@ public class EventDto {
             return false;
         }
         EventDto eventDto = (EventDto) o;
-        return  Objects.equals(name, eventDto.name)
-                && Objects.equals(duration, eventDto.duration)
-                && Objects.equals(content, eventDto.content)
-                && Objects.equals(dateTime, eventDto.dateTime)
-                && Objects.equals(category, eventDto.category)
-                && Objects.equals(room, eventDto.room)
-                && Objects.equals(artist, eventDto.artist);
+        return Objects.equals(name, eventDto.name)
+            && Objects.equals(duration, eventDto.duration)
+            && Objects.equals(content, eventDto.content)
+            && Objects.equals(dateTime, eventDto.dateTime)
+            && Objects.equals(category, eventDto.category)
+            && Objects.equals(room, eventDto.room)
+            && Objects.equals(artist, eventDto.artist);
     }
 
     @Override

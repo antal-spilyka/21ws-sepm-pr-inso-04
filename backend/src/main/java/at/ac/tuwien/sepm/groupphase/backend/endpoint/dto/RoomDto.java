@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class RoomDto {

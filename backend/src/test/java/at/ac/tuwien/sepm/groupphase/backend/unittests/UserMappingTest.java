@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;

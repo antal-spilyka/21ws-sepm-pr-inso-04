@@ -2,15 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.CascadeType;
-import javax.persistence.OneToOne;
-import java.util.List;
+import javax.persistence.*;
 
 @Entity
 public class ApplicationUser {

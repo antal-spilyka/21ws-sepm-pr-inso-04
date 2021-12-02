@@ -61,7 +61,7 @@ public class EventServiceImpl implements EventService {
             }
 
             Event event = eventMapper.inquiryDtoToEntity(eventInquiryDto, room, category, artist);
-            Event persistedEvent =  eventRepository.save(event);
+            Event persistedEvent = eventRepository.save(event);
             return eventMapper.entityToDto(persistedEvent);
         } catch (EntityExistsException e) {
             throw new ContextException(e);

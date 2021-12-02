@@ -3,14 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 

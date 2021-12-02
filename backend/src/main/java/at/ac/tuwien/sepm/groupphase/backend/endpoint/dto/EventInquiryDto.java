@@ -91,11 +91,11 @@ public class EventInquiryDto {
         }
         EventInquiryDto that = (EventInquiryDto) o;
         return Objects.equals(name, that.name)
-                && Objects.equals(duration, that.duration)
-                && Objects.equals(content, that.content)
-                && Objects.equals(dateTime, that.dateTime)
-                && Objects.equals(categoryName, that.categoryName)
-                && Objects.equals(roomId, that.roomId);
+            && Objects.equals(duration, that.duration)
+            && Objects.equals(content, that.content)
+            && Objects.equals(dateTime, that.dateTime)
+            && Objects.equals(categoryName, that.categoryName)
+            && Objects.equals(roomId, that.roomId);
     }
 
     @Override

@@ -4,10 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 // This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
@@ -71,7 +67,7 @@ public class UserEditTest implements TestData {
 
 
     @Test
-    public void updateValidUser () {
+    public void updateValidUser() {
         PaymentInformationDto paymentInformation = new PaymentInformationDto();
         paymentInformation.setCreditCardNr("1234123412341234");
         paymentInformation.setCreditCardExpirationDate("202022");
@@ -101,7 +97,7 @@ public class UserEditTest implements TestData {
     }
 
     @Test
-    public void updateUserWithExistingEmail () {
+    public void updateUserWithExistingEmail() {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("hallo@test.com")
             .withNewEmail("test@test.com")
@@ -118,11 +114,11 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () ->  userService.updateUser(toUpdate));
+        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test
-    public void updateNotExistingUser () {
+    public void updateNotExistingUser() {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("notExitsing@hallo.com")
             .withAdmin(false)
@@ -138,11 +134,11 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () ->  userService.updateUser(toUpdate));
+        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test
-    public void updateUserWithMissingData () {
+    public void updateUserWithMissingData() {
         UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
             .withEmail("hallo@test.com")
             .withAdmin(false)
