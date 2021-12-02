@@ -49,7 +49,7 @@
              aria-describedby="titleHelp" placeholder="Enter Country" [(ngModel)]="searchAddress.country">
     </div>
 
-    <input type="submit" value="Search" (click)="onSubmit()" class="btn-primary">
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
     <div *ngIf="eventLocations !== []">
       <table class="table table-hover">
         <thead>

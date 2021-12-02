@@ -35,7 +35,7 @@
       <input type="text" name="content" class="form-control" id="content"
              aria-describedby="titleHelp" placeholder="Enter Content" [(ngModel)]="searchEvent.content">
     </div>
-    <input type="submit" value="Search" (click)="onSubmit()" class="btn-primary">
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
     <div *ngIf="eventList !== []">
       <table class="table table-hover">
         <thead>
