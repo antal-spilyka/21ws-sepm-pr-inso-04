@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,7 +12,7 @@ public class UserRegisterDto {
     @Email
     private String email;
 
-    @NotNull(message = "Admin must not be null")
+    // optional value which can only be set by an admin
     private Boolean admin;
 
     @NotNull(message = "Password must not be null")
@@ -53,7 +55,7 @@ public class UserRegisterDto {
     }
 
     public Boolean getAdmin() {
-        return admin;
+        return admin != null ? admin : false;
     }
 
     public void setAdmin(Boolean admin) {

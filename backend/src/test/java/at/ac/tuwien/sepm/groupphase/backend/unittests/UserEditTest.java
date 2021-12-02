@@ -46,7 +46,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .withDisabled(true)
             .build();
-        userService.createUser(user1);
+        userService.createUser(user1, false);
 
         UserRegisterDto user2 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("test@test.com")
@@ -62,7 +62,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .withDisabled(true)
             .build();
-        userService.createUser(user2);
+        userService.createUser(user2, false);
     }
 
 

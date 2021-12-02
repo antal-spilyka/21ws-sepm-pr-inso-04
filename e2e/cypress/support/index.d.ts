@@ -1,14 +1,13 @@
 declare namespace Cypress{
     interface Chainable {
         /**
-         * Navigate to main page and login as admin
+         * Navigate to main page and register as admin
          */
-        loginAdmin();
+        registerUser();
 
         /**
-         * Creates a message with a given text
-         * @param msg the text of the created message
+         * Navigate to main page and login as user
          */
-        createMessage(msg: string);
+        loginUser();
     }
 }

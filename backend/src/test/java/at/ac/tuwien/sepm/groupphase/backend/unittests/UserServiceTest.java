@@ -58,7 +58,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -82,7 +82,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -106,7 +106,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -130,7 +130,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -154,7 +154,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -178,7 +178,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -202,7 +202,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -226,7 +226,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -250,7 +250,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -274,7 +274,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -298,7 +298,7 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(user);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -322,8 +322,8 @@ public class UserServiceTest implements TestData {
             .build();
 
         try {
-            userService.createUser(newUser1);
-            userService.createUser(user);
+            userService.createUser(newUser1, false);
+            userService.createUser(user, false);
             fail("ServiceException should occur!");
         } catch (ServiceException e) {
             // Should be the case
@@ -332,7 +332,7 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void createUser_thenFindUser() {
-        userService.createUser(newUser1);
+        userService.createUser(newUser1, false);
 
         assertAll(
             () -> assertEquals(1, userService.findUsers(null).size()),
@@ -342,9 +342,9 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void createSeveralUsers_thenFindAllUser() {
-        userService.createUser(newUser1);
-        userService.createUser(newUser2);
-        userService.createUser(newUser3);
+        userService.createUser(newUser1, false);
+        userService.createUser(newUser2, false);
+        userService.createUser(newUser3, false);
 
         assertAll(
             () -> assertEquals(3, userService.findUsers(null).size()),
@@ -358,8 +358,8 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void changeAdminRights_thenShowCorrectRightsOfUser() {
-        userService.createUser(newUser1);
-        userService.createUser(newAdminUser1);
+        userService.createUser(newUser1, false);
+        userService.createUser(newAdminUser1, true);
         UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
             .withAdminEmail(newAdminUser1.getEmail())
             .withEmail(newUser1.getEmail())
@@ -376,7 +376,7 @@ public class UserServiceTest implements TestData {
 
     @Test
     public void changeOwnRights_shouldThrowServiceException() {
-        userService.createUser(newAdminUser1);
+        userService.createUser(newAdminUser1, true);
         UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
             .withAdminEmail(newAdminUser1.getEmail())
             .withEmail(newAdminUser1.getEmail())
