@@ -5,7 +5,8 @@
     <div class="form-group">
       <label for="descriptionLocation">Description</label>
       <input type="text" name="descriptionLocation" class="form-control" id="descriptionLocation"
-             aria-describedby="titleHelp" placeholder="Enter Description for Location" [(ngModel)]="searchAddress.description">
+             aria-describedby="titleHelp" placeholder="Enter Description for Location"
+             [(ngModel)]="searchAddress.description">
     </div>
 
     <div class="form-group">
@@ -31,18 +32,24 @@
       <input type="number" name="zip" class="form-control" id="zip"
              aria-describedby="titleHelp" placeholder="Enter ZIP-Code" [(ngModel)]="searchAddress.zip">
     </div>
-
-    <!--div class="form-group">
-      <label for="">Text</label>
-      <textarea rows="6" name="text" class="form-control" id="inputText" required
-                aria-describedby="textHelp" placeholder="Enter text" [(ngModel)]="currentMessage.text"
-                [readOnly]="currentMessage.id"></textarea>
-      <div *ngIf="submitted && messageForm.controls.text.errors" class="error">
-        <small class="form-text text-warning" *ngIf="messageForm.controls.text.errors.required">Your text is
-          required!
-        </small>
-      </div>
-    </div-->
+    <input type="submit" value="Search" (click)="onSubmit()" class="btn-primary">
+    <div *ngIf="eventLocations !== []">
+      <table class="table table-hover">
+        <thead>
+        <th>Events</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let eventLocation of eventLocations">
+          <td>
+            <div class="flex"><span>Description: {{eventLocation.description}};</span>
+              <span> City: {{eventLocation.city}};</span>
+              <span> Country: {{eventLocation.country}};</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

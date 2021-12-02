@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
 
 import java.util.List;
@@ -19,6 +22,9 @@ public interface EventPlaceService {
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
     List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
+
+    List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
+
 
     /**
      * Persists category.

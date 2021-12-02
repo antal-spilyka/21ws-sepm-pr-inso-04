@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
@@ -50,6 +51,21 @@ public class EventPlaceServiceImpl implements EventPlaceService {
             List<EventPlace> eventPlaces = eventPlaceRepository.findEventPlace(eventPlaceSearchDto.getName(), PageRequest.of(0, 2));
             return eventPlaces.stream().map(eventPlace ->
                 eventPlaceMapper.entityToDto(eventPlace)
+            ).collect(Collectors.toList());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
+        LOGGER.debug("Handeling in Service {}", eventLocationSearchDto);
+        try {
+            List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
+                eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(), eventLocationSearchDto.getDescription(),
+                eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(),  PageRequest.of(0, 10));
+            return addresses.stream().map(eventLocation ->
+                addressMapper.entityToDto(eventLocation)
             ).collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
