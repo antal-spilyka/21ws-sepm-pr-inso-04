@@ -16,7 +16,7 @@ export class EventLocationService {
    * Finds Addresses by search query.
    *
    * @returns Observable List of Addresses matching query
-   * @param searchAddress
+   * @param searchAddress dto for storing the seach information.
    */
   findEventLocation(searchAddress: Address): Observable<Address[]> {
     let params = new HttpParams();

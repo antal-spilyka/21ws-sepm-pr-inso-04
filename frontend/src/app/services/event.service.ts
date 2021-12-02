@@ -16,10 +16,22 @@ export class EventService {
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
+  /**
+   * Creates a new Event.
+   *
+   * @param eventInquiry stores information for new event.
+   * @returns Observable<EventDto> with the information for the event.
+   */
   createEvent(eventInquiry: EventInquiry): Observable<EventDto> {
     return this.httpClient.post<EventDto>(this.messageBaseUri, eventInquiry);
   }
 
+  /**
+   * Finds an event based on the duration, content, category and description.
+   *
+   * @param searchEvent dto for storing the search information.
+   * @returns an array of events which suit the search query.
+   */
   findEvent(searchEvent: EventSearchDto): Observable<EventDto[]> {
     let params = new HttpParams();
     if(searchEvent.duration !== null){
@@ -37,6 +49,12 @@ export class EventService {
     return this.httpClient.get<EventDto[]>(this.messageBaseUri, { params });
   }
 
+  /**
+   * Finds an event based on date/time, name of event and room.
+   *
+   * @param searchEvent dto for storing the search information.
+   * @returns an array of events which suit the search query.
+   */
   findEventByDateTime(searchEvent: EventDateTimeSearchDto): Observable<EventDto[]>{
     let params = new HttpParams();
     if(searchEvent.dateTime !== null){
