@@ -15,7 +15,7 @@
     <div>
       <mat-form-field appearance="fill" class="big-control">
         <mat-label>Enter your email</mat-label>
-        <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" name="username" required>
+        <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" name="email" required>
         <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </div>

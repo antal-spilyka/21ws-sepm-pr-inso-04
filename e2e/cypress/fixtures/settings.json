@@ -1,5 +1,21 @@
 {
   "adminUser": "admin@email.com",
   "adminPw": "password",
-  "baseUrl": "localhost:4200"
+  "baseUrl": "localhost:4200",
+  "paths": {
+    "register": "/register"
+  },
+  "registerUsers": {
+    "user1": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe9@email.com",
+      "phone": "0664123456",
+      "pw": "password",
+      "country": "Austria",
+      "zip": "1010",
+      "city": "Wien",
+      "street": "Straße 1"
+    }
+  }
 }

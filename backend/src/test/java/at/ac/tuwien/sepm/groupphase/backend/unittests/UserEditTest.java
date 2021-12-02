@@ -35,7 +35,6 @@ public class UserEditTest implements TestData {
         UserRegisterDto user1 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("hallo@test.com")
             .withPassword("testPassword")
-            .withAdmin(false)
             .withFirstName("test")
             .withLastName("person")
             .withSalutation("mr")
@@ -50,7 +49,6 @@ public class UserEditTest implements TestData {
 
         UserRegisterDto user2 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
             .withEmail("test@test.com")
-            .withAdmin(false)
             .withPassword("testPassword")
             .withFirstName("test2")
             .withLastName("person2")

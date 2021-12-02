@@ -1,15 +1,15 @@
 <div class="header">
   <div class="headerButtons">
-    <button mat-icon-button
+    <button *ngIf="authService.isLoggedIn()" mat-icon-button
             matTooltip="Your Account">
       <mat-icon>person</mat-icon>
     </button>
-    <button mat-icon-button
+    <button *ngIf="authService.isLoggedIn()" mat-icon-button
             matTooltip="Settings">
       <mat-icon>settings</mat-icon>
     </button>
-    <button mat-icon-button
-            matTooltip="Logout">
+    <button *ngIf="authService.isLoggedIn()" routerLink="/edit" mat-icon-button
+            matTooltip="Logout" (click)="authService.logoutUser()" name="logout">
       <mat-icon>logout</mat-icon>
     </button>
   </div>
@@ -26,9 +26,6 @@
       <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/edit" routerLinkActive="active">Edit</a>
-      </li>
       <li>
         <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users" routerLinkActive="active">Users</a>
       </li>
@@ -36,7 +33,6 @@
 
     <ul class="navbar-nav mr-5">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
     </ul>
 
     <ul class="navbar-nav mr-5" *ngIf="!authService.isLoggedIn()">

@@ -1,24 +1,35 @@
-Cypress.Commands.add('loginAdmin', () => {
+function checkLogin(cy) {
+    cy.contains('Welcome to the SEPM group phase!').should('be.visible');
+    cy.get('button[name="logout"]').click();
+    cy.contains('a', 'Login').should('be.visible');
+    cy.contains('a', 'Register').should('be.visible');
+}
+
+Cypress.Commands.add('loginUser', () => {
     cy.fixture('settings').then(settings => {
         cy.visit(settings.baseUrl);
         cy.contains('a', 'Login').click();
-        cy.get('input[name="username"]').type(settings.adminUser);
-        cy.get('input[name="password"]').type(settings.adminPw);
+        cy.get('input[name="email"]').type(settings.registerUsers.user1.email);
+        cy.get('input[name="password"]').type(settings.registerUsers.user1.pw);
         cy.contains('button', 'Login').click();
+        checkLogin(cy);
     })
 })
-
-Cypress.Commands.add('createMessage', (msg) => {
+Cypress.Commands.add('registerUser', () => {
     cy.fixture('settings').then(settings => {
-        cy.contains('a', 'Message');
-        cy.contains('button', 'Add message').click();
-        cy.get('input[name="title"]').type('title' +  msg);
-        cy.get('textarea[name="summary"]').type('summary' +  msg);
-        cy.get('textarea[name="text"]').type('text' +  msg);
-        cy.get('button[id="add-msg"]').click();
-        cy.get('button[id="close-modal-btn"]').click();
-
-        cy.contains('title' +  msg).should('be.visible');
-        cy.contains('summary' +  msg).should('be.visible');
+        cy.visit(settings.baseUrl + '/#' + settings.paths.register);
+        cy.get('input[name="firstName"]').type(settings.registerUsers.user1.firstName);
+        cy.get('input[name="lastName"]').type(settings.registerUsers.user1.lastName);
+        cy.get('input[name="email"]').type(settings.registerUsers.user1.email);
+        cy.get('input[name="phone"]').type(settings.registerUsers.user1.phone);
+        cy.get('input[name="password"]').type(settings.registerUsers.user1.pw);
+        cy.contains('button', 'Next').click();
+        cy.get('mat-select[name="country"]').click();
+        cy.get('mat-option').contains(settings.registerUsers.user1.country).click();
+        cy.get('input[name="zip"]').type(settings.registerUsers.user1.zip);
+        cy.get('input[name="city"]').type(settings.registerUsers.user1.city);
+        cy.get('input[name="street"]').type(settings.registerUsers.user1.street);
+        cy.contains('button', 'Sign Up').click();
+        checkLogin(cy);
     })
 })

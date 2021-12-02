@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
+import javax.servlet.http.HttpServletRequest;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +56,12 @@ public class UserEndpoint {
      */
     @PermitAll
     @PostMapping("")
-    public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult) {
+    public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult, HttpServletRequest request) {
         LOGGER.info("POST " + BASE_URL + " " + user.toString());
         if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+            ObjectError e = bindingResult.getAllErrors().get(0);
+            LOGGER.error(e.getDefaultMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + e.getDefaultMessage());
         }
 
         try {
