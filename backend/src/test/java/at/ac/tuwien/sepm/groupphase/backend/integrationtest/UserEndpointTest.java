@@ -4,8 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
@@ -25,9 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -208,19 +206,32 @@ public class UserEndpointTest implements TestData {
             for (int j = 0; j < 13; j++) {
                 if (j != i) {
                     switch (j) {
-                        case 0: user.withEmail("testUserFields@email.com");
-                        case 1: user.withPassword("password");
-                        case 2: user.withCity("Wien");
-                        case 3: user.withCountry("AL");
-                        case 4: user.withDisabled(false);
-                        case 5: user.withFirstName("Gucci");
-                        case 6: user.withLastName("King");
-                        case 7: user.withPhone("0664 123 456");
-                        case 8: user.withStreet("street 1");
-                        case 9: user.withZip("1010");
-                        case 10: user.withPaymentInformation(paymentInformation);
-                        case 11: user.withNewEmail("testNewEmail@email.com");
-                        case 12: user.withAdmin(false);
+                        case 0:
+                            user.withEmail("testUserFields@email.com");
+                        case 1:
+                            user.withPassword("password");
+                        case 2:
+                            user.withCity("Wien");
+                        case 3:
+                            user.withCountry("AL");
+                        case 4:
+                            user.withDisabled(false);
+                        case 5:
+                            user.withFirstName("Gucci");
+                        case 6:
+                            user.withLastName("King");
+                        case 7:
+                            user.withPhone("0664 123 456");
+                        case 8:
+                            user.withStreet("street 1");
+                        case 9:
+                            user.withZip("1010");
+                        case 10:
+                            user.withPaymentInformation(paymentInformation);
+                        case 11:
+                            user.withNewEmail("testNewEmail@email.com");
+                        case 12:
+                            user.withAdmin(false);
                     }
                 }
             }
@@ -316,5 +327,105 @@ public class UserEndpointTest implements TestData {
 
         MockHttpServletResponse response3 = mvcResult3.getResponse();
         assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
+    }
+
+    @Test
+    public void setAdminWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
+        String body = objectMapper.writeValueAsString(user2);
+
+        // Register user to be changed
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+
+        body = objectMapper.writeValueAsString(user1);
+
+        // Register the second user
+        mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+
+        String body2 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user1.getEmail()).withPassword(user1.getPassword()).build());
+
+        // Login
+        MvcResult mvcResult2 = this.mockMvc.perform(post(AUTHENTICATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body2))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        // Make user admin
+        MvcResult mvcResult3 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
+                .header(securityProperties.getAuthHeader(), response2.getContentAsString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(true)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
+    }
+
+    @Test
+    public void setAdminWithAdminRights_shouldReturnHttpStatusOkAndChangeValue() throws Exception {
+        String body = objectMapper.writeValueAsString(user2);
+
+        // Register user to be changed
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+
+        String body2 = objectMapper.writeValueAsString(user3);
+
+        // Register admin
+        MvcResult mvcResult2 = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body2))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response2.getStatus());
+        String body3 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user3.getEmail()).withPassword(user3.getPassword()).build());
+
+        // Login
+        MvcResult mvcResult3 = this.mockMvc.perform(post(AUTHENTICATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body3))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.OK.value(), response3.getStatus());
+
+        // Make user admin
+        MvcResult mvcResult4 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
+                .header(securityProperties.getAuthHeader(), response3.getContentAsString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(true)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response4 = mvcResult4.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response4.getStatus());
     }
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
@@ -95,14 +96,14 @@ public class UserEndpoint {
     @Secured("ROLE_ADMIN")
     @PermitAll
     @PutMapping("/{email}")
-    public ResponseEntity<String> setAdmin(@PathVariable String email, @RequestBody Boolean newAdmin) {
+    public ResponseEntity<String> setAdmin(@PathVariable String email, @RequestBody UserAdminDto request) {
         LOGGER.info("PUT /api/v1/users/{}", email);
 
         try {
-            userService.setAdmin(email, newAdmin);
+            userService.setAdmin(request);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail: " + e.getLocalizedMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Admin rights of the user could not be changed: " + e.getLocalizedMessage(), e);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -131,7 +132,7 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("/{email}")
     public UserDto getUser(@PathVariable String email) {
-        LOGGER.info("GET " + BASE_URL + "/{email}");
+        LOGGER.info("GET " + BASE_URL + "/{}", email);
         try {
             return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
         } catch (ServiceException e) {

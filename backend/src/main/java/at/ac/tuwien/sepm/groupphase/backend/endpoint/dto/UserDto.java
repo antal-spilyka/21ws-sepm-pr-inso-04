@@ -164,7 +164,7 @@ public class UserDto {
     @Override
     public String toString() {
         return "UserDto{"
-            + ", email='" + email + '\''
+            + "email='" + email + '\''
             + ", password='" + password + '\''
             + ", firstName='" + firstName + '\''
             + ", lastName='" + lastName + '\''

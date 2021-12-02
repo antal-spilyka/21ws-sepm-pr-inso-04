@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -104,12 +105,16 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     @Transactional
-    public void setAdmin(String email, Boolean admin) {
-        if (userRepository.findUserByEmail(email) == null) {
+    public void setAdmin(UserAdminDto request) {
+        if (request.getAdminEmail() == null || userRepository.findUserByEmail(request.getAdminEmail()) == null) {
+            throw new ServiceException("No administrator found with the given e-mail");
+        } else if (request.getAdmin() == null || userRepository.findUserByEmail(request.getEmail()) == null) {
             throw new ServiceException("No user found with the given e-mail");
+        } else if (request.getEmail().equals(request.getAdminEmail())) {
+            throw new ServiceException("You can not change your own admin rights");
         } else {
-            ApplicationUser currentUser = userRepository.findUserByEmail(email);
-            currentUser.setAdmin(admin);
+            ApplicationUser currentUser = userRepository.findUserByEmail(request.getEmail());
+            currentUser.setAdmin(request.getAdmin());
             userRepository.save(currentUser);
         }
     }

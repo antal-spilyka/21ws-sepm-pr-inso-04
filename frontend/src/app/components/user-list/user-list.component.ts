@@ -102,20 +102,19 @@ export class UserListComponent implements OnInit {
     if (user === null) {
       console.log('error user not found');
     } else {
-      let newAdmin: boolean;
-      // admin value of user has already been changed through the switcher
-      if (user.admin) {
-        newAdmin = true;
-      } else {
-       newAdmin = false;
-      }
-      this.userService.setAdmin(user.email, newAdmin).subscribe({
+      const request = {
+        adminEmail: this.currentUser.email,
+        email: user.email,
+        admin: user.admin // admin value of user has already been changed through the switcher
+      };
+      this.userService.setAdmin(request).subscribe({
         next: () => {
           console.log('User with the e-mail ' + user.email + 'changed');
         },
         error: (error) => {
-          this.errorMessage = 'Admin settings of the user can not be changed: ' + error.error;
+          this.errorMessage = 'Admin settings of the user can not be changed';
           this.error = true;
+          user.admin = !user.admin; // Resetting the value
         }
       });
     }

@@ -37,7 +37,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {EditEmailDialogComponent} from './components/edit-user/edit-email-dialog/edit-email-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {EditPasswordDialogComponent} from './components/edit-user/edit-password-dialog/edit-password-dialog.component';
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({

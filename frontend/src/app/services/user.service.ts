@@ -5,6 +5,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {User} from '../dtos/user';
 import {UpdateUserRequest} from '../dtos/updateUser-request';
+import {AdminRequest} from "../dtos/admin-request";
 
 @Injectable({
   providedIn: 'root'
@@ -32,10 +33,8 @@ export class UserService {
    * @param email of the user
    */
   get(email: string): Observable<User> {
-    let params = new HttpParams();
-    params = params.set('email', email);
     console.log('Get user with email address ', email);
-    return this.httpClient.get<User>(this.registerBaseUri + '/', {params});
+    return this.httpClient.get<User>(this.registerBaseUri + '/' + email);
   }
 
   /**
@@ -44,8 +43,11 @@ export class UserService {
   findUsers(email: string): Observable<User[]> {
     let params = new HttpParams();
     params = params.set('email', email);
-    console.log('Get users with email address ', params);
-    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
+    if (email === null || email === ' ') {
+      console.log('Get all users');
+    } else {
+      console.log('Get users with email address ', email);
+    }    return this.httpClient.get<User[]>(this.registerBaseUri + '/', {params});
   }
 
   /**
@@ -61,11 +63,10 @@ export class UserService {
   /**
    * Changes the admin attribute of the given user.
    *
-   * @param email of the user
-   * @param admin attribute to be set
+   * @param request containing the user to be changed and the admin who sends the request.
    */
-  setAdmin(email: string, admin: boolean): Observable<string> {
-    console.log('Setting admin attribute of the user with email ' + email);
-    return this.httpClient.put(this.registerBaseUri + '/' + email, admin, {responseType: 'text'});
+  setAdmin(request: AdminRequest): Observable<string> {
+    console.log('Setting admin attribute of the user with email ' + request.email);
+    return this.httpClient.put(this.registerBaseUri + '/' + request.email, request, {responseType: 'text'});
   }
 }
