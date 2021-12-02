@@ -1,4 +1,4 @@
 export class RoomSearch {
-    name: string;
-    eventPlaceName: string;
+  name: string;
+  eventPlaceName: string;
 }

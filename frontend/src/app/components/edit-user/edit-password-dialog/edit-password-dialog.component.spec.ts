@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { EditPasswordDialogComponent } from './edit-password-dialog.component';
+import {EditPasswordDialogComponent} from './edit-password-dialog.component';
 
 describe('EditPasswordDialogComponent', () => {
   let component: EditPasswordDialogComponent;
@@ -8,9 +8,9 @@ describe('EditPasswordDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditPasswordDialogComponent ]
+      declarations: [EditPasswordDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
-import { Artist } from 'src/app/dtos/artist';
-import { Category } from 'src/app/dtos/category';
-import { ArtistService } from 'src/app/services/artist.service';
-import { CategoryService } from 'src/app/services/category.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {debounceTime, distinctUntilChanged, Observable, switchMap} from 'rxjs';
+import {Artist} from 'src/app/dtos/artist';
+import {Category} from 'src/app/dtos/category';
+import {ArtistService} from 'src/app/services/artist.service';
+import {CategoryService} from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-create-artist',
@@ -35,31 +35,31 @@ export class CreateArtistComponent implements OnInit {
     private formBuilder: FormBuilder,
     private artistService: ArtistService,
     private categoryService: CategoryService
-    ) {
+  ) {
     this.artists = this.form.get('name').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(name => !this.isNewArtist ?
         this.artistService.findArtist(name) :
         new Observable<Artist[]>()
-    )
-  );
-  this.categories = this.form.get('categoryName').valueChanges.pipe(
-    distinctUntilChanged(),
-    debounceTime(500),
-    switchMap(name => !this.isNewCategory ?
-      this.categoryService.findCategory(name) :
-    new Observable<Category[]>()
-  )
-  );
-   }
+      )
+    );
+    this.categories = this.form.get('categoryName').valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap(name => !this.isNewCategory ?
+        this.categoryService.findCategory(name) :
+        new Observable<Category[]>()
+      )
+    );
+  }
 
   ngOnInit(): void {
   }
 
   handleNewArtist() {
     this.isNewArtist = !this.isNewArtist;
-    if(this.isNewArtist) {
+    if (this.isNewArtist) {
       this.selectedArtist = null;
       this.form.controls.name.setValue(null);
       this.form.controls.description.enable();
@@ -70,28 +70,28 @@ export class CreateArtistComponent implements OnInit {
 
   handleNewCategory() {
     this.isNewCategory = !this.isNewCategory;
-    if(this.isNewCategory) {
+    if (this.isNewCategory) {
       this.selectedCategory = null;
       this.form.controls.categoryName.setValue(null);
     }
   }
 
   async nextStep() {
-    if(!this.form.valid) {
+    if (!this.form.valid) {
       return;
     }
-    if(this.isNewArtist) {
+    if (this.isNewArtist) {
       await this.submitArtistChanges();
     } else {
       this.artistSubmitted = true;
     }
-    if(this.isNewCategory) {
+    if (this.isNewCategory) {
       await this.submitCategoryChanges();
     } else {
       this.categorySubmitted = true;
     }
-    if(!this.isNewArtist && !this.isNewCategory) {
-      if(!this.selectedArtist || !this.selectedCategory) {
+    if (!this.isNewArtist && !this.isNewCategory) {
+      if (!this.selectedArtist || !this.selectedCategory) {
         this.setErrorFlag('Please Select Artist and Category from Dropdown or create new ones.');
       } else {
         this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
@@ -100,14 +100,14 @@ export class CreateArtistComponent implements OnInit {
   }
 
   onSelectArtist(artist: Artist) {
-    const { bandName, description } = artist;
+    const {bandName, description} = artist;
     this.selectedArtist = artist;
     this.form.controls.name.setValue(bandName);
     this.form.controls.description.setValue(description);
   }
 
   onSelectCategory(category: Category) {
-    const { name } = category;
+    const {name} = category;
     this.selectedCategory = category;
     this.form.controls.categoryName.setValue(name);
   }
@@ -125,7 +125,7 @@ export class CreateArtistComponent implements OnInit {
       },
       complete: () => {
         this.artistSubmitted = true;
-        if(this.categorySubmitted) {
+        if (this.categorySubmitted) {
           this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
         }
       }
@@ -144,7 +144,7 @@ export class CreateArtistComponent implements OnInit {
       },
       complete: () => {
         this.categorySubmitted = true;
-        if(this.artistSubmitted) {
+        if (this.artistSubmitted) {
           this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
         }
       }

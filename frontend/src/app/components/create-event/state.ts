@@ -1,5 +1,5 @@
 export enum Step {
-eventPlace,
-artist,
-event,
+  eventPlace,
+  artist,
+  event,
 }

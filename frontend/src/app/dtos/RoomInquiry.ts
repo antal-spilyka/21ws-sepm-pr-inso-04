@@ -1,4 +1,4 @@
 export class RoomInquiry {
-    name: string;
-    eventPlaceName: string;
+  name: string;
+  eventPlaceName: string;
 }

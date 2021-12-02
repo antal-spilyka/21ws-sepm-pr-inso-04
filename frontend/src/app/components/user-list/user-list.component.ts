@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {AuthService} from '../../services/auth.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-user-list',
@@ -12,14 +13,38 @@ export class UserListComponent implements OnInit {
   userList: any;
   searchEmail = null;
   filterToggled = false;
+  currentUser = null;
 
   error = false;
   errorMessage = '';
 
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private userService: UserService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
+    this.getUser();
     this.findUsers();
+  }
+
+  getToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  getUser() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      const email: string = decoded.sub;
+      this.userService.get(email).subscribe({
+        next: (user: User) => {
+          this.currentUser = user;
+        },
+        error: err => {
+          console.log(err.error);
+        }
+      });
+    } else {
+      this.currentUser = null;
+    }
   }
 
   findUsers() {
@@ -70,6 +95,28 @@ export class UserListComponent implements OnInit {
       this.filterToggled = false;
     } else {
       this.filterToggled = true;
+    }
+  }
+
+  setAdmin(user: User) {
+    if (user === null) {
+      console.log('error user not found');
+    } else {
+      const request = {
+        adminEmail: this.currentUser.email,
+        email: user.email,
+        admin: user.admin // admin value of user has already been changed through the switcher
+      };
+      this.userService.setAdmin(request).subscribe({
+        next: () => {
+          console.log('User with the e-mail ' + user.email + 'changed');
+        },
+        error: (error) => {
+          this.errorMessage = 'Admin settings of the user can not be changed';
+          this.error = true;
+          user.admin = !user.admin; // Resetting the value
+        }
+      });
     }
   }
 

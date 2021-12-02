@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +12,9 @@ public class UserEditDto {
 
     @Email
     private String newEmail;
+
+    @NotNull(message = "Admin must not be null")
+    private Boolean admin;
 
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
@@ -62,6 +63,14 @@ public class UserEditDto {
 
     public void setNewEmail(String newEmail) {
         this.newEmail = newEmail;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getPassword() {
@@ -183,6 +192,7 @@ public class UserEditDto {
     public static final class UserEditDtoBuilder {
         private String email;
         private String newEmail;
+        private Boolean admin;
         private String password;
         private String firstName;
         private String lastName;
@@ -209,6 +219,11 @@ public class UserEditDto {
 
         public UserEditDtoBuilder withNewEmail(String newEmail) {
             this.newEmail = newEmail;
+            return this;
+        }
+
+        public UserEditDtoBuilder withAdmin(Boolean admin) {
+            this.admin = admin;
             return this;
         }
 
@@ -271,6 +286,7 @@ public class UserEditDto {
             UserEditDto userEditDto = new UserEditDto();
             userEditDto.setEmail(email);
             userEditDto.setNewEmail(newEmail);
+            userEditDto.setAdmin(admin);
             userEditDto.setPassword(password);
             userEditDto.setFirstName(firstName);
             userEditDto.setLastName(lastName);

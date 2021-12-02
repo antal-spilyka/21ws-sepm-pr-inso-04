@@ -11,7 +11,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
-import {AuthRequest} from '../../dtos/auth-request';
 
 export interface DialogData {
   email: string;
@@ -57,7 +56,6 @@ export class EditUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-
   }
 
   /**
@@ -129,6 +127,7 @@ export class EditUserComponent implements OnInit {
 
     const updatedUser: UpdateUserRequest = {
       email: this.user.email, newEmail: this.emailControl.value,
+      admin: this.user.admin,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,

@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,9 +49,9 @@ public class CategoryEndpointTest {
         String body = objectMapper.writeValueAsString(categoryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(TestData.CATEGORY_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -62,8 +60,8 @@ public class CategoryEndpointTest {
         CategoryDto categorySearchDto = new CategoryDto();
         categorySearchDto.setName(categoryDto.getName());
         MvcResult mvcResult2 = this.mockMvc.perform(get(TestData.CATEGORY_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response2 = mvcResult2.getResponse();
@@ -79,8 +77,8 @@ public class CategoryEndpointTest {
         CategoryDto artistSearchDto = new CategoryDto();
         artistSearchDto.setName("not existing");
         MvcResult mvcResult = this.mockMvc.perform(get(TestData.CATEGORY_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.USER_ROLES)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.USER_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

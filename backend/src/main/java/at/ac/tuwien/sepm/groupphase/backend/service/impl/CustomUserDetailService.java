@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -12,7 +13,6 @@ import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -92,13 +91,39 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
+        if (user == null) {
+            throw new ServiceException("Please fill out all the mandatory fields");
+        }
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
         if (foundUser == null) {
-            userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
-                false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
-                user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), 0));
+            if (user.getEmail() == null || user.getPassword() == null || user.getAdmin() == null
+                || user.getFirstName() == null || user.getLastName() == null || user.getSalutation() == null
+                || user.getPhone() == null || user.getCountry() == null || user.getCity() == null || user.getStreet() == null
+                || user.getZip() == null || user.getDisabled() == null) {
+                throw new ServiceException("Please fill out all the mandatory fields");
+            } else {
+                userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
+                    false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
+                    user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), 0));
+            }
         } else {
             throw new ServiceException("E-mail already used");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void setAdmin(UserAdminDto request) {
+        if (request.getAdminEmail() == null || userRepository.findUserByEmail(request.getAdminEmail()) == null) {
+            throw new ServiceException("No administrator found with the given e-mail");
+        } else if (request.getAdmin() == null || userRepository.findUserByEmail(request.getEmail()) == null) {
+            throw new ServiceException("No user found with the given e-mail");
+        } else if (request.getEmail().equals(request.getAdminEmail())) {
+            throw new ServiceException("You can not change your own admin rights");
+        } else {
+            ApplicationUser currentUser = userRepository.findUserByEmail(request.getEmail());
+            currentUser.setAdmin(request.getAdmin());
+            userRepository.save(currentUser);
         }
     }
 
@@ -125,6 +150,7 @@ public class CustomUserDetailService implements UserService {
             toUpdateUser.setSalutation(updatedUser.getSalutation());
             toUpdateUser.setFirstName(updatedUser.getFirstName());
             toUpdateUser.setLastName(updatedUser.getLastName());
+            toUpdateUser.setAdmin(updatedUser.getAdmin());
             if (updatedUser.getNewEmail() == null) {
                 toUpdateUser.setEmail(updatedUser.getEmail());
             } else {
