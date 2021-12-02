@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
@@ -23,4 +24,6 @@ public interface EventService {
     EventDto createEvent(EventInquiryDto eventInquiryDto);
 
     List<EventDto> findEvents(EventSearchDto eventSearchDto);
+
+    List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto);
 }

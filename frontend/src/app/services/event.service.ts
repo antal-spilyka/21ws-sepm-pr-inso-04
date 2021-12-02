@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { EventDto } from '../dtos/eventDto';
 import { EventInquiry } from '../dtos/eventInquiry';
 import { Globals } from '../global/globals';
-import {Address} from '../dtos/address';
 import {EventSearchDto} from '../dtos/eventSearchDto';
+import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +35,19 @@ export class EventService {
       params=params.set('description', searchEvent.description.trim());
     }
     return this.httpClient.get<EventDto[]>(this.messageBaseUri, { params });
+  }
+
+  findEventByDateTime(searchEvent: EventDateTimeSearchDto): Observable<EventDto[]>{
+    let params = new HttpParams();
+    if(searchEvent.dateTime !== null){
+      params=params.set('dateTime', searchEvent.dateTime.toDateString());
+    }
+    if( searchEvent.event && searchEvent.event !== '' ){
+      params=params.set('event', searchEvent.event.trim());
+    }
+    if(searchEvent.room && searchEvent.room !== ''){
+      params=params.set('room', searchEvent.room.trim());
+    }
+    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/dateTime', { params });
   }
 }

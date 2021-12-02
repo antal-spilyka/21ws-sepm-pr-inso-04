@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -39,4 +40,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEvents(@Param("duration") Integer duration, @Param("content") String content,
                            @Param("categoryName") String categoryName, @Param("description") String description,
                            Pageable pageable);
+
+    @Query("SELECT a FROM Event a WHERE (:dateTime is null OR (a.dateTime <= :dateTimeTill AND a.dateTime >= :dateTimeFrom)) " +
+        "AND (:event is null OR :event='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :event, '%'))) AND (:roomId is null " +
+        "OR a.room = :roomId)")
+    List<Event> findEventsWithDateTime(@Param("dateTimeFrom") LocalDateTime dateTimeFrom, @Param("dateTimeTill") LocalDateTime dateTimeTill,
+                                     @Param("event") String event, @Param("roomId") Long roomId);
+
+    @Query("SELECT a FROM Event a WHERE (:event is null OR :event='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :event, '%'))) " +
+        "AND (:roomId is null OR a.room = :roomId)")
+    List<Event> findEventsWithoutDateTime(@Param("event") String event, @Param("roomId") Long roomId);
 }

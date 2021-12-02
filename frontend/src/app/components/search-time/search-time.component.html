@@ -17,7 +17,7 @@
     <div class="form-group">
       <label for="event">Event</label>
       <input type="text" name="event" class="form-control" id="event"
-             aria-describedby="titleHelp" placeholder="Enter Event" [(ngModel)]="searchEvent.name">
+             aria-describedby="titleHelp" placeholder="Enter Event" [(ngModel)]="searchEvent.event">
     </div>
 
     <!--div class="form-group">
@@ -28,11 +28,29 @@
         <option *ngFor="let room of this.roomsList" value="{{room.id}}">{{room.name}}</option>
       </select>
     </div-->
+
     <div class="form-group">
       <label for="room">Room</label>
       <input type="text" name="room" class="form-control" id="room"
-             aria-describedby="titleHelp" placeholder="Enter Room" [(ngModel)]="searchEvent.name">
+             aria-describedby="titleHelp" placeholder="Enter Room" [(ngModel)]="searchEvent.room">
     </div>
     <input type="submit" value="Search" (click)="onSubmit()" class="btn-primary">
+
+    <div *ngIf="eventList !== []">
+      <table class="table table-hover">
+        <thead>
+        <th>Events</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of eventList">
+          <td>
+            <div class="flex"><span>Name: {{event.name}}</span>
+              <span>Date/Time: {{event.dateTime.toDateString()}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

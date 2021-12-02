@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
@@ -22,8 +23,11 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +66,7 @@ public class EventServiceImpl implements EventService {
                 throw new ContextException("Category doesn't exist.");
             }
             Event event = eventMapper.inquiryDtoToEntity(eventInquiryDto, room, category, artist);
-            Event persistedEvent =  eventRepository.save(event);
+            Event persistedEvent = eventRepository.save(event);
             return eventMapper.entityToDto(persistedEvent);
         } catch (EntityExistsException e) {
             throw new ContextException(e);
@@ -77,6 +81,40 @@ public class EventServiceImpl implements EventService {
         try {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getContent(),
                 eventSearchDto.getCategoryName(), eventSearchDto.getDescription(), PageRequest.of(0, 10));
+            return events.stream().map(event ->
+                eventMapper.entityToDto(event)
+            ).collect(Collectors.toList());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
+        LOGGER.debug("Handeling in Service {}", eventDateTimeSearchDto);
+        try {
+            List<Room> rooms = roomRepository.findRoom(eventDateTimeSearchDto.getRoom());
+            List<Event> events = new ArrayList<>();
+            List<Long> roomIds = new ArrayList<>();
+            if (eventDateTimeSearchDto.getDateTime() != null) {
+                LocalDateTime dateTimeFrom = eventDateTimeSearchDto.getDateTime().minusMinutes(30);
+                LocalDateTime dateTimeTill = eventDateTimeSearchDto.getDateTime().plusMinutes(30);
+                for (Room room : rooms) {
+                    List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                        eventDateTimeSearchDto.getEvent(), room.getId());
+                    events.addAll(eventsForRoom);
+                    //roomIds.add(room.getId());
+                }
+                //events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                //eventDateTimeSearchDto.getEvent(), roomIds, PageRequest.of(0, 10));
+            } else {
+                for (Room room : rooms) {
+                    List<Event> eventsForRoom = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), room.getId());
+                    events.addAll(eventsForRoom);
+                }
+                /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
+                    PageRequest.of(0, 10));*/
+            }
             return events.stream().map(event ->
                 eventMapper.entityToDto(event)
             ).collect(Collectors.toList());

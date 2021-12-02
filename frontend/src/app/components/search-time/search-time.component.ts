@@ -4,6 +4,7 @@ import {EventService} from '../../services/event.service';
 import {EventInquiry} from '../../dtos/eventInquiry';
 import {Room} from '../../dtos/room';
 import {RoomService} from '../../services/room.service';
+import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
 
 @Component({
   selector: 'app-search-time',
@@ -11,9 +12,8 @@ import {RoomService} from '../../services/room.service';
   styleUrls: ['./search-time.component.scss']
 })
 export class SearchTimeComponent implements OnInit {
-  searchEvent: EventInquiry = {
-    name: '', duration: null, content: '', dateTime: null, categoryName: '', roomId: null,
-    artistId: null, description: null,
+  searchEvent: EventDateTimeSearchDto = {
+    dateTime: null, event: '', room: '',
   };
   eventList: EventDto[] = [];
   roomsList: Room[] = [];
@@ -25,7 +25,7 @@ export class SearchTimeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadRooms();
+    //this.loadRooms();
   }
 
   loadRooms() {
@@ -46,7 +46,7 @@ export class SearchTimeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.eventService.findEvent(this.searchEvent).subscribe(
+    this.eventService.findEventByDateTime(this.searchEvent).subscribe(
       {
         next: events => {
           console.log(this.eventList);

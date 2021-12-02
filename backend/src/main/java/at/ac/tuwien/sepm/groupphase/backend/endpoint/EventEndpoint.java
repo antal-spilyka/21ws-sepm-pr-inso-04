@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
@@ -50,6 +51,14 @@ public class EventEndpoint {
     @Operation(summary = "Find events by search parameters.")
     public ResponseEntity findEvents(@Validated EventSearchDto eventSearchDto) {
         ResponseEntity response = new ResponseEntity(eventService.findEvents(eventSearchDto).stream(), HttpStatus.OK);
+        return response;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/dateTime")
+    @Operation(summary = "Find events by search parameters.")
+    public ResponseEntity findEventsByDateTime(@Validated EventDateTimeSearchDto eventDateTimeSearchDto) {
+        ResponseEntity response = new ResponseEntity(eventService.findEventsByDateTime(eventDateTimeSearchDto).stream(), HttpStatus.OK);
         return response;
     }
 }
