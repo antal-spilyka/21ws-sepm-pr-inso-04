@@ -11,7 +11,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
-import {AuthRequest} from '../../dtos/auth-request';
 
 export interface DialogData {
   email: string;

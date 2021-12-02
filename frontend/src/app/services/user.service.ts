@@ -49,13 +49,23 @@ export class UserService {
   }
 
   /**
-   * Updates User
+   * Updates the given user.
    *
    * @param user object with updated data
    */
   updateUser(user: UpdateUserRequest): Observable<string> {
-    console.log("new admin: " + user.admin);
     console.log('Update user with email ' + user.email);
     return this.httpClient.put(this.registerBaseUri, user, {responseType: 'text'});
+  }
+
+  /**
+   * Changes the admin attribute of the given user.
+   *
+   * @param email of the user
+   * @param admin attribute to be set
+   */
+  setAdmin(email: string, admin: boolean): Observable<string> {
+    console.log('Setting admin attribute of the user with email ' + email);
+    return this.httpClient.put(this.registerBaseUri + '/' + email, admin, {responseType: 'text'});
   }
 }

@@ -104,6 +104,18 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     @Transactional
+    public void setAdmin(String email, Boolean admin) {
+        if (userRepository.findUserByEmail(email) == null) {
+            throw new ServiceException("No user found with the given e-mail");
+        } else {
+            ApplicationUser currentUser = userRepository.findUserByEmail(email);
+            currentUser.setAdmin(admin);
+            userRepository.save(currentUser);
+        }
+    }
+
+    @Override
+    @Transactional
     public void updateUser(UserEditDto updatedUser) {
         LOGGER.trace("Update existing user");
         ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());

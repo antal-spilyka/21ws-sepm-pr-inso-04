@@ -46,9 +46,9 @@
     <td class="column">
       <mat-slide-toggle class="slider" (change)="setAdmin(user)" [(ngModel)]="user.admin">
       </mat-slide-toggle>
+      <span *ngIf="user.email === this.currentUser.email">------</span>
     </td>
   </tr>
   </tbody>
 </table>
 </div>
-

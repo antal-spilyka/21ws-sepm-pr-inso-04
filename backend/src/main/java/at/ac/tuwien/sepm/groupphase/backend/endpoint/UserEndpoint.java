@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,13 +89,39 @@ public class UserEndpoint {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * Updates the admin rights of an existing user.
+     */
+    @Secured("ROLE_ADMIN")
+    @PermitAll
+    @PutMapping("/{email}")
+    public ResponseEntity<String> setAdmin(@PathVariable String email, @RequestBody Boolean newAdmin) {
+        LOGGER.info("PUT /api/v1/users/{}", email);
+
+        try {
+            userService.setAdmin(email, newAdmin);
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail: " + e.getLocalizedMessage(), e);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @Secured("ROLE_ADMIN")
     @PermitAll
     @GetMapping
-    public List<ApplicationUser> findUsers(String email) {
+    public List<UserDto> findUsers(String email) {
         LOGGER.info("GET " + BASE_URL + "?email=" + email);
         try {
-            return userService.findUsers(email);
+            List<ApplicationUser> result = userService.findUsers(email);
+            List<UserDto> returnValue = new ArrayList<>();
+            for (ApplicationUser user : result) {
+                if (user != null) {
+                    returnValue.add(userMapper.applicationUserToUserDto(user));
+                }
+            }
+
+            return returnValue;
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found in the repository");
@@ -109,7 +136,7 @@ public class UserEndpoint {
             return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
         }
     }
 }

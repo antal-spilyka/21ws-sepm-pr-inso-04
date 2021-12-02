@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {AuthService} from '../../services/auth.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-user-list',
@@ -12,6 +13,7 @@ export class UserListComponent implements OnInit {
   userList: any;
   searchEmail = null;
   filterToggled = false;
+  currentUser = null;
 
   error = false;
   errorMessage = '';
@@ -20,7 +22,29 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getUser();
     this.findUsers();
+  }
+
+  getToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  getUser() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      const email: string = decoded.sub;
+      this.userService.get(email).subscribe({
+        next: (user: User) => {
+          this.currentUser = user;
+        },
+        error: err => {
+          console.log(err.error);
+        }
+      });
+    } else {
+      this.currentUser = null;
+    }
   }
 
   findUsers() {
@@ -85,23 +109,7 @@ export class UserListComponent implements OnInit {
       } else {
        newAdmin = false;
       }
-      const changedUser = {
-        email: user.email,
-        newEmail: user.email,
-        admin: newAdmin,
-        password: user.password,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        salutation: user.salutation,
-        city: user.city,
-        zip: user.zip,
-        country: user.country,
-        street: user.street,
-        disabled: user.disabled,
-        paymentInformation: user.paymentInformation
-      };
-      this.userService.updateUser(changedUser).subscribe({
+      this.userService.setAdmin(user.email, newAdmin).subscribe({
         next: () => {
           console.log('User with the e-mail ' + user.email + 'changed');
         },

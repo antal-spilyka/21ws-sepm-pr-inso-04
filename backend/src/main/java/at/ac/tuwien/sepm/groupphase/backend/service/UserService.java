@@ -48,6 +48,14 @@ public interface UserService extends UserDetailsService {
     void createUser(UserRegisterDto user);
 
     /**
+     * Sets the admin attribute of a user.
+     *
+     * @param email of the user
+     * @param admin attribute to be set
+     */
+    void setAdmin(String email, Boolean admin);
+
+    /**
      * Updates an existing user.
      *
      * @param user that should be updated with new/old data
