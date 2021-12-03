@@ -23,4 +23,14 @@ export class NewsService {
     console.log(`Save new news ${news} in the datastore`);
     return this.httpClient.post(this.newsBaseUri, news, {responseType: 'text'});
   }
+
+  /**
+   * Get all news stored in the system
+   *
+   * @return observable list of found news.
+   */
+  getNewNews(): Observable<News[]> {
+    console.log('Load all news');
+    return this.httpClient.get<News[]>(this.newsBaseUri);
+  }
 }

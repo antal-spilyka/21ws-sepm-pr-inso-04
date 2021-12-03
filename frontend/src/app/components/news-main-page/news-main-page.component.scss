@@ -1,0 +1,14 @@
+.news {
+  display: flex;
+  align-items: center;
+  position: static;
+}
+
+.news-card {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  margin-bottom: 8px;
+  background-color: #e8e8e8;
+}
+
+

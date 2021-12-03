@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class NewsMapper {
@@ -25,6 +27,7 @@ public class NewsMapper {
         news.setFsk(newsDto.getFsk());
         news.setShortDescription(newsDto.getShortDescription());
         news.setLongDescription(newsDto.getLongDescription());
+        news.setCreateDate(newsDto.getCreateDate());
         return news;
     }
 
@@ -37,6 +40,19 @@ public class NewsMapper {
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
         newsDto.setLongDescription(news.getLongDescription());
+        newsDto.setCreateDate(news.getCreateDate());
         return newsDto;
+    }
+
+    public List<NewsDto> entityToDto(List<News> news) {
+        LOGGER.trace("entityToDto(List<News>)");
+        if (news == null) {
+            return null;
+        }
+        List<NewsDto> all = new ArrayList<>();
+        for (int i = 0; i < news.size(); i++) {
+            all.add(this.entityToDto(news.get(i)));
+        }
+        return all;
     }
 }

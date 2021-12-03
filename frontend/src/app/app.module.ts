@@ -43,8 +43,8 @@ import { SearchArtistComponent } from './components/search-artist/search-artist.
 import { SearchLocationComponent } from './components/search-location/search-location.component';
 import { SearchEventsComponent } from './components/search-events/search-events.component';
 import { SearchTimeComponent } from './components/search-time/search-time.component';
-
-
+import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -64,12 +64,12 @@ import { SearchTimeComponent } from './components/search-time/search-time.compon
     CreateEventPlaceComponent,
     CreateArtistComponent,
     CreateActualEventComponent,
+    NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,
     SearchLocationComponent,
     SearchEventsComponent,
     SearchTimeComponent
-
   ],
   imports: [
     BrowserModule,
@@ -95,6 +95,7 @@ import { SearchTimeComponent } from './components/search-time/search-time.compon
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
+    MatGridListModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

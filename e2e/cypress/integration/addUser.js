@@ -1,6 +1,4 @@
-context('add message', () => {
-    let msgText = 'msg' + new Date().getTime();
-
+context('add user', () => {
     it('register', () => {
         cy.registerUser();
     })

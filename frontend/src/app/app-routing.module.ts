@@ -14,9 +14,10 @@ import {SearchEventsComponent} from './components/search-events/search-events.co
 import {SearchTimeComponent} from './components/search-time/search-time.component';
 import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
+import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: NewsMainPageComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'edit', component: EditUserComponent},

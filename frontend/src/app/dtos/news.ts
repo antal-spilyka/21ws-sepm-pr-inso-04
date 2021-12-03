@@ -7,4 +7,5 @@ export class News {
   fsk: number;
   shortDescription?: string;
   longDescription?: string;
+  createDate: Date;
 }

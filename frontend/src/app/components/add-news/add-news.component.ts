@@ -65,7 +65,8 @@ export class AddNewsComponent implements OnInit {
       fsk: this.form.controls.fsk.value,
       shortDescription: this.form.controls.shortDescription.value,
       longDescription: this.form.controls.longDescription.value
-    } as News;
+    ,
+      createDate: new Date()} as News;
     console.log(newsRequest);
     this.newsService.save(newsRequest).subscribe({
       next: () => {

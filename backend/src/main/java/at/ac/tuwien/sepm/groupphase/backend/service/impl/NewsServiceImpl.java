@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -22,5 +24,13 @@ public class NewsServiceImpl implements NewsService {
     public void save(News news) {
         LOGGER.debug("Publish new news {}", news);
         newsRepository.save(news);
+    }
+
+    @Override
+    public List<News> getNewNews() {
+        LOGGER.debug("Get all News");
+
+        LocalDateTime beforeSevenDays = LocalDateTime.now().minusDays(7);
+        return newsRepository.findByCreateDateAfter(beforeSevenDays);
     }
 }

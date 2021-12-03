@@ -1,52 +1,67 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CategoryService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
-import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
+import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
+import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsEndpointTest {
+public class NewsEndpointTest implements TestData {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     EventService eventService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private SecurityProperties securityProperties;
     @Autowired
     EventPlaceMapper eventPlaceMapper;
     @Autowired
@@ -58,10 +73,14 @@ public class NewsEndpointTest {
     @Autowired
     ArtistService artistService;
     @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
     NewsService newsService;
 
     @Autowired
     NewsRepository newsRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     NewsMapper newsMapper;
@@ -71,39 +90,42 @@ public class NewsEndpointTest {
     ArtistDto artistDto;
     EventDto eventDto;
 
-    @BeforeAll
-    public void insertNeededContext() {
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+
         AddressDto addressDto = new AddressDto();
         addressDto.setZip("1234");
-        addressDto.setState("TestState");
-        addressDto.setCountry("TestCountry");
-        addressDto.setCity("TestCity");
+        addressDto.setState("TestStateNews5");
+        addressDto.setCountry("TestCountryNews5");
+        addressDto.setCity("TestCityNews5");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace3");
+        eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
         EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
 
         RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoom");
+        roomInquiryDto.setName("TestRoomNews5");
         roomInquiryDto.setEventPlaceName(eventPlace.getName());
         roomDto = roomService.save(roomInquiryDto);
 
         ArtistDto artistDto = new ArtistDto();
-        artistDto.setBandName("TestArtist");
-        artistDto.setDescription("an artist");
+        artistDto.setBandName("TestArtistNews5");
+        artistDto.setDescription("an artistNews5");
         this.artistDto = artistService.save(artistDto);
 
         CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName("testCategory");
+        categoryDto.setName("testCategoryNews5");
         this.categoryDto = categoryService.save(categoryDto);
     }
 
+
     @Test
-    public void insert_news_valid() {
+    public void addNewsWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews6");
+        eventInquiryDto.setContent("testContentNews6");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());
@@ -111,59 +133,7 @@ public class NewsEndpointTest {
         eventInquiryDto.setArtistId(artistDto.getId());
         this.eventDto = eventService.createEvent(eventInquiryDto);
 
-        NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
-        newsDto.setRating(5L);
-        newsDto.setFsk(18L);
-        newsDto.setShortDescription("This is a short Description");
-        newsDto.setLongDescription("This is a bit longer Description");
-        News firstNews = newsRepository.save(newsMapper.dtoToEntity(newsDto));
-
-        News secondNews = new News();
-        secondNews.setId(firstNews.getId());
-        secondNews.setEvent(firstNews.getEvent());
-        secondNews.setRating(firstNews.getRating());
-        secondNews.setFsk(firstNews.getFsk());
-        secondNews.setShortDescription(firstNews.getShortDescription());
-        secondNews.setLongDescription(firstNews.getLongDescription());
-
-        assertEquals(firstNews, secondNews);
-    }
-
-    @Test
-    public void insert_news_invalid_event() {
-        EventDto invalidEvent = eventDto;
-        invalidEvent.setId(null);
-        NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(invalidEvent);
-        newsDto.setRating(5L);
-        newsDto.setFsk(18L);
-        newsDto.setShortDescription("This is a short Description");
-        newsDto.setLongDescription("This is a bit longer Description");
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> newsRepository.save(newsMapper.dtoToEntity(newsDto)));
-    }
-
-    @Test
-    public void insert_news_nullValue_rating() {
-        NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
-        newsDto.setFsk(18L);
-        newsDto.setShortDescription("This is a short Description");
-        newsDto.setLongDescription("This is a bit longer Description");
-        assertThrows(DataIntegrityViolationException.class, () -> newsService.save(newsMapper.dtoToEntity(newsDto)));
-    }
-
-    @Test
-    public void insert_news_invalid_compare() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setCategoryName(categoryDto.getName());
-        eventInquiryDto.setRoomId(roomDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        LocalDateTime date = LocalDateTime.now();
 
         NewsDto newsDto = new NewsDto();
         newsDto.setEvent(eventDto);
@@ -171,16 +141,41 @@ public class NewsEndpointTest {
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
-        News firstNews = newsRepository.save(newsMapper.dtoToEntity(newsDto));
+        newsDto.setCreateDate(date);
 
-        News secondNews = new News();
-        secondNews.setId(-100000L);
-        secondNews.setEvent(firstNews.getEvent());
-        secondNews.setRating(firstNews.getRating());
-        secondNews.setFsk(firstNews.getFsk());
-        secondNews.setShortDescription(firstNews.getShortDescription());
-        secondNews.setLongDescription(firstNews.getLongDescription());
+        String body = objectMapper.writeValueAsString(user1);
 
-        assertNotEquals(firstNews, secondNews);
+        // Register
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        String body2 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user1.getEmail()).withPassword(user1.getPassword()).build());
+
+        // Login
+        MvcResult mvcResult2 = this.mockMvc.perform(post(AUTHENTICATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body2))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        String body3 = objectMapper.writeValueAsString(newsDto);
+
+        MvcResult mvcResult3 = this.mockMvc.perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body3))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
     }
 }
