@@ -1,32 +1,28 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-//TODO: replace this class with a correct ApplicationUser JPARepository implementation
+import java.util.Optional;
+import java.util.List;
+
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
-    private final ApplicationUser user;
-    private final ApplicationUser admin;
+    /**
+     * Find the user by the unique mail.
+     *
+     * @param email of the user
+     * @return the found user
+     */
+    ApplicationUser findUserByEmail(String email);
 
-    @Autowired
-    public UserRepository(PasswordEncoder passwordEncoder) {
-        user = new ApplicationUser("user@email.com", passwordEncoder.encode("password"), false);
-        admin = new ApplicationUser("admin@email.com", passwordEncoder.encode("password"), true);
-    }
-
-    public ApplicationUser findUserByEmail(String email) {
-        if (email.equals(user.getEmail())) {
-            return user;
-        }
-        if (email.equals(admin.getEmail())) {
-            return admin;
-        }
-        return null; // In this case null is returned to fake Repository behavior
-    }
-
-
+    /**
+     * Find every user in the repository with the given email address.
+     *
+     * @param email address to search for
+     * @return list of users
+     */
+    List<ApplicationUser> findByEmailContains(String email);
 }

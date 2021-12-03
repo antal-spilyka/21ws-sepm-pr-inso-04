@@ -13,6 +13,9 @@ public class UserLoginDto {
     @NotNull(message = "Password must not be null")
     private String password;
 
+    @NotNull(message = "LockedCounter must not be null")
+    private int lockedCounter;
+
     public String getEmail() {
         return email;
     }
@@ -27,6 +30,14 @@ public class UserLoginDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getLockedCounter() {
+        return lockedCounter;
+    }
+
+    public void setLockedCounter(int lockedCounter) {
+        this.lockedCounter = lockedCounter;
     }
 
     @Override

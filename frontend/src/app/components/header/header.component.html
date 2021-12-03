@@ -1,19 +1,54 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
+<div class="header">
+  <div class="headerButtons">
+    <button *ngIf="authService.isLoggedIn()" routerLink="/edit" mat-icon-button
+            matTooltip="Your Account">
+      <mat-icon>person</mat-icon>
+    </button>
+    <button *ngIf="authService.isLoggedIn()" mat-icon-button
+            matTooltip="Settings">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <button *ngIf="authService.isLoggedIn()" routerLink="/login" mat-icon-button
+            matTooltip="Logout" (click)="authService.logoutUser()" name="logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navigationBar">
   <a class="navbar-brand ml-lg-5" href="">SEPM Group Phase</a>
-  <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news/add" routerLinkActive="active">Add
+          News</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
       </li>
+      <li>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users" routerLinkActive="active">Users</a>
+      </li>
     </ul>
+
     <ul class="navbar-nav mr-5">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+    </ul>
+
+    <ul class="navbar-nav mr-5" *ngIf="!authService.isLoggedIn()">
+      <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+    </ul>
+
+    <ul class="navbar-nav mr-5">
+    <div class="dropdown">
+      <button class="dropbtn">Search</button>
+      <div class="dropdown-content">
+        <a class="nav-link" routerLink="/search-artist" routerLinkActive="active">Search by Artist</a>
+        <a class="nav-link" routerLink="/search-location" routerLinkActive="active">Search by Location</a>
+        <a class="nav-link" routerLink="/search-event" routerLinkActive="active">Search by Event</a>
+        <a class="nav-link" routerLink="/search-time" routerLinkActive="active">Search by Time</a>
+      </div>
+    </div>
     </ul>
   </div>
 </nav>

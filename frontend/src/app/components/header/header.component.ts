@@ -8,9 +8,17 @@ import {AuthService} from '../../services/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService) {
+  }
 
   ngOnInit() {
+  }
+
+  /**
+   * Returns true if the authenticated user is an admin
+   */
+  isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
   }
 
 }

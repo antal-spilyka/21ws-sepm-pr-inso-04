@@ -1,0 +1,59 @@
+<div class="container mt-3" *ngIf="error">
+  <div class="alert alert-danger" role="alert">
+    <h4>Error! {{errorMessage}}</h4>
+    <span>Close error window </span>
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<div class="modal-body">
+
+  <div>
+
+    <div class="form-group">
+      <label for="descriptionEvent">Description</label>
+      <input type="text" name="descriptionEvent" class="form-control" id="descriptionEvent"
+             aria-describedby="titleHelp" placeholder="Enter Description for Event" [(ngModel)]="searchEvent.description">
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input type="text" name="category" class="form-control" id="category"
+             aria-describedby="titleHelp" placeholder="Enter Category" [(ngModel)]="searchEvent.categoryName">
+    </div>
+
+    <div class="form-group">
+      <label for="duration">Duration  (+/- 30 Minutes)</label>
+      <input type="number" name="duration" class="form-control" id="duration"
+             aria-describedby="titleHelp" placeholder="Enter Duration" [(ngModel)]="searchEvent.duration" min="0">
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content of the Event</label>
+      <input type="text" name="content" class="form-control" id="content"
+             aria-describedby="titleHelp" placeholder="Enter Content" [(ngModel)]="searchEvent.content">
+    </div>
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
+    <div *ngIf="eventList !== []">
+      <table class="table table-hover">
+        <thead>
+        <th>Events</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let event of eventList">
+          <td>
+            <div class="flex"><span>Name: {{event.name}}</span>
+              <span>Description: {{event.description}}</span>
+              <span>Category: {{event.category.name}}</span>
+              <span>Duration: {{event.duration}}</span>
+              <span>Content: {{event.content}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

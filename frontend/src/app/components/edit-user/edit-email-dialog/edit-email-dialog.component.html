@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Changing Email</h2>
+<mat-dialog-content class="mat-typography">
+  Do you really want to change your Email?
+  This means that your Username is changing and you have to log in again.
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Change</button>
+</mat-dialog-actions>
