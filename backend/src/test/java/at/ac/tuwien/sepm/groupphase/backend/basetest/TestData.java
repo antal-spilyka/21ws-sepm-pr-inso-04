@@ -21,6 +21,7 @@ public interface TestData {
     String USER_BASE_URI = BASE_URI + "/users";
     String NEWS_BASE_URI = BASE_URI + "/news";
     String AUTHENTICATION_URI = BASE_URI + "/authentication";
+    String FILE_URI = BASE_URI + "/files";
 
     String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
