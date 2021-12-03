@@ -19,7 +19,7 @@ public interface ArtistService {
      * @return List of artists matching properties
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto);
+    List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto, Integer number);
 
     /**
      * Gets artist by primary key (id).

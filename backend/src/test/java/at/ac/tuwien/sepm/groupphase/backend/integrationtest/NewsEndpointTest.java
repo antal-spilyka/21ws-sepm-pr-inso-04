@@ -74,13 +74,13 @@ public class NewsEndpointTest {
     @BeforeAll
     public void insertNeededContext() {
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
+        addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace");
+        eventPlaceDto.setName("TestPlace3");
         eventPlaceDto.setAddressDto(addressDto);
         EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
 

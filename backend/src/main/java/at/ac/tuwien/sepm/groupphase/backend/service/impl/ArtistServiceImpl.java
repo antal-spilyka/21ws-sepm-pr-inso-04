@@ -34,10 +34,10 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Transactional
     @Override
-    public List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto) {
+    public List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto, Integer number) {
         LOGGER.debug("Handeling in Service {}", artistSearchDto);
         try {
-            List<Artist> artists = artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, 2));
+            List<Artist> artists = artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
             return artists.stream().map(artist ->
                 artistMapper.entityToDto(artist)
             ).collect(Collectors.toList());

@@ -25,6 +25,19 @@ export class ArtistService {
     params = params.set('misc', searchName);
     return this.httpClient.get<Artist[]>(this.messageBaseUri, {params});
   }
+  /**
+   * Searches for artist by name.
+   *
+   * @param searchName to search for
+   * @returns Observable List of Artists matching query
+   */
+  searchArtist(searchName: string): Observable<Artist[]> {
+    let params = new HttpParams();
+    if (searchName && searchName !== '') {
+      params = params.set('misc', searchName.trim());
+    }
+    return this.httpClient.get<Artist[]>(this.messageBaseUri + '/search', {params});
+  }
 
   /**
    * Persists new artist.

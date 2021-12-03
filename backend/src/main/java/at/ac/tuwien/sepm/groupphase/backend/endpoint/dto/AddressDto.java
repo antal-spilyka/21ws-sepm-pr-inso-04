@@ -7,8 +7,27 @@ public class AddressDto {
     Long id;
     String city;
     String state;
-    Integer zip;
+    String zip;
     String country;
+    String description;
+    String street;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @NotNull()
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     public Long getId() {
         return id;
@@ -37,11 +56,11 @@ public class AddressDto {
     }
 
     @NotNull()
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 

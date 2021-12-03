@@ -11,4 +11,5 @@ export class EventDto {
   category: Category;
   room: Room;
   artist: Artist;
+  description: string;
 }

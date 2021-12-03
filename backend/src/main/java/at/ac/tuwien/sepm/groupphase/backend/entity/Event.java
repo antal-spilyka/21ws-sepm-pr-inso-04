@@ -19,6 +19,15 @@ public class Event {
     Category category;
     Room room;
     Artist artist;
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

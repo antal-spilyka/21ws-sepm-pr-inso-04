@@ -15,9 +15,9 @@ import java.lang.invoke.MethodHandles;
 @Component
 public class EventMapper {
 
-    private RoomMapper roomMapper;
-    private CategoryMapper categoryMapper;
-    private ArtistMapper artistMapper;
+    private final RoomMapper roomMapper;
+    private final CategoryMapper categoryMapper;
+    private final ArtistMapper artistMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public EventMapper(RoomMapper roomMapper, CategoryMapper categoryMapper, ArtistMapper artistMapper) {
@@ -36,6 +36,7 @@ public class EventMapper {
         event.setCategory(category);
         event.setRoom(room);
         event.setArtist(artist);
+        event.setDescription(eventInquiryDto.getDescription());
         return event;
     }
 
@@ -50,6 +51,7 @@ public class EventMapper {
         eventDto.setCategory(categoryMapper.entityToDto(event.getCategory()));
         eventDto.setRoom(roomMapper.entityToDto(event.getRoom()));
         eventDto.setArtist(artistMapper.entityToDto(event.getArtist()));
+        eventDto.setDescription(event.getDescription());
         return eventDto;
     }
 

@@ -38,7 +38,7 @@ export class AddNewsComponent implements OnInit {
     this.events = this.form.get('chosenEvent').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap((name: string) => this.eventService.findEvent(name))
+      switchMap((name: string) => this.eventService.findEventByName(name))
     );
   }
 

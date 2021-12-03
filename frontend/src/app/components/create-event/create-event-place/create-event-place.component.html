@@ -34,7 +34,18 @@
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <hr class="line">
+        <mat-form-field>
+                    <mat-label>Street</mat-label>
+                    <input matInput required formControlName="street">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea cdkTestareaAutosize matInput formControlName="description" cdkAutosizeMinRows="3"
+                        cdkAutosizeMaxRows="5"></textarea>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <hr class="line">
       </div>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <h2>Room</h2>

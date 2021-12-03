@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
@@ -8,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
@@ -55,11 +57,37 @@ public class EventPlaceServiceImpl implements EventPlaceService {
         }
     }
 
+    @Override
+    public List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
+        LOGGER.debug("Handeling in Service {}", eventLocationSearchDto);
+        if (eventLocationSearchDto.getZip() == null && eventLocationSearchDto.getStreet() == null
+            && eventLocationSearchDto.getCountry() == null && eventLocationSearchDto.getDescription() == null
+            && eventLocationSearchDto.getState() == null && eventLocationSearchDto.getCity() == null) {
+            throw new NotFoundException("No address was found for this query");
+        }
+        try {
+            List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
+                eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(), eventLocationSearchDto.getDescription(),
+                eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(0, 10));
+            if (addresses.isEmpty()) {
+                throw new NotFoundException("No address was found for this query");
+            }
+            return addresses.stream().map(eventLocation ->
+                addressMapper.entityToDto(eventLocation)
+            ).collect(Collectors.toList());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
     @Transactional
     @Override
     public EventPlaceDto save(EventPlaceDto eventPlaceDto) {
         LOGGER.debug("Handeling in Service {}", eventPlaceDto);
         try {
+            if (eventPlaceRepository.existsById(eventPlaceDto.getName())) {
+                throw new ContextException("Event with same name already exists.");
+            }
             AddressDto addressDto = eventPlaceDto.getAddressDto();
             if (addressDto == null) {
                 throw new ContextException("Address invalid");

@@ -12,8 +12,26 @@ public class Address {
     Long id;
     String city;
     String state;
-    Integer zip;
+    String zip;
     String country;
+    String description;
+    String street;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +50,7 @@ public class Address {
     }
 
     @Column(nullable = false, length = 10)
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
@@ -53,7 +71,7 @@ public class Address {
         this.state = state;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 

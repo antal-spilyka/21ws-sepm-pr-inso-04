@@ -38,6 +38,12 @@ import {EditEmailDialogComponent} from './components/edit-user/edit-email-dialog
 import {MatDialogModule} from '@angular/material/dialog';
 import {EditPasswordDialogComponent} from './components/edit-user/edit-password-dialog/edit-password-dialog.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SearchComponent } from './components/search/search.component';
+import { SearchArtistComponent } from './components/search-artist/search-artist.component';
+import { SearchLocationComponent } from './components/search-location/search-location.component';
+import { SearchEventsComponent } from './components/search-events/search-events.component';
+import { SearchTimeComponent } from './components/search-time/search-time.component';
+
 
 
 @NgModule({
@@ -58,6 +64,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     CreateEventPlaceComponent,
     CreateArtistComponent,
     CreateActualEventComponent,
+    SearchComponent,
+    SearchArtistComponent,
+    SearchLocationComponent,
+    SearchEventsComponent,
+    SearchTimeComponent
+
   ],
   imports: [
     BrowserModule,

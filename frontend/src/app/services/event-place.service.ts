@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {EventPlace} from '../dtos/eventPlace';
 import {Globals} from '../global/globals';
+import {Address} from '../dtos/address';
 
 @Injectable({
   providedIn: 'root'
@@ -36,4 +37,5 @@ export class EventPlaceService {
     console.log(eventPlace);
     return this.httpClient.post<EventPlace>(this.messageBaseUri, eventPlace);
   }
+
 }

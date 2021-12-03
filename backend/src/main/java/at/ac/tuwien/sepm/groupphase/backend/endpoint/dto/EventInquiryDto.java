@@ -15,6 +15,15 @@ public class EventInquiryDto {
     String categoryName;
     Long roomId;
     Long artistId;
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @NotNull(message = "Event must have a name!")
     @NotBlank

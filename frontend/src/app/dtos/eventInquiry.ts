@@ -6,4 +6,5 @@ export class EventInquiry {
   categoryName: string;
   roomId: number;
   artistId: number;
+  description: string;
 }
