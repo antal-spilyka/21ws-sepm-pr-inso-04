@@ -1,87 +1,87 @@
-<div class="buttons-div">
-  <button mat-raised-button color="warn">Cancel</button>
-  <button mat-raised-button color="primary">Save</button>
-</div>
-<div class="div-content">
-  <img class="event-image" src="favicon.ico" alt="Input here">
-  <div class="div-info">
-    <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
-      <mat-label>Fill in the information here</mat-label>
-      <textarea matInput
-      rows="15"></textarea>
-    </mat-form-field>
+<form [formGroup]="form">
+  <div class="buttons-div">
+    <button mat-raised-button color="warn" (click)="goBack();">Cancel</button>
+    <button mat-raised-button color="primary" (click)="save();">Save</button>
+  </div>
+  <div class="div-content">
+    <img class="event-image" src="favicon.ico" alt="Input here">
+    <div class="div-info">
+      <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
+        <mat-label>Fill in the information here</mat-label>
+        <textarea matInput rows="15" formControlName="shortDescription"></textarea>
+      </mat-form-field>
 
-    <div class="div-additional-info">
-      <div>
-        <mat-form-field class="example-full-width" appearance="fill">
-          <mat-label>Choose Event</mat-label>
-          <input type="text"
-                 aria-label="Event"
-                 matInput
-                 [formControl]="myControl"
-                 [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let event of events | async" [value]="event">
-              {{event}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
+      <div class="div-additional-info">
+        <div>
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Choose Event</mat-label>
+            <input type="text" matInput [matAutocomplete]="auto" formControlName="chosenEvent">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let event of events | async" (onSelectionChange)="setChosenEvent(event)"
+                          [value]="event.name">
+                {{event.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <label id="testing">utzu</label>
 
-
-      <div class="rating-div">
+        <div class="rating-div">
           <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>FSK</mat-label>
-            <input matInput>
+            <input matInput type="number" formControlName="fsk" MIN="0">
           </mat-form-field>
 
-        <div class="rating">
-          <input type="radio" name="rating" id="rating-1" (click)="setStars(5)">
-          <label for="rating-1"></label>
-          <input class="stars" type="radio" name="rating" id="rating-2" (click)="setStars(4)">
-          <label for="rating-2"></label>
-          <input class="stars" type="radio" name="rating" id="rating-3" (click)="setStars(3)">
-          <label for="rating-3"></label>
-          <input class="stars" type="radio" name="rating" id="rating-4" (click)="setStars(2)">
-          <label for="rating-4"></label>
-          <input class="stars" type="radio" name="rating" id="rating-5" (click)="setStars(1)">
-          <label for="rating-5"></label>
-          <h2>{{stars}}</h2>
+          <div class="rating">
+            <input type="radio" name="rating" id="rating-1" (click)="setRating(5)">
+            <label for="rating-1"></label>
+            <input class="stars" type="radio" name="rating" id="rating-2" (click)="setRating(4)">
+            <label for="rating-2"></label>
+            <input class="stars" type="radio" name="rating" id="rating-3" (click)="setRating(3)">
+            <label for="rating-3"></label>
+            <input class="stars" type="radio" name="rating" id="rating-4" (click)="setRating(2)">
+            <label for="rating-4"></label>
+            <input class="stars" type="radio" name="rating" id="rating-5" (click)="setRating(1)">
+            <label for="rating-5"></label>
+          </div>
         </div>
+
       </div>
+
     </div>
-
   </div>
-</div>
-<h2>Add additional pictures</h2>
 
-<div class="additional-events">
-  <button mat-icon-button
-          matTooltip="Scroll left"
-          (click)="scrollLeft(list)">
-    <mat-icon>arrow_back_ios</mat-icon>
-  </button>
-  <div class="scrolling-wrapper" #list>
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
-    <img class="additional-event-image card" src="favicon.ico">
+  <h2>Add additional pictures</h2>
+
+  <div class="additional-events">
+    <div class="scrolling-wrapper" #list>
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+      <img class="additional-event-image card" src="favicon.ico">
+    </div>
+    <button mat-icon-button
+            matTooltip="Scroll left"
+            (click)="scrollLeft(list)"
+            class="arrow-left">
+      <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <button mat-icon-button
+            matTooltip="Scroll right"
+            (click)="scrollRight(list)"
+            class="arrow-right">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
   </div>
-  <button mat-icon-button
-          matTooltip="Scroll right"
-          (click)="scrollRight(list)">
-    <mat-icon>arrow_forward_ios</mat-icon>
-  </button>
-</div>
 
-<div class="space-div"></div>
-<mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
-  <mat-label>Fill in the detailed information here</mat-label>
-  <textarea matInput
-            rows="15"></textarea>
-</mat-form-field>
+  <div class="space-div"></div>
+  <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
+    <mat-label>Fill in the detailed information here</mat-label>
+    <textarea matInput rows="15" formControlName="longDescription"></textarea>
+  </mat-form-field>
+</form>

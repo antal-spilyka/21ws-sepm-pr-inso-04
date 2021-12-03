@@ -15,9 +15,9 @@ import java.lang.invoke.MethodHandles;
 @Component
 public class EventMapper {
 
-    private RoomMapper roomMapper;
-    private CategoryMapper categoryMapper;
-    private ArtistMapper artistMapper;
+    private final RoomMapper roomMapper;
+    private final CategoryMapper categoryMapper;
+    private final ArtistMapper artistMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public EventMapper(RoomMapper roomMapper, CategoryMapper categoryMapper, ArtistMapper artistMapper) {
@@ -43,6 +43,7 @@ public class EventMapper {
     public EventDto entityToDto(Event event) {
         LOGGER.trace("Mapping {}", event);
         EventDto eventDto = new EventDto();
+        eventDto.setId(event.getId());
         eventDto.setName(event.getName());
         eventDto.setDuration(event.getDuration());
         eventDto.setContent(event.getContent());
@@ -52,5 +53,19 @@ public class EventMapper {
         eventDto.setArtist(artistMapper.entityToDto(event.getArtist()));
         eventDto.setDescription(event.getDescription());
         return eventDto;
+    }
+
+    public Event dtoToEntity(EventDto eventDto) {
+        LOGGER.trace("Mapping {}", eventDto);
+        Event event = new Event();
+        event.setId(eventDto.getId());
+        event.setName(eventDto.getName());
+        event.setDuration(eventDto.getDuration());
+        event.setContent(eventDto.getContent());
+        event.setDateTime(eventDto.getDateTime());
+        event.setCategory(categoryMapper.dtoToEntity(eventDto.getCategory()));
+        event.setRoom(roomMapper.dtoToEntity(eventDto.getRoom()));
+        event.setArtist(artistMapper.dtoToEntity(eventDto.getArtist()));
+        return event;
     }
 }

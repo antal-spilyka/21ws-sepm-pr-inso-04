@@ -18,7 +18,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     /**
      * Finds artist that contains name in first-, lastname or bandName.
      *
-     * @param name of the artist
+     * @param name     of the artist
      * @param pageable regulates the number of results
      * @return list of fitting artists
      * @throws javax.persistence.PersistenceException when unknown error occurs

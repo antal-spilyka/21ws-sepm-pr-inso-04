@@ -4,9 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,11 +37,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param duration
-     * @param content
-     * @param categoryName
-     * @param description
-     * @param pageable
+     * @param duration of the event
+     * @param content of the event
+     * @param categoryName of the event
+     * @param description of the event
+     * @param pageable of the event
      * @return all matching events.
      */
     @Query("SELECT a FROM Event a WHERE (:duration is null OR (a.duration <= :duration+30 AND a.duration >= :duration-30)) " +
@@ -54,10 +55,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param dateTimeFrom
-     * @param dateTimeTill
-     * @param event
-     * @param roomId
+     * @param dateTimeFrom of the event
+     * @param dateTimeTill of the event
+     * @param event of the event
+     * @param roomId of the event
      * @return all matching events.
      */
     @Query("SELECT a FROM Event a WHERE (:dateTime is null OR (a.dateTime <= :dateTimeTill AND a.dateTime >= :dateTimeFrom)) " +
@@ -69,11 +70,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param event
-     * @param roomId
+     * @param event of the event
+     * @param roomId of the event
      * @return all matching events.
      */
     @Query("SELECT a FROM Event a WHERE (:event is null OR :event='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :event, '%'))) " +
         "AND (:roomId is null OR a.room = :roomId)")
     List<Event> findEventsWithoutDateTime(@Param("event") String event, @Param("roomId") Long roomId);
+
+    List<Event> findByNameAllIgnoreCaseContaining(String name);
 }

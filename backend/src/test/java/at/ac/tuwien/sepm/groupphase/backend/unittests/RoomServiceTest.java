@@ -9,21 +9,20 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -49,7 +48,7 @@ public class RoomServiceTest {
         addressDto.setCity("TestCity");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace");
+        eventPlaceDto.setName("TestPlace1");
         eventPlaceDto.setAddressDto(addressDto);
         eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
     }
@@ -71,13 +70,13 @@ public class RoomServiceTest {
         RoomDto roomDtoExp = new RoomDto();
         roomDtoExp.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
         roomDtoExp.setName(roomInquiryDto.getName());
-        assertEquals(roomDtoExp, roomDtoPers);
+        assertEquals(roomDtoExp.getName(), roomDtoPers.getName());
 
         RoomSearchDto roomSearchDto = new RoomSearchDto();
         roomSearchDto.setName(roomInquiryDto.getName());
         roomSearchDto.setEventPlaceName(eventPlace.getName());
         List<RoomDto> roomDto = roomService.findRoom(roomSearchDto);
-        assertEquals(roomDto.get(0), roomDtoExp);
+        assertEquals(roomDto.get(0).getName(), roomDtoExp.getName());
     }
 
     @Test

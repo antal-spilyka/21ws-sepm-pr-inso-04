@@ -20,14 +20,14 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     /**
      * Finds Room that contains name (LIKE) and has eventPlace (equals).
      *
-     * @param name of the room to search for
+     * @param name       of the room to search for
      * @param eventPlace the room is in (exact)
-     * @param pageable regulates number of results
+     * @param pageable   regulates number of results
      * @return List of corresponding Rooms
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
     @Query("SELECT r FROM Room r WHERE UPPER(r.name) LIKE UPPER(CONCAT('%', :name, '%')) " +
-            "AND r.eventPlace = :eventPlace")
+        "AND r.eventPlace = :eventPlace")
     List<Room> findRoom(@Param("name") String name, @Param("eventPlace") EventPlace eventPlace, Pageable pageable);
 
     /**
@@ -60,7 +60,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     /**
      * Returns all rooms from the database without any filter.
      *
-     * @param pageable
+     * @param pageable of the room
      * @return all rooms.
      */
     List<Room> getAllBy(Pageable pageable);

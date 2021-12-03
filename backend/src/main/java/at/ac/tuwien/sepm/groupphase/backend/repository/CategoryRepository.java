@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     /**
      * Finds category that contains name.
      *
-     * @param name of the category
+     * @param name     of the category
      * @param pageable regulates the number of results
      * @return list of fitting categories
      * @throws javax.persistence.PersistenceException when unknown error occurs

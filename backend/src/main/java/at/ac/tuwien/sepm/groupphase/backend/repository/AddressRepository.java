@@ -36,13 +36,13 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param city
-     * @param state
-     * @param country
-     * @param description
-     * @param street
-     * @param zip
-     * @param pageable
+     * @param city of the address
+     * @param state of the address
+     * @param country of the address
+     * @param description of the address
+     * @param street of the address
+     * @param zip of the address
+     * @param pageable of the address
      * @return all matching addresses.
      */
     @Query("SELECT a FROM Address a WHERE (:zip is null OR :zip='' OR UPPER(a.zip) LIKE UPPER(CONCAT( '%', :zip, '%'))) AND (:city is null OR :city='' OR UPPER(a.city) " +

@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
           this.wrongLogin = false;
 
           console.log('Successfully logged in user: ' + authRequest.email);
-          this.router.navigate(['/message']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           // Hide error message in the form

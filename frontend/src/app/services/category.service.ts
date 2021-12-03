@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Category } from '../dtos/category';
-import { Globals } from '../global/globals';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Category} from '../dtos/category';
+import {Globals} from '../global/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,8 @@ export class CategoryService {
 
   private messageBaseUri: string = this.globals.backendUri + '/categories';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
 
   /**
    * Finds category by name.
@@ -22,7 +23,7 @@ export class CategoryService {
   findCategory(searchName: string): Observable<Category[]> {
     let params = new HttpParams();
     params = params.set('name', searchName);
-    return this.httpClient.get<Category[]>(this.messageBaseUri, { params });
+    return this.httpClient.get<Category[]>(this.messageBaseUri, {params});
   }
 
   /**

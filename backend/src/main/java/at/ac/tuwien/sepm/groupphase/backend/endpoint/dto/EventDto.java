@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class EventDto {
+    Long id;
     String name;
     Integer duration;
     String content;
@@ -19,6 +20,14 @@ public class EventDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -86,13 +95,13 @@ public class EventDto {
             return false;
         }
         EventDto eventDto = (EventDto) o;
-        return  Objects.equals(name, eventDto.name)
-                && Objects.equals(duration, eventDto.duration)
-                && Objects.equals(content, eventDto.content)
-                && Objects.equals(dateTime, eventDto.dateTime)
-                && Objects.equals(category, eventDto.category)
-                && Objects.equals(room, eventDto.room)
-                && Objects.equals(artist, eventDto.artist);
+        return Objects.equals(name, eventDto.name)
+            && Objects.equals(duration, eventDto.duration)
+            && Objects.equals(content, eventDto.content)
+            && Objects.equals(dateTime, eventDto.dateTime)
+            && Objects.equals(category, eventDto.category)
+            && Objects.equals(room, eventDto.room)
+            && Objects.equals(artist, eventDto.artist);
     }
 
     @Override

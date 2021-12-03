@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -9,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -31,7 +33,7 @@ public class EventPlaceServiceTest {
     @Test()
     public void missing_addressDto() {
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestEventPlace");
+        eventPlaceDto.setName("TestEventPlace1");
         assertThrows(ContextException.class, () -> eventPlaceService.save(eventPlaceDto));
     }
 
@@ -44,7 +46,7 @@ public class EventPlaceServiceTest {
         addressDto.setCity("TestCity");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestEventPlace");
+        eventPlaceDto.setName("TestEventPlace2");
         eventPlaceDto.setAddressDto(addressDto);
 
         EventPlaceDto eventPlaceDtoPers = eventPlaceService.save(eventPlaceDto);
@@ -75,7 +77,7 @@ public class EventPlaceServiceTest {
         addressDto.setCity("TestCity");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestEventPlace1");
+        eventPlaceDto.setName("TestEventPlace3");
         eventPlaceDto.setAddressDto(addressDto);
 
         EventPlaceDto eventPlaceDtoPers = eventPlaceService.save(eventPlaceDto);

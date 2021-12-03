@@ -1,9 +1,9 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { EventDto } from '../dtos/eventDto';
-import { EventInquiry } from '../dtos/eventInquiry';
-import { Globals } from '../global/globals';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {EventDto} from '../dtos/eventDto';
+import {EventInquiry} from '../dtos/eventInquiry';
+import {Globals} from '../global/globals';
 import {EventSearchDto} from '../dtos/eventSearchDto';
 import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
 
@@ -14,7 +14,8 @@ export class EventService {
 
   private messageBaseUri: string = this.globals.backendUri + '/events';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
 
   /**
    * Creates a new Event.
@@ -67,5 +68,13 @@ export class EventService {
       params=params.set('room', searchEvent.room.trim());
     }
     return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/dateTime', { params });
+  }
+
+  /**
+   * Loads all events from the backend
+   */
+  findEventByName(searchName: string): Observable<EventDto[]> {
+    console.log(`searching for ${searchName}`);
+    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/' + searchName);
   }
 }

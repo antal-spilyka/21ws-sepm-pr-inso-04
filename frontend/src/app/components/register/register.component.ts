@@ -133,8 +133,4 @@ export class RegisterComponent implements OnInit {
   goBack() {
     this.next = false;
   }
-
-  navigateToSignIn() {
-
-  }
 }

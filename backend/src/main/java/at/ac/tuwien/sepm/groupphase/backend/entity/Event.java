@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -113,12 +112,12 @@ public class Event {
         }
         Event event = (Event) o;
         return Objects.equals(id, event.id)
-                && Objects.equals(name, event.name)
-                && Objects.equals(duration, event.duration)
-                && Objects.equals(content, event.content)
-                && Objects.equals(dateTime, event.dateTime)
-                && Objects.equals(category, event.category)
-                && Objects.equals(room, event.room);
+            && Objects.equals(name, event.name)
+            && Objects.equals(duration, event.duration)
+            && Objects.equals(content, event.content)
+            && Objects.equals(dateTime, event.dateTime)
+            && Objects.equals(category, event.category)
+            && Objects.equals(room, event.room);
     }
 
     @Override

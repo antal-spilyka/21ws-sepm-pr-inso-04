@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="5.9280" tests="2" failures="0">
+  <testsuite name="Root Suite" timestamp="2021-12-01T16:36:46" tests="0" file="cypress/integration/addMessage.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="add message" timestamp="2021-12-01T16:36:46" tests="2" time="5.9080" failures="0">
+    <testcase name="add message login" time="2.3670" classname="login">
+    </testcase>
+    <testcase name="add message create message" time="3.5110" classname="create message">
+    </testcase>
+  </testsuite>
+</testsuites>

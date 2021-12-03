@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {map, startWith, takeWhile, tap} from 'rxjs/operators';
-import {interval} from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {takeWhile, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, interval, Observable, switchMap} from 'rxjs';
+import {EventService} from '../../services/event.service';
+import {EventDto} from '../../dtos/eventDto';
+import {FormBuilder, Validators} from '@angular/forms';
+import {News} from '../../dtos/news';
+import {NewsService} from '../../services/news.service';
 
 @Component({
   selector: 'app-add-news',
@@ -9,16 +13,74 @@ import {interval} from 'rxjs';
   styleUrls: ['./add-news.component.scss']
 })
 export class AddNewsComponent implements OnInit {
-  myControl = new FormControl();
-  events: any;
-  stars: number;
-  items: number[] = [1,2,3,4,5,6,7,8,9];
+  error = false;
+  errorMessage = '';
+  events: Observable<EventDto[]>;
+  currentEvent: EventDto;
+  form = this.formBuilder.group({
+    id: ['',],
+    chosenEvent: ['', Validators.required],
+    rating: [null, Validators.required],
+    fsk: [18, Validators.required],
+    shortDescription: ['',],
+    longDescription: ['',]
+  });
 
-  constructor() { }
-
-  setStars(stars: number) {
-    this.stars = stars;
+  constructor(
+    private eventService: EventService,
+    private formBuilder: FormBuilder,
+    private newsService: NewsService,
+  ) {
+    this.loadEvents();
   }
+
+  loadEvents() {
+    this.events = this.form.get('chosenEvent').valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap((name: string) => this.eventService.findEventByName(name))
+    );
+  }
+
+  ngOnInit() {
+  }
+
+  setChosenEvent(event: EventDto) {
+    this.currentEvent = event;
+    document.getElementById('testing').innerText = this.currentEvent.toString();
+  }
+
+  setRating(rating: number) {
+    this.form.controls.rating.setValue(rating);
+  }
+
+  goBack() {
+    history.back();
+  }
+
+  save() {
+    const newsRequest = {
+      event: this.currentEvent,
+      rating: this.form.controls.rating.value,
+      fsk: this.form.controls.fsk.value,
+      shortDescription: this.form.controls.shortDescription.value,
+      longDescription: this.form.controls.longDescription.value
+    } as News;
+    console.log(newsRequest);
+    this.newsService.save(newsRequest).subscribe({
+      next: () => {
+        console.log('News was created successfully: ' + newsRequest.toString());
+        alert('News were added!');
+      },
+      error: (error) => {
+        console.log(`could not create news due to: ${error}`);
+        this.error = true;
+        this.errorMessage = error;
+      }
+    });
+  }
+
+  // region horizontal scroll
 
   scrollLeft(el: Element) {
     const animTimeMs = 400;
@@ -44,15 +106,5 @@ export class AddNewsComponent implements OnInit {
       .subscribe();
   }
 
-  ngOnInit(): void {
-    this.events = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filter(value)),
-    );
-  }
-
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.events.filter(event => event.toLowerCase().includes(filterValue));
-  }
+  // endregion
 }

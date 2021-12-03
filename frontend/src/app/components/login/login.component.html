@@ -15,7 +15,7 @@
     <div>
       <mat-form-field appearance="fill" class="big-control">
         <mat-label>Enter your email</mat-label>
-        <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" name="username" required>
+        <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" name="email" required>
         <mat-error *ngIf="emailControl.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </div>
@@ -39,9 +39,12 @@
     </div>
 
     <div>
-      <button type="button" mat-button class="forgot-password-button" routerLink="/register">Forgot password? Get reset e-mail!
+      <button type="button" mat-button class="forgot-password-button" routerLink="/register">Forgot password? Get reset
+        e-mail!
       </button>
-      <button type="button" mat-button class="not-registered-button" routerLink="/register">Not a memeber yet? Join us!</button>
+      <button type="button" mat-button class="not-registered-button" routerLink="/register">Not a memeber yet? Join
+        us!
+      </button>
       <button type="button" mat-raised-button color="primary" class="next-button"
               (click)="loginUser()"
               [disabled]="!loginForm.valid">Login

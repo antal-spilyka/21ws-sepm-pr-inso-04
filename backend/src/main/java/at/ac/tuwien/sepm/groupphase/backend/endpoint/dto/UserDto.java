@@ -3,9 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
 
 public class UserDto {
+
     @NotNull(message = "Email must not be null")
     @Email
     private String email;
@@ -13,6 +13,9 @@ public class UserDto {
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must not be shorter than 8 digits")
     private String password;
+
+    @NotNull(message = "Admin must not be null")
+    private Boolean admin;
 
     @NotNull(message = "First name must not be null")
     private String firstName;
@@ -32,14 +35,17 @@ public class UserDto {
     @NotNull(message = "City must not be null")
     private String city;
 
-    @NotNull(message = "Zip must not be null")
-    private String zip;
-
     @NotNull(message = "Street must not be null")
     private String street;
 
-    @NotNull(message = "Disabled must not be null")
+    @NotNull(message = "Zip must not be null")
+    private String zip;
+
+    private PaymentInformationDto paymentInformation;
+
     private Boolean disabled;
+
+    private int lockedCounter;
 
     public String getEmail() {
         return email;
@@ -55,6 +61,14 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getFirstName() {
@@ -113,14 +127,6 @@ public class UserDto {
         this.street = street;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
-    }
-
     public String getZip() {
         return zip;
     }
@@ -129,124 +135,45 @@ public class UserDto {
         this.zip = zip;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UserDto)) {
-            return false;
-        }
-        UserDto userRegisterDto = (UserDto) o;
-        return Objects.equals(email, userRegisterDto.email)
-            && Objects.equals(password, userRegisterDto.password);
+    public PaymentInformationDto getPaymentInformation() {
+        return paymentInformation;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, password);
+    public void setPaymentInformation(PaymentInformationDto paymentInformation) {
+        this.paymentInformation = paymentInformation;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public int getLockedCounter() {
+        return lockedCounter;
+    }
+
+    public void setLockedCounter(int lockedCounter) {
+        this.lockedCounter = lockedCounter;
     }
 
     @Override
     public String toString() {
-        return "UserRegisterDto{"
+        return "UserDto{"
             + "email='" + email + '\''
             + ", password='" + password + '\''
+            + ", firstName='" + firstName + '\''
+            + ", lastName='" + lastName + '\''
+            + ", salutation='" + salutation + '\''
+            + ", phone='" + phone + '\''
+            + ", country='" + country + '\''
+            + ", city='" + city + '\''
+            + ", street='" + street + '\''
+            + ", zip='" + zip + '\''
+            + ", paymentInformation=" + paymentInformation
             + '}';
     }
 
-    public static final class UserDtoBuilder {
-        private String email;
-        private String password;
-        private String firstName;
-        private String lastName;
-        private String salutation;
-        private String phone;
-        private String country;
-        private String zip;
-        private String city;
-        private String street;
-        private Boolean disabled;
-        private Boolean locked;
-        private int lockedCounter;
-
-        private UserDtoBuilder() {
-        }
-
-        public static UserDto.UserDtoBuilder aUserDto() {
-            return new UserDto.UserDtoBuilder();
-        }
-
-        public UserDto.UserDtoBuilder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withLastName(String lastName) {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withSalutation(String salutation) {
-            this.salutation = salutation;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withPhone(String phone) {
-            this.phone = phone;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withCountry(String country) {
-            this.country = country;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withCity(String city) {
-            this.city = city;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withStreet(String street) {
-            this.street = street;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withDisabled(Boolean disabled) {
-            this.disabled = disabled;
-            return this;
-        }
-
-        public UserDto.UserDtoBuilder withZip(String zip) {
-            this.zip = zip;
-            return this;
-        }
-
-        public UserDto build() {
-            UserDto userDto = new UserDto();
-            userDto.setEmail(email);
-            userDto.setPassword(password);
-            userDto.setFirstName(firstName);
-            userDto.setLastName(lastName);
-            userDto.setSalutation(salutation);
-            userDto.setPhone(phone);
-            userDto.setCountry(country);
-            userDto.setCity(city);
-            userDto.setStreet(street);
-            userDto.setDisabled(disabled);
-            userDto.setZip(zip);
-            return userDto;
-        }
-    }
 }
-

@@ -12,15 +12,19 @@ import {SearchArtistComponent} from './components/search-artist/search-artist.co
 import {SearchLocationComponent} from './components/search-location/search-location.component';
 import {SearchEventsComponent} from './components/search-events/search-events.component';
 import {SearchTimeComponent} from './components/search-time/search-time.component';
+import {EditUserComponent} from './components/edit-user/edit-user.component';
+import {UserListComponent} from './components/user-list/user-list.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'message', component: MessageComponent},
+  {path: 'edit', component: EditUserComponent},
+  {path: 'users', canActivate: [AuthGuard], component: UserListComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},
+  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
   {path: 'search', component: SearchComponent},

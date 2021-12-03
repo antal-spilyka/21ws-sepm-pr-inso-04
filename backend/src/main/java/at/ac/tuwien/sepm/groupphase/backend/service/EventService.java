@@ -18,7 +18,7 @@ public interface EventService {
      *
      * @param eventInquiryDto containing properties to be persisted
      * @return persisted event
-     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
+     * @throws org.hibernate.service.spi.ServiceException                      when unknown error occurs
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException when entity already exists
      */
     EventDto createEvent(EventInquiryDto eventInquiryDto);
@@ -38,4 +38,6 @@ public interface EventService {
      * @return all events that meet the search criteria.
      */
     List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto);
+
+    List<Event> findEvent(String name);
 }
