@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.invoke.MethodHandles;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,13 +96,12 @@ public class UserEndpoint {
      * Updates the admin rights of an existing user.
      */
     @Secured("ROLE_ADMIN")
-    @PermitAll
     @PutMapping("/{email}")
-    public ResponseEntity<String> setAdmin(@PathVariable String email, @RequestBody UserAdminDto request) {
+    public ResponseEntity<String> setAdmin(@PathVariable String email, Principal principal) {
         LOGGER.info("PUT /api/v1/users/{}", email);
 
         try {
-            userService.setAdmin(request);
+            userService.setAdmin(email, principal);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Admin rights of the user could not be changed: " + e.getLocalizedMessage(), e);
@@ -112,7 +110,6 @@ public class UserEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @PermitAll
     @GetMapping
     public List<UserDto> findUsers(String email) {
         LOGGER.info("GET " + BASE_URL + "?email=" + email);

@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -16,10 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import java.security.Principal;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -95,12 +93,9 @@ public class UserServiceTest implements TestData {
     public void changeAdminRights_thenShowCorrectRightsOfUser() {
         userService.createUser(newUser1);
         userService.createUser(newAdminUser1);
-        UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withAdminEmail(newAdminUser1.getEmail())
-            .withEmail(newUser1.getEmail())
-            .withAdmin(true)
-            .build();
-        userService.setAdmin(request);
+        Principal principal = newAdminUser1::getEmail;
+
+        userService.setAdmin(newUser1.getEmail(), principal);
 
         assertAll(
             () -> assertEquals(2, userService.findUsers(null).size()),
@@ -112,14 +107,11 @@ public class UserServiceTest implements TestData {
     @Test
     public void changeOwnRights_shouldThrowServiceException() {
         userService.createUser(newAdminUser1);
-        UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withAdminEmail(newAdminUser1.getEmail())
-            .withEmail(newAdminUser1.getEmail())
-            .withAdmin(true)
-            .build();
+
+        Principal principal = newAdminUser1::getEmail;
 
         try {
-            userService.setAdmin(request);
+            userService.setAdmin(newAdminUser1.getEmail(), principal);
             fail("ServiceException should occur");
         } catch (ServiceException e) {
             // Should be the case

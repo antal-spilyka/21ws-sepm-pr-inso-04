@@ -1,9 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
@@ -18,7 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -28,9 +29,6 @@ public class EventPlaceServiceTest {
 
     @Autowired
     private EventPlaceService eventPlaceService;
-
-    @Autowired
-    private AddressRepository addressRepository;
 
     @Test()
     public void missing_addressDto() {
@@ -65,9 +63,9 @@ public class EventPlaceServiceTest {
     }
 
     @Test
-    public void search_forLocation_withNoInputs(){
+    public void search_forLocation_withNoInputs() {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
-        assertThrows(NotFoundException.class, () ->eventPlaceService.findEventLocation(eventLocationSearchDto));
+        assertThrows(NotFoundException.class, () -> eventPlaceService.findEventLocation(eventLocationSearchDto));
     }
 
     @Test

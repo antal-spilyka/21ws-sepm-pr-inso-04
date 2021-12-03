@@ -1,16 +1,26 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CategoryService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,13 +30,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -35,22 +44,27 @@ import java.time.LocalDateTime;
 public class EventServiceTest {
 
     @Autowired
-    EventService eventService;
-    @Autowired
-    EventPlaceMapper eventPlaceMapper;
-    @Autowired
-    EventPlaceService eventPlaceService;
-    @Autowired
-    RoomService roomService;
-    @Autowired
-    CategoryService categoryService;
-    @Autowired
-    ArtistService artistService;
+    private EventService eventService;
 
-    RoomDto roomDto;
-    CategoryDto categoryDto;
-    ArtistDto artistDto;
-    EventDto eventDto;
+    @Autowired
+    private EventPlaceMapper eventPlaceMapper;
+
+    @Autowired
+    private EventPlaceService eventPlaceService;
+
+    @Autowired
+    private RoomService roomService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private ArtistService artistService;
+
+    private RoomDto roomDto;
+    private CategoryDto categoryDto;
+    private ArtistDto artistDto;
+    private EventDto eventDto;
 
     @BeforeAll
     public void insertNeededContext() {
@@ -154,7 +168,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void search_for_valid_event(){
+    public void search_for_valid_event() {
 
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setContent("testContent123");
@@ -164,7 +178,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void search_for_invalid_event(){
+    public void search_for_invalid_event() {
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDescription("desc");
         eventSearchDto.setContent("dataThatWasSurelyNotInserted");

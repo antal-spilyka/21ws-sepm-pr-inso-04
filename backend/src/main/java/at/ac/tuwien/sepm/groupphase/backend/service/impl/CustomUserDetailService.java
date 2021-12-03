@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -13,7 +13,6 @@ import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -33,12 +33,14 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PaymentInformationRepository paymentInformationRepository;
+    private SecurityProperties securityProperties;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository, SecurityProperties securityProperties) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.securityProperties = securityProperties;
     }
 
     @Override
@@ -101,16 +103,16 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     @Transactional
-    public void setAdmin(UserAdminDto request) {
-        if (request.getAdminEmail() == null || userRepository.findUserByEmail(request.getAdminEmail()) == null) {
+    public void setAdmin(String email, Principal principal) {
+        if (principal == null || principal.getName() == null) {
             throw new ServiceException("No administrator found with the given e-mail");
-        } else if (request.getAdmin() == null || userRepository.findUserByEmail(request.getEmail()) == null) {
+        } else if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new ServiceException("No user found with the given e-mail");
-        } else if (request.getEmail().equals(request.getAdminEmail())) {
+        } else if (principal.getName().equals(email)) {
             throw new ServiceException("You can not change your own admin rights");
         } else {
-            ApplicationUser currentUser = userRepository.findUserByEmail(request.getEmail());
-            currentUser.setAdmin(request.getAdmin());
+            ApplicationUser currentUser = userRepository.findUserByEmail(email);
+            currentUser.setAdmin(!currentUser.getAdmin()); // changing the admin rights of the user
             userRepository.save(currentUser);
         }
     }

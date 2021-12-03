@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -8,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -51,9 +51,10 @@ public interface UserService extends UserDetailsService {
     /**
      * Sets the admin attribute of a user.
      *
-     * @param request containing the user to be set as admin and the user who sent the request.
+     * @param email     of the user to change the admin rights for
+     * @param principal to find out the user changing the rights
      */
-    void setAdmin(UserAdminDto request);
+    void setAdmin(String email, Principal principal);
 
     /**
      * Updates an existing user.

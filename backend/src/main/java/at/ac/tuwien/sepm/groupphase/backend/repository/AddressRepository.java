@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,13 +34,13 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param city of the address
-     * @param state of the address
-     * @param country of the address
+     * @param city        of the address
+     * @param state       of the address
+     * @param country     of the address
      * @param description of the address
-     * @param street of the address
-     * @param zip of the address
-     * @param pageable of the address
+     * @param street      of the address
+     * @param zip         of the address
+     * @param pageable    of the address
      * @return all matching addresses.
      */
     @Query("SELECT a FROM Address a WHERE (:zip is null OR :zip='' OR UPPER(a.zip) LIKE UPPER(CONCAT( '%', :zip, '%'))) AND (:city is null OR :city='' OR UPPER(a.city) " +
@@ -51,6 +49,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
         " AND (:country is null OR :country='' OR UPPER(a.country) LIKE UPPER(CONCAT( '%', :country, '%'))) AND " +
         "(:street is null OR :street='' OR UPPER(a.street) LIKE UPPER(CONCAT( '%', :street, '%')))")
     List<Address> findEventLocation(@Param("city") String city, @Param("state") String state, @Param("country") String country,
-                                       @Param("description") String description, @Param("street") String street,
-                                       @Param("zip") String zip, Pageable pageable);
+                                    @Param("description") String description, @Param("street") String street,
+                                    @Param("zip") String zip, Pageable pageable);
 }
