@@ -1,5 +1,5 @@
 function checkLogin(cy) {
-    cy.contains('Welcome to the SEPM group phase!').should('be.visible');
+    cy.contains('Welcome').should('be.visible');
     cy.get('button[name="logout"]').click();
     cy.contains('a', 'Login').should('be.visible');
     cy.contains('a', 'Register').should('be.visible');
