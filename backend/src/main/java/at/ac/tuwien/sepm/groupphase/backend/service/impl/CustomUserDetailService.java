@@ -67,7 +67,6 @@ public class CustomUserDetailService implements UserService {
         if (applicationUser == null) {
             throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
         } else {
-            userRepository.save(applicationUser);
             return applicationUser;
         }
     }
@@ -81,12 +80,7 @@ public class CustomUserDetailService implements UserService {
         } else {
             users = userRepository.findByEmailContains(email);
         }
-        if (users == null || users.size() <= 0) {
-            throw new NotFoundException("No user found in the repository");
-        } else {
-            userRepository.saveAll(users);
-            return users;
-        }
+        return users;
     }
 
     @Override

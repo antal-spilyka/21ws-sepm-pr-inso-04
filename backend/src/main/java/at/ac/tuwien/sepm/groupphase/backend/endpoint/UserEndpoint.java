@@ -118,6 +118,7 @@ public class UserEndpoint {
         LOGGER.info("GET " + BASE_URL + "?email=" + email);
         try {
             List<ApplicationUser> result = userService.findUsers(email);
+            // Mapping the users
             List<UserDto> returnValue = new ArrayList<>();
             for (ApplicationUser user : result) {
                 if (user != null) {
@@ -128,7 +129,7 @@ public class UserEndpoint {
             return returnValue;
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found in the repository");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find users: " + e.getLocalizedMessage(), e);
         }
     }
 

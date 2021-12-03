@@ -50,7 +50,14 @@ export class UserListComponent implements OnInit {
   findUsers() {
     this.userService.findUsers(this.searchEmail).subscribe({
       next: (result: User[]) => {
-        this.userList = result;
+        if (result === null || result.length <= 0) {
+          this.errorMessage = 'No users found with the given e-mail address';
+          this.error = true;
+        } else {
+          this.userList = result;
+          this.resetSearch(); // resetting the error flag  after a successful search
+        }
+
         console.log('Initializing list of users with length: ' + this.userList.length);
       },
       error: (error) => {
@@ -58,6 +65,11 @@ export class UserListComponent implements OnInit {
         this.error = true;
       }
     });
+  }
+
+  resetSearch() {
+    this.vanishError(); // hide the error flag
+    this.findUsers(); // reload the list of users
   }
 
   getEmail(currentUser: User) {
@@ -111,12 +123,21 @@ export class UserListComponent implements OnInit {
         next: () => {
           console.log('User with the e-mail ' + user.email + 'changed');
         },
-        error: (error) => {
+        error: () => {
           this.errorMessage = 'Admin settings of the user can not be changed';
           this.error = true;
           user.admin = !user.admin; // Resetting the value
         }
       });
+    }
+  }
+
+  userEquals(user: User) {
+    if (user === null || this.currentUser === null
+    || user.email !== this.currentUser.email) {
+      return false;
+    } else {
+      return true;
     }
   }
 
