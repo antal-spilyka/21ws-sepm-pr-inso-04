@@ -9,37 +9,46 @@
 <h1 *ngIf="isAdmin()">Users</h1>
 
 <div *ngIf="isAdmin()">
-<table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
-  <thead>
-  <tr>
-    <th class="column">
+  <table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
+    <thead>
+    <tr>
+      <th class="column">
         <mat-form-field class="filter-select" *ngIf="filterToggled">
           <input placeholder="Enter E-Mail Address" matNativeControl (input)="findUsers()" [(ngModel)]="searchEmail">
         </mat-form-field>
-      <span *ngIf="!filterToggled"> E-Mail </span>
-      <mat-icon *ngIf="!filterToggled" (click)="toggleFilter()">filter_list</mat-icon>
-      <mat-icon *ngIf="filterToggled" (click)="toggleFilter()">close</mat-icon>
-    </th>
+        <span *ngIf="!filterToggled"> E-Mail </span>
+        <mat-icon *ngIf="!filterToggled" (click)="toggleFilter()">filter_list</mat-icon>
+        <mat-icon *ngIf="filterToggled" (click)="toggleFilter()">close</mat-icon>
+      </th>
 
-    <th class="column">
-      <div style="margin-left: 200px">
-        Role
-      </div>
-    </th>
-    <th class="column">
-      <div style="margin-left: 50px">
-        Phone (if given)
-      </div>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let user of userList">
-    <td class="column"> {{getEmail(user)}} </td>
-    <td class="column"> {{getRole(user)}} </td>
-    <td class="column"> {{getPhone(user)}} </td>
-  </tr>
-  </tbody>
-</table>
+      <th class="column">
+        <div style="margin-left: 200px">
+          Role
+        </div>
+      </th>
+      <th class="column">
+        <div style="margin-left: 50px">
+          Phone (if given)
+        </div>
+      </th>
+      <th class="column">
+        <div style="margin-left: 50px">
+          Set Admin
+        </div>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of userList">
+      <td class="column"> {{getEmail(user)}} </td>
+      <td class="column"> {{getRole(user)}} </td>
+      <td class="column"> {{getPhone(user)}} </td>
+      <td class="column">
+        <mat-slide-toggle *ngIf="!(this.currentUser.email === user.email)" class="slider" (change)="setAdmin(user)"
+                          [(ngModel)]="user.admin">
+        </mat-slide-toggle>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-

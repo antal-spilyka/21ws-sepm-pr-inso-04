@@ -58,36 +58,36 @@ public class NewsServiceTest implements TestData {
     @BeforeAll
     public void insertNeededContext() {
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
-        addressDto.setState("TestState");
-        addressDto.setCountry("TestCountry");
-        addressDto.setCity("TestCity");
+        addressDto.setZip("1234");
+        addressDto.setState("TestStateNews");
+        addressDto.setCountry("TestCountryNews");
+        addressDto.setCity("TestCityNews");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace");
+        eventPlaceDto.setName("TestPlaceNews");
         eventPlaceDto.setAddressDto(addressDto);
         EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
 
         RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoom");
+        roomInquiryDto.setName("TestRoomNews");
         roomInquiryDto.setEventPlaceName(eventPlace.getName());
         roomDto = roomService.save(roomInquiryDto);
 
         ArtistDto artistDto = new ArtistDto();
-        artistDto.setBandName("TestArtist");
-        artistDto.setDescription("an artist");
+        artistDto.setBandName("TestArtistNews");
+        artistDto.setDescription("an artistNews");
         this.artistDto = artistService.save(artistDto);
 
         CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName("testCategory");
+        categoryDto.setName("testCategoryNews");
         this.categoryDto = categoryService.save(categoryDto);
     }
 
     @Test
     public void insert_news_valid() {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews2");
+        eventInquiryDto.setContent("testContentNews2");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());
@@ -146,8 +146,8 @@ public class NewsServiceTest implements TestData {
     @Test
     public void insert_news_invalid_compare() {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews7");
+        eventInquiryDto.setContent("testContentNews7");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());
@@ -179,8 +179,8 @@ public class NewsServiceTest implements TestData {
     @Test
     public void oldNewsShouldntBeInNewNewsList() {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews8");
+        eventInquiryDto.setContent("testContentNews8");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());
@@ -206,8 +206,8 @@ public class NewsServiceTest implements TestData {
     @Test
     public void newNewsShouldBeInNewNewsList() {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews9");
+        eventInquiryDto.setContent("testContentNews9");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());

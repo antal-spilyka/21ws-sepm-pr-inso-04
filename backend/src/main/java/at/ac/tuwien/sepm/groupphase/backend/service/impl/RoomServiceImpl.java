@@ -65,6 +65,21 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    @Override
+    public List<RoomDto> getAll() {
+        LOGGER.debug("Handeling in Service list of rooms");
+        try {
+            List<Room> rooms = roomRepository.getAllBy(PageRequest.of(0, 10));
+            return rooms.stream().map(room ->
+                roomMapper.entityToDto(room)
+            ).collect(Collectors.toList());
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(e);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
     @Transactional
     @Override
     public RoomDto save(RoomInquiryDto roomInquiryDto) {

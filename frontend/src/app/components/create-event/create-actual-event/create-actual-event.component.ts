@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Artist } from 'src/app/dtos/artist';
-import { Category } from 'src/app/dtos/category';
-import { EventInquiry } from 'src/app/dtos/eventInquiry';
-import { Room } from 'src/app/dtos/room';
-import { EventService } from 'src/app/services/event.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {Artist} from 'src/app/dtos/artist';
+import {Category} from 'src/app/dtos/category';
+import {EventInquiry} from 'src/app/dtos/eventInquiry';
+import {Room} from 'src/app/dtos/room';
+import {EventService} from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-create-actual-event',
@@ -33,7 +33,8 @@ export class CreateActualEventComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private eventService: EventService,
-    private router: Router) { }
+    private router: Router) {
+  }
 
   ngOnInit(): void {
   }
@@ -43,10 +44,10 @@ export class CreateActualEventComponent implements OnInit {
   }
 
   async nextStep() {
-    if(!this.form.valid) {
+    if (!this.form.valid) {
       return;
     }
-    if(this.artist && this.room && this.category) {
+    if (this.artist && this.room && this.category) {
       const eventInquiry = new EventInquiry();
       eventInquiry.name = this.form.value.name;
       eventInquiry.content = this.form.value.content;
@@ -55,7 +56,7 @@ export class CreateActualEventComponent implements OnInit {
       eventInquiry.roomId = this.room.id;
       eventInquiry.artistId = this.artist.id;
       eventInquiry.categoryName = this.category.name;
-      if(eventInquiry.dateTime <= new Date()) {
+      if (eventInquiry.dateTime <= new Date()) {
         this.setErrorFlag('The Date of the event must be in the future');
         return;
       }

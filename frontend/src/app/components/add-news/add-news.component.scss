@@ -85,6 +85,7 @@
   overflow-y: hidden;
   white-space: nowrap;
   border-radius: 30px;
+
   .card {
     display: inline;
   }
@@ -98,6 +99,7 @@
 
 .scrolling-wrapper, .scrolling-wrapper-flexbox {
   -webkit-overflow-scrolling: touch;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -119,11 +121,11 @@
 .arrow-left {
   position: absolute;
   left: 2rem;
-  background: rgba(128,128,128, 0.5);
+  background: rgba(128, 128, 128, 0.5);
 }
 
 .arrow-right {
   position: absolute;
   right: 2rem;
-  background: rgba(128,128,128, 0.5);
+  background: rgba(128, 128, 128, 0.5);
 }

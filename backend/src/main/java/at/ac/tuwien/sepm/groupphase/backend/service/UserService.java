@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +20,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param email the email address
      * @return a Spring Security user
-     * @throws UsernameNotFoundException is thrown if the specified user does not exists
+     * @throws UsernameNotFoundException is thrown if the specified user does not exist
      */
     @Override
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
@@ -44,7 +46,21 @@ public interface UserService extends UserDetailsService {
      *
      * @param user that should be registered
      */
-    void createUser(UserDto user);
+    void createUser(UserRegisterDto user);
+
+    /**
+     * Sets the admin attribute of a user.
+     *
+     * @param request containing the user to be set as admin and the user who sent the request.
+     */
+    void setAdmin(UserAdminDto request);
+
+    /**
+     * Updates an existing user.
+     *
+     * @param user that should be updated with new/old data
+     */
+    void updateUser(UserEditDto user);
 
     /**
      * Increase the lockedCounter of a user.

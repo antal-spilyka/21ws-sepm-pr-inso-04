@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
 
 import java.util.List;
 
@@ -26,10 +25,17 @@ public interface RoomService {
      *
      * @param id of the room
      * @return corresponding room
-     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
+     * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException when room not found
      */
     RoomDto getById(Long id);
+
+    /**
+     * Methode for returning all rooms from database.
+     *
+     * @return all the rooms stored in database
+     */
+    List<RoomDto> getAll();
 
     /**
      * Persists room.

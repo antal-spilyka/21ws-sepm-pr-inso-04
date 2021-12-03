@@ -1,6 +1,6 @@
-import { Address } from './address';
+import {Address} from './address';
 
 export class EventPlace {
-    name: string;
-    addressDto: Address;
+  name: string;
+  addressDto: Address;
 }

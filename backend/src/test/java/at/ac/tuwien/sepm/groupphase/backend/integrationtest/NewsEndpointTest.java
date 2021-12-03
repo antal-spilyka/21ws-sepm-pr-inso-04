@@ -42,10 +42,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -94,28 +95,28 @@ public class NewsEndpointTest implements TestData {
         userRepository.deleteAll();
 
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
-        addressDto.setState("TestState");
-        addressDto.setCountry("TestCountry");
-        addressDto.setCity("TestCity");
+        addressDto.setZip("1234");
+        addressDto.setState("TestStateNews5");
+        addressDto.setCountry("TestCountryNews5");
+        addressDto.setCity("TestCityNews5");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace");
+        eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
         EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
 
         RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoom");
+        roomInquiryDto.setName("TestRoomNews5");
         roomInquiryDto.setEventPlaceName(eventPlace.getName());
         roomDto = roomService.save(roomInquiryDto);
 
         ArtistDto artistDto = new ArtistDto();
-        artistDto.setBandName("TestArtist");
-        artistDto.setDescription("an artist");
+        artistDto.setBandName("TestArtistNews5");
+        artistDto.setDescription("an artistNews5");
         this.artistDto = artistService.save(artistDto);
 
         CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName("testCategory");
+        categoryDto.setName("testCategoryNews5");
         this.categoryDto = categoryService.save(categoryDto);
     }
 
@@ -123,8 +124,8 @@ public class NewsEndpointTest implements TestData {
     @Test
     public void addNewsWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
         EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
+        eventInquiryDto.setName("testEventNews6");
+        eventInquiryDto.setContent("testContentNews6");
         eventInquiryDto.setDateTime(LocalDateTime.now());
         eventInquiryDto.setDuration(120);
         eventInquiryDto.setCategoryName(categoryDto.getName());

@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     /**
      * Finds EventPlace that contains name.
      *
-     * @param name of the eventPlace
+     * @param name     of the eventPlace
      * @param pageable regulates the number of results
      * @return list of fitting eventplaces
      * @throws javax.persistence.PersistenceException when unknown error occurs
@@ -42,4 +42,12 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
      * @return persisted eventPlace
      */
     EventPlace save(EventPlace eventPlace);
+
+    /**
+     * Returns true if entity with id exists.
+     *
+     * @param name of the eventplace
+     * @return boolean
+     */
+    boolean existsById(String name);
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {takeWhile, tap} from 'rxjs/operators';
 import {debounceTime, distinctUntilChanged, interval, Observable, switchMap} from 'rxjs';
 import {EventService} from '../../services/event.service';
@@ -38,7 +38,7 @@ export class AddNewsComponent implements OnInit {
     this.events = this.form.get('chosenEvent').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap((name: string) => this.eventService.findEvent(name))
+      switchMap((name: string) => this.eventService.findEventByName(name))
     );
   }
 
@@ -59,8 +59,13 @@ export class AddNewsComponent implements OnInit {
   }
 
   save() {
-    const newsRequest = {event: this.currentEvent, rating: this.form.controls.rating.value, fsk: this.form.controls.fsk.value,
-    shortDescription: this.form.controls.shortDescription.value, longDescription: this.form.controls.longDescription.value,
+    const newsRequest = {
+      event: this.currentEvent,
+      rating: this.form.controls.rating.value,
+      fsk: this.form.controls.fsk.value,
+      shortDescription: this.form.controls.shortDescription.value,
+      longDescription: this.form.controls.longDescription.value
+    ,
       createDate: new Date()} as News;
     console.log(newsRequest);
     this.newsService.save(newsRequest).subscribe({

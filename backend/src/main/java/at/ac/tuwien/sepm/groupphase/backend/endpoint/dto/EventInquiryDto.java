@@ -15,6 +15,15 @@ public class EventInquiryDto {
     String categoryName;
     Long roomId;
     Long artistId;
+    String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @NotNull(message = "Event must have a name!")
     @NotBlank
@@ -91,11 +100,11 @@ public class EventInquiryDto {
         }
         EventInquiryDto that = (EventInquiryDto) o;
         return Objects.equals(name, that.name)
-                && Objects.equals(duration, that.duration)
-                && Objects.equals(content, that.content)
-                && Objects.equals(dateTime, that.dateTime)
-                && Objects.equals(categoryName, that.categoryName)
-                && Objects.equals(roomId, that.roomId);
+            && Objects.equals(duration, that.duration)
+            && Objects.equals(content, that.content)
+            && Objects.equals(dateTime, that.dateTime)
+            && Objects.equals(categoryName, that.categoryName)
+            && Objects.equals(roomId, that.roomId);
     }
 
     @Override

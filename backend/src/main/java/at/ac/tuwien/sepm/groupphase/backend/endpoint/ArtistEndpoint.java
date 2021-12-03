@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,8 +37,21 @@ public class ArtistEndpoint {
     @GetMapping
     @Operation(summary = "Find artist by search parameters.")
     public ResponseEntity findArtists(@Validated ArtistSearchDto artistSearchDto) {
-        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto).stream(), HttpStatus.OK);
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 2).stream(), HttpStatus.OK);
         return response;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/search")
+    @Operation(summary = "Search artists by search parameters.")
+    public ResponseEntity searchArtists(@Validated ArtistSearchDto artistSearchDto) {
+        try {
+            ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
+            return response;
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
+        }
     }
 
     @Secured("ROLE_ADMIN")

@@ -1,0 +1,34 @@
+<div class="container mt-3" *ngIf="error">
+  <div class="alert alert-danger" role="alert">
+    <h4>Error! {{errorMessage}}</h4>
+    <span>Close error window </span>
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
+<div class="modal-body">
+
+  <div class="form-group">
+    <label for="artistName">Artist Name</label>
+    <input type="text" name="artistName" class="form-control" id="artistName"
+           aria-describedby="titleHelp" placeholder="Enter Artist Name" [(ngModel)]="artistName">
+  </div>
+  <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
+  <div *ngIf="artistList !== []">
+    <table class="table table-hover">
+      <thead>
+      <th>Artists</th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let artist of artistList">
+        <td>
+          <div class="flex"><span>Name: {{artist.bandName}}</span>
+            </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

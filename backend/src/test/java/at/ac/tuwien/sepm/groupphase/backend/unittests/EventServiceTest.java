@@ -1,33 +1,30 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CategoryService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
-import org.springframework.dao.DataIntegrityViolationException;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -53,17 +50,18 @@ public class EventServiceTest {
     RoomDto roomDto;
     CategoryDto categoryDto;
     ArtistDto artistDto;
+    EventDto eventDto;
 
     @BeforeAll
     public void insertNeededContext() {
         AddressDto addressDto = new AddressDto();
-        addressDto.setZip(1234);
+        addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlace");
+        eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
         EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
 
@@ -80,6 +78,16 @@ public class EventServiceTest {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName("testCategory");
         this.categoryDto = categoryService.save(categoryDto);
+
+        EventInquiryDto eventInquiryDto = new EventInquiryDto();
+        eventInquiryDto.setName("testName");
+        eventInquiryDto.setContent("testContent1234");
+        eventInquiryDto.setDateTime(LocalDateTime.now());
+        eventInquiryDto.setDuration(710);
+        eventInquiryDto.setCategoryName(this.categoryDto.getName());
+        eventInquiryDto.setRoomId(this.roomDto.getId());
+        eventInquiryDto.setArtistId(this.artistDto.getId());
+        this.eventDto = eventService.createEvent(eventInquiryDto);
     }
 
     @Test
@@ -143,5 +151,24 @@ public class EventServiceTest {
         eventInquiryDto.setRoomId(roomDto.getId());
         eventInquiryDto.setArtistId(-123L);
         assertThrows(DataIntegrityViolationException.class, () -> eventService.createEvent(eventInquiryDto));
+    }
+
+    @Test
+    public void search_for_valid_event(){
+
+        EventSearchDto eventSearchDto = new EventSearchDto();
+        eventSearchDto.setContent("testContent123");
+        eventSearchDto.setDuration(700);
+        List<EventDto> events = eventService.findEvents(eventSearchDto);
+        assertFalse(events.isEmpty());
+    }
+
+    @Test
+    public void search_for_invalid_event(){
+        EventSearchDto eventSearchDto = new EventSearchDto();
+        eventSearchDto.setDescription("desc");
+        eventSearchDto.setContent("dataThatWasSurelyNotInserted");
+        eventSearchDto.setDuration(120);
+        assertThrows(NotFoundException.class, () -> eventService.findEvents(eventSearchDto));
     }
 }

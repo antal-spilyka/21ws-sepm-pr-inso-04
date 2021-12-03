@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {News} from '../dtos/news';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -11,7 +11,8 @@ export class NewsService {
 
   private newsBaseUri: string = this.globals.backendUri + '/news';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
 
   /**
    * Create news, which can be shown later.

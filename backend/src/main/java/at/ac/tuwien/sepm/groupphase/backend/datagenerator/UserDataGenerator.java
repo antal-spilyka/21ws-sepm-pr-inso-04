@@ -26,7 +26,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    private void generateMessage() {
+    private void generateUser() {
         if (userRepository.findAll().size() > 0) {
             LOGGER.debug("users already generated");
         } else {
