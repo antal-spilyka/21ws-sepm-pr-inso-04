@@ -69,4 +69,14 @@ export class UserService {
     console.log('Setting admin attribute of the user with email ' + email);
     return this.httpClient.put(this.registerBaseUri + '/' + email, null, {responseType: 'text'});
   }
+
+  /**
+   * Deletes the given user.
+   *
+   * @param user object to delete
+   */
+  deleteUser(user: User) {
+    console.log('Delete user with email ' + user.email);
+    return this.httpClient.delete<User>(this.registerBaseUri + '/' + user.email);
+  }
 }
