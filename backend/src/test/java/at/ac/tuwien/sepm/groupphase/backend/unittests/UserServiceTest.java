@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -116,5 +117,44 @@ public class UserServiceTest implements TestData {
         } catch (ServiceException e) {
             // Should be the case
         }
+    }
+
+    @Test
+    public void deleteNonExistingUser_shouldThrowNotFoundException() {
+        userService.createUser(newUser1);
+
+        try {
+            userService.deleteUser(newUser2.getEmail());
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void deleteWithEmptyEmail_shouldThrowNotFoundException() {
+        userService.createUser(newUser1);
+
+        try {
+            userService.deleteUser(null);
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void deleteExistingUser_shouldRemoveUser() {
+        userService.createUser(newUser1);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertEquals(1, userService.findUsers("user").size())
+        );
+
+        userService.deleteUser(newUser1.getEmail());
+
+        assertAll(
+            () -> assertEquals(0, userService.findUsers(null).size()),
+            () -> assertEquals(0, userService.findUsers("user").size())
+        );
     }
 }
