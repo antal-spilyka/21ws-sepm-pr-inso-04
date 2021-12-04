@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class UserRepositoryTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
-
-    @BeforeEach
-    public void beforeEach() { userRepository.deleteAll(); }
 
     @Test
     public void missingEmail_whenSaveUser_shouldThrowDataIntegrityException() {
@@ -374,44 +370,5 @@ public class UserRepositoryTest implements TestData {
             () -> assertEquals(1, userRepository.findByEmailContains("user").size()),
             () -> assertEquals(true, userRepository.findUserByEmail("user1@email.com").getAdmin())
         );
-    }
-
-    @Test
-    public void givenNothing_whenDeleteOnlyUser_thenFindEmptyRepository() {
-        userRepository.save(user1);
-
-        assertAll(
-            () -> assertEquals(1, userRepository.findAll().size()),
-            () -> assertEquals(1, userRepository.findByEmailContains("user").size()));
-
-        Long currentId = userRepository.findUserByEmail(user1.getEmail()).getId();
-        userRepository.deleteById(currentId);
-
-        assertAll(
-            () -> assertEquals(0, userRepository.findAll().size()),
-            () -> assertEquals(0, userRepository.findByEmailContains("user").size()));
-    }
-
-    @Test
-    public void givenNothing_whenDeleteSeveralUsers_thenDoNotFindDeletedOnes() {
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
-        userRepository.save(user4);
-
-        assertAll(
-            () -> assertEquals(4, userRepository.findAll().size()),
-            () -> assertEquals(2, userRepository.findByEmailContains("user").size()),
-            () -> assertEquals(2, userRepository.findByEmailContains("admin").size()));
-
-        Long currentId1 = userRepository.findUserByEmail(user1.getEmail()).getId();
-        userRepository.deleteById(currentId1);
-        Long currentId2 = userRepository.findUserByEmail(user3.getEmail()).getId();
-        userRepository.deleteById(currentId2);
-
-        assertAll(
-            () -> assertEquals(2, userRepository.findAll().size()),
-            () -> assertEquals(1, userRepository.findByEmailContains("user").size()),
-            () -> assertEquals(1, userRepository.findByEmailContains("admin").size()));
     }
 }
