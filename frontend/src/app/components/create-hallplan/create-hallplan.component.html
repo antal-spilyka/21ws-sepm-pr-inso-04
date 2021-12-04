@@ -1,0 +1,26 @@
+<div class="create-hallplan-container">
+  <div class="main">
+    <div class="hallplan-container">
+      <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
+        <app-seat *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
+                  [added]="rows[rowIndex][seatIndex].added"
+                  [rowIndex]="rowIndex" [seatIndex]="seatIndex"
+                  [add]="addSeat" [remove]="removeSeat"
+                  [removeCandidate]="rows[rowIndex][seatIndex].removeCandidate"
+                  [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
+                  [outsideBottom]="rowIndex === this.rows.length - 1"
+                  [outsideRight]="seatIndex === this.rows[0].length - 1"
+                  [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
+                  [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
+                  [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
+                  [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
+                  [mouseOverSeat]="mouseOverSeat" [mouseOutSeat]="mouseOutSeat"
+                  [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
+                  [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-seat>
+      </div>
+    </div>
+  </div>
+  <div class="side-bar">
+  </div>
+</div>
+

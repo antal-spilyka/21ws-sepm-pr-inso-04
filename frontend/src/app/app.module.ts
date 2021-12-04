@@ -45,6 +45,8 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
+import {SeatComponent} from './components/create-hallplan/seat/seat.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     CreateEventPlaceComponent,
     CreateArtistComponent,
     CreateActualEventComponent,
+    CreateHallplanComponent,
+    SeatComponent,
     NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,

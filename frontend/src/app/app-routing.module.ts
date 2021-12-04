@@ -15,6 +15,7 @@ import {SearchTimeComponent} from './components/search-time/search-time.componen
 import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
+import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -32,6 +33,7 @@ const routes: Routes = [
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
+  {path: 'hallplan/add', component: CreateHallplanComponent},
   {path: 'search-time', component: SearchTimeComponent}
 ];
 
