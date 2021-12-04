@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class EventSearchDto {

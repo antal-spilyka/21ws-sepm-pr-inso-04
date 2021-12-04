@@ -3,13 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,9 +43,6 @@ public class UserEndpointTest implements TestData {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -371,12 +366,8 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // Make user admin
-        String body3 = objectMapper.writeValueAsString(UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withEmail(user2.getEmail()).withAdminEmail(user1.getEmail()).withAdmin(true).build());
         MvcResult mvcResult3 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
-                .header(securityProperties.getAuthHeader(), response2.getContentAsString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body3))
+                .header(securityProperties.getAuthHeader(), response2.getContentAsString()))
             .andDo(print())
             .andReturn();
 

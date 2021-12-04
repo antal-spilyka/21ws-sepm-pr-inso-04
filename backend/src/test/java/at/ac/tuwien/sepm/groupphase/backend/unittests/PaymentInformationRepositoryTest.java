@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @ActiveProfiles("test")
 public class PaymentInformationRepositoryTest implements TestData {
+
     @Autowired
     private PaymentInformationRepository paymentInformationRepository;
 

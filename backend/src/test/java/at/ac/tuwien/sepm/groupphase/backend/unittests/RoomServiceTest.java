@@ -31,13 +31,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class RoomServiceTest {
 
     @Autowired
-    RoomService roomService;
-    @Autowired
-    EventPlaceService eventPlaceService;
-    @Autowired
-    EventPlaceMapper eventPlaceMapper;
+    private RoomService roomService;
 
-    EventPlace eventPlace;
+    @Autowired
+    private EventPlaceService eventPlaceService;
+
+    @Autowired
+    private EventPlaceMapper eventPlaceMapper;
+
+    private EventPlace eventPlace;
 
     @BeforeAll
     public void insertEventPlace() {
