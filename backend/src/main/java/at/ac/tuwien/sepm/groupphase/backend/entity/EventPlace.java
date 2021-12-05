@@ -3,12 +3,20 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 public class EventPlace {
-    String name;
-    Address address;
+    private String name;
+    private Address address;
+
+    public EventPlace() {}
+
+    public EventPlace(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
 
     @Id
     public String getName() {
@@ -51,5 +59,34 @@ public class EventPlace {
             "name='" + name + '\'' +
             ", address=" + address +
             '}';
+    }
+
+    public static final class EventPlaceBuilder {
+        private String name;
+        private Address address;
+
+        private EventPlaceBuilder() {
+        }
+
+        public static EventPlace.EventPlaceBuilder anEventPlace() {
+            return new EventPlace.EventPlaceBuilder();
+        }
+
+        public EventPlace.EventPlaceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EventPlace.EventPlaceBuilder withAddress(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public EventPlace build() {
+            EventPlace eventPlace = new EventPlace();
+            eventPlace.setName(name);
+            eventPlace.setAddress(address);
+            return eventPlace;
+        }
     }
 }

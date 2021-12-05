@@ -1,12 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Room;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -29,6 +34,12 @@ public class EventDataGenerator {
 
     private final CategoryRepository categoryRepository;
 
+    private final EventPlaceRepository eventPlaceRepository;
+
+    private final AddressRepository addressRepository;
+
+    private final RoomRepository roomRepository;
+
     // Test durations
     private final Integer[] durations = new Integer[150];
 
@@ -39,13 +50,17 @@ public class EventDataGenerator {
     private final Integer[] days = new Integer[28];
 
     // Artist ids
-    private final Integer[] artistIds = new Integer[25];
+    private final Integer[] ids = new Integer[25];
 
     public EventDataGenerator(EventRepository eventRepository, ArtistRepository artistRepository,
-                              CategoryRepository categoryRepository) {
+                              CategoryRepository categoryRepository, EventPlaceRepository eventPlaceRepository,
+                              RoomRepository roomRepository, AddressRepository addressRepository) {
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
         this.categoryRepository = categoryRepository;
+        this.eventPlaceRepository = eventPlaceRepository;
+        this.roomRepository = roomRepository;
+        this.addressRepository = addressRepository;
     }
 
     @PostConstruct
@@ -54,7 +69,7 @@ public class EventDataGenerator {
             LOGGER.debug("events already generated");
         } else {
             this.setArray(this.durations, 0, 150);
-            this.setArray(this.artistIds, 0, 25);
+            this.setArray(this.ids, 0, 25);
             this.setArray(this.days, 0, 28);
 
             for (int i = 1; i <= 200; i++) {
@@ -68,29 +83,43 @@ public class EventDataGenerator {
                     eventName = "meeting";
                 }
                 // Event duration
-                Integer duration = getRandom(this.durations);
+                final Integer duration = getRandom(this.durations);
                 // Event datetime
-                int year = (i * 11) % 2030;
-                int month = getRandom(this.months);
-                int day = getRandom(this.days);
-                int hour = i % 24;
-                int minute = i % 60;
-                int second = (i * 7) % 60;
-                int nanosecond = (i * 3) % 60;
-                LocalDateTime dateTime =
+                final int year = (i * 11) % 2030;
+                final int month = getRandom(this.months);
+                final int day = getRandom(this.days);
+                final int hour = i % 24;
+                final int minute = i % 60;
+                final int second = (i * 7) % 60;
+                final int nanosecond = (i * 3) % 60;
+                final LocalDateTime dateTime =
                     LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
                 // Event category
-                long artistId = i % 25 == 0 ? 1 : i % 25;
-                Category category = new Category("category" + artistId);
+                final long categoryId = i % 25 == 0 ? 1 : i % 25;
+                final Category category = new Category("category" + categoryId);
                 categoryRepository.save(category);
+                // Event place
+                final long eventPlaceId = getRandom(this.ids);
+                final Address address = new Address((long) i,
+                    "city" + i,
+                    "state" + i,
+                    "zip" + i,
+                    "country" + i,
+                    "description" + i,
+                    "street" + i);
+                addressRepository.save(address);
+                final EventPlace eventPlace = new EventPlace("event place" + i,
+                    address);
+                eventPlaceRepository.save(eventPlace);
                 // Room
-                //Room room = new Room()
+                final Room room = new Room((long) i, "room" + i, eventPlace);
+                roomRepository.save(room);
                 // Event artist
-                Artist artist = artistRepository.getById((long) getRandom(this.artistIds));
+                final Artist artist = artistRepository.getById((long) getRandom(this.ids));
                 eventRepository.save(Event.EventBuilder.anEvent().withId((long) i)
                         .withName(eventName + i).withDuration(duration).withContent("content for the event with name " + eventName)
-                        .withDateTime(dateTime).withCategory(category).withRoom(null).withArtist(artist)
-                    .withDescription("Test description for the artist with band " + eventName).build());
+                        .withDateTime(dateTime).withCategory(category).withRoom(room).withArtist(artist)
+                    .withDescription("Test description for the event with name " + eventName).build());
             }
         }
     }

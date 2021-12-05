@@ -9,13 +9,26 @@ import java.util.Objects;
 
 @Entity
 public class Address {
-    Long id;
-    String city;
-    String state;
-    String zip;
-    String country;
-    String description;
-    String street;
+    private Long id;
+    private String city;
+    private String state;
+    private String zip;
+    private String country;
+    private String description;
+    private String street;
+
+    public Address() {}
+
+    public Address(Long id, String city, String state, String zip, String country,
+                   String description, String street) {
+        this.id = id;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.country = country;
+        this.description = description;
+        this.street = street;
+    }
 
     public String getDescription() {
         return description;
