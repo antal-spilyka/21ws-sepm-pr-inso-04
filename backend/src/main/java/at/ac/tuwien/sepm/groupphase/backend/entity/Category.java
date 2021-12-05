@@ -7,7 +7,13 @@ import java.util.Objects;
 
 @Entity
 public class Category {
-    String name;
+    private String name;
+
+    public Category() {}
+
+    public Category(String name) {
+        this.name = name;
+    }
 
     @Id
     @Column(nullable = false, length = 100)

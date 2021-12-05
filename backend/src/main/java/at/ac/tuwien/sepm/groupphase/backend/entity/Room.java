@@ -10,9 +10,17 @@ import java.util.Objects;
 
 @Entity
 public class Room {
-    Long id;
-    String name;
-    EventPlace eventPlace;
+    private Long id;
+    private String name;
+    private EventPlace eventPlace;
+
+    public Room() {}
+
+    public Room(Long id, String name, EventPlace eventPlace) {
+        this.id = id;
+        this.name = name;
+        this.eventPlace = eventPlace;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

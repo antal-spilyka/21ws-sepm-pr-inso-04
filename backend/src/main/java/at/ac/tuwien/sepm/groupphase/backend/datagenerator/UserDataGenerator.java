@@ -58,8 +58,8 @@ public class UserDataGenerator {
                     baseName = "test";
                 }
                 String city = getRandom(this.cities);
-                boolean admin = getDecision(this.decision);
-                boolean disabled = getDecision(this.decision);
+                boolean admin = getRandomDecision(this.decision);
+                boolean disabled = getRandomDecision(this.decision);
                 String salutation = getRandom(this.salutations);
                 String country = getRandom(this.countries); // countries not related to cities in the test dataset
                 userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
@@ -78,7 +78,7 @@ public class UserDataGenerator {
     }
 
     // Pick a boolean value
-    public static boolean getDecision(boolean[] array) {
+    public static boolean getRandomDecision(boolean[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }
