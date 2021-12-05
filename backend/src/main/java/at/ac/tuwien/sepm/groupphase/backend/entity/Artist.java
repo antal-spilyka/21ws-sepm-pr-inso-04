@@ -29,6 +29,14 @@ public class Artist {
         return description;
     }
 
+    public Artist() {}
+
+    public Artist(Long id, String bandName, String description) {
+        this.id = id;
+        this.bandName = bandName;
+        this.description = description;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -65,5 +73,41 @@ public class Artist {
             ", bandName='" + bandName + '\'' +
             ", description='" + description + '\'' +
             '}';
+    }
+
+    public static final class ArtistBuilder {
+        private Long id;
+        private String bandName;
+        private String description;
+
+        private ArtistBuilder() {
+        }
+
+        public static Artist.ArtistBuilder anArtist() {
+            return new Artist.ArtistBuilder();
+        }
+
+        public Artist.ArtistBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Artist.ArtistBuilder withBandName(String bandName) {
+            this.bandName = bandName;
+            return this;
+        }
+
+        public Artist.ArtistBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Artist build() {
+            Artist artist = new Artist();
+            artist.setId(id);
+            artist.setBandName(bandName);
+            artist.setDescription(description);
+            return artist;
+        }
     }
 }
