@@ -46,7 +46,8 @@ import { SearchTimeComponent } from './components/search-time/search-time.compon
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
-import {SeatComponent} from './components/create-hallplan/seat/seat.component';
+import {HallplanElementComponent} from './components/create-hallplan/components/hallplan-element/hallplan-element.component';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,7 @@ import {SeatComponent} from './components/create-hallplan/seat/seat.component';
     CreateArtistComponent,
     CreateActualEventComponent,
     CreateHallplanComponent,
-    SeatComponent,
+    HallplanElementComponent,
     NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,
@@ -99,7 +100,8 @@ import {SeatComponent} from './components/create-hallplan/seat/seat.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    MatGridListModule
+    MatGridListModule,
+    MatRadioModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -1,9 +1,6 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
-
-interface Seat {
-  added: boolean;
-  removeCandidate: boolean;
-}
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {HallplanElementType, IHallplanElement, HallplanElement} from './types';
 
 @Component({
   selector: 'app-create-hallplan',
@@ -11,62 +8,53 @@ interface Seat {
   styleUrls: ['./create-hallplan.component.scss']
 })
 export class CreateHallplanComponent implements OnInit {
-  rows: Seat[][] = [];
+  rows: IHallplanElement[][] = [];
   defaultRowsNumber = 10;
   defaultSeatsNumber = 10;
   minRowsNumber = 8;
   minSeatsNumber = 8;
+  radioControl = new FormControl(HallplanElementType.seat);
+  editModes = HallplanElementType;
 
   constructor() {
     this.addSeat = this.addSeat.bind(this);
     this.removeSeat = this.removeSeat.bind(this);
-    this.mouseOverSeat = this.mouseOverSeat.bind(this);
-    this.mouseOutSeat = this.mouseOutSeat.bind(this);
+    this.mouseOverHallplanElement = this.mouseOverHallplanElement.bind(this);
+    this.mouseOutHallplanElement = this.mouseOutHallplanElement.bind(this);
   }
 
   ngOnInit(): void {
-    const rows: Seat[][] = [];
+    const rows: IHallplanElement[][] = [];
     for (let rowIndex = 0; rowIndex < this.defaultRowsNumber; rowIndex++) {
-      const row: Seat[] = [];
+      const row: IHallplanElement[] = [];
       for (let seatIndex = 0; seatIndex < this.defaultSeatsNumber; seatIndex++) {
         if (seatIndex === 0 || rowIndex === 0 || rowIndex === this.defaultRowsNumber - 1 || seatIndex === this.defaultSeatsNumber - 1) {
-          row.push({
-            added: false,
-            removeCandidate: false,
-          });
+          row.push(new HallplanElement());
         } else {
-          row.push({
-            added: true,
-            removeCandidate: false,
-          });
+          row.push(new HallplanElement(true));
         }
       }
       this.rows.push(row);
     }
   }
 
-  createRow(added: boolean): Seat[] {
-    const row: Seat[] = [];
+  createRow(added: boolean): IHallplanElement[] {
+    const row: IHallplanElement[] = [];
     for (const seat of this.rows[0]) {
-      row.push({
-        added,
-        removeCandidate: false,
-      });
+      row.push(new HallplanElement(added));
     }
     return row;
   }
 
   addSeat(rowIndex: number, seatIndex: number) {
-    this.rows[rowIndex][seatIndex].added = true;
+    console.log(`add seat : ${rowIndex} ${seatIndex}`);
+    this.rows[rowIndex][seatIndex] = {...this.rows[rowIndex][seatIndex].withType(this.radioControl.value).withAdded(true)};
     if (rowIndex === 0) {
       this.rows = [this.createRow(false)].concat(this.rows);
     }
     if (seatIndex === 0) {
       for (let i = 0; i < this.rows.length; i++) {
-        this.rows[i] = [{
-          added: false,
-          removeCandidate: false,
-        }].concat(this.rows[i]);
+        this.rows[i] = [new HallplanElement() as IHallplanElement].concat(this.rows[i]);
       }
     }
     if (rowIndex === this.rows.length - 1) {
@@ -74,15 +62,12 @@ export class CreateHallplanComponent implements OnInit {
     }
     if (seatIndex === this.rows[0].length - 1) {
       for (let i = 0; i < this.rows.length; i++) {
-        this.rows[i] = this.rows[i].concat([{
-          added: false,
-          removeCandidate: false,
-        }]);
+        this.rows[i] = this.rows[i].concat([new HallplanElement()]);
       }
     }
   }
 
-  allSeatsRemoved(rows: Seat[]): boolean {
+  allSeatsRemoved(rows: IHallplanElement[]): boolean {
     for (const row of rows) {
       if (row.added) {
         return false;
@@ -105,42 +90,33 @@ export class CreateHallplanComponent implements OnInit {
   isLastRightSeat = (rowIndex, seatIndex, indent = 1) => seatIndex === this.rows[0].length - 1 - indent && this.allSeatsRemoved(
     this.rows.filter((unused, index) => index !== rowIndex).map(row => row[seatIndex]));
 
-  mouseOverSeat(rowIndex: number, seatIndex: number, indent = 1) {
+  mouseOverHallplanElement(rowIndex: number, seatIndex: number, indent = 1) {
     if (this.rows.length > this.minRowsNumber && this.isLastTopSeat(rowIndex, seatIndex, indent)) {
-      this.rows[rowIndex].map((seat) => {
-        seat.removeCandidate = true;
-        return seat;
-      });
-      this.mouseOverSeat(rowIndex + 1, 0, indent + 1);
+      this.rows[rowIndex].map((seat) => seat.withRemoveCandidate(true));
+      this.mouseOverHallplanElement(rowIndex + 1, 0, indent + 1);
     }
     if (this.rows[0].length > this.minSeatsNumber && this.isLastLeftSeat(rowIndex, seatIndex, indent)) {
-      this.rows = this.rows.map(row => {
-        row[seatIndex].removeCandidate = true;
+      this.rows.map(row => {
+        row[seatIndex].withRemoveCandidate(true);
         return row;
       });
-      this.mouseOverSeat(0, seatIndex + 1, indent + 1);
+      this.mouseOverHallplanElement(0, seatIndex + 1, indent + 1);
     }
     if (this.rows.length > this.minRowsNumber && this.isLastBottomSeat(rowIndex, seatIndex, indent)) {
-      this.rows[rowIndex].map((seat) => {
-        seat.removeCandidate = true;
-        return seat;
-      });
-      this.mouseOverSeat(rowIndex - 1, this.rows[0].length - 1, indent + 1);
+      this.rows[rowIndex].map((seat) => seat.withRemoveCandidate(true));
+      this.mouseOverHallplanElement(rowIndex - 1, this.rows[0].length - 1, indent + 1);
     }
     if (this.rows[0].length > this.minSeatsNumber && this.isLastRightSeat(rowIndex, seatIndex, indent)) {
-      this.rows = this.rows.map(row => {
-        row[seatIndex].removeCandidate = true;
+      this.rows.map(row => {
+        row[seatIndex].withRemoveCandidate(true);
         return row;
       });
-      this.mouseOverSeat(this.rows.length - 1, seatIndex - 1, indent + 1);
+      this.mouseOverHallplanElement(this.rows.length - 1, seatIndex - 1, indent + 1);
     }
   }
 
-  mouseOutSeat(rowIndex: number, seatIndex: number) {
-    this.rows.map(row => row.map(seat => {
-      seat.removeCandidate = false;
-      return seat;
-    }));
+  mouseOutHallplanElement(rowIndex: number, seatIndex: number) {
+    this.rows.map(row => row.map(seat => seat.withRemoveCandidate(false)));
   }
 
   removeSeat(rowIndex: number, seatIndex: number, indent = 1) {

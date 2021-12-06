@@ -2,25 +2,31 @@
   <div class="main">
     <div class="hallplan-container">
       <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
-        <app-seat *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
-                  [added]="rows[rowIndex][seatIndex].added"
-                  [rowIndex]="rowIndex" [seatIndex]="seatIndex"
-                  [add]="addSeat" [remove]="removeSeat"
-                  [removeCandidate]="rows[rowIndex][seatIndex].removeCandidate"
-                  [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
-                  [outsideBottom]="rowIndex === this.rows.length - 1"
-                  [outsideRight]="seatIndex === this.rows[0].length - 1"
-                  [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
-                  [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
-                  [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
-                  [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
-                  [mouseOverSeat]="mouseOverSeat" [mouseOutSeat]="mouseOutSeat"
-                  [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
-                  [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-seat>
+        <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
+                          [rows]="rows"
+                          [rowIndex]="rowIndex" [seatIndex]="seatIndex"
+                          [add]="addSeat" [remove]="removeSeat"
+                          [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
+                          [outsideBottom]="rowIndex === rows.length - 1"
+                          [outsideRight]="seatIndex === rows[0].length - 1"
+                          [hallplanElement]="rows[rowIndex][seatIndex]"
+                          [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
+                          [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
+                          [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
+                          [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
+                          [mouseOverHallplanElement]="mouseOverHallplanElement" [mouseOutHallplanElement]="mouseOutHallplanElement"
+                          [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
+                          [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
       </div>
     </div>
   </div>
   <div class="side-bar">
+    <h2>What do you want to edit?</h2>
+    <mat-radio-group aria-label="Select an option" [formControl]="radioControl">
+      <mat-radio-button [value]="editModes.seat">Seats</mat-radio-button>
+      <mat-radio-button [value]="editModes.stage">Stage</mat-radio-button>
+      <mat-radio-button [value]="editModes.exit">Exit</mat-radio-button>
+    </mat-radio-group>
   </div>
 </div>
 
