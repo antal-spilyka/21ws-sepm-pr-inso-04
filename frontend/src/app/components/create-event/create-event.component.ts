@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Artist} from '../../dtos/artist';
-import {Category} from '../../dtos/category';
-import {EventPlace} from '../../dtos/eventPlace';
-import {Room} from '../../dtos/room';
 import {Step} from './state';
+import {EventDto} from '../../dtos/eventDto';
 
 @Component({
   selector: 'app-create-event',
@@ -11,14 +8,10 @@ import {Step} from './state';
   styleUrls: ['./create-event.component.scss']
 })
 export class CreateEventComponent implements OnInit {
-  step: Step = Step.eventPlace;
-
-  eventPlace: EventPlace;
-  room: Room;
-  artist: Artist;
-  category: Category;
+  step: Step = Step.event;
   error = false;
   errorMessage = '';
+  selectedEvent: EventDto;
 
   constructor() {
   }
@@ -44,18 +37,11 @@ export class CreateEventComponent implements OnInit {
     this.errorMessage = '';
   }
 
-  handleNext = (values: any) => {
-    console.log(values);
-    if (this.step === Step.eventPlace) {
-      const {selectedEventPlace, selectedRoom} = values;
-      this.eventPlace = selectedEventPlace;
-      this.room = selectedRoom;
-      this.step = Step.artist;
-    } else if (this.step === Step.artist) {
-      const {selectedArtist, selectedCategory} = values;
-      this.artist = selectedArtist;
-      this.category = selectedCategory;
-      this.step = Step.event;
+  handleNext = (event: EventDto) => {
+    console.log(event);
+    if (this.step === Step.event) {
+      this.selectedEvent = event;
+      this.step = Step.performances;
     }
   };
 }

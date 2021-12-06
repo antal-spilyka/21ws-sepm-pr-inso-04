@@ -4,16 +4,12 @@ import java.util.Objects;
 
 public class EventSearchDto {
     Integer duration;
-    String content;
-    String categoryName;
     String description;
 
     @Override
     public String toString() {
         return "EventSearchDto{" +
             "duration=" + duration +
-            ", content='" + content + '\'' +
-            ", categoryName='" + categoryName + '\'' +
             ", description='" + description + '\'' +
             '}';
     }
@@ -24,22 +20,6 @@ public class EventSearchDto {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
     }
 
     public String getDescription() {
@@ -59,11 +39,11 @@ public class EventSearchDto {
             return false;
         }
         EventSearchDto that = (EventSearchDto) o;
-        return Objects.equals(duration, that.duration) && Objects.equals(content, that.content) && Objects.equals(categoryName, that.categoryName) && Objects.equals(description, that.description);
+        return Objects.equals(duration, that.duration) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, content, categoryName, description);
+        return Objects.hash(duration, description);
     }
 }

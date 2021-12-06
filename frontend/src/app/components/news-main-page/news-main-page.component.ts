@@ -43,7 +43,7 @@ export class NewsMainPageComponent implements OnInit {
     for (const val of this.news) {
       val.createDate = new Date(val.createDate);
       console.log(val.createDate);
-      val.event.dateTime = new Date(val.event.dateTime);
+      val.event.startTime = new Date(val.event.startTime);
     }
   }
 

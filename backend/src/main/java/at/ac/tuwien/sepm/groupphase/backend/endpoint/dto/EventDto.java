@@ -1,26 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 public class EventDto {
-    Long id;
-    String name;
-    Integer duration;
-    String content;
-    LocalDateTime dateTime;
-    CategoryDto category;
-    RoomDto room;
-    ArtistDto artist;
-    String description;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    private Long id;
+    private String name;
+    private LocalDateTime startTime;
+    private Long duration;
+    private List<PerformanceDto> performances;
+    private EventPlaceDto eventPlace;
+    private String description;
 
     public Long getId() {
         return id;
@@ -38,52 +29,57 @@ public class EventDto {
         this.name = name;
     }
 
-    public Integer getDuration() {
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getDuration() {
         return duration;
     }
 
-    public void setDuration(Integer duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
-    public String getContent() {
-        return content;
+    public List<PerformanceDto> getPerformances() {
+        return performances;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPerformances(List<PerformanceDto> performances) {
+        this.performances = performances;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public EventPlaceDto getEventPlace() {
+        return eventPlace;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setEventPlace(EventPlaceDto eventPlace) {
+        this.eventPlace = eventPlace;
     }
 
-    public CategoryDto getCategory() {
-        return category;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategory(CategoryDto category) {
-        this.category = category;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public RoomDto getRoom() {
-        return room;
-    }
-
-    public void setRoom(RoomDto room) {
-        this.room = room;
-    }
-
-    public ArtistDto getArtist() {
-        return artist;
-    }
-
-    public void setArtist(ArtistDto artist) {
-        this.artist = artist;
+    @Override
+    public String toString() {
+        return "EventDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", startTime=" + startTime +
+            ", duration=" + duration +
+            ", performances=" + performances +
+            ", eventPlace=" + eventPlace.toString() +
+            ", description='" + description + '\'' +
+            '}';
     }
 
     @Override
@@ -91,34 +87,17 @@ public class EventDto {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof EventDto)) {
             return false;
         }
         EventDto eventDto = (EventDto) o;
-        return Objects.equals(name, eventDto.name)
-            && Objects.equals(duration, eventDto.duration)
-            && Objects.equals(content, eventDto.content)
-            && Objects.equals(dateTime, eventDto.dateTime)
-            && Objects.equals(category, eventDto.category)
-            && Objects.equals(room, eventDto.room)
-            && Objects.equals(artist, eventDto.artist);
+        return Objects.equals(id, eventDto.id) && Objects.equals(name, eventDto.name) && Objects.equals(startTime, eventDto.startTime)
+            && Objects.equals(duration, eventDto.duration) && Objects.equals(performances, eventDto.performances)
+            && Objects.equals(eventPlace, eventDto.eventPlace) && Objects.equals(description, eventDto.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, duration, content, dateTime, category, room, artist);
-    }
-
-    @Override
-    public String toString() {
-        return "EventDto{" +
-            "name='" + name + '\'' +
-            ", duration=" + duration +
-            ", content='" + content + '\'' +
-            ", dateTime=" + dateTime +
-            ", category=" + category +
-            ", room=" + room +
-            ", artist=" + artist +
-            '}';
+        return Objects.hash(id, name, startTime, duration, performances, eventPlace, description);
     }
 }

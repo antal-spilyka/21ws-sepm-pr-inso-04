@@ -20,11 +20,12 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/news/add" routerLinkActive="active">Add
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/news/add" routerLinkActive="active">Add
           News</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/message" routerLinkActive="active">Message</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/events/add" routerLinkActive="active">Add
+          Events</a>
       </li>
       <li>
         <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users" routerLinkActive="active">Users</a>
