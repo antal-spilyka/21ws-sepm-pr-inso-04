@@ -1,24 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
-import at.ac.tuwien.sepm.groupphase.backend.service.CategoryService;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
-import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
-import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
+import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +22,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
