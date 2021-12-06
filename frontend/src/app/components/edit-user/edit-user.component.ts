@@ -115,15 +115,18 @@ export class EditUserComponent implements OnInit {
   }
 
   deleteUser() {
-   this.userService.deleteUser(this.user).subscribe({
-      next: () => {
-        window.alert('Successfully deleted the User');
-        this.authService.logoutUser();
-      },
-      error: (error) => {
-        window.alert('Error during deleting User: ' + error.error.message);
-      }
-    });
+    if (window.confirm('Are you sure that you want to permanently delete your account?')) {
+      this.userService.deleteUser(this.user).subscribe({
+        next: () => {
+          this.authService.logoutUser();
+          this.router.navigate(['/login']);
+          window.alert('Successfully deleted the User');
+        },
+        error: (error) => {
+          window.alert('Error during deleting User: ' + error.error.message);
+        }
+      });
+    }
   }
 
   updateUser() {
