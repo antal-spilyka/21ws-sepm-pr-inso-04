@@ -49,9 +49,31 @@ public class EventPlaceServiceImpl implements EventPlaceService {
         LOGGER.debug("Handeling in Service {}", eventPlaceSearchDto);
         try {
             List<EventPlace> eventPlaces = eventPlaceRepository.findEventPlace(eventPlaceSearchDto.getName(), PageRequest.of(0, 2));
-            return eventPlaces.stream().map(eventPlace ->
-                eventPlaceMapper.entityToDto(eventPlace)
-            ).collect(Collectors.toList());
+            return eventPlaces.stream().map(eventPlace -> eventPlaceMapper.entityToDto(eventPlace)).collect(Collectors.toList());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public EventPlace findEventPlace(EventPlace eventPlace) {
+        LOGGER.debug("Handeling in Service {}", eventPlace);
+        try {
+            Address address;
+            if (eventPlace.getId() != null) {
+                address = addressRepository.getById(eventPlace.getAddress().getId());
+            } else {
+                address = addressRepository.save(eventPlace.getAddress());
+            }
+            eventPlace.setAddress(address);
+            EventPlace newEventPlace = eventPlaceRepository.findByIdEquals(eventPlace.getId());
+            if (newEventPlace == null) {
+                newEventPlace = eventPlaceRepository.save(eventPlace);
+            }
+            return newEventPlace;
+        } catch (EntityExistsException e) {
+            throw new ContextException(e);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -61,13 +83,13 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     public List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         LOGGER.debug("Handeling in Service {}", eventLocationSearchDto);
         if (eventLocationSearchDto.getZip() == null && eventLocationSearchDto.getStreet() == null
-            && eventLocationSearchDto.getCountry() == null && eventLocationSearchDto.getDescription() == null
-            && eventLocationSearchDto.getState() == null && eventLocationSearchDto.getCity() == null) {
+            && eventLocationSearchDto.getCountry() == null && eventLocationSearchDto.getState() == null
+            && eventLocationSearchDto.getCity() == null) {
             throw new NotFoundException("No address was found for this query");
         }
         try {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
-                eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(), eventLocationSearchDto.getDescription(),
+                eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(),
                 eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(0, 10));
             if (addresses.isEmpty()) {
                 throw new NotFoundException("No address was found for this query");
@@ -85,9 +107,9 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     public EventPlaceDto save(EventPlaceDto eventPlaceDto) {
         LOGGER.debug("Handeling in Service {}", eventPlaceDto);
         try {
-            if (eventPlaceRepository.existsById(eventPlaceDto.getName())) {
-                throw new ContextException("Event with same name already exists.");
-            }
+            //if (eventPlaceRepository.findByIdEquals(eventPlaceDto.getId()) != null) {
+            //  throw new ContextException("Event with same name already exists.");
+            //}
             AddressDto addressDto = eventPlaceDto.getAddressDto();
             if (addressDto == null) {
                 throw new ContextException("Address invalid");

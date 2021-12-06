@@ -5,8 +5,17 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class EventPlaceDto {
+    Long id;
     String name;
     AddressDto addressDto;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @NotNull()
     @NotBlank

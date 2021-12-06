@@ -22,6 +22,7 @@ public class EventPlaceMapper {
     public EventPlaceDto entityToDto(EventPlace eventPlace) {
         LOGGER.trace("Mapping {}", eventPlace);
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setId(eventPlace.getId());
         eventPlaceDto.setName(eventPlace.getName());
         eventPlaceDto.setAddressDto(addressMapper.entityToDto(eventPlace.getAddress()));
         return eventPlaceDto;
@@ -30,6 +31,7 @@ public class EventPlaceMapper {
     public EventPlace dtoToEntity(EventPlaceDto eventPlaceDto) {
         LOGGER.trace("Mapping {}", eventPlaceDto);
         EventPlace eventPlace = new EventPlace();
+        eventPlace.setId(eventPlaceDto.getId());
         eventPlace.setName(eventPlaceDto.getName());
         eventPlace.setAddress(addressMapper.dtoToEntity(eventPlaceDto.getAddressDto()));
         return eventPlace;
@@ -38,6 +40,7 @@ public class EventPlaceMapper {
     public EventPlace dtoToEntity(EventPlaceDto eventPlaceDto, Address address) {
         LOGGER.trace("Mapping {}", eventPlaceDto);
         EventPlace eventPlace = new EventPlace();
+        eventPlace.setId(eventPlace.getId());
         eventPlace.setName(eventPlaceDto.getName());
         eventPlace.setAddress(address);
         return eventPlace;

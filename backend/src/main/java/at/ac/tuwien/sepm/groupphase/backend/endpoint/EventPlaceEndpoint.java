@@ -21,10 +21,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping("/api/v1/eventplaces")
+@RequestMapping("/api/v1/eventplaces") // todo ist das nicht das gleiche iw EventLocationEndpoint
 public class EventPlaceEndpoint {
 
-    private EventPlaceService eventPlaceService;
+    private final EventPlaceService eventPlaceService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public EventPlaceEndpoint(EventPlaceService eventPlaceService) {
@@ -35,8 +35,7 @@ public class EventPlaceEndpoint {
     @GetMapping
     @Operation(summary = "Find EventPlace by search parameters.")
     public ResponseEntity findEventPlace(EventPlaceSearchDto eventPlaceSearchDto) {
-        ResponseEntity response = new ResponseEntity(eventPlaceService.findEventPlace(eventPlaceSearchDto).stream(), HttpStatus.OK);
-        return response;
+        return new ResponseEntity(eventPlaceService.findEventPlace(eventPlaceSearchDto).stream(), HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")

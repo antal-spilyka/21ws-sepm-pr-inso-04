@@ -37,7 +37,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
      * @param city        of the address
      * @param state       of the address
      * @param country     of the address
-     * @param description of the address
      * @param street      of the address
      * @param zip         of the address
      * @param pageable    of the address
@@ -45,10 +44,8 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
      */
     @Query("SELECT a FROM Address a WHERE (:zip is null OR :zip='' OR UPPER(a.zip) LIKE UPPER(CONCAT( '%', :zip, '%'))) AND (:city is null OR :city='' OR UPPER(a.city) " +
         "LIKE UPPER(CONCAT( '%', :city, '%'))) AND (:state is null OR :state='' OR UPPER(a.state) LIKE UPPER(CONCAT( '%', :state, '%')))" +
-        "AND (:description is null OR :description='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%')))" +
         " AND (:country is null OR :country='' OR UPPER(a.country) LIKE UPPER(CONCAT( '%', :country, '%'))) AND " +
         "(:street is null OR :street='' OR UPPER(a.street) LIKE UPPER(CONCAT( '%', :street, '%')))")
     List<Address> findEventLocation(@Param("city") String city, @Param("state") String state, @Param("country") String country,
-                                    @Param("description") String description, @Param("street") String street,
-                                    @Param("zip") String zip, Pageable pageable);
+                                    @Param("street") String street, @Param("zip") String zip, Pageable pageable);
 }

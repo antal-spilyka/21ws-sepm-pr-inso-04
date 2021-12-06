@@ -9,7 +9,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -26,7 +25,6 @@ import {MatInputModule} from '@angular/material/input';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {CreateEventPlaceComponent} from './components/create-event/create-event-place/create-event-place.component';
 import {CreateArtistComponent} from './components/create-event/create-artist/create-artist.component';
-import {CreateActualEventComponent} from './components/create-event/create-actual-event/create-actual-event.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -54,7 +52,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    MessageComponent,
     EditUserComponent,
     EditEmailDialogComponent,
     EditPasswordDialogComponent,
@@ -63,7 +60,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
     CreateEventComponent,
     CreateEventPlaceComponent,
     CreateArtistComponent,
-    CreateActualEventComponent,
     NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,

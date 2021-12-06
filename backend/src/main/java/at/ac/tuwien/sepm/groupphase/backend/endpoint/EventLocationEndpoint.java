@@ -32,8 +32,7 @@ public class EventLocationEndpoint {
     @Operation(summary = "Find Event Location by search parameters.")
     public ResponseEntity findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         try {
-            ResponseEntity response = new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
-            return response;
+            return new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
         } catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);

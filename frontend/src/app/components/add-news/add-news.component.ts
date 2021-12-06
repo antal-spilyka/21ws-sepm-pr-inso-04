@@ -31,14 +31,10 @@ export class AddNewsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private newsService: NewsService,
   ) {
-    this.loadEvents();
-  }
-
-  loadEvents() {
     this.events = this.form.get('chosenEvent').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap((name: string) => this.eventService.findEventByName(name))
+      switchMap(name => this.eventService.findEventByName(name))
     );
   }
 
@@ -47,7 +43,6 @@ export class AddNewsComponent implements OnInit {
 
   setChosenEvent(event: EventDto) {
     this.currentEvent = event;
-    document.getElementById('testing').innerText = this.currentEvent.toString();
   }
 
   setRating(rating: number) {
@@ -64,8 +59,7 @@ export class AddNewsComponent implements OnInit {
       rating: this.form.controls.rating.value,
       fsk: this.form.controls.fsk.value,
       shortDescription: this.form.controls.shortDescription.value,
-      longDescription: this.form.controls.longDescription.value
-    ,
+      longDescription: this.form.controls.longDescription.value,
       createDate: new Date()} as News;
     console.log(newsRequest);
     this.newsService.save(newsRequest).subscribe({

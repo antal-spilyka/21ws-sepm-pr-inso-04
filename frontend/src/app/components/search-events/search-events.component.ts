@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {EventInquiry} from '../../dtos/eventInquiry';
 import {EventService} from '../../services/event.service';
 import {EventDto} from '../../dtos/eventDto';
 import {EventSearchDto} from '../../dtos/eventSearchDto';

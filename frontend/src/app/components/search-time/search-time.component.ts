@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {EventDto} from '../../dtos/eventDto';
 import {EventService} from '../../services/event.service';
-import {EventInquiry} from '../../dtos/eventInquiry';
-import {Room} from '../../dtos/room';
-import {RoomService} from '../../services/room.service';
+import {Hall} from '../../dtos/hall';
+import {HallService} from '../../services/hall.service';
 import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
 
 @Component({
@@ -16,12 +15,12 @@ export class SearchTimeComponent implements OnInit {
     dateTime: null, event: '', room: '',
   };
   eventList: EventDto[] = [];
-  roomsList: Room[] = [];
+  roomsList: Hall[] = [];
   roomMap = new Map();
   private error = false;
   private errorMessage: string;
 
-  constructor(private eventService: EventService, private roomService: RoomService) {
+  constructor(private eventService: EventService, private roomService: HallService) {
   }
 
   ngOnInit(): void {

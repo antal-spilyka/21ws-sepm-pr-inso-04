@@ -62,15 +62,8 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             ObjectError e = bindingResult.getAllErrors().get(0);
             LOGGER.error(e.getDefaultMessage(), e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + e.getDefaultMessage());
         }
-
-        try {
-            userService.createUser(user);
-        } catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }
+        userService.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -81,16 +74,7 @@ public class UserEndpoint {
     @PutMapping("")
     public ResponseEntity<String> update(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
         LOGGER.info("PUT /api/v1/users" + user.toString());
-        if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
-        }
-
-        try {
-            userService.updateUser(user);
-        } catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }
+        userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -101,13 +85,7 @@ public class UserEndpoint {
     @PutMapping("/{email}")
     public ResponseEntity<String> setAdmin(@PathVariable String email, Principal principal) {
         LOGGER.info("PUT /api/v1/users/{}", email);
-
-        try {
-            userService.setAdmin(email, principal);
-        } catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Admin rights of the user could not be changed: " + e.getLocalizedMessage(), e);
-        }
+        userService.setAdmin(email, principal);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -136,12 +114,7 @@ public class UserEndpoint {
     @GetMapping("/{email}")
     public UserDto getUser(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}", email);
-        try {
-            return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
-        } catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
-        }
+        return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
     }
 
     @PermitAll

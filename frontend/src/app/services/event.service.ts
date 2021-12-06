@@ -2,7 +2,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {EventDto} from '../dtos/eventDto';
-import {EventInquiry} from '../dtos/eventInquiry';
 import {Globals} from '../global/globals';
 import {EventSearchDto} from '../dtos/eventSearchDto';
 import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
@@ -20,11 +19,12 @@ export class EventService {
   /**
    * Creates a new Event.
    *
-   * @param eventInquiry stores information for new event.
+   * @param eventDto stores information for new event.
    * @returns Observable<EventDto> with the information for the event.
    */
-  createEvent(eventInquiry: EventInquiry): Observable<EventDto> {
-    return this.httpClient.post<EventDto>(this.messageBaseUri, eventInquiry);
+  saveEvent(eventDto: EventDto): Observable<EventDto> {
+    console.log(`Service event ${eventDto}`);
+    return this.httpClient.post<EventDto>(this.messageBaseUri, eventDto);
   }
 
   /**
@@ -74,7 +74,9 @@ export class EventService {
    * Loads all events from the backend
    */
   findEventByName(searchName: string): Observable<EventDto[]> {
+    let params = new HttpParams();
+    params = params.set('name', searchName);
     console.log(`searching for ${searchName}`);
-    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/' + searchName);
+    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/news', { params });
   }
 }
