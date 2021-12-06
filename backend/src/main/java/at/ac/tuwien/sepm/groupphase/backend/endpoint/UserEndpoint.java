@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -141,5 +143,21 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
         }
     }
+
+    @PermitAll
+    @DeleteMapping("/{email}")
+    public void deleteUser(@PathVariable String email) {
+        LOGGER.info("DELETE " + BASE_URL + "/{}", email);
+        try {
+            this.userService.deleteUser(email);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not delete user: " + e.getLocalizedMessage(), e);
+        }
+    }
+
 }
 

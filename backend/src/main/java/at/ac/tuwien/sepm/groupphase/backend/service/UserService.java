@@ -64,6 +64,13 @@ public interface UserService extends UserDetailsService {
     void updateUser(UserEditDto user);
 
     /**
+     * Deletes an existing user.
+     *
+     * @param email of the user that should be deleted
+     */
+    void deleteUser(String email);
+
+    /**
      * Increase the lockedCounter of a user.
      *
      * @param email of the user

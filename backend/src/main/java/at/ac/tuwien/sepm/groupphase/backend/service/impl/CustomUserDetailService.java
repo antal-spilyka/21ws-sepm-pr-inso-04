@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -33,14 +32,12 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PaymentInformationRepository paymentInformationRepository;
-    private SecurityProperties securityProperties;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository, SecurityProperties securityProperties) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.paymentInformationRepository = paymentInformationRepository;
-        this.securityProperties = securityProperties;
     }
 
     @Override
@@ -164,6 +161,17 @@ public class CustomUserDetailService implements UserService {
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");
+        }
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        LOGGER.debug("Delete user with the email {}", email);
+        if (email == null || userRepository.findUserByEmail(email) == null) {
+            throw new NotFoundException("No user found with the given e-mail address");
+        } else {
+            ApplicationUser userToDelete = userRepository.findUserByEmail(email);
+            userRepository.deleteById(userToDelete.getId());
         }
     }
 

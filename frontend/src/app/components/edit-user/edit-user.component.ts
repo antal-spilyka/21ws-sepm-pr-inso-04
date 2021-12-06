@@ -114,6 +114,18 @@ export class EditUserComponent implements OnInit {
     return '';
   }
 
+  deleteUser() {
+   this.userService.deleteUser(this.user).subscribe({
+      next: () => {
+        window.alert('Successfully deleted the User');
+        this.authService.logoutUser();
+      },
+      error: (error) => {
+        window.alert('Error during deleting User: ' + error.error.message);
+      }
+    });
+  }
+
   updateUser() {
     let paymentInformation: PaymentInformation = null;
     if (this.creditCardCvvControl.valid && this.creditCardNumberControl.valid && this.creditCardExperationYearControl.valid &&
@@ -191,10 +203,6 @@ export class EditUserComponent implements OnInit {
 
   getToken() {
     return localStorage.getItem('authToken');
-  }
-
-  setToken(authResponse: string) {
-    localStorage.setItem('authToken', authResponse);
   }
 
   defaultServiceErrorHandling(error: any) {

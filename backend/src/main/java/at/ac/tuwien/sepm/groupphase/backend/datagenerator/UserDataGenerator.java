@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Profile("generateData")
 @Component

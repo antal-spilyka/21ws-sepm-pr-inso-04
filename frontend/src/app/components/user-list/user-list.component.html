@@ -44,7 +44,7 @@
       <td class="column"> {{getRole(user)}} </td>
       <td class="column"> {{getPhone(user)}} </td>
       <td class="column">
-        <mat-slide-toggle *ngIf="!userEquals(user)" class="slider" (change)="setAdmin(user)"
+        <mat-slide-toggle *ngIf="!userEquals(user)" (change)="setAdmin(user)"
                           [(ngModel)]="user.admin">
         </mat-slide-toggle>
       </td>
