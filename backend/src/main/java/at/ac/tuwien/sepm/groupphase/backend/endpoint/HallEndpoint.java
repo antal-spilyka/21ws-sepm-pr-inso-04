@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.stream.Stream;
 
 @RestController
