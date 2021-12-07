@@ -43,6 +43,9 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { NewsViewComponent } from './components/news-view/news-view.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -65,7 +68,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     SearchArtistComponent,
     SearchLocationComponent,
     SearchEventsComponent,
-    SearchTimeComponent
+    SearchTimeComponent,
+    NewsViewComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +95,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    MatGridListModule
+    MatGridListModule,
+    NgImageSliderModule,
+    MatProgressSpinnerModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

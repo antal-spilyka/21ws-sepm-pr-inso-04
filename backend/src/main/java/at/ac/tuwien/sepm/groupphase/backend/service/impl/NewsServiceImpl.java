@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
@@ -56,8 +57,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsDto getById(Long id) {
         LOGGER.debug("Get news by id");
-        News news = newsRepository.getById(id);
-        List<Picture> pictures = pictureRepository.findByNewsId(news);
-        return newsMapper.entityToDto(news, pictures);
+        try {
+            News news = newsRepository.getById(id);
+            List<Picture> pictures = pictureRepository.findByNewsId(news);
+            return newsMapper.entityToDto(news, pictures);
+        } catch (EntityNotFoundException e) {
+            LOGGER.debug("News with id {} not found", id);
+            throw new EntityNotFoundException(e.getMessage());
+        }
+
     }
 }

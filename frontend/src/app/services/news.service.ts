@@ -33,4 +33,15 @@ export class NewsService {
     console.log('Load all news');
     return this.httpClient.get<News[]>(this.newsBaseUri);
   }
+
+  /**
+   * Get News with corresponding id
+   *
+   * @param id of the news
+   * @returns found news
+   */
+  getNewsById(id: number): Observable<News> {
+    console.log(`Get News by Id: ${id}`);
+    return this.httpClient.get<News>(this.newsBaseUri + `/${id}`);
+  }
 }

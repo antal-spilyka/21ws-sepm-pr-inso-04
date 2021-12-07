@@ -57,7 +57,7 @@ public class NewsMapper {
         newsDto.setShortDescription(news.getShortDescription());
         newsDto.setLongDescription(news.getLongDescription());
         newsDto.setCreateDate(news.getCreateDate());
-        newsDto.setPictures(pictureMapper.entityToDto(pictures));
+        newsDto.setPictures(pictures == null ? null : pictureMapper.entityToDto(pictures));
         return newsDto;
     }
 

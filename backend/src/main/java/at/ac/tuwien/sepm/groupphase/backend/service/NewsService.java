@@ -11,8 +11,8 @@ public interface NewsService {
      * Persists a new event.
      *
      * @param news containing properties to be persisted
-     * @throws org.hibernate.service.spi.ServiceException                      when unknown error occurs
-     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException when entity already exists
+     * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException  when entity already exists
      */
     void save(News news);
 
@@ -26,7 +26,8 @@ public interface NewsService {
      *
      * @param id of the news
      * @return NewsDto with corresponding id
-     * @throws org.hibernate.service.spi.ServiceException                      when unknown error occurs
+     * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
+     * @throws javax.persistence.EntityNotFoundException                        when entity not found
      */
     NewsDto getById(Long id);
 

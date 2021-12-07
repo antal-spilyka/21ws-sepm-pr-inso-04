@@ -66,7 +66,7 @@ public class NewsEndpoint {
     }
 
     @GetMapping("/{id}")
-    @PermitAll
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     public NewsDto getNewsById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/news : getById");
