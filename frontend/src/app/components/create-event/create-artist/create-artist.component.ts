@@ -6,7 +6,7 @@ import { EventDto } from 'src/app/dtos/eventDto';
 import {ArtistService} from 'src/app/services/artist.service';
 import {Hall} from '../../../dtos/hall';
 import {HallService} from '../../../services/hall.service';
-import {Performance} from '../../../dtos/performance';
+import {Performance} from '../../../dtos/Performance';
 import {EventService} from '../../../services/event.service';
 
 @Component({
