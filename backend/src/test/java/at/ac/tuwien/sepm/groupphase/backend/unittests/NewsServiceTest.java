@@ -116,9 +116,8 @@ public class NewsServiceTest implements TestData {
     }*/
 
     @Test
-    public void insert_news_invalid_event() {
+    public void insert_news_nullValue_event() {
         EventDto invalidEvent = eventDto;
-        invalidEvent.setId(null);
         NewsDto newsDto = new NewsDto();
         newsDto.setEvent(invalidEvent);
         newsDto.setRating(5L);
@@ -126,7 +125,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> newsRepository.save(newsMapper.dtoToEntity(newsDto)));
+        assertThrows(NullPointerException.class, () -> newsRepository.save(newsMapper.dtoToEntity(newsDto)));
     }
 
     @Test
@@ -137,7 +136,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> newsService.save(newsMapper.dtoToEntity(newsDto)));
+        assertThrows(NullPointerException.class, () -> newsService.save(newsMapper.dtoToEntity(newsDto)));
     }
 
     /*@Test todo

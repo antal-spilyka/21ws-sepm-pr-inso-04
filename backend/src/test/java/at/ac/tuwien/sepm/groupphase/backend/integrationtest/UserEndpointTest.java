@@ -79,7 +79,7 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // this should be changed to the event list route in the future
-        MvcResult mvcResult3 = this.mockMvc.perform(get(MESSAGE_BASE_URI)
+        MvcResult mvcResult3 = this.mockMvc.perform(get(EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), response2.getContentAsString()))

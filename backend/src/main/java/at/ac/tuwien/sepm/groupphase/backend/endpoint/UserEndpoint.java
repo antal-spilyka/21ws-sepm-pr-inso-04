@@ -62,9 +62,17 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             ObjectError e = bindingResult.getAllErrors().get(0);
             LOGGER.error(e.getDefaultMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + e.getDefaultMessage());
         }
-        userService.createUser(user);
+
+        try {
+            userService.createUser(user);
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     /**
@@ -74,8 +82,18 @@ public class UserEndpoint {
     @PutMapping("")
     public ResponseEntity<String> update(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
         LOGGER.info("PUT /api/v1/users" + user.toString());
-        userService.updateUser(user);
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        try {
+            userService.updateUser(user);
+        } catch (ServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     /**

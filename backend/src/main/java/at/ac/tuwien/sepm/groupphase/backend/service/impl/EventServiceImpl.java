@@ -53,7 +53,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDto> findEvents(EventSearchDto eventSearchDto) {
-        LOGGER.debug("Handeling in Service {}", eventSearchDto);
+        LOGGER.debug("Handling in Service {}", eventSearchDto);
         if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null) {
             throw new NotFoundException("No address was found for this query");
         }
@@ -61,7 +61,8 @@ public class EventServiceImpl implements EventService {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(),
                 PageRequest.of(0, 10));
             if (events.isEmpty()) {
-                throw new NotFoundException("No events were found for this search query");
+                List<EventDto> result = new ArrayList<>();
+                return result;
             }
             return events.stream().map(event -> eventMapper.entityToDto(event)).collect(Collectors.toList());
         } catch (PersistenceException e) {
@@ -71,7 +72,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
-        LOGGER.debug("Handeling in Service {}", eventDateTimeSearchDto);
+        LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
         try {
             List<Hall> halls = new ArrayList<>();
             eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));

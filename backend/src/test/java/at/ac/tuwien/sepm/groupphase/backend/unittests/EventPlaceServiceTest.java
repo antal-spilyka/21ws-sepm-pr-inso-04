@@ -44,8 +44,10 @@ public class EventPlaceServiceTest {
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setId(1L);
         eventPlaceDto.setName("TestEventPlace2");
         eventPlaceDto.setAddressDto(addressDto);
 
@@ -75,6 +77,7 @@ public class EventPlaceServiceTest {
         addressDto.setState("TestState1");
         addressDto.setCountry("TestCountry1");
         addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestEventPlace3");

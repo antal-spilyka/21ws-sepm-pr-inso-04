@@ -22,7 +22,7 @@ public interface EventPlaceService {
      */
     List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
-    EventPlace findEventPlace(EventPlace eventPlace);
+    EventPlace findEventPlace(EventPlace eventPlace); //TODO delete
 
     /**
      * FInds eventLocations with matching properties.
