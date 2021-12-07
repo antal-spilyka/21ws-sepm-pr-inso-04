@@ -23,10 +23,6 @@
       .hallplan-row {
         flex: 1;
         display: flex;
-
-        hallplan-element {
-          flex: 1;
-        }
       }
     }
   }
@@ -37,11 +33,18 @@
     border-top-left-radius: 10px;
     padding: 3rem 1rem 1rem 3rem;
     background: white;
+    position: relative;
 
     mat-radio-button {
       display: block;
       font-size: 1.05rem;
       padding-bottom: 1rem;
+    }
+
+    .next-button {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
     }
   }
 }

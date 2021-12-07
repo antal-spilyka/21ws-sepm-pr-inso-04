@@ -30,16 +30,16 @@ export class HallplanElement implements IHallplanElement {
 
   withRemoveCandidate(removeCandidate: boolean): HallplanElement {
     this.removeCandidate = removeCandidate;
-    return {...this};
+    return this;
   }
 
   withType(type: HallplanElementType): HallplanElement {
     this.type = type;
-    return {...this};
+    return this;
   }
 
   withAdded(added: boolean): HallplanElement {
     this.added = added;
-    return {...this};
+    return this;
   }
 }

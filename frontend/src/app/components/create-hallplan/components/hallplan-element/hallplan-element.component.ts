@@ -41,20 +41,6 @@ export class HallplanElementComponent implements OnChanges {
   };
 
   onAdd(): void {
-    console.log(this.rowIndex + ' ' + this.seatIndex);
-    if (this.hallplanElement.added && this.hallplanElement.type === HallplanElementType.exit &&
-      this.rows[this.rowIndex + 1][this.seatIndex].type === HallplanElementType.exit &&
-      this.rows[this.rowIndex + 1][this.seatIndex].added &&
-      ((this.rows[this.rowIndex + 1][this.seatIndex + 1].type === HallplanElementType.exit &&
-        this.rows[this.rowIndex + 1][this.seatIndex + 1].added) ||
-        (this.rows[this.rowIndex + 1][this.seatIndex - 1].type === HallplanElementType.exit &&
-          this.rows[this.rowIndex + 1][this.seatIndex - 1].added))) {
-      console.log('zIndex true');
-      this.zIndex = true;
-    } else {
-      console.log('zIndex false');
-      this.zIndex = false;
-    }
   }
 
   hallplanElementClick() {
@@ -84,24 +70,36 @@ export class HallplanElementComponent implements OnChanges {
     const leftElement = this.rows[this.rowIndex][this.seatIndex - 1];
     const topElement = this.rows[this.rowIndex - 1][this.seatIndex];
     const bottomElement = this.rows[this.rowIndex + 1][this.seatIndex];
-    if (this.hallplanElement.type === HallplanElementType.exit && this.hallplanElement.added) {
 
-      if ((leftElement.added && leftElement.type === HallplanElementType.exit) ||
-        (rightElement.added && rightElement.type === HallplanElementType.exit)) {
-        style += ' rotated';
-      }
-    }
-    if (leftElement.type !== this.hallplanElement.type || !leftElement.added) {
+    const topLeftElement = this.rows[this.rowIndex - 1][this.seatIndex - 1];
+    const topRightElement = this.rows[this.rowIndex - 1][this.seatIndex + 1];
+    const bottomRightElement = this.rows[this.rowIndex + 1][this.seatIndex + 1];
+    const bottomLeftElement = this.rows[this.rowIndex + 1][this.seatIndex - 1];
+
+    if (leftElement.type === this.hallplanElement.type && leftElement.added) {
       style += ' left';
     }
-    if (rightElement.type !== this.hallplanElement.type || !rightElement.added) {
+    if (rightElement.type === this.hallplanElement.type && rightElement.added) {
       style += ' right';
     }
-    if (bottomElement.type !== this.hallplanElement.type || !bottomElement.added) {
+    if (bottomElement.type === this.hallplanElement.type && bottomElement.added) {
       style += ' bottom';
     }
-    if (topElement.type !== this.hallplanElement.type || !topElement.added) {
+    if (topElement.type === this.hallplanElement.type && topElement.added) {
       style += ' top';
+    }
+
+    if (topLeftElement.type === this.hallplanElement.type && topLeftElement.added) {
+      style += ' top-left';
+    }
+    if (topRightElement.type === this.hallplanElement.type && topRightElement.added) {
+      style += ' top-right';
+    }
+    if (bottomRightElement.type === this.hallplanElement.type && bottomRightElement.added) {
+      style += ' bottom-right';
+    }
+    if (bottomLeftElement.type === this.hallplanElement.type && bottomLeftElement.added) {
+      style += ' bottom-left';
     }
 
     return style;

@@ -47,7 +47,7 @@ export class CreateHallplanComponent implements OnInit {
   }
 
   addSeat(rowIndex: number, seatIndex: number) {
-    console.log(`add seat : ${rowIndex} ${seatIndex}`);
+    console.log(`addSeat(${rowIndex}, ${seatIndex});`);
     this.rows[rowIndex][seatIndex] = {...this.rows[rowIndex][seatIndex].withType(this.radioControl.value).withAdded(true)};
     if (rowIndex === 0) {
       this.rows = [this.createRow(false)].concat(this.rows);
@@ -92,7 +92,7 @@ export class CreateHallplanComponent implements OnInit {
 
   mouseOverHallplanElement(rowIndex: number, seatIndex: number, indent = 1) {
     if (this.rows.length > this.minRowsNumber && this.isLastTopSeat(rowIndex, seatIndex, indent)) {
-      this.rows[rowIndex].map((seat) => seat.withRemoveCandidate(true));
+      this.rows[rowIndex].map((seat, ind) => seat.withRemoveCandidate(true));
       this.mouseOverHallplanElement(rowIndex + 1, 0, indent + 1);
     }
     if (this.rows[0].length > this.minSeatsNumber && this.isLastLeftSeat(rowIndex, seatIndex, indent)) {
@@ -121,7 +121,7 @@ export class CreateHallplanComponent implements OnInit {
 
   removeSeat(rowIndex: number, seatIndex: number, indent = 1) {
     let removed = false;
-    this.rows[rowIndex][seatIndex].added = false;
+    this.rows[rowIndex][seatIndex] = this.rows[rowIndex][seatIndex].withAdded(false);
     if (this.rows.length > this.minRowsNumber && this.isLastTopSeat(1, 0)) {
       removed = true;
       this.rows = this.rows.slice(1);

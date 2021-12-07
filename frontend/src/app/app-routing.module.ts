@@ -33,7 +33,7 @@ const routes: Routes = [
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
-  {path: 'hallplan/add', component: CreateHallplanComponent},
+  {path: 'hallplans/add', component: CreateHallplanComponent},
   {path: 'search-time', component: SearchTimeComponent}
 ];
 
