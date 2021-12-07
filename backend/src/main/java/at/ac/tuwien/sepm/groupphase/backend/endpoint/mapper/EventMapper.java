@@ -34,12 +34,15 @@ public class EventMapper {
         eventDto.setDuration(event.getDuration());
         eventDto.setEventPlace(eventPlaceMapper.entityToDto(event.getEventPlace()));
         eventDto.setDescription(eventDto.getDescription());
-        // avoid cyclical calls
-        List<PerformanceDto> performanceDtos = new ArrayList<>();
-        for (Performance performance : event.getPerformances()) {
-            performanceDtos.add(performanceMapper.entityToDto(performance, eventDto));
+        if (event != null && event.getPerformances() != null && 0 < event.getPerformances().size()) {
+            // avoid cyclical calls
+            List<PerformanceDto> performanceDtos = new ArrayList<>();
+            for (Performance performance : event.getPerformances()) {
+                performanceDtos.add(performanceMapper.entityToDto(performance, eventDto));
+            }
+            eventDto.setPerformances(performanceDtos);
         }
-        eventDto.setPerformances(performanceDtos);
+        eventDto.setPerformances(null);
         LOGGER.info("mapped" + eventDto);
         return eventDto;
     }

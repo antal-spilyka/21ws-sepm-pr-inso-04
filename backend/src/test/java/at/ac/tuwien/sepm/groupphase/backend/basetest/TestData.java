@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public interface TestData {
 
     String BASE_URI = "/api/v1";
     String EVENT_BASE_URI = BASE_URI + "/artists";
+    String NEWS_BASE_URI = BASE_URI + "/news";
     String USER_BASE_URI = BASE_URI + "/users";
     String AUTHENTICATION_URI = BASE_URI + "/authentication";
     String FILE_URI = BASE_URI + "/files";

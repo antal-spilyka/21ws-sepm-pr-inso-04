@@ -58,7 +58,6 @@ public class EventServiceTest {
     private HallDto hallDto;
     private Hall hall;
     private AddressDto addressDto;
-    private Address address;
     private EventPlaceDto eventPlaceDto;
     private EventPlace eventPlace;
     private ArtistDto artistDto;
@@ -74,34 +73,20 @@ public class EventServiceTest {
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
         addressDto.setStreet("TestStreet");
-        this.address = new Address();
-        address.setZip("1234");
-        address.setState("TestState");
-        address.setCountry("TestCountry");
-        address.setCity("TestCity");
-        address.setStreet("TestStreet");
 
         this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        eventPlaceService.save(eventPlaceDto);
-
-        this.eventPlace = new EventPlace();
-        eventPlace.setName("TestPlace");
-        eventPlace.setAddress(this.address);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
         ArtistDto artistDto = new ArtistDto();
         artistDto.setBandName("TestArtist");
         artistDto.setDescription("an artist");
         this.artist = artistService.save(artistDto);
 
-        this.artist = new Artist();
-        artist.setBandName("TestArtist");
-        artist.setDescription("TestDescription");
-
         this.hallDto = new HallDto();
         hallDto.setName("TestHall");
-        hallDto.setEventPlaceDto(eventPlaceDto);
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
         this.hall = hallService.save(hallDto);
 
         this.event = new Event();
@@ -122,7 +107,7 @@ public class EventServiceTest {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
 
-        this.event = eventService.saveEvent(eventMapper.entityToDto(event));
+        eventService.saveEvent(eventMapper.entityToDto(event));
     }
 
     @Test

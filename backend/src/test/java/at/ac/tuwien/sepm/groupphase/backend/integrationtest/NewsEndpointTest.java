@@ -5,9 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
@@ -39,6 +37,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -83,7 +84,8 @@ public class NewsEndpointTest implements TestData {
     private HallDto hallDto;
     private ArtistDto artistDto;
     private Artist artist;
-    private EventDto eventDto;
+    private Event event;
+    private List<Performance> performances= new ArrayList();
 
     @BeforeEach
     public void beforeEach() {
@@ -94,11 +96,12 @@ public class NewsEndpointTest implements TestData {
         addressDto.setState("TestStateNews5");
         addressDto.setCountry("TestCountryNews5");
         addressDto.setCity("TestCityNews5");
+        addressDto.setStreet("TestStreet");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+        eventPlaceService.save(eventPlaceDto);
 
         hallDto = new HallDto();
         hallDto.setName("TestHall");
@@ -111,16 +114,39 @@ public class NewsEndpointTest implements TestData {
     }
 
 
-    /*@Test
+    @Test
     public void addNewsWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
-        Event event = new Event();
-        eventInquiryDto.setName("testEventNews6");
-        eventInquiryDto.setContent("testContentNews6");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        AddressDto addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
+
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        Hall hall = new Hall();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hall = hallService.save(hallDto);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setName("testEventNews6");
+        eventDto.setStartTime(LocalDateTime.now());
+        eventDto.setDuration(120L);
+        this.event = eventService.saveEvent(eventDto);
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        this.performances.add(performance);
 
         LocalDateTime date = LocalDateTime.now();
 
@@ -166,5 +192,5 @@ public class NewsEndpointTest implements TestData {
 
         MockHttpServletResponse response3 = mvcResult3.getResponse();
         assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
-    }*/
+    }
 }

@@ -114,12 +114,16 @@ public class EventServiceImpl implements EventService {
     public Event saveEvent(EventDto event) {
         LOGGER.debug("Update event by adding a performance {}", event);
         long durationCounter = 0L;
-        for (PerformanceDto performance : event.getPerformances()) {
-            performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
-            durationCounter += 5 + performance.getDuration();
-            performanceService.save(performance);
+        if (event != null) {
+            if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
+                for (PerformanceDto performance : event.getPerformances()) {
+                    performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
+                    durationCounter += 5 + performance.getDuration();
+                    performanceService.save(performance);
+                }
+            }
+            event.setDuration(durationCounter);
         }
-        event.setDuration(durationCounter);
         return eventRepository.save(eventMapper.dtoToEntity(event));
     }
 }

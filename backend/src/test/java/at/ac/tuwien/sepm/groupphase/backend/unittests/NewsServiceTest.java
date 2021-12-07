@@ -1,28 +1,27 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -56,41 +55,71 @@ public class NewsServiceTest implements TestData {
     private HallDto hallDto;
     private ArtistDto artistDto;
     private EventDto eventDto;
+    private Artist artist;
+    private Event event;
+    private List<PerformanceDto> performances = new ArrayList<>();
 
-    /*@BeforeAll todo
+    @BeforeAll
     public void insertNeededContext() {
         AddressDto addressDto = new AddressDto();
         addressDto.setZip("1234");
-        addressDto.setState("TestStateNews");
-        addressDto.setCountry("TestCountryNews");
-        addressDto.setCity("TestCityNews");
+        addressDto.setState("TestStateNews5");
+        addressDto.setCountry("TestCountryNews5");
+        addressDto.setCity("TestCityNews5");
+        addressDto.setStreet("TestStreet");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
-        eventPlaceDto.setName("TestPlaceNews");
+        eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
+        eventPlaceService.save(eventPlaceDto);
 
-        RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoomNews");
-        roomInquiryDto.setEventPlaceName(eventPlace.getName());
-        hallDto = roomService.save(roomInquiryDto);
+        hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceDto);
 
         ArtistDto artistDto = new ArtistDto();
-        artistDto.setBandName("TestArtistNews");
-        artistDto.setDescription("an artistNews");
-        this.artistDto = artistService.save(artistDto);
+        artistDto.setBandName("TestArtistNews5");
+        artistDto.setDescription("an artistNews5");
+        this.artist = artistService.save(artistDto);
     }
 
     @Test
     public void insert_news_valid() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEventNews2");
-        eventInquiryDto.setContent("testContentNews2");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        AddressDto addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
+
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        Hall hall = new Hall();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hall = hallService.save(hallDto);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setName("testEventNews6");
+        eventDto.setStartTime(LocalDateTime.now());
+        eventDto.setDuration(120L);
+        eventDto.setEventPlace(eventPlaceDto);
+        this.event = eventService.saveEvent(eventDto);
+
+        PerformanceDto performance = new PerformanceDto();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(eventDto);
+        performance.setArtist(artistDto);
+        performance.setHall(hallDto);
+        this.performances.add(performance);
+
+        eventDto.setPerformances(this.performances);
+        this.event = eventService.saveEvent(eventDto);
 
         LocalDateTime date = LocalDateTime.now();
 
@@ -101,7 +130,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(date);
-        News firstNews = newsRepository.save(newsMapper.dtoToEntity(newsDto));
+        News firstNews = newsService.save(newsDto);
 
         News secondNews = new News();
         secondNews.setId(firstNews.getId());
@@ -113,7 +142,7 @@ public class NewsServiceTest implements TestData {
         secondNews.setLongDescription(firstNews.getLongDescription());
 
         assertEquals(firstNews, secondNews);
-    }*/
+    }
 
     @Test
     public void insert_news_nullValue_event() {
@@ -139,16 +168,45 @@ public class NewsServiceTest implements TestData {
         assertThrows(NullPointerException.class, () -> newsService.save(newsDto));
     }
 
-    /*@Test todo
+    @Test
     public void insert_news_invalid_compare() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEventNews7");
-        eventInquiryDto.setContent("testContentNews7");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        AddressDto addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
+
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        Hall hall = new Hall();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hall = hallService.save(hallDto);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setName("testEventNews6");
+        eventDto.setStartTime(LocalDateTime.now());
+        eventDto.setDuration(120L);
+        eventDto.setEventPlace(eventPlaceDto);
+        this.event = eventService.saveEvent(eventDto);
+
+        PerformanceDto performance = new PerformanceDto();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(eventDto);
+        performance.setArtist(artistDto);
+        performance.setHall(hallDto);
+        this.performances.add(performance);
+
+        eventDto.setPerformances(this.performances);
+        this.event = eventService.saveEvent(eventDto);
+
+        LocalDateTime date = LocalDateTime.now();
 
         NewsDto newsDto = new NewsDto();
         newsDto.setEvent(eventDto);
@@ -156,8 +214,8 @@ public class NewsServiceTest implements TestData {
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
-        newsDto.setCreateDate(LocalDateTime.now());
-        News firstNews = newsRepository.save(newsMapper.dtoToEntity(newsDto));
+        newsDto.setCreateDate(date);
+        News firstNews = newsService.save(newsDto);
 
         News secondNews = new News();
         secondNews.setId(-100000L);
@@ -172,15 +230,42 @@ public class NewsServiceTest implements TestData {
     }
 
     @Test
-    public void oldNewsShouldntBeInNewNewsList() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEventNews8");
-        eventInquiryDto.setContent("testContentNews8");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+    public void oldNewsShouldNotBeInNewNewsList() {
+        AddressDto addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
+
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        Hall hall = new Hall();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hall = hallService.save(hallDto);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setName("testEventNews6");
+        eventDto.setStartTime(LocalDateTime.now());
+        eventDto.setDuration(120L);
+        eventDto.setEventPlace(eventPlaceDto);
+        this.event = eventService.saveEvent(eventDto);
+
+        PerformanceDto performance = new PerformanceDto();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(eventDto);
+        performance.setArtist(artistDto);
+        performance.setHall(hallDto);
+        this.performances.add(performance);
+
+        eventDto.setPerformances(this.performances);
+        this.event = eventService.saveEvent(eventDto);
 
         // old size of newsTable
         int size = newsService.getNewNews().size();
@@ -191,7 +276,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now().minusDays(8));
-        newsService.save(newsMapper.dtoToEntity(newsDto));
+        newsService.save(newsDto);
 
         // there shouldn't be a difference
         assertEquals(size, newsService.getNewNews().size());
@@ -199,14 +284,43 @@ public class NewsServiceTest implements TestData {
 
     @Test
     public void newNewsShouldBeInNewNewsList() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEventNews9");
-        eventInquiryDto.setContent("testContentNews9");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        AddressDto addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
+
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        Hall hall = new Hall();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hall = hallService.save(hallDto);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setName("testEventNews6");
+        eventDto.setStartTime(LocalDateTime.now());
+        eventDto.setDuration(120L);
+        eventDto.setEventPlace(eventPlaceDto);
+        this.event = eventService.saveEvent(eventDto);
+
+        PerformanceDto performance = new PerformanceDto();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(eventDto);
+        performance.setArtist(artistDto);
+        performance.setHall(hallDto);
+        this.performances.add(performance);
+
+        eventDto.setPerformances(this.performances);
+        this.event = eventService.saveEvent(eventDto);
+
+        LocalDateTime date = LocalDateTime.now();
 
         // old size of newsTable
         int size = newsService.getNewNews().size();
@@ -217,9 +331,9 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now().minusDays(6));
-        newsService.save(newsMapper.dtoToEntity(newsDto));
+        newsService.save(newsDto);
 
         // there shouldn't be a difference
         assertEquals(size + 1, newsService.getNewNews().size());
-    }*/
+    }
 }
