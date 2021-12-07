@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
@@ -51,8 +53,8 @@ public class EventPlaceServiceTest {
         eventPlaceDto.setName("TestEventPlace2");
         eventPlaceDto.setAddressDto(addressDto);
 
-        EventPlaceDto eventPlaceDtoPers = eventPlaceService.save(eventPlaceDto);
-        eventPlaceDto.getAddressDto().setId(eventPlaceDtoPers.getAddressDto().getId());
+        EventPlace eventPlaceDtoPers = eventPlaceService.save(eventPlaceDto);
+        eventPlaceDto.getAddressDto().setId(eventPlaceDtoPers.getAddress().getId());
         assertEquals(eventPlaceDtoPers, eventPlaceDto);
     }
 
@@ -60,7 +62,7 @@ public class EventPlaceServiceTest {
     public void search_for_notExisting() {
         EventPlaceSearchDto eventPlaceSearchDto = new EventPlaceSearchDto();
         eventPlaceSearchDto.setName("not existing");
-        List<EventPlaceDto> eventPlacesFound = eventPlaceService.findEventPlace(eventPlaceSearchDto);
+        List<EventPlace> eventPlacesFound = eventPlaceService.findEventPlace(eventPlaceSearchDto);
         assertEquals(eventPlacesFound.size(), 0);
     }
 
@@ -83,12 +85,12 @@ public class EventPlaceServiceTest {
         eventPlaceDto.setName("TestEventPlace3");
         eventPlaceDto.setAddressDto(addressDto);
 
-        EventPlaceDto eventPlaceDtoPers = eventPlaceService.save(eventPlaceDto);
+        EventPlace eventPlaceD = eventPlaceService.save(eventPlaceDto);
 
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
         eventLocationSearchDto.setCity("TestCity");
         eventLocationSearchDto.setCountry("TestCountry1");
-        List<AddressDto> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
+        List<Address> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
         assertEquals(1, events.size());
     }
 }

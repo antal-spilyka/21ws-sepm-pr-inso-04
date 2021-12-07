@@ -136,7 +136,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(NullPointerException.class, () -> newsService.save(newsMapper.dtoToEntity(newsDto)));
+        assertThrows(NullPointerException.class, () -> newsService.save(newsDto));
     }
 
     /*@Test todo

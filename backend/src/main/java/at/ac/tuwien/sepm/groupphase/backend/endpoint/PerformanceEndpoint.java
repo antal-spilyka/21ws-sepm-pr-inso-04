@@ -37,7 +37,6 @@ public class PerformanceEndpoint {
     @Operation(summary = "persist new performance.")
     public PerformanceDto savePerformance(@RequestBody @Validated PerformanceDto performanceDto) {
         LOGGER.info("POST /api/v1/performance/{}", performanceDto);
-        return performanceMapper.entityToDto(performanceService.save(performanceMapper.dtoToEntity(performanceDto,
-            eventMapper.dtoToEntity(performanceDto.getEvent()))), performanceDto.getEvent());
+        return performanceMapper.entityToDto(performanceService.save(performanceDto), performanceDto.getEvent());
     }
 }

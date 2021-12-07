@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -43,13 +44,18 @@ public class EventServiceTest {
     private EventPlaceMapper eventPlaceMapper;
 
     @Autowired
+    private EventMapper eventMapper;
+
+    @Autowired
     private EventPlaceService eventPlaceService;
 
     @Autowired
     HallService hallService;
+
     @Autowired
     private ArtistService artistService;
 
+    private HallDto hallDto;
     private Hall hall;
     private AddressDto addressDto;
     private Address address;
@@ -79,6 +85,7 @@ public class EventServiceTest {
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
         eventPlaceService.save(eventPlaceDto);
+
         this.eventPlace = new EventPlace();
         eventPlace.setName("TestPlace");
         eventPlace.setAddress(this.address);
@@ -86,14 +93,16 @@ public class EventServiceTest {
         ArtistDto artistDto = new ArtistDto();
         artistDto.setBandName("TestArtist");
         artistDto.setDescription("an artist");
-        this.artistDto = artistService.save(artistDto);
+        this.artist = artistService.save(artistDto);
 
         this.artist = new Artist();
         artist.setBandName("TestArtist");
         artist.setDescription("TestDescription");
-        this.hall = new Hall();
-        hall.setName("TestHall");
-        hall.setEventPlace(eventPlace);
+
+        this.hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceDto);
+        this.hall = hallService.save(hallDto);
 
         this.event = new Event();
         event.setName("TestName");
@@ -113,7 +122,7 @@ public class EventServiceTest {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
 
-        this.event = eventService.saveEvent(event);
+        this.event = eventService.saveEvent(eventMapper.entityToDto(event));
     }
 
     @Test
@@ -121,10 +130,10 @@ public class EventServiceTest {
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
 
 
-        Event eventPers = eventService.saveEvent(this.event);
+        Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         Event event2 = new Event();
         event.setName(event.getName());
@@ -145,7 +154,7 @@ public class EventServiceTest {
         event.setPerformances(this.performances);
         event.setEventPlace(this.eventPlace);
         event.setDescription("testDescription");
-        assertThrows(DataIntegrityViolationException.class, () -> eventService.saveEvent(event));
+        assertThrows(DataIntegrityViolationException.class, () -> eventService.saveEvent(eventMapper.entityToDto(event)));
     }
 
     @Test
@@ -153,17 +162,17 @@ public class EventServiceTest {
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDuration(1000);
         eventSearchDto.setDescription("not found");
-        List<EventDto> events = eventService.findEvents(eventSearchDto);
+        List<Event> events = eventService.findEvents(eventSearchDto);
         assertTrue(events.isEmpty());
     }
 
     @Test
     public void search_for_valid_event_found() {
-        eventService.saveEvent(this.event);
+        eventService.saveEvent(eventMapper.entityToDto(this.event));
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDuration(this.event.getDuration().intValue());
         eventSearchDto.setDescription(this.event.getDescription());
-        List<EventDto> events = eventService.findEvents(eventSearchDto);
+        List<Event> events = eventService.findEvents(eventSearchDto);
         assertFalse(events.isEmpty());
     }
 

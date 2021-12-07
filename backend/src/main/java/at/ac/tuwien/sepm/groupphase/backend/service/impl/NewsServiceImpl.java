@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -15,18 +17,23 @@ import java.util.List;
 
 @Service
 public class NewsServiceImpl implements NewsService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final NewsRepository newsRepository;
 
-    public NewsServiceImpl(NewsRepository newsRepository) {
+    private final NewsMapper newsMapper;
+
+    public NewsServiceImpl(NewsRepository newsRepository, NewsMapper newsMapper) {
         this.newsRepository = newsRepository;
+        this.newsMapper = newsMapper;
     }
 
     @Transactional
     @Override
-    public void save(News news) {
-        LOGGER.debug("Publish new news {}", news);
-        newsRepository.save(news);
+    public News save(NewsDto newsDto) {
+        LOGGER.debug("Publish new news {}", newsDto);
+        return newsRepository.save(newsMapper.dtoToEntity(newsDto));
     }
 
     @Transactional

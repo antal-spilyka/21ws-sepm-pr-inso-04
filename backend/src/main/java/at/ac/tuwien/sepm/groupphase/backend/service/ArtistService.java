@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface ArtistService {
      * @return List of artists matching properties
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto, Integer number);
+    List<Artist> findArtist(ArtistSearchDto artistSearchDto, Integer number);
 
     /**
      * Gets artist by primary key (id).
@@ -29,7 +30,7 @@ public interface ArtistService {
      * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException when artist could not be found
      */
-    ArtistDto getById(Long id);
+    Artist getById(Long id);
 
     /**
      * Persists artist.
@@ -39,5 +40,5 @@ public interface ArtistService {
      * @throws org.hibernate.service.spi.ServiceException                      when unknown error occurs
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ContextException when artist already exists
      */
-    ArtistDto save(ArtistDto artistDto);
+    Artist save(ArtistDto artistDto);
 }

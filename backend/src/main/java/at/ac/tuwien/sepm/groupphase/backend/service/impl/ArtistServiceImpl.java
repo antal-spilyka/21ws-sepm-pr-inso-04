@@ -34,23 +34,20 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Transactional
     @Override
-    public List<ArtistDto> findArtist(ArtistSearchDto artistSearchDto, Integer number) {
-        LOGGER.debug("Handeling in Service {}", artistSearchDto);
+    public List<Artist> findArtist(ArtistSearchDto artistSearchDto, Integer number) {
+        LOGGER.debug("Handling in Service {}", artistSearchDto);
         try {
-            List<Artist> artists = artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
-            return artists.stream().map(artist ->
-                artistMapper.entityToDto(artist)
-            ).collect(Collectors.toList());
+            return artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }
 
     @Override
-    public ArtistDto getById(Long id) {
-        LOGGER.debug("Handeling in Service {}", id);
+    public Artist getById(Long id) {
+        LOGGER.debug("Handling in Service {}", id);
         try {
-            return artistMapper.entityToDto(artistRepository.getById(id));
+            return artistRepository.getById(id);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {
@@ -59,11 +56,10 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public ArtistDto save(ArtistDto artistDto) {
-        LOGGER.debug("Handeling in Service {}", artistDto);
+    public Artist save(ArtistDto artistDto) {
+        LOGGER.debug("Handling in Service {}", artistDto);
         try {
-            Artist persistedArtist = artistRepository.save(artistMapper.dtoToEntity(artistDto));
-            return artistMapper.entityToDto(persistedArtist);
+            return artistRepository.save(artistMapper.dtoToEntity(artistDto));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {

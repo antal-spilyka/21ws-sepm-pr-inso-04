@@ -49,7 +49,7 @@ public class HallServiceTest {
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace1");
         eventPlaceDto.setAddressDto(addressDto);
-        eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
+        eventPlace = eventPlaceService.save(eventPlaceDto);
     }
 
     /*@Test() todo

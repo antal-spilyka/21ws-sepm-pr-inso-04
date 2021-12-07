@@ -28,14 +28,14 @@ public interface HallService {
      * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException when room not found
      */
-    HallDto getById(Long id);
+    Hall getById(Long id);
 
     /**
-     * Methode for returning all rooms from database.
+     * Method for returning all rooms from database.
      *
      * @return all the rooms stored in database
      */
-    List<HallDto> getAll();
+    List<Hall> getAll();
 
     /**
      * Persists room.
@@ -44,5 +44,5 @@ public interface HallService {
      * @return persisted room
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    HallDto save(HallDto hallDto);
+    Hall save(HallDto hallDto);
 }

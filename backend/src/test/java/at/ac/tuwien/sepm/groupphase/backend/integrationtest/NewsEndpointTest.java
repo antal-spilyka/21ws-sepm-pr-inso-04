@@ -5,6 +5,9 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
@@ -77,11 +80,12 @@ public class NewsEndpointTest implements TestData {
     @Autowired
     NewsMapper newsMapper;
 
-    HallDto hallDto;
-    ArtistDto artistDto;
-    EventDto eventDto;
+    private HallDto hallDto;
+    private ArtistDto artistDto;
+    private Artist artist;
+    private EventDto eventDto;
 
-    /*@BeforeEach todo
+    @BeforeEach
     public void beforeEach() {
         userRepository.deleteAll();
 
@@ -94,23 +98,22 @@ public class NewsEndpointTest implements TestData {
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
+        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
 
-        RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoomNews5");
-        roomInquiryDto.setEventPlaceName(eventPlace.getName());
-        hallDto = roomService.save(roomInquiryDto);
+        hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceDto);
 
         ArtistDto artistDto = new ArtistDto();
         artistDto.setBandName("TestArtistNews5");
         artistDto.setDescription("an artistNews5");
-        this.artistDto = artistService.save(artistDto);
+        this.artist = artistService.save(artistDto);
     }
 
 
-    @Test
+    /*@Test
     public void addNewsWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
+        Event event = new Event();
         eventInquiryDto.setName("testEventNews6");
         eventInquiryDto.setContent("testContentNews6");
         eventInquiryDto.setDateTime(LocalDateTime.now());
