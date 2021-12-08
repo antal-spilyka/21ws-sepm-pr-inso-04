@@ -1,5 +1,5 @@
 import {EventPlace} from './eventPlace';
-import {Performance} from './Performance';
+import {Performance} from './performance';
 
 export class EventDto {
   id?: number;

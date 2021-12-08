@@ -46,7 +46,11 @@ public class EventDto {
     }
 
     public List<PerformanceDto> getPerformances() {
-        return performances;
+        if (performances == null) {
+            return null;
+        } else {
+            return performances;
+        }
     }
 
     public void setPerformances(List<PerformanceDto> performances) {

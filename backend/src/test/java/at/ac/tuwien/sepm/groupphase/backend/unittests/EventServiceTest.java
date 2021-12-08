@@ -5,10 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
-import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
+import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import ch.qos.logback.classic.util.StatusViaSLF4JLoggerFactory;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -93,6 +90,9 @@ public class EventServiceTest {
         event.setName("TestName");
         event.setStartTime(LocalDateTime.now());
         event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
         performance.setName("TestPerformance");
@@ -101,13 +101,8 @@ public class EventServiceTest {
         performance.setEvent(event);
         performance.setArtist(artist);
         performance.setHall(hall);
+        performance.setEvent(this.event);
         this.performances.add(performance);
-
-        event.setPerformances(performances);
-        event.setEventPlace(eventPlace);
-        event.setDescription("TestDescription");
-
-        eventService.saveEvent(eventMapper.entityToDto(event));
     }
 
     @Test
@@ -115,20 +110,20 @@ public class EventServiceTest {
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
-
+        eventPlaceService.save(eventPlaceDto);
 
         Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         Event event2 = new Event();
-        event.setName(event.getName());
-        event.setStartTime(event.getStartTime());
-        event.setDuration(event.getDuration());
-        event.setPerformances(event.getPerformances());
-        event.setEventPlace(event.getEventPlace());
-        event.setDescription(event.getDescription());
+        event2.setId(eventPers.getId());
+        event2.setName(eventPers.getName());
+        event2.setStartTime(eventPers.getStartTime());
+        event2.setDuration(eventPers.getDuration());
+        event2.setPerformances(eventPers.getPerformances());
+        event2.setEventPlace(eventPers.getEventPlace());
+        event2.setDescription(eventPers.getDescription());
 
-        assertEquals(eventPers.toString(), event2.toString());
+        assertEquals(eventPers, event2);
     }
 
     @Test
@@ -153,10 +148,10 @@ public class EventServiceTest {
 
     @Test
     public void search_for_valid_event_found() {
-        eventService.saveEvent(eventMapper.entityToDto(this.event));
+        Event result = eventService.saveEvent(eventMapper.entityToDto(this.event));
         EventSearchDto eventSearchDto = new EventSearchDto();
-        eventSearchDto.setDuration(this.event.getDuration().intValue());
-        eventSearchDto.setDescription(this.event.getDescription());
+        eventSearchDto.setDuration(result.getDuration().intValue());
+        eventSearchDto.setDescription(result.getDescription());
         List<Event> events = eventService.findEvents(eventSearchDto);
         assertFalse(events.isEmpty());
     }
@@ -165,6 +160,9 @@ public class EventServiceTest {
     public void search_for_invalid_event() {
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDescription("desc");
-        assertThrows(ServiceException.class, () -> eventService.findEvents(eventSearchDto));
+        eventSearchDto.setDuration(9999999);
+        List<Event> events = eventService.findEvents(eventSearchDto);
+        //assertThrows(ServiceException.class, () -> eventService.findEvents(eventSearchDto));
+        assertTrue(events.isEmpty());
     }
 }
