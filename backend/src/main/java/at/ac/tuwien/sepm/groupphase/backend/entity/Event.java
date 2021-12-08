@@ -95,12 +95,19 @@ public class Event {
 
     @Override
     public String toString() {
+        String performanceToString;
+        if (performances == null || performances.size() <= 0) {
+            performanceToString = "null";
+        } else {
+            performanceToString = performances.toString();
+        }
+
         return "Event{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", startTime=" + startTime +
             ", duration=" + duration +
-            ", performances=" + performances.toString() +
+            ", performances=" + performanceToString +
             ", eventPlace=" + eventPlace.toString() +
             ", description='" + description + '\'' +
             '}';

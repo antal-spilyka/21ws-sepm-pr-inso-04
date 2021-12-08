@@ -3,8 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,7 +39,17 @@ public class NewsServiceTest implements TestData {
     private EventPlaceService eventPlaceService;
 
     @Autowired
-    HallService hallService;
+    private HallService hallService;
+
+    @Autowired
+    private EventMapper eventMapper;
+
+    @Autowired
+    private PerformanceMapper performanceMapper;
+
+   @Autowired
+   private ArtistMapper artistMapper;
+
     @Autowired
     private ArtistService artistService;
 
@@ -53,11 +63,13 @@ public class NewsServiceTest implements TestData {
     private NewsMapper newsMapper;
 
     private HallDto hallDto;
-    private ArtistDto artistDto;
-    private EventDto eventDto;
+    private Hall hall;
+    private AddressDto addressDto;
+    private EventPlaceDto eventPlaceDto;
+    private EventPlace eventPlace;
     private Artist artist;
     private Event event;
-    private List<PerformanceDto> performances = new ArrayList<>();
+    private List<Performance> performances = new ArrayList<>();
 
     @BeforeAll
     public void insertNeededContext() {
@@ -85,46 +97,51 @@ public class NewsServiceTest implements TestData {
 
     @Test
     public void insert_news_valid() {
-        AddressDto addressDto = new AddressDto();
+        this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
         addressDto.setStreet("TestStreet");
 
-        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
-        Hall hall = new Hall();
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestArtist");
+        artistDto.setDescription("an artist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
         hallDto.setName("TestHall");
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
-        hall = hallService.save(hallDto);
+        this.hall = hallService.save(hallDto);
 
-        EventDto eventDto = new EventDto();
-        eventDto.setName("testEventNews6");
-        eventDto.setStartTime(LocalDateTime.now());
-        eventDto.setDuration(120L);
-        eventDto.setEventPlace(eventPlaceDto);
-        this.event = eventService.saveEvent(eventDto);
+        this.event = new Event();
+        event.setName("TestName");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        eventService.saveEvent(eventMapper.entityToDto(event));
 
-        PerformanceDto performance = new PerformanceDto();
+        Performance performance = new Performance();
         performance.setName("TestPerformance");
         performance.setStartTime(LocalDateTime.now());
         performance.setDuration(50L);
-        performance.setEvent(eventDto);
-        performance.setArtist(artistDto);
-        performance.setHall(hallDto);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
         this.performances.add(performance);
-
-        eventDto.setPerformances(this.performances);
-        this.event = eventService.saveEvent(eventDto);
+        Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         LocalDateTime date = LocalDateTime.now();
 
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(eventPers));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -146,9 +163,7 @@ public class NewsServiceTest implements TestData {
 
     @Test
     public void insert_news_nullValue_event() {
-        EventDto invalidEvent = eventDto;
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(invalidEvent);
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -160,56 +175,60 @@ public class NewsServiceTest implements TestData {
     @Test
     public void insert_news_nullValue_rating() {
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(this.event));
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
         newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(NullPointerException.class, () -> newsService.save(newsDto));
+        assertThrows(DataIntegrityViolationException.class, () -> newsService.save(newsDto));
     }
 
     @Test
     public void insert_news_invalid_compare() {
-        AddressDto addressDto = new AddressDto();
+        this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
         addressDto.setStreet("TestStreet");
 
-        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
-        Hall hall = new Hall();
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestArtist");
+        artistDto.setDescription("an artist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
         hallDto.setName("TestHall");
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
-        hall = hallService.save(hallDto);
+        this.hall = hallService.save(hallDto);
 
-        EventDto eventDto = new EventDto();
-        eventDto.setName("testEventNews6");
-        eventDto.setStartTime(LocalDateTime.now());
-        eventDto.setDuration(120L);
-        eventDto.setEventPlace(eventPlaceDto);
-        this.event = eventService.saveEvent(eventDto);
+        this.event = new Event();
+        event.setName("TestName");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        this.event = eventService.saveEvent(eventMapper.entityToDto(event));
 
-        PerformanceDto performance = new PerformanceDto();
+        Performance performance = new Performance();
         performance.setName("TestPerformance");
         performance.setStartTime(LocalDateTime.now());
         performance.setDuration(50L);
-        performance.setEvent(eventDto);
-        performance.setArtist(artistDto);
-        performance.setHall(hallDto);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
         this.performances.add(performance);
-
-        eventDto.setPerformances(this.performances);
-        this.event = eventService.saveEvent(eventDto);
 
         LocalDateTime date = LocalDateTime.now();
 
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(this.event));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -231,46 +250,51 @@ public class NewsServiceTest implements TestData {
 
     @Test
     public void oldNewsShouldNotBeInNewNewsList() {
-        AddressDto addressDto = new AddressDto();
+        this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
         addressDto.setStreet("TestStreet");
 
-        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
-        Hall hall = new Hall();
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestArtist");
+        artistDto.setDescription("an artist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
         hallDto.setName("TestHall");
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
-        hall = hallService.save(hallDto);
+        this.hall = hallService.save(hallDto);
 
-        EventDto eventDto = new EventDto();
-        eventDto.setName("testEventNews6");
-        eventDto.setStartTime(LocalDateTime.now());
-        eventDto.setDuration(120L);
-        eventDto.setEventPlace(eventPlaceDto);
-        this.event = eventService.saveEvent(eventDto);
+        this.event = new Event();
+        event.setName("TestName");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        eventService.saveEvent(eventMapper.entityToDto(event));
 
-        PerformanceDto performance = new PerformanceDto();
+        Performance performance = new Performance();
         performance.setName("TestPerformance");
         performance.setStartTime(LocalDateTime.now());
         performance.setDuration(50L);
-        performance.setEvent(eventDto);
-        performance.setArtist(artistDto);
-        performance.setHall(hallDto);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
         this.performances.add(performance);
-
-        eventDto.setPerformances(this.performances);
-        this.event = eventService.saveEvent(eventDto);
+        Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         // old size of newsTable
         int size = newsService.getNewNews().size();
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(eventPers));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -284,48 +308,51 @@ public class NewsServiceTest implements TestData {
 
     @Test
     public void newNewsShouldBeInNewNewsList() {
-        AddressDto addressDto = new AddressDto();
+        this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
         addressDto.setStreet("TestStreet");
 
-        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceService.save(eventPlaceDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
-        Hall hall = new Hall();
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestArtist");
+        artistDto.setDescription("an artist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
         hallDto.setName("TestHall");
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
-        hall = hallService.save(hallDto);
+        this.hall = hallService.save(hallDto);
 
-        EventDto eventDto = new EventDto();
-        eventDto.setName("testEventNews6");
-        eventDto.setStartTime(LocalDateTime.now());
-        eventDto.setDuration(120L);
-        eventDto.setEventPlace(eventPlaceDto);
-        this.event = eventService.saveEvent(eventDto);
+        this.event = new Event();
+        event.setName("TestName");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        eventService.saveEvent(eventMapper.entityToDto(event));
 
-        PerformanceDto performance = new PerformanceDto();
+        Performance performance = new Performance();
         performance.setName("TestPerformance");
         performance.setStartTime(LocalDateTime.now());
         performance.setDuration(50L);
-        performance.setEvent(eventDto);
-        performance.setArtist(artistDto);
-        performance.setHall(hallDto);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
         this.performances.add(performance);
-
-        eventDto.setPerformances(this.performances);
-        this.event = eventService.saveEvent(eventDto);
-
-        LocalDateTime date = LocalDateTime.now();
+        Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         // old size of newsTable
         int size = newsService.getNewNews().size();
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(eventPers));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -333,7 +360,7 @@ public class NewsServiceTest implements TestData {
         newsDto.setCreateDate(LocalDateTime.now().minusDays(6));
         newsService.save(newsDto);
 
-        // there shouldn't be a difference
+        // there should be not difference
         assertEquals(size + 1, newsService.getNewNews().size());
     }
 }

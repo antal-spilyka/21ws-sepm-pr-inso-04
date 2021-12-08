@@ -47,7 +47,7 @@ public class EventServiceTest {
     private EventPlaceService eventPlaceService;
 
     @Autowired
-    HallService hallService;
+    private HallService hallService;
 
     @Autowired
     private ArtistService artistService;
@@ -57,7 +57,6 @@ public class EventServiceTest {
     private AddressDto addressDto;
     private EventPlaceDto eventPlaceDto;
     private EventPlace eventPlace;
-    private ArtistDto artistDto;
     private Artist artist;
     private Event event;
     private List<Performance> performances = new ArrayList<>();
