@@ -3,9 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import java.util.Objects;
 
 public class HallDto {
-    Long id;
-    String name;
-    EventPlaceDto eventPlaceDto;
+    private Long id;
+    private String name;
+    private EventPlaceDto eventPlaceDto;
 
     public Long getId() {
         return id;

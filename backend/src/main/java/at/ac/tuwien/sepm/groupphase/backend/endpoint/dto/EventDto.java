@@ -46,7 +46,11 @@ public class EventDto {
     }
 
     public List<PerformanceDto> getPerformances() {
-        return performances;
+        if (performances == null) {
+            return null;
+        } else {
+            return performances;
+        }
     }
 
     public void setPerformances(List<PerformanceDto> performances) {
@@ -71,12 +75,19 @@ public class EventDto {
 
     @Override
     public String toString() {
+        String performanceToString;
+        if (performances == null || performances.size() <= 0) {
+            performanceToString = "null";
+        } else {
+            performanceToString = performances.toString();
+        }
+
         return "EventDto{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", startTime=" + startTime +
             ", duration=" + duration +
-            ", performances=" + performances +
+            ", performances=" + performanceToString +
             ", eventPlace=" + eventPlace.toString() +
             ", description='" + description + '\'' +
             '}';

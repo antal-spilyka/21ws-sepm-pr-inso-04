@@ -3,8 +3,10 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
@@ -36,6 +38,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,41 +52,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class NewsEndpointTest implements TestData {
 
     @Autowired
-    EventService eventService;
+    private EventService eventService;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    EventPlaceMapper eventPlaceMapper;
+    private EventPlaceMapper eventPlaceMapper;
 
     @Autowired
-    EventPlaceService eventPlaceService;
+    private EventPlaceService eventPlaceService;
 
     @Autowired
-    HallService hallService;
-    @Autowired
-    ArtistService artistService;
+    private HallService hallService;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ArtistService artistService;
 
     @Autowired
-    NewsService newsService;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    NewsRepository newsRepository;
-    @Autowired
-    UserRepository userRepository;
+    private EventMapper eventMapper;
 
     @Autowired
-    NewsMapper newsMapper;
+    private UserRepository userRepository;
 
-    HallDto hallDto;
-    ArtistDto artistDto;
-    EventDto eventDto;
+    @Autowired
+    private NewsMapper newsMapper;
 
-    /*@BeforeEach todo
+    private HallDto hallDto;
+    private Hall hall;
+    private AddressDto addressDto;
+    private EventPlaceDto eventPlaceDto;
+    private EventPlace eventPlace;
+    private Artist artist;
+    private Event event;
+    private List<Performance> performances = new ArrayList<>();
+
+    @BeforeEach
     public void beforeEach() {
         userRepository.deleteAll();
 
@@ -90,39 +99,69 @@ public class NewsEndpointTest implements TestData {
         addressDto.setState("TestStateNews5");
         addressDto.setCountry("TestCountryNews5");
         addressDto.setCity("TestCityNews5");
+        addressDto.setStreet("TestStreet");
 
         EventPlaceDto eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlaceNews5");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
+        eventPlaceService.save(eventPlaceDto);
 
-        RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoomNews5");
-        roomInquiryDto.setEventPlaceName(eventPlace.getName());
-        hallDto = roomService.save(roomInquiryDto);
+        hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceDto);
 
         ArtistDto artistDto = new ArtistDto();
         artistDto.setBandName("TestArtistNews5");
         artistDto.setDescription("an artistNews5");
-        this.artistDto = artistService.save(artistDto);
+        this.artist = artistService.save(artistDto);
     }
 
 
     @Test
     public void addNewsWithoutAdminRights_shouldReturnHttpStatusForbidden() throws Exception {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEventNews6");
-        eventInquiryDto.setContent("testContentNews6");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setRoomId(hallDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        this.addressDto = new AddressDto();
+        addressDto.setZip("1234");
+        addressDto.setState("TestState");
+        addressDto.setCountry("TestCountry");
+        addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
 
+        this.eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestArtist");
+        artistDto.setDescription("an artist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        this.hall = hallService.save(hallDto);
+
+        this.event = new Event();
+        event.setName("TestName");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        eventService.saveEvent(eventMapper.entityToDto(event));
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
+        this.performances.add(performance);
         LocalDateTime date = LocalDateTime.now();
 
         NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventDto);
+        newsDto.setEvent(eventMapper.entityToDto(this.event));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
@@ -163,5 +202,5 @@ public class NewsEndpointTest implements TestData {
 
         MockHttpServletResponse response3 = mvcResult3.getResponse();
         assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
-    }*/
+    }
 }

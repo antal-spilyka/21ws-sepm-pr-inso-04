@@ -44,7 +44,7 @@ public class NewsEndpoint {
     @Operation(summary = "Publish new news")
     public void save(@Validated @RequestBody NewsDto newsDto) {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
-        newsService.save(newsMapper.dtoToEntity(newsDto));
+        newsService.save(newsDto);
     }
 
     /**

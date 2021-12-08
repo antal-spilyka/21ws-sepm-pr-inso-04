@@ -8,15 +8,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ public class Event {
     @Column(nullable = false)
     private Long duration;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Performance> performances = new ArrayList<>();
 
     @OneToOne
@@ -95,14 +95,41 @@ public class Event {
 
     @Override
     public String toString() {
+        String performanceToString;
+        if (performances == null || performances.size() <= 0) {
+            performanceToString = "null";
+        } else {
+            performanceToString = performances.toString();
+        }
+
         return "Event{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", startTime=" + startTime +
             ", duration=" + duration +
-            ", performances=" + performances.toString() +
+            ", performances=" + performanceToString +
             ", eventPlace=" + eventPlace.toString() +
             ", description='" + description + '\'' +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Event)) {
+            return false;
+        }
+        Event event = (Event) o;
+        return Objects.equals(id, event.id) && Objects.equals(name, event.name)
+            && Objects.equals(startTime, event.startTime) && Objects.equals(duration, event.duration)
+            && Objects.equals(performances, event.performances) && Objects.equals(eventPlace, event.eventPlace)
+            && Objects.equals(description, event.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, startTime, duration, performances, eventPlace, description);
     }
 }
