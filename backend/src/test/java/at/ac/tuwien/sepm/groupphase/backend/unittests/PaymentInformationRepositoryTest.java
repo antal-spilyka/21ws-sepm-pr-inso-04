@@ -60,7 +60,7 @@ public class PaymentInformationRepositoryTest implements TestData {
             () -> assertEquals(1, paymentInformationRepository.findAll().size()),
             () -> assertNotNull(paymentInformationRepository.findById(user.getId())),
             () -> assertEquals(userRepository.findUserByEmail(user.getEmail()).getEmail(),
-                paymentInformationRepository.findByUser(user).getUser().getEmail())
+                paymentInformationRepository.findByUser(user).get(0).getUser().getEmail())
         );
     }
 }
