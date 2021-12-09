@@ -53,13 +53,14 @@ public class PerformanceServiceImpl implements PerformanceService {
         ArtistDto artistDto = performanceDto.getArtist();
         if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
             Artist artist = artistMapper.dtoToEntity(artistDto);
-            artistRepository.save(artist);
+            performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
         }
         HallDto hallDto = performanceDto.getHall();
         if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
             Hall hall = hallMapper.dtoToEntity(hallDto);
-            hallRepository.save(hall);
+            performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
         }
+        performanceDto.getEvent().setPerformances(null);
         Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEvent()));
         return performanceRepository.save(performance);
     }

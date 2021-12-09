@@ -111,19 +111,20 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Event saveEvent(EventDto event) {
-        LOGGER.debug("Update event by adding a performance {}", event);
+    public Event saveEvent(EventDto eventDto) {
+        LOGGER.debug("Update event by adding a performance {}", eventDto);
         long durationCounter = 0L;
-        if (event != null) {
-            if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
-                for (PerformanceDto performance : event.getPerformances()) {
-                    performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
-                    durationCounter += 5 + performance.getDuration();
-                    performanceService.save(performance);
+        if (eventDto != null) {
+            if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
+                for (PerformanceDto performanceDto : eventDto.getPerformances()) {
+                    performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
+                    durationCounter += 5 + performanceDto.getDuration();
+                    performanceDto.setEvent(eventDto);
+                    performanceService.save(performanceDto);
                 }
             }
-            event.setDuration(durationCounter);
+            eventDto.setDuration(durationCounter);
         }
-        return eventRepository.save(eventMapper.dtoToEntity(event));
+        return eventRepository.save(eventMapper.dtoToEntity(eventDto));
     }
 }
