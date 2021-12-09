@@ -117,51 +117,36 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-card-title> Payment Information</mat-card-title>
-  <div class="horizontal">
-    <mat-card class="card">
-      <table class="example-full-width" cellspacing="0">
-        <td>
-          <mat-form-field appearance="fill">
-            <mat-label>Name</mat-label>
-            <input matInput placeholder="" [formControl]="creditCardNameControl" required>
-            <mat-error *ngIf="creditCardNameControl.invalid">{{getErrorMessage(creditCardNameControl)}}</mat-error>
-          </mat-form-field>
-        </td>
-
-        <td>
-          <mat-form-field appearance="fill" class="half-control">
-            <mat-label>Card Number</mat-label>
-            <input matInput placeholder="" [formControl]="creditCardNumberControl" required>
-            <mat-error *ngIf="creditCardNumberControl.invalid">{{getErrorMessage(creditCardNumberControl)}}</mat-error>
-          </mat-form-field>
-        </td>
-      </table>
-    </mat-card>
-
-    <mat-card class="card">
-      <mat-form-field appearance="fill" class="half-control">
-        <mat-label>Month</mat-label>
-        <input matInput [formControl]="creditCardExperationMonthControl" required>
-        <mat-error
-          *ngIf="creditCardExperationMonthControl.invalid">{{getErrorMessage(creditCardExperationMonthControl)}}</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="half-control">
-        <mat-label>Year</mat-label>
-        <input matInput [formControl]="creditCardExperationYearControl" required>
-        <mat-error
-          *ngIf="creditCardExperationYearControl.invalid">{{getErrorMessage(creditCardExperationYearControl)}}</mat-error>
-      </mat-form-field>
-    </mat-card>
-
-    <mat-card class="card">
-      <mat-form-field appearance="fill" class="half-control">
-        <mat-label>CSV</mat-label>
-        <input matInput placeholder="" [formControl]="creditCardCvvControl" required>
-        <mat-error *ngIf="creditCardCvvControl.invalid">{{getErrorMessage(creditCardCvvControl)}}</mat-error>
-      </mat-form-field>
-    </mat-card>
-  </div>
+  <table class="mat-elevation-z3" cellspacing="0">
+    <tr>
+      <th>Name</th>
+      <th>Number</th>
+      <th>Expiration Date</th>
+      <th>CVV</th>
+    </tr>
+    <tr *ngFor="let paymentInformation of user.paymentInformation; index as i">
+      <td>
+        {{paymentInformation.creditCardName}}
+      </td>
+      <td>
+        {{paymentInformation.creditCardNr}}
+      </td>
+      <td>
+        {{paymentInformation.creditCardExpirationDate}}
+      </td>
+      <td>
+        {{paymentInformation.creditCardCvv}}
+      </td>
+      <td>
+        <button style="margin-bottom: 10px" mat-icon-button (click)="editPaymentInformation(paymentInformation)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </table>
+  <button mat-fab color="primary" style="margin-top: 30px" (click)="addPaymentInformation()">
+    <mat-icon>add</mat-icon>
+  </button>
 </mat-expansion-panel>
 
 <button style="margin-top: 50px; align-content: center" (click)="updateUser()" mat-raised-button color="primary">Save

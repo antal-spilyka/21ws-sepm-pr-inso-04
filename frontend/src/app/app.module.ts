@@ -43,6 +43,8 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { EditPaymentInformationDialogComponent } from
+    './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     SearchArtistComponent,
     SearchLocationComponent,
     SearchEventsComponent,
-    SearchTimeComponent
+    SearchTimeComponent,
+    EditPaymentInformationDialogComponent
   ],
   imports: [
     BrowserModule,

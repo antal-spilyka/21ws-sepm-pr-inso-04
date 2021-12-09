@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../../services/user.service';
 import {countries} from '../../utils';
@@ -11,6 +11,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
+import {EditPaymentInformationDialogComponent} from './edit-payment-information-dialog/edit-payment-information-dialog.component';
 
 export interface DialogData {
   email: string;
@@ -48,10 +49,15 @@ export class EditUserComponent implements OnInit {
   errorMessage = '';
   error = false;
   countries = countries;
+  paymentInformationForm: FormGroup;
+  paymentInformations: PaymentInformation[];
+  fb: FormBuilder;
 
   user: User;
 
-  constructor(public dialog: MatDialog, private router: Router, private userService: UserService, private authService: AuthService) {
+  constructor(fb: FormBuilder, public dialog: MatDialog, private router: Router,
+              private userService: UserService, private authService: AuthService) {
+    this.fb = fb;
   }
 
   ngOnInit(): void {
@@ -83,13 +89,8 @@ export class EditUserComponent implements OnInit {
           this.emailControl.setValue(user.email);
           this.disabledControl.setValue(user.disabled);
           if (user.paymentInformation != null) {
-            this.creditCardNameControl.setValue(user.paymentInformation.creditCardName);
-            this.creditCardCvvControl.setValue(user.paymentInformation.creditCardCvv);
-            this.creditCardExperationMonthControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(0, 2));
-            this.creditCardExperationYearControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(2));
-            this.creditCardNumberControl.setValue(user.paymentInformation.creditCardNr);
+            this.paymentInformations = user.paymentInformation;
           }
-          console.log(this.user);
         },
         error => {
           this.defaultServiceErrorHandling(error);
@@ -130,23 +131,13 @@ export class EditUserComponent implements OnInit {
   }
 
   updateUser() {
-    let paymentInformation: PaymentInformation = null;
-    if (this.creditCardCvvControl.valid && this.creditCardNumberControl.valid && this.creditCardExperationYearControl.valid &&
-      this.creditCardExperationMonthControl.valid && this.creditCardNameControl.valid) {
-      paymentInformation = {
-        creditCardName: this.creditCardNameControl.value,
-        creditCardCvv: this.creditCardCvvControl.value, creditCardNr: this.creditCardNumberControl.value,
-        creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value
-      };
-    }
-
     const updatedUser: UpdateUserRequest = {
       email: this.user.email, newEmail: this.emailControl.value,
       admin: this.user.admin,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,
-      disabled: this.disabledControl.value, paymentInformation
+      disabled: this.disabledControl.value, paymentInformation: this.paymentInformations
     };
     if (this.emailControl.dirty && !(this.emailControl.value === this.user.email)) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
@@ -200,6 +191,31 @@ export class EditUserComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         this.user.password = result;
+      }
+    });
+  }
+
+  editPaymentInformation(paymentInformation: PaymentInformation) {
+    const dialogRef = this.dialog.open(EditPaymentInformationDialogComponent, {
+      data: paymentInformation,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result != null) {
+        this.paymentInformations = this.paymentInformations.filter(obj => obj !== paymentInformation);
+        this.paymentInformations.push(result);
+      }
+    });
+  }
+
+  addPaymentInformation() {
+    const dialogRef = this.dialog.open(EditPaymentInformationDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result != null) {
+        this.paymentInformations.push(result);
       }
     });
   }

@@ -14,8 +14,8 @@ import javax.persistence.JoinColumn;
 @Entity
 public class PaymentInformation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(length = 100)
+    private String creditCardNr;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
@@ -23,9 +23,6 @@ public class PaymentInformation {
 
     @Column(length = 100)
     private String creditCardName;
-
-    @Column(length = 100)
-    private String creditCardNr;
 
     @Column(length = 100)
     private String creditCardExpirationDate;
@@ -87,7 +84,6 @@ public class PaymentInformation {
     @Override
     public String toString() {
         return "PaymentInformation{"
-            + "id='" + id + '\''
             + "creditCardName='" + creditCardName + '\''
             + ", creditCardNr='" + creditCardNr + '\''
             + ", creditCardExpirationDate='" + creditCardExpirationDate + '\''
