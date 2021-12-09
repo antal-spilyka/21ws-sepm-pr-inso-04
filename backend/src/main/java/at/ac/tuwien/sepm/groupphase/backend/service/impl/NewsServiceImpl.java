@@ -62,6 +62,7 @@ public class NewsServiceImpl implements NewsService {
         try {
             News news = newsRepository.getById(id);
             List<Picture> pictures = pictureRepository.findByNewsId(news);
+
             return newsMapper.entityToDto(news, pictures);
         } catch (EntityNotFoundException e) {
             LOGGER.debug("News with id {} not found", id);

@@ -27,6 +27,7 @@ export class NewsViewComponent implements OnInit {
     this.newsService.getNewsById(id).subscribe({
       next: (news) => {
         this.news = news;
+        console.log(this.news);
         this.durationDHM = this.minutesToDhms(news.event.duration);
         if(this.news.pictures) {
           if(this.news.pictures.length === 0) {
@@ -63,7 +64,7 @@ export class NewsViewComponent implements OnInit {
     const dDisplay = d > 0 ? d + (d === 1 ? ' day ' : ' days ') : '';
     const hDisplay = h > 0 ? h + (h === 1 ? ' hour ' : ' hours ') : '';
     const mDisplay = m > 0 ? m + (m === 1 ? ' minute ' : ' minutes ') : '';
-    return dDisplay + hDisplay + mDisplay;
+    return (dDisplay + hDisplay + mDisplay).substring(1);
   }
 
   vanishError() {
