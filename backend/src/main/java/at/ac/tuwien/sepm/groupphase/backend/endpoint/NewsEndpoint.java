@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +63,13 @@ public class NewsEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
         }
+    }
+
+    @GetMapping("/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    public NewsDto getNewsById(@PathVariable Long id) {
+        LOGGER.info("GET /api/v1/news : getById");
+        return newsService.getById(id);
     }
 }
