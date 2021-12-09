@@ -27,11 +27,13 @@ export class EditPaymentInformationDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public dialogData: PaymentInformation) { }
 
   ngOnInit(): void {
-    this.creditCardNameControl.setValue(this.dialogData.creditCardName);
-    this.creditCardCvvControl.setValue(this.dialogData.creditCardCvv);
-    this.creditCardExperationYearControl.setValue(this.dialogData.creditCardExpirationDate.substring(2));
-    this.creditCardExperationMonthControl.setValue(this.dialogData.creditCardExpirationDate.substring(0, 2));
-    this.creditCardNumberControl.setValue(this.dialogData.creditCardNr);
+    if (this.dialogData) {
+      this.creditCardNameControl.setValue(this.dialogData.creditCardName);
+      this.creditCardCvvControl.setValue(this.dialogData.creditCardCvv);
+      this.creditCardExperationYearControl.setValue(this.dialogData.creditCardExpirationDate.substring(2));
+      this.creditCardExperationMonthControl.setValue(this.dialogData.creditCardExpirationDate.substring(0, 2));
+      this.creditCardNumberControl.setValue(this.dialogData.creditCardNr);
+    }
   }
 
   /**

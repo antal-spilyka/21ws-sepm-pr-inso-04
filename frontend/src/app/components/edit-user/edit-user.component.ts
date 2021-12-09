@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../../services/user.service';
 import {countries} from '../../utils';
@@ -35,29 +35,17 @@ export class EditUserComponent implements OnInit {
   streetControl = new FormControl('', [Validators.required]);
   salutationControl = new FormControl('mr', [Validators.required]);
 
-  creditCardNumberControl = new FormControl('', [Validators.required,
-    // eslint-disable-next-line max-len
-    Validators.pattern(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/im)]);
-
-  creditCardNameControl = new FormControl('', [Validators.required]);
-  creditCardExperationMonthControl = new FormControl('', [Validators.required,
-    Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
-  creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
-  creditCardCvvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
   disabledControl = new FormControl();
 
   errorMessage = '';
   error = false;
   countries = countries;
-  paymentInformationForm: FormGroup;
   paymentInformations: PaymentInformation[];
-  fb: FormBuilder;
 
   user: User;
 
-  constructor(fb: FormBuilder, public dialog: MatDialog, private router: Router,
+  constructor(public dialog: MatDialog, private router: Router,
               private userService: UserService, private authService: AuthService) {
-    this.fb = fb;
   }
 
   ngOnInit(): void {
@@ -88,7 +76,7 @@ export class EditUserComponent implements OnInit {
           this.phoneControl.setValue(user.phone);
           this.emailControl.setValue(user.email);
           this.disabledControl.setValue(user.disabled);
-          if (user.paymentInformation != null) {
+          if (user.paymentInformation.length !== 0) {
             this.paymentInformations = user.paymentInformation;
           }
         },
@@ -215,6 +203,9 @@ export class EditUserComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
       if (result != null) {
+        if (!this.paymentInformations) {
+          this.paymentInformations = [];
+        }
         this.paymentInformations.push(result);
       }
     });
