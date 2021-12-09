@@ -117,7 +117,7 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-card-title> Payment Information</mat-card-title>
-  <table class="mat-elevation-z3" cellspacing="0">
+  <table *ngIf="paymentInformations.length !== 0" class="mat-elevation-z3" cellspacing="0">
     <tr>
       <th>Name</th>
       <th>Number</th>
