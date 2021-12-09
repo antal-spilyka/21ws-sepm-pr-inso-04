@@ -70,6 +70,6 @@ public class EventEndpoint {
     @Operation(summary = "Persist a new event.")
     public EventDto saveEvent(@RequestBody @Validated EventDto eventDto) {
         LOGGER.info("POST /api/v1/events/{}", eventDto);
-        return eventMapper.entityToDto(eventService.saveEvent(eventMapper.dtoToEntity(eventDto)));
+        return eventMapper.entityToDto(eventService.saveEvent(eventDto));
     }
 }

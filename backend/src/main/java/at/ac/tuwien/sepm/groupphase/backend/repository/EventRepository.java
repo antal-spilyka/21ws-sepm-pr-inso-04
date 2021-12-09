@@ -41,7 +41,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return all matching events.
      */
     @Query("SELECT a FROM Event a WHERE (:duration is null OR (a.duration <= :duration+30 AND a.duration >= :duration-30))" +
-        " AND (:content is null OR :content='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :content, '%')))" +
         " AND (:description is null OR :description='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%')))")
     List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description,
                            Pageable pageable);

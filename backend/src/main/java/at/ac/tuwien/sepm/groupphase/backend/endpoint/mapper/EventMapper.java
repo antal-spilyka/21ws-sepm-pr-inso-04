@@ -34,12 +34,16 @@ public class EventMapper {
         eventDto.setDuration(event.getDuration());
         eventDto.setEventPlace(eventPlaceMapper.entityToDto(event.getEventPlace()));
         eventDto.setDescription(eventDto.getDescription());
-        // avoid cyclical calls
-        List<PerformanceDto> performanceDtos = new ArrayList<>();
-        for (Performance performance : event.getPerformances()) {
-            performanceDtos.add(performanceMapper.entityToDto(performance, eventDto));
+        if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
+            // avoid cyclical calls
+            List<PerformanceDto> performanceDtos = new ArrayList<>();
+            for (Performance performance : event.getPerformances()) {
+                performanceDtos.add(performanceMapper.entityToDto(performance, eventDto));
+            }
+            eventDto.setPerformances(performanceDtos);
+        } else {
+            eventDto.setPerformances(null);
         }
-        eventDto.setPerformances(performanceDtos);
         LOGGER.info("mapped" + eventDto);
         return eventDto;
     }
@@ -53,12 +57,16 @@ public class EventMapper {
         event.setDuration(eventDto.getDuration());
         event.setEventPlace(eventPlaceMapper.dtoToEntity(eventDto.getEventPlace()));
         event.setDescription(eventDto.getDescription());
-        // avoid cyclical calls
-        List<Performance> performances = new ArrayList<>();
-        for (PerformanceDto performanceDto : eventDto.getPerformances()) {
-            performances.add(performanceMapper.dtoToEntity(performanceDto, event));
+        if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
+            // avoid cyclical calls
+            List<Performance> performances = new ArrayList<>();
+            for (PerformanceDto performanceDto : eventDto.getPerformances()) {
+                performances.add(performanceMapper.dtoToEntity(performanceDto, event));
+            }
+            event.setPerformances(performances);
+        } else {
+            event.setPerformances(null);
         }
-        event.setPerformances(performances);
         return event;
     }
 }

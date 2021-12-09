@@ -53,7 +53,7 @@ public class HallEndpoint {
     @Operation(summary = "persist new hall.")
     public HallDto saveHall(@RequestBody @Validated HallDto hallDto) {
         try {
-            return hallService.save(hallDto);
+            return hallMapper.entityToDto(hallService.save(hallDto));
         } catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Hall already exists:  " + e.getLocalizedMessage(), e);

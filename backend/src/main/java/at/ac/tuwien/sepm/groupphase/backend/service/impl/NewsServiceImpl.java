@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PictureDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
@@ -34,9 +36,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public void save(News news) {
-        LOGGER.debug("Publish new news {}", news);
-        newsRepository.save(news);
+    public News save(NewsDto newsDto) {
+        LOGGER.debug("Publish new news {}", newsDto);
+        return newsRepository.save(newsMapper.dtoToEntity(newsDto));
     }
 
     @Transactional

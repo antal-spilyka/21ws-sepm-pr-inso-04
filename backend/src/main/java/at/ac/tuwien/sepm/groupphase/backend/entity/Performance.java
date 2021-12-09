@@ -10,12 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Performance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -91,5 +92,25 @@ public class Performance {
 
     public void setHall(Hall hall) {
         this.hall = hall;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Performance)) {
+            return false;
+        }
+        Performance that = (Performance) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+            && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
+            && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
+            && Objects.equals(hall, that.hall);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, startTime, duration, event, artist, hall);
     }
 }

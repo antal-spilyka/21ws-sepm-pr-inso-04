@@ -2,10 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
@@ -52,26 +51,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> findEvents(EventSearchDto eventSearchDto) {
-        LOGGER.debug("Handeling in Service {}", eventSearchDto);
+    public List<Event> findEvents(EventSearchDto eventSearchDto) {
+        LOGGER.debug("Handling in Service {}", eventSearchDto);
         if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null) {
             throw new NotFoundException("No address was found for this query");
         }
         try {
-            List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(),
+            return eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(),
                 PageRequest.of(0, 10));
-            if (events.isEmpty()) {
-                throw new NotFoundException("No events were found for this search query");
-            }
-            return events.stream().map(event -> eventMapper.entityToDto(event)).collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }
 
     @Override
-    public List<EventDto> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
-        LOGGER.debug("Handeling in Service {}", eventDateTimeSearchDto);
+    public List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
+        LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
         try {
             List<Hall> halls = new ArrayList<>();
             eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
@@ -95,7 +90,7 @@ public class EventServiceImpl implements EventService {
                 /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
                     PageRequest.of(0, 10));*/
             }
-            return events.stream().map(event -> eventMapper.entityToDto(event)).collect(Collectors.toList());
+            return events;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -116,15 +111,19 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Event saveEvent(Event event) {
+    public Event saveEvent(EventDto event) {
         LOGGER.debug("Update event by adding a performance {}", event);
         long durationCounter = 0L;
-        for (Performance performance : event.getPerformances()) {
-            performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
-            durationCounter += 5 + performance.getDuration();
-            performanceService.save(performance);
+        if (event != null) {
+            if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
+                for (PerformanceDto performance : event.getPerformances()) {
+                    performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
+                    durationCounter += 5 + performance.getDuration();
+                    performanceService.save(performance);
+                }
+            }
+            event.setDuration(durationCounter);
         }
-        event.setDuration(durationCounter);
-        return eventRepository.save(event);
+        return eventRepository.save(eventMapper.dtoToEntity(event));
     }
 }

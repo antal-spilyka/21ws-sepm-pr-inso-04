@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity
 public class Hall {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(nullable = false)

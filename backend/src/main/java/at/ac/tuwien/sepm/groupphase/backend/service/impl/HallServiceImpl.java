@@ -49,10 +49,10 @@ public class HallServiceImpl implements HallService {
 
     @Transactional
     @Override
-    public HallDto getById(Long id) {
+    public Hall getById(Long id) {
         LOGGER.debug("Handling in Service {}", id);
         try {
-            return hallMapper.entityToDto(hallRepository.getById(id));
+            return hallRepository.getById(id);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {
@@ -61,11 +61,10 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public List<HallDto> getAll() {
-        LOGGER.debug("Handeling in Service list of rooms");
+    public List<Hall> getAll() {
+        LOGGER.debug("Handling in Service list of rooms");
         try {
-            List<Hall> halls = hallRepository.getAllBy(PageRequest.of(0, 10));
-            return halls.stream().map(hall -> hallMapper.entityToDto(hall)).collect(Collectors.toList());
+            return hallRepository.getAllBy(PageRequest.of(0, 10));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {
@@ -75,14 +74,14 @@ public class HallServiceImpl implements HallService {
 
     @Transactional
     @Override
-    public HallDto save(HallDto hallDto) {
-        LOGGER.debug("Handeling in Service {}", hallDto);
+    public Hall save(HallDto hallDto) {
+        LOGGER.debug("Handling in Service {}", hallDto);
         try {
             EventPlace eventPlace = eventPlaceRepository.findByIdEquals(hallMapper.dtoToEntity(hallDto).getEventPlace().getId());
             if (eventPlace == null) {
                 throw new ContextException("EventPlace does not exist");
             }
-            return hallMapper.entityToDto(hallRepository.save(hallMapper.dtoToEntity(hallDto)));
+            return hallRepository.save(hallMapper.dtoToEntity(hallDto));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {
