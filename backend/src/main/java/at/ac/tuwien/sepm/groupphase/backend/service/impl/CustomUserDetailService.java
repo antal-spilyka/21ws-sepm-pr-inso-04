@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.aspectj.lang.annotation.Before;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +149,6 @@ public class CustomUserDetailService implements UserService {
             } else {
                 toUpdateUser.setEmail(updatedUser.getNewEmail());
             }
-            LOGGER.info("adüophi" + updatedUser.getPaymentInformation().toString());
             if (!updatedUser.getPaymentInformation().isEmpty()) {
                 List<PaymentInformation> paymentInformationList = new ArrayList<>();
                 for (PaymentInformationDto e : updatedUser.getPaymentInformation()) {
@@ -161,6 +161,15 @@ public class CustomUserDetailService implements UserService {
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");
+        }
+    }
+
+    @Transactional
+    public void deletePaymentInformations(UserEditDto updatedUser) {
+        ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
+        List<PaymentInformation> paymentInformationList = paymentInformationRepository.findByUser(user);
+        for (PaymentInformation e : paymentInformationList) {
+            paymentInformationRepository.deleteById(e.getId());
         }
     }
 

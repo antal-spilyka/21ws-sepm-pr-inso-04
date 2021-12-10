@@ -45,7 +45,7 @@ export class EditUserComponent implements OnInit {
   countries = countries;
   paymentInformations: PaymentInformation[];
 
-  displayedColumns: string[] = ['name', 'number', 'expirationDate', 'cvv', 'editButton'];
+  displayedColumns: string[] = ['name', 'number', 'expirationDate', 'cvv', 'editButton', 'deleteButton'];
 
   user: User;
 
@@ -217,6 +217,11 @@ export class EditUserComponent implements OnInit {
         this.table.renderRows();
       }
     });
+  }
+
+  deletePaymentInformation(paymentInformation: PaymentInformation) {
+    this.paymentInformations = this.paymentInformations.filter(obj => obj !== paymentInformation);
+    this.table.renderRows();
   }
 
   getToken() {

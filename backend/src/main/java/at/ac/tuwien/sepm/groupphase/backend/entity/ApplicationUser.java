@@ -52,7 +52,7 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(cascade = CascadeType.REMOVE,
         fetch = FetchType.EAGER,
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
