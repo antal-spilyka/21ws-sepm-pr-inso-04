@@ -45,6 +45,7 @@ import { NewsMainPageComponent } from './components/news-main-page/news-main-pag
 import {MatGridListModule} from '@angular/material/grid-list';
 import { EditPaymentInformationDialogComponent } from
     './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -70,32 +71,33 @@ import { EditPaymentInformationDialogComponent } from
     SearchTimeComponent,
     EditPaymentInformationDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgbModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSlideToggleModule,
-    MatGridListModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        NgbModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatAutocompleteModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        FlexLayoutModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSlideToggleModule,
+        MatGridListModule,
+        MatTableModule
+    ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })

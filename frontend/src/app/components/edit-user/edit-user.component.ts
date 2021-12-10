@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../../services/user.service';
@@ -12,6 +12,7 @@ import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.co
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
 import {EditPaymentInformationDialogComponent} from './edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTable} from '@angular/material/table';
 
 export interface DialogData {
   email: string;
@@ -23,6 +24,8 @@ export interface DialogData {
   styleUrls: ['./edit-user.component.scss'],
 })
 export class EditUserComponent implements OnInit {
+  @ViewChild(MatTable) table: MatTable<any>;
+
   emailControl = new FormControl('', [Validators.required, Validators.email]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
   firstNameControl = new FormControl('', [Validators.required]);
@@ -41,6 +44,8 @@ export class EditUserComponent implements OnInit {
   error = false;
   countries = countries;
   paymentInformations: PaymentInformation[];
+
+  displayedColumns: string[] = ['name', 'number', 'expirationDate', 'cvv', 'editButton'];
 
   user: User;
 
@@ -193,6 +198,7 @@ export class EditUserComponent implements OnInit {
       if (result != null) {
         this.paymentInformations = this.paymentInformations.filter(obj => obj !== paymentInformation);
         this.paymentInformations.push(result);
+        this.table.renderRows();
       }
     });
   }
@@ -207,6 +213,7 @@ export class EditUserComponent implements OnInit {
           this.paymentInformations = [];
         }
         this.paymentInformations.push(result);
+        this.table.renderRows();
       }
     });
   }
