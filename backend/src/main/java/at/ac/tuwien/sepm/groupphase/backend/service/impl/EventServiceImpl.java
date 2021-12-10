@@ -116,10 +116,9 @@ public class EventServiceImpl implements EventService {
         if (eventDto == null) {
             throw new ServiceException("Event can't be null");
         }
-        Event event = new Event();
         long durationCounter = 0L;
+        List<PerformanceDto> temp = new ArrayList<>();
         if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
-            List<PerformanceDto> temp = new ArrayList<>();
             for (PerformanceDto performanceDto : eventDto.getPerformances()) {
                 performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
                 durationCounter += 5 + performanceDto.getDuration();
@@ -128,12 +127,10 @@ public class EventServiceImpl implements EventService {
 
             }
             eventDto.setDuration(durationCounter);
-            event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
-            for(PerformanceDto performanceDto : temp) {
-                performanceService.save(performanceDto, event);
-            }
-        } else {
-            throw new ServiceException("Event must have Performances.");
+        }
+        Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
+        for (PerformanceDto performanceDto : temp) {
+            performanceService.save(performanceDto, event);
         }
         return event;
     }
