@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
@@ -62,6 +63,25 @@ public class PerformanceServiceImpl implements PerformanceService {
         }
         performanceDto.getEvent().setPerformances(null);
         Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEvent()));
+        return performanceRepository.save(performance);
+    }
+
+    @Transactional
+    @Override
+    public Performance save(PerformanceDto performanceDto, Event event) {
+        LOGGER.debug("Handeling in Service {}", performanceDto);
+        ArtistDto artistDto = performanceDto.getArtist();
+        if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
+            Artist artist = artistMapper.dtoToEntity(artistDto);
+            performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+        }
+        HallDto hallDto = performanceDto.getHall();
+        if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
+            Hall hall = hallMapper.dtoToEntity(hallDto);
+            performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
+        }
+        //performanceDto.getEvent().setPerformances(null);
+        Performance performance = performanceMapper.dtoToEntity(performanceDto, event);
         return performanceRepository.save(performance);
     }
 }
