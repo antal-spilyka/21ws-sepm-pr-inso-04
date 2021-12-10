@@ -64,37 +64,38 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    @Override
+    /*@Override
     public List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
         LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
         try {
             List<Hall> halls = new ArrayList<>();
+            List<Long> hallIds = new ArrayList<>();
             eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
             List<Event> events = new ArrayList<>();
             if (eventDateTimeSearchDto.getStartTime() != null) {
                 LocalDateTime dateTimeFrom = eventDateTimeSearchDto.getStartTime().minusMinutes(30);
                 LocalDateTime dateTimeTill = eventDateTimeSearchDto.getStartTime().plusMinutes(30);
                 for (Hall hall : halls) {
-                    List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                    /*List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
                         eventDateTimeSearchDto.getEventName(), hall.getId());
                     events.addAll(eventsForRoom);
-                    //roomIds.add(room.getId());
+                    hallIds.add(hall.getId());
                 }
-                //events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
-                //eventDateTimeSearchDto.getEvent(), roomIds, PageRequest.of(0, 10));
+                events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                eventDateTimeSearchDto.getEvent(), hallIds, PageRequest.of(0, 10));
             } else {
                 for (Hall hall : halls) {
                     List<Event> eventsForRoom = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEventName(), hall.getId());
                     events.addAll(eventsForRoom);
                 }
                 /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
-                    PageRequest.of(0, 10));*/
+                    PageRequest.of(0, 10));
             }
             return events;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
-    }
+    }*/
 
     @Transactional
     @Override

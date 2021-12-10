@@ -31,13 +31,13 @@ public interface EventService {
      */
     List<Event> findEvents(EventSearchDto eventSearchDto);
 
-    /**
+    /*/**
      * Finds all event which meet the criteria from dto.
      *
      * @param eventDateTimeSearchDto dto for storing the search criteria.
      * @return all events that meet the search criteria.
      */
-    List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto);
+    //List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto);*/
 
     List<Event> findEvent(String name);
 }

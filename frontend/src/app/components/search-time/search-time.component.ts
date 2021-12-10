@@ -4,6 +4,9 @@ import {EventService} from '../../services/event.service';
 import {Hall} from '../../dtos/hall';
 import {HallService} from '../../services/hall.service';
 import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
+import {PerformanceSearchDto} from '../../dtos/performanceSearchDto';
+import {PerformanceService} from '../../services/performance.service';
+import {Performance} from '../../dtos/performance';
 
 @Component({
   selector: 'app-search-time',
@@ -11,16 +14,16 @@ import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
   styleUrls: ['./search-time.component.scss']
 })
 export class SearchTimeComponent implements OnInit {
-  searchEvent: EventDateTimeSearchDto = {
-    dateTime: null, event: '', room: '',
+  performanceSearchDto: PerformanceSearchDto = {
+    eventName: '', startTime: '', hallName: '',
   };
-  eventList: EventDto[] = [];
+  performanceList: Performance[] = [];
   roomsList: Hall[] = [];
   roomMap = new Map();
   private error = false;
   private errorMessage: string;
 
-  constructor(private eventService: EventService, private roomService: HallService) {
+  constructor(private performanceService: PerformanceService, private roomService: HallService) {
   }
 
   ngOnInit(): void {
@@ -45,12 +48,14 @@ export class SearchTimeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.eventService.findEventByDateTime(this.searchEvent).subscribe(
+    this.performanceList = [];
+    console.log(this.performanceSearchDto);
+    this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
       {
-        next: events => {
-          console.log(this.eventList);
-          this.eventList = events;
-          console.log(this.eventList);
+        next: performances => {
+          console.log(this.performanceList);
+          this.performanceList = performances;
+          console.log(this.performanceList);
         }, error: error => this.handleError(error)
       }
     );

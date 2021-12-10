@@ -54,12 +54,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param hallId       of the event
      * @return all matching events.
      */
-    @Query("SELECT a FROM Event a WHERE (:startTime is null OR (a.startTime <= :dateTimeTill AND a.startTime >= :dateTimeFrom))" +
+    /*@Query("SELECT a FROM Event a WHERE (:startTime is null OR (a.startTime <= :dateTimeTill AND a.startTime >= :dateTimeFrom))" +
         "AND (:eventName is null OR :eventName='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :eventName, '%'))) AND (:hallId is null " +
         "OR :hallId in (a.performances))")
     List<Event> findEventsWithDateTime(@Param("dateTimeFrom") LocalDateTime dateTimeFrom, @Param("dateTimeTill") LocalDateTime dateTimeTill,
                                        @Param("eventName") String eventName, @Param("hall") Long hallId);
-
+*/
     /**
      * Finds all the events which suit the criteria from parameters.
      *

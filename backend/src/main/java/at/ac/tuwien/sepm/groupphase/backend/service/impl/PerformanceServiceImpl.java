@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
@@ -14,12 +15,20 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class PerformanceServiceImpl implements PerformanceService {
@@ -62,5 +71,30 @@ public class PerformanceServiceImpl implements PerformanceService {
         }
         Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEvent()));
         return performanceRepository.save(performance);
+    }
+
+    @Override
+    public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
+        LOGGER.debug("Handling in Service {}", performanceSearchDto);
+        try {
+            //List<Hall> halls = new ArrayList<>();
+            //List<Long> hallIds = new ArrayList<>();
+            //eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
+            List<Performance> performances;
+            if(performanceSearchDto.getStartTime() != null){
+                LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);
+                LocalDateTime dateTimeTill = performanceSearchDto.getStartTime().plusMinutes(30);
+                performances = performanceRepository.findPerformanceByDateTime(dateTimeFrom, dateTimeTill,
+                    performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), PageRequest.of(0,10));
+            }
+            else{
+                performances = performanceRepository.findPerformanceByEventAndHall(performanceSearchDto.getEventName(),
+                    performanceSearchDto.getHallName(), PageRequest.of(0, 10));
+            }
+            LOGGER.info(performances.toString());
+            return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+        }catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 }
