@@ -84,6 +84,7 @@ export class EditUserComponent implements OnInit {
           if (user.paymentInformation.length !== 0) {
             this.paymentInformations = user.paymentInformation;
           }
+          console.log(user);
         },
         error => {
           this.defaultServiceErrorHandling(error);

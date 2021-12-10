@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 @Entity
 public class PaymentInformation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(length = 100)
     private String creditCardNr;
 
@@ -39,6 +42,14 @@ public class PaymentInformation {
         this.creditCardNr = paymentInformationDto.getCreditCardNr();
         this.creditCardExpirationDate = paymentInformationDto.getCreditCardExpirationDate();
         this.creditCardCvv = paymentInformationDto.getCreditCardCvv();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public ApplicationUser getUser() {
@@ -84,6 +95,7 @@ public class PaymentInformation {
     @Override
     public String toString() {
         return "PaymentInformation{"
+            + "id='" + id + '\''
             + "creditCardName='" + creditCardName + '\''
             + ", creditCardNr='" + creditCardNr + '\''
             + ", creditCardExpirationDate='" + creditCardExpirationDate + '\''

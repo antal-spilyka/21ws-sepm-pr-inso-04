@@ -61,7 +61,13 @@ export class EditPaymentInformationDialogComponent implements OnInit {
     if (this.creditCardNumberControl.valid && this.creditCardExperationMonthControl.valid
     && this.creditCardExperationYearControl.valid && this.creditCardNameControl.valid
     && this.creditCardCvvControl.valid) {
-      const paymentInformation = {
+      let id: number;
+      if (!this.dialogData) {
+        id = null;
+      } else {
+        id = this.dialogData.id;
+      }
+      const paymentInformation = {id,
         creditCardName: this.creditCardNameControl.value,
         creditCardCvv: this.creditCardCvvControl.value, creditCardNr: this.creditCardNumberControl.value,
         creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value
