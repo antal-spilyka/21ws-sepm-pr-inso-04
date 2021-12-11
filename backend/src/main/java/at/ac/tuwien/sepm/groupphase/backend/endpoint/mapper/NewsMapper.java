@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,12 @@ import java.util.List;
 @Component
 public class NewsMapper {
     private final EventMapper eventMapper;
+    private final PictureMapper pictureMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public NewsMapper(EventMapper eventMapper) {
+    public NewsMapper(EventMapper eventMapper, PictureMapper pictureMapper) {
         this.eventMapper = eventMapper;
+        this.pictureMapper = pictureMapper;
     }
 
     public News dtoToEntity(NewsDto newsDto) {
@@ -41,6 +44,20 @@ public class NewsMapper {
         newsDto.setShortDescription(news.getShortDescription());
         newsDto.setLongDescription(news.getLongDescription());
         newsDto.setCreateDate(news.getCreateDate());
+        return newsDto;
+    }
+
+    public NewsDto entityToDto(News news, List<Picture> pictures) {
+        LOGGER.trace("Mapping {}", news);
+        NewsDto newsDto = new NewsDto();
+        newsDto.setId(news.getId());
+        newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
+        newsDto.setRating(news.getRating());
+        newsDto.setFsk(news.getFsk());
+        newsDto.setShortDescription(news.getShortDescription());
+        newsDto.setLongDescription(news.getLongDescription());
+        newsDto.setCreateDate(news.getCreateDate());
+        newsDto.setPictures(pictures == null ? null : pictureMapper.entityToDto(pictures));
         return newsDto;
     }
 

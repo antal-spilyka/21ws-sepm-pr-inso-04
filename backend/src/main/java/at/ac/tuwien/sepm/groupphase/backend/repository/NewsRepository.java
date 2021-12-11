@@ -21,4 +21,13 @@ public interface NewsRepository extends JpaRepository<News, Long>, JpaSpecificat
 
     @Query("SELECT n FROM News n WHERE n.createDate >= :beforeSevenDays")
     List<News> findByCreateDateAfter(@Param("beforeSevenDays") LocalDateTime beforeSevenDays);
+
+    /**
+     * Get Event by id.
+     *
+     * @param id of the evnt
+     * @return News with corresponding id
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
+    News getById(Long id);
 }

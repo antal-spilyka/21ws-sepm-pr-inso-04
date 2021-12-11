@@ -46,6 +46,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { EditPaymentInformationDialogComponent } from
     './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
 import {MatTableModule} from '@angular/material/table';
+import { NewsViewComponent } from './components/news-view/news-view.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -69,35 +72,38 @@ import {MatTableModule} from '@angular/material/table';
     SearchLocationComponent,
     SearchEventsComponent,
     SearchTimeComponent,
-    EditPaymentInformationDialogComponent
+    EditPaymentInformationDialogComponent,
+    NewsViewComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        NgbModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatCardModule,
-        MatExpansionModule,
-        MatDialogModule,
-        MatTooltipModule,
-        MatAutocompleteModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        FlexLayoutModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSlideToggleModule,
-        MatGridListModule,
-        MatTableModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSlideToggleModule,
+    MatGridListModule,
+    NgImageSliderModule,
+    MatProgressSpinnerModule,
+    MatTableModule
+  ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
