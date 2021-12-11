@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class UserDto {
 
@@ -41,7 +42,7 @@ public class UserDto {
     @NotNull(message = "Zip must not be null")
     private String zip;
 
-    private PaymentInformationDto paymentInformation;
+    private List<PaymentInformationDto> paymentInformation;
 
     private Boolean disabled;
 
@@ -135,11 +136,11 @@ public class UserDto {
         this.zip = zip;
     }
 
-    public PaymentInformationDto getPaymentInformation() {
+    public List<PaymentInformationDto> getPaymentInformation() {
         return paymentInformation;
     }
 
-    public void setPaymentInformation(PaymentInformationDto paymentInformation) {
+    public void setPaymentInformation(List<PaymentInformationDto> paymentInformation) {
         this.paymentInformation = paymentInformation;
     }
 

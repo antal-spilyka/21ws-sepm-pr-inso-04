@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -28,6 +32,9 @@ public class UserServiceTest implements TestData {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
     UserMapper userMapper;
@@ -155,6 +162,48 @@ public class UserServiceTest implements TestData {
         assertAll(
             () -> assertEquals(0, userService.findUsers(null).size()),
             () -> assertEquals(0, userService.findUsers("user").size())
+        );
+    }
+
+    @Test
+    public void deleteExistingUserWithPaymentInformation_shouldRemoveUserAndPaymentInformation() {
+        PaymentInformationDto paymentInformation1 = new PaymentInformationDto();
+        paymentInformation1.setCreditCardNr("1234123412341234");
+        paymentInformation1.setCreditCardExpirationDate("202022");
+        paymentInformation1.setCreditCardCvv("123");
+        paymentInformation1.setCreditCardName("Test");
+
+        userService.createUser(newUser1);
+        UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail("user1@email.com")
+            .withNewEmail("user1@email.com")
+            .withAdmin(false)
+            .withPassword("testPassword")
+            .withFirstName("firstName")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Test City")
+            .withStreet("Test Street")
+            .withDisabled(true)
+            .withZip("12345")
+            .withPaymentInformation(paymentInformation1)  //add paymentinformation to user
+            .build();
+        userService.updateUser(toUpdate);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertEquals(1, userService.findUsers("user").size())
+        );
+        ApplicationUser user = userRepository.findUserByEmail("user1@email.com");
+
+        userService.deleteUser(newUser1.getEmail());
+
+        assertAll(
+            () -> assertEquals(0, userService.findUsers(null).size()),
+            () -> assertEquals(0, userService.findUsers("user").size()),
+            () -> assertEquals(0, paymentInformationRepository.findByUser(user).size())
         );
     }
 }

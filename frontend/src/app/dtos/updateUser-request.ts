@@ -15,7 +15,7 @@ export class UpdateUserRequest {
     public country: string,
     public street: string,
     public disabled: boolean,
-    public paymentInformation: PaymentInformation
+    public paymentInformation: PaymentInformation[]
   ) {
   }
 }
