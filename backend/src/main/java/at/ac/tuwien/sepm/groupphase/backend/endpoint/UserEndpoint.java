@@ -86,7 +86,6 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
         try {
-            userService.deletePaymentInformations(user);
             userService.updateUser(user);
         } catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);

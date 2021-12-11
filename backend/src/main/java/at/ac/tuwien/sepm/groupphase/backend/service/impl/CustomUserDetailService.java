@@ -149,6 +149,7 @@ public class CustomUserDetailService implements UserService {
             } else {
                 toUpdateUser.setEmail(updatedUser.getNewEmail());
             }
+            this.deletePaymentInformations(updatedUser);
             if (!updatedUser.getPaymentInformation().isEmpty()) {
                 List<PaymentInformation> paymentInformationList = new ArrayList<>();
                 for (PaymentInformationDto e : updatedUser.getPaymentInformation()) {
@@ -164,6 +165,7 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
+    // removes all existing paymentInformations of updatedUser to owerwrite the new data
     @Transactional
     public void deletePaymentInformations(UserEditDto updatedUser) {
         ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());

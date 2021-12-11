@@ -63,13 +63,6 @@ public interface UserService extends UserDetailsService {
     void updateUser(UserEditDto user);
 
     /**
-     * Deletes all PaymentInformations.
-     *
-     * @param updatedUser which all paymentInformations will be deleted.
-     */
-    void deletePaymentInformations(UserEditDto updatedUser);
-
-    /**
      * Deletes an existing user.
      *
      * @param email of the user that should be deleted
