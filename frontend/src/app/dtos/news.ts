@@ -1,4 +1,5 @@
-import {EventDto} from './eventDto';
+import { EventDto } from './eventDto';
+import { Picture } from './picture';
 
 export class News {
   id?: number;
@@ -8,4 +9,5 @@ export class News {
   shortDescription?: string;
   longDescription?: string;
   createDate: Date;
+  pictures?: Picture[];
 }

@@ -2,14 +2,15 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 
 @Entity
 public class PaymentInformation {
@@ -17,15 +18,15 @@ public class PaymentInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user")
+    @Column(length = 100)
+    private String creditCardNr;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userId")
     private ApplicationUser user;
 
     @Column(length = 100)
     private String creditCardName;
-
-    @Column(length = 100)
-    private String creditCardNr;
 
     @Column(length = 100)
     private String creditCardExpirationDate;
@@ -42,6 +43,14 @@ public class PaymentInformation {
         this.creditCardNr = paymentInformationDto.getCreditCardNr();
         this.creditCardExpirationDate = paymentInformationDto.getCreditCardExpirationDate();
         this.creditCardCvv = paymentInformationDto.getCreditCardCvv();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public ApplicationUser getUser() {

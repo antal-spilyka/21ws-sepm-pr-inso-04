@@ -10,7 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import org.springframework.stereotype.Repository;
 
+
+@Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
     /*@Query("SELECT distinct p FROM Performance p INNER JOIN Hall h ON (:hall is NULL  OR :hall='' OR upper(h.name) LIKE " +
         "UPPER(CONCAT( '%', :hall, '%')) ) INNER JOIN Event e ON (:eventName  is null OR :eventName='' OR UPPER(e.name) " +
