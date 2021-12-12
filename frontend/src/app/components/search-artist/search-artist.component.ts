@@ -9,6 +9,7 @@ import {Artist} from '../../dtos/artist';
 })
 export class SearchArtistComponent implements OnInit {
   artistName: string;
+  submitted  = false;
   artistList: Artist[] = [];
   error = false;
   errorMessage: string;
@@ -21,6 +22,7 @@ export class SearchArtistComponent implements OnInit {
     this.artistService.searchArtist(this.artistName).subscribe(
       {
         next: artists => {
+          this.submitted = true;
           console.log(this.artistList);
           this.artistList = artists;
           console.log(this.artistList);

@@ -76,6 +76,10 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
         LOGGER.debug("Handling in Service {}", performanceSearchDto);
+        if (performanceSearchDto.getHallName() == null && performanceSearchDto.getEventName() == null
+            && performanceSearchDto.getStartTime() == null) {
+            return new ArrayList<PerformanceDto>().stream();
+        }
         try {
             //List<Hall> halls = new ArrayList<>();
             //List<Long> hallIds = new ArrayList<>();

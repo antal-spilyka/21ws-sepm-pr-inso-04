@@ -20,6 +20,7 @@ export class SearchTimeComponent implements OnInit {
   performanceList: Performance[] = [];
   roomsList: Hall[] = [];
   roomMap = new Map();
+  submitted = false;
   private error = false;
   private errorMessage: string;
 
@@ -53,6 +54,7 @@ export class SearchTimeComponent implements OnInit {
     this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
       {
         next: performances => {
+          this.submitted = true;
           console.log(this.performanceList);
           this.performanceList = performances;
           console.log(this.performanceList);

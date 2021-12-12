@@ -21,7 +21,7 @@
     <div class="form-group">
       <label for="category">Category</label>
       <input type="text" name="category" class="form-control" id="category"
-             aria-describedby="titleHelp" placeholder="Enter Category" [(ngModel)]="searchEvent.categoryName">
+             aria-describedby="titleHelp" placeholder="Enter Category" [(ngModel)]="searchEvent.category">
     </div>
 
     <div class="form-group">
@@ -32,6 +32,9 @@
 
 
     <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
+    <div *ngIf="eventList.length === 0 && submitted">
+      No Events were found for this search criteria!
+    </div>
     <div *ngIf="eventList !== []">
       <table class="table table-hover">
         <thead>

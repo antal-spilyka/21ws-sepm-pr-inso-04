@@ -91,9 +91,6 @@ public class EventPlaceServiceImpl implements EventPlaceService {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
                 eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(),
                 eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(0, 10));
-            if (addresses.isEmpty()) {
-                throw new NotFoundException("No address was found for this query");
-            }
             return addresses;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

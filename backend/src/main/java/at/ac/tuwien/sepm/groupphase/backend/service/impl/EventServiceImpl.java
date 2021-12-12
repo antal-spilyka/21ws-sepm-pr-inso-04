@@ -58,8 +58,12 @@ public class EventServiceImpl implements EventService {
             return new ArrayList<Event>();
         }
         try {
-            return eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
+            List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
                 PageRequest.of(0, 10));
+            for (Event event : events) {
+                event.setPerformances(null);
+            }
+            return events;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
