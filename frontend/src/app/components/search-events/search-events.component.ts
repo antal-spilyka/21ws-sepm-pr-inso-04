@@ -10,7 +10,7 @@ import {EventSearchDto} from '../../dtos/eventSearchDto';
 })
 export class SearchEventsComponent implements OnInit {
   searchEvent: EventSearchDto = {
-    duration: null, content: '', categoryName: '', description: null,
+    duration: null, categoryName: '', description: null,
   };
   eventList: EventDto[] = [];
   error = false;

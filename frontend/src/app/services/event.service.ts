@@ -39,9 +39,6 @@ export class EventService {
     if(searchEvent.duration !== null){
       params=params.set('duration', searchEvent.duration);
     }
-    if(searchEvent.content !== '' && searchEvent.content !== null){
-      params=params.set('content', searchEvent.content.trim());
-    }
     if(searchEvent.categoryName !== '' && searchEvent.categoryName !== null){
       params=params.set('categoryName', searchEvent.categoryName.trim());
     }

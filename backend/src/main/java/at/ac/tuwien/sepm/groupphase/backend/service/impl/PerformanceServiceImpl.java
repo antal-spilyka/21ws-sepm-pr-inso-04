@@ -81,19 +81,18 @@ public class PerformanceServiceImpl implements PerformanceService {
             //List<Long> hallIds = new ArrayList<>();
             //eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
             List<Performance> performances;
-            if(performanceSearchDto.getStartTime() != null){
+            if (performanceSearchDto.getStartTime() != null) {
                 LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);
                 LocalDateTime dateTimeTill = performanceSearchDto.getStartTime().plusMinutes(30);
-                performances = performanceRepository.findPerformanceByDateTime(dateTimeFrom, dateTimeTill,
-                    performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), PageRequest.of(0,10));
-            }
-            else{
+                performances = performanceRepository.findPerformanceByDateTime(dateTimeFrom,
+                    dateTimeTill, performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), PageRequest.of(0, 10));
+            } else {
                 performances = performanceRepository.findPerformanceByEventAndHall(performanceSearchDto.getEventName(),
                     performanceSearchDto.getHallName(), PageRequest.of(0, 10));
             }
             LOGGER.info(performances.toString());
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
-        }catch (PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }

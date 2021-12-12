@@ -34,6 +34,7 @@ public class EventMapper {
         eventDto.setDuration(event.getDuration());
         eventDto.setEventPlace(eventPlaceMapper.entityToDto(event.getEventPlace()));
         eventDto.setDescription(eventDto.getDescription());
+        eventDto.setCategory(event.getCategory());
         if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
             // avoid cyclical calls
             List<PerformanceDto> performanceDtos = new ArrayList<>();
@@ -57,6 +58,7 @@ public class EventMapper {
         event.setDuration(eventDto.getDuration());
         event.setEventPlace(eventPlaceMapper.dtoToEntity(eventDto.getEventPlace()));
         event.setDescription(eventDto.getDescription());
+        event.setCategory(eventDto.getCategory());
         if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
             // avoid cyclical calls
             List<Performance> performances = new ArrayList<>();

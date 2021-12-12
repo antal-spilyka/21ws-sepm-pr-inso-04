@@ -25,8 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -77,7 +76,7 @@ public class EventPlaceServiceTest {
     @Test
     public void search_forLocation_withNoInputs() {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
-        assertThrows(NotFoundException.class, () -> eventPlaceService.findEventLocation(eventLocationSearchDto));
+        assertEquals(0, eventPlaceService.findEventLocation(eventLocationSearchDto).size());
     }
 
     @Test

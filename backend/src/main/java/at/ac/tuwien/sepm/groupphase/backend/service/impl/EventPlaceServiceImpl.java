@@ -23,6 +23,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,7 +85,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
         if (eventLocationSearchDto.getZip() == null && eventLocationSearchDto.getStreet() == null
             && eventLocationSearchDto.getCountry() == null && eventLocationSearchDto.getState() == null
             && eventLocationSearchDto.getCity() == null) {
-            throw new NotFoundException("No address was found for this query");
+            return new ArrayList<Address>();
         }
         try {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),

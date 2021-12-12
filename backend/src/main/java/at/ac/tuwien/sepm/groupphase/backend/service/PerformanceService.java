@@ -11,5 +11,6 @@ import java.util.stream.Stream;
 public interface PerformanceService {
 
     Performance save(PerformanceDto performanceDto);
+
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
 }

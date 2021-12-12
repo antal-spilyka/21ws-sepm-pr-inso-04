@@ -53,11 +53,12 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> findEvents(EventSearchDto eventSearchDto) {
         LOGGER.debug("Handling in Service {}", eventSearchDto);
-        if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null) {
-            throw new NotFoundException("No address was found for this query");
+        if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null
+            && eventSearchDto.getCategory() == null) {
+            return new ArrayList<Event>();
         }
         try {
-            return eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(),
+            return eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
                 PageRequest.of(0, 10));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

@@ -17,6 +17,10 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
       <mat-form-field>
+        <mat-label>Category</mat-label>
+        <input matInput required type="text" formControlName="category">
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>Description</mat-label>
         <textarea cdkTestareaAutosize required matInput formControlName="description" cdkAutosizeMinRows="3"
                   cdkAutosizeMaxRows="5"></textarea>
