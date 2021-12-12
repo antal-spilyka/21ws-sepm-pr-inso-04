@@ -106,4 +106,17 @@ public class News {
     public int hashCode() {
         return Objects.hash(id, event, rating, fsk, shortDescription, longDescription, createDate);
     }
+
+    @Override
+    public String toString() {
+        return "News{"
+            + "id=" + id
+            + ", event=" + event
+            + ", rating=" + rating
+            + ", fsk=" + fsk
+            + ", createDate=" + createDate
+            + ", shortDescription='" + shortDescription + '\''
+            + ", longDescription='" + longDescription + '\''
+            + '}';
+    }
 }

@@ -11,11 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,22 +52,22 @@ public class NewsEndpoint {
      *
      * @return observable list of found news.
      */
-    @GetMapping
+    @GetMapping("/{email}")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public List<NewsDto> getNewNews() {
+    public List<NewsDto> getNewNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : newNews");
         try {
-            return newsMapper.entityToDto(newsService.getNewNews());
+            return newsMapper.entityToDto(newsService.getNewNews(email));
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
         }
     }
 
     @PostMapping("/read")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public NewsDto readNews(@RequestBody SimpleSeenNewsDto simpleSeenNewsDto) {
         LOGGER.info("POST /api/v1/news/read : readNews");
-        return newsService.getById(simpleSeenNewsDto);
+        return newsService.readNews(simpleSeenNewsDto);
     }
 }

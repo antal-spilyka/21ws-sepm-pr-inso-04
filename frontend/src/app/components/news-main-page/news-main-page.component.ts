@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import { Router } from '@angular/router';
-import {Picture} from "../../dtos/picture";
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-news-main-page',
@@ -29,7 +29,7 @@ export class NewsMainPageComponent implements OnInit {
   }
 
   loadNews(): void {
-    this.newsService.getNewNews().subscribe(
+    this.newsService.getNewNews(this.getEmail()).subscribe(
       (news: News[]) => {
         this.news = news;
         console.log(this.news);
@@ -39,6 +39,11 @@ export class NewsMainPageComponent implements OnInit {
         this.defaultServiceErrorHandling(error);
       }
     );
+  }
+
+  getEmail(): string {
+    const decoded: any = jwt_decode(localStorage.getItem('authToken'));
+    return decoded.sub;
   }
 
   formatDate(): void {

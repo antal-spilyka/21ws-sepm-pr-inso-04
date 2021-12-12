@@ -3,7 +3,7 @@ import {News} from '../dtos/news';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
-import {SimpleSeenNewsDto} from "../dtos/simpleSeenNewsDto";
+import {SimpleSeenNewsDto} from '../dtos/simpleSeenNewsDto';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +30,9 @@ export class NewsService {
    *
    * @return observable list of found news.
    */
-  getNewNews(): Observable<News[]> {
+  getNewNews(email: string): Observable<News[]> {
     console.log('Load all news');
-    return this.httpClient.get<News[]>(this.newsBaseUri);
+    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email);
   }
 
   /**

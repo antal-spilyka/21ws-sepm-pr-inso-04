@@ -16,7 +16,7 @@ public class SeenNews {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false)
     private ApplicationUser user;
 
     @ManyToOne
@@ -45,5 +45,14 @@ public class SeenNews {
 
     public void setNews(News newsId) {
         this.news = newsId;
+    }
+
+    @Override
+    public String toString() {
+        return "SeenNews{"
+            + "id=" + id
+            + ", user=" + user
+            + ", news=" + news
+            + '}';
     }
 }

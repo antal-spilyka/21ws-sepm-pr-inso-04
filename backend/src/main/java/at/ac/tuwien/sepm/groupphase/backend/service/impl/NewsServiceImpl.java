@@ -3,8 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeenNews;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -20,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,21 +49,28 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public List<News> getNewNews() {
+    public List<News> getNewNews(String email) {
         LOGGER.debug("Get all News");
-        LocalDateTime beforeSevenDays = LocalDateTime.now().minusDays(7);
+        /*LocalDateTime beforeSevenDays = LocalDateTime.now().minusDays(7);
         List<News> filteredList = newsRepository.findByCreateDateAfter(beforeSevenDays);
         for (News news : filteredList) {
             for (Performance performance : news.getEvent().getPerformances()) {
                 performance.setEvent(null);
             }
+        }*/
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
+        List<News> newsList = new ArrayList<>();
+        for (SeenNews e : seenNewsList) {
+            newsList.add(e.getNews());
         }
-        return filteredList;
+
+        return newsList;
     }
 
     @Transactional
     @Override
-    public NewsDto getById(SimpleSeenNewsDto simpleSeenNewsDto) {
+    public NewsDto readNews(SimpleSeenNewsDto simpleSeenNewsDto) {
         LOGGER.debug("Get news by id");
         try {
             News news = newsRepository.getById(simpleSeenNewsDto.getNewsId());

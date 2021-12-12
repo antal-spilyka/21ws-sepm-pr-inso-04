@@ -20,7 +20,7 @@ public interface NewsService {
     /**
      * Persists a new event.
      */
-    List<News> getNewNews();
+    List<News> getNewNews(String email);
 
     /**
      * Returns NewsDto with id.
@@ -30,6 +30,6 @@ public interface NewsService {
      * @throws org.hibernate.service.spi.ServiceException                       when unknown error occurs
      * @throws javax.persistence.EntityNotFoundException                        when entity not found
      */
-    NewsDto getById(SimpleSeenNewsDto simpleSeenNewsDto);
+    NewsDto readNews(SimpleSeenNewsDto simpleSeenNewsDto);
 
 }

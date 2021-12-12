@@ -256,7 +256,7 @@ public class NewsServiceTest implements TestData {
         assertNotEquals(firstNews, secondNews);
     }
 
-    @Test
+    /*@Test
     public void oldNewsShouldNotBeInNewNewsList() {
         this.addressDto = new AddressDto();
         addressDto.setZip("1234");
@@ -312,9 +312,9 @@ public class NewsServiceTest implements TestData {
 
         // there shouldn't be a difference
         assertEquals(size, newsService.getNewNews().size());
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void newNewsShouldBeInNewNewsList() {
         this.addressDto = new AddressDto();
         addressDto.setZip("1234");
@@ -370,5 +370,5 @@ public class NewsServiceTest implements TestData {
 
         // there should be not difference
         assertEquals(size + 1, newsService.getNewNews().size());
-    }
+    }*/
 }
