@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { NewsService } from 'src/app/services/news.service';
+import {SimpleSeenNewsDto} from "../../dtos/simpleSeenNewsDto";
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-news-view',
@@ -24,7 +26,10 @@ export class NewsViewComponent implements OnInit {
     this.route.paramMap.subscribe( paramMap => {
       id = Number(paramMap.get('id'));
     });
-    this.newsService.getNewsById(id).subscribe({
+    const simpleNewsDto: SimpleSeenNewsDto = {
+      newsId: id, userEmail: this.getEmail()
+    };
+    this.newsService.readNews(simpleNewsDto).subscribe({
       next: (news) => {
         this.news = news;
         console.log(this.news);
@@ -53,6 +58,11 @@ export class NewsViewComponent implements OnInit {
         this.error = true;
       }
     });
+  }
+
+  getEmail(): string {
+    const decoded: any = jwt_decode(localStorage.getItem('authToken'));
+    return decoded.sub;
   }
 
   minutesToDhms(minutes: number) {

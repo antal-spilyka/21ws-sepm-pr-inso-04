@@ -8,7 +8,7 @@
           <mat-card-title>{{news.event.name}}</mat-card-title>
           <mat-card-subtitle>{{news.event.startTime.toDateString()}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-md-image src="favicon.ico">
+        <img *ngIf="news.pictures" mat-card-md-image src="{{news.pictures.pop()}}">
         <mat-card-content>
           {{news.shortDescription}}
         </mat-card-content>

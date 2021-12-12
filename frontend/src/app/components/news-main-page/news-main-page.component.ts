@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import { Router } from '@angular/router';
+import {Picture} from "../../dtos/picture";
 
 @Component({
   selector: 'app-news-main-page',
@@ -43,7 +44,6 @@ export class NewsMainPageComponent implements OnInit {
   formatDate(): void {
     for (const val of this.news) {
       val.createDate = new Date(val.createDate);
-      console.log(val.createDate);
       val.event.startTime = new Date(val.event.startTime);
     }
   }

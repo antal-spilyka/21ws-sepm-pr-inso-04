@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
@@ -65,11 +66,10 @@ public class NewsEndpoint {
         }
     }
 
-    @GetMapping("/{id}")
-    @Secured("ROLE_USER")
+    @PostMapping("/read")
     @ResponseStatus(HttpStatus.OK)
-    public NewsDto getNewsById(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/news : getById");
-        return newsService.getById(id);
+    public NewsDto readNews(@RequestBody SimpleSeenNewsDto simpleSeenNewsDto) {
+        LOGGER.info("POST /api/v1/news/read : readNews");
+        return newsService.getById(simpleSeenNewsDto);
     }
 }

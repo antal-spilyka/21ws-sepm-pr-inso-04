@@ -3,6 +3,7 @@ import {News} from '../dtos/news';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
+import {SimpleSeenNewsDto} from "../dtos/simpleSeenNewsDto";
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,8 @@ export class NewsService {
    * @param id of the news
    * @returns found news
    */
-  getNewsById(id: number): Observable<News> {
-    console.log(`Get News by Id: ${id}`);
-    return this.httpClient.get<News>(this.newsBaseUri + `/${id}`);
+  readNews(simpleSeenNewsDto: SimpleSeenNewsDto): Observable<News> {
+    console.log(`Read News`);
+    return this.httpClient.post<News>(this.newsBaseUri + `/read`, simpleSeenNewsDto);
   }
 }

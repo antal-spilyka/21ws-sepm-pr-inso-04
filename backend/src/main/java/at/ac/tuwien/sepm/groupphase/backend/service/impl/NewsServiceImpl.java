@@ -1,15 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PictureDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeenNews;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PictureRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,15 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
     private final PictureRepository pictureRepository;
+    private final SeenNewsRepository seenNewsRepository;
+    private final UserRepository userRepository;
 
-    public NewsServiceImpl(NewsRepository newsRepository, PictureRepository pictureRepository, NewsMapper newsMapper) {
+    public NewsServiceImpl(NewsRepository newsRepository, PictureRepository pictureRepository, NewsMapper newsMapper, SeenNewsRepository seenNewsRepository, UserRepository userRepository) {
         this.newsRepository = newsRepository;
         this.pictureRepository = pictureRepository;
         this.newsMapper = newsMapper;
+        this.seenNewsRepository = seenNewsRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -57,15 +62,19 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public NewsDto getById(Long id) {
+    public NewsDto getById(SimpleSeenNewsDto simpleSeenNewsDto) {
         LOGGER.debug("Get news by id");
         try {
-            News news = newsRepository.getById(id);
-            List<Picture> pictures = pictureRepository.findByNewsId(news);
+            News news = newsRepository.getById(simpleSeenNewsDto.getNewsId());
+            SeenNews seenNews = new SeenNews();
+            seenNews.setNews(news);
+            seenNews.setUser(userRepository.findUserByEmail(simpleSeenNewsDto.getUserEmail()));
+            seenNewsRepository.save(seenNews);
 
+            List<Picture> pictures = pictureRepository.findByNewsId(news);
             return newsMapper.entityToDto(news, pictures);
         } catch (EntityNotFoundException e) {
-            LOGGER.debug("News with id {} not found", id);
+            LOGGER.debug("News with id {} not found", simpleSeenNewsDto.getNewsId());
             throw new EntityNotFoundException(e.getMessage());
         }
 
