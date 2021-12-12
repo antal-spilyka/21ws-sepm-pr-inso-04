@@ -9,21 +9,24 @@ import java.util.Objects;
 
 @Entity
 public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @Column(nullable = false)
     String city;
+
+    @Column(nullable = false)
     String state;
+
+    @Column(nullable = false)
     String zip;
+
+    @Column(nullable = false)
     String country;
-    String description;
+
+    @Column(nullable = false)
     String street;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getStreet() {
         return street;
@@ -33,28 +36,22 @@ public class Address {
         this.street = street;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
 
-    @Column(nullable = false, length = 100)
     public String getCity() {
         return city;
     }
 
-    @Column(nullable = false, length = 100)
     public String getState() {
         return state;
     }
 
-    @Column(nullable = false, length = 10)
     public String getZip() {
         return zip;
     }
 
-    @Column(nullable = false, length = 100)
     public String getCountry() {
         return country;
     }

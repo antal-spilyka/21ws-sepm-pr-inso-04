@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news-main-page',
@@ -13,7 +14,7 @@ export class NewsMainPageComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private newsService: NewsService) { }
+  constructor(private newsService: NewsService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadNews();
@@ -43,7 +44,7 @@ export class NewsMainPageComponent implements OnInit {
     for (const val of this.news) {
       val.createDate = new Date(val.createDate);
       console.log(val.createDate);
-      val.event.dateTime = new Date(val.event.dateTime);
+      val.event.startTime = new Date(val.event.startTime);
     }
   }
 
@@ -58,6 +59,13 @@ export class NewsMainPageComponent implements OnInit {
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error.message;
+    }
+  }
+
+  redirect(news: News) {
+    console.log(news);
+    if(news.id) {
+      this.router.navigateByUrl(`/news/${news.id}`);
     }
   }
 

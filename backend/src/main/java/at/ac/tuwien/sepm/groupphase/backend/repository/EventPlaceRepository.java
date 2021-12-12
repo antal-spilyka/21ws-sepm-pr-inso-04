@@ -27,15 +27,6 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     List<EventPlace> findEventPlace(@Param("name") String name, Pageable pageable);
 
     /**
-     * Gets Category by primary key (name).
-     *
-     * @param name of the eventPlace
-     * @return corresponding eventPlace
-     * @throws javax.persistence.PersistenceException when unknown error occurs
-     */
-    EventPlace getById(String name);
-
-    /**
      * Persists eventPlace.
      *
      * @param eventPlace to be persisted
@@ -43,11 +34,7 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
      */
     EventPlace save(EventPlace eventPlace);
 
-    /**
-     * Returns true if entity with id exists.
-     *
-     * @param name of the eventplace
-     * @return boolean
-     */
-    boolean existsById(String name);
+    EventPlace findByIdEquals(Long id);
+
+    EventPlace findByNameIgnoreCase(String name);
 }

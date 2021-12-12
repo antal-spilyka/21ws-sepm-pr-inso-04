@@ -12,14 +12,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
@@ -42,12 +43,9 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Publish new news")
-    public void save(@Validated @RequestBody NewsDto newsDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
-        }
+    public void save(@Validated @RequestBody NewsDto newsDto) {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
-        newsService.save(newsMapper.dtoToEntity(newsDto));
+        newsService.save(newsDto);
     }
 
     /**
@@ -63,7 +61,15 @@ public class NewsEndpoint {
         try {
             return newsMapper.entityToDto(newsService.getNewNews());
         } catch (NotFoundException e) {
-            throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
         }
+    }
+
+    @GetMapping("/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    public NewsDto getNewsById(@PathVariable Long id) {
+        LOGGER.info("GET /api/v1/news : getById");
+        return newsService.getById(id);
     }
 }

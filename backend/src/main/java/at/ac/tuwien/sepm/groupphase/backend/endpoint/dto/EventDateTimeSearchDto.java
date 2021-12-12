@@ -1,60 +1,37 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 public class EventDateTimeSearchDto {
-    private LocalDateTime dateTime;
-    private String event;
-    private String room;
+    private LocalDateTime startTime;
+    private List<Performance> performances;
+    private String eventName;
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEvent() {
-        return event;
+    public List<Performance> getPerformances() {
+        return performances;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
+    public void setPerformances(List<Performance> performances) {
+        this.performances = performances;
     }
 
-    public String getRoom() {
-        return room;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        EventDateTimeSearchDto that = (EventDateTimeSearchDto) o;
-        return Objects.equals(dateTime, that.dateTime) && Objects.equals(event, that.event) && Objects.equals(room, that.room);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dateTime, event, room);
-    }
-
-    @Override
-    public String toString() {
-        return "EventDateTimeSearchDto{" +
-            "dateTime=" + dateTime +
-            ", event='" + event + '\'' +
-            ", room='" + room + '\'' +
-            '}';
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 }

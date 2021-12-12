@@ -1,15 +1,13 @@
-import {Artist} from './artist';
-import {Category} from './category';
-import {Room} from './room';
+import {EventPlace} from './eventPlace';
+import {Performance} from './performance';
 
 export class EventDto {
   id?: number;
   name: string;
+  startTime: Date;
   duration: number;
-  content: string;
-  dateTime: Date;
-  category: Category;
-  room: Room;
-  artist: Artist;
+  performances: Performance[];
+  eventPlace: EventPlace;
   description: string;
+  category: string;
 }

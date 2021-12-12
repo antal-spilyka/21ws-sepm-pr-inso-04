@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -16,10 +20,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import java.security.Principal;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -29,6 +32,9 @@ public class UserServiceTest implements TestData {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
     UserMapper userMapper;
@@ -95,12 +101,9 @@ public class UserServiceTest implements TestData {
     public void changeAdminRights_thenShowCorrectRightsOfUser() {
         userService.createUser(newUser1);
         userService.createUser(newAdminUser1);
-        UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withAdminEmail(newAdminUser1.getEmail())
-            .withEmail(newUser1.getEmail())
-            .withAdmin(true)
-            .build();
-        userService.setAdmin(request);
+        Principal principal = newAdminUser1::getEmail;
+
+        userService.setAdmin(newUser1.getEmail(), principal);
 
         assertAll(
             () -> assertEquals(2, userService.findUsers(null).size()),
@@ -112,17 +115,95 @@ public class UserServiceTest implements TestData {
     @Test
     public void changeOwnRights_shouldThrowServiceException() {
         userService.createUser(newAdminUser1);
-        UserAdminDto request = UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withAdminEmail(newAdminUser1.getEmail())
-            .withEmail(newAdminUser1.getEmail())
-            .withAdmin(true)
-            .build();
+
+        Principal principal = newAdminUser1::getEmail;
 
         try {
-            userService.setAdmin(request);
+            userService.setAdmin(newAdminUser1.getEmail(), principal);
             fail("ServiceException should occur");
         } catch (ServiceException e) {
             // Should be the case
         }
+    }
+
+    @Test
+    public void deleteNonExistingUser_shouldThrowNotFoundException() {
+        userService.createUser(newUser1);
+
+        try {
+            userService.deleteUser(newUser2.getEmail());
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void deleteWithEmptyEmail_shouldThrowNotFoundException() {
+        userService.createUser(newUser1);
+
+        try {
+            userService.deleteUser(null);
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void deleteExistingUser_shouldRemoveUser() {
+        userService.createUser(newUser1);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertEquals(1, userService.findUsers("user").size())
+        );
+
+        userService.deleteUser(newUser1.getEmail());
+
+        assertAll(
+            () -> assertEquals(0, userService.findUsers(null).size()),
+            () -> assertEquals(0, userService.findUsers("user").size())
+        );
+    }
+
+    @Test
+    public void deleteExistingUserWithPaymentInformation_shouldRemoveUserAndPaymentInformation() {
+        PaymentInformationDto paymentInformation1 = new PaymentInformationDto();
+        paymentInformation1.setCreditCardNr("1234123412341234");
+        paymentInformation1.setCreditCardExpirationDate("202022");
+        paymentInformation1.setCreditCardCvv("123");
+        paymentInformation1.setCreditCardName("Test");
+
+        userService.createUser(newUser1);
+        UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail("user1@email.com")
+            .withNewEmail("user1@email.com")
+            .withAdmin(false)
+            .withPassword("testPassword")
+            .withFirstName("firstName")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Test City")
+            .withStreet("Test Street")
+            .withDisabled(true)
+            .withZip("12345")
+            .withPaymentInformation(paymentInformation1)  //add paymentinformation to user
+            .build();
+        userService.updateUser(toUpdate);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertEquals(1, userService.findUsers("user").size())
+        );
+        ApplicationUser user = userRepository.findUserByEmail("user1@email.com");
+
+        userService.deleteUser(newUser1.getEmail());
+
+        assertAll(
+            () -> assertEquals(0, userService.findUsers(null).size()),
+            () -> assertEquals(0, userService.findUsers("user").size()),
+            () -> assertEquals(0, paymentInformationRepository.findByUser(user).size())
+        );
     }
 }

@@ -1,9 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
@@ -15,6 +13,7 @@ import {SearchTimeComponent} from './components/search-time/search-time.componen
 import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
+import { NewsViewComponent } from './components/news-view/news-view.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -22,17 +21,14 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'edit', component: EditUserComponent},
   {path: 'users', canActivate: [AuthGuard], component: UserListComponent},
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'message', component: MessageComponent},
   {path: 'news/add', component: AddNewsComponent},
-  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
-  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
-  {path: 'createEvent', canActivate: [AuthGuard], component: CreateEventComponent},
+  {path: 'events/add', canActivate: [AuthGuard], component: CreateEventComponent},
   {path: 'search', component: SearchComponent},
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
-  {path: 'search-time', component: SearchTimeComponent}
+  {path: 'search-time', component: SearchTimeComponent},
+  {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent}
 ];
 
 @NgModule({

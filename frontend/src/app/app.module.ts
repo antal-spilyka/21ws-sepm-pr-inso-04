@@ -9,7 +9,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -26,7 +25,6 @@ import {MatInputModule} from '@angular/material/input';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {CreateEventPlaceComponent} from './components/create-event/create-event-place/create-event-place.component';
 import {CreateArtistComponent} from './components/create-event/create-artist/create-artist.component';
-import {CreateActualEventComponent} from './components/create-event/create-actual-event/create-actual-event.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -45,6 +43,12 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { EditPaymentInformationDialogComponent } from
+    './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTableModule} from '@angular/material/table';
+import { NewsViewComponent } from './components/news-view/news-view.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -54,7 +58,6 @@ import {MatGridListModule} from '@angular/material/grid-list';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    MessageComponent,
     EditUserComponent,
     EditEmailDialogComponent,
     EditPasswordDialogComponent,
@@ -63,13 +66,14 @@ import {MatGridListModule} from '@angular/material/grid-list';
     CreateEventComponent,
     CreateEventPlaceComponent,
     CreateArtistComponent,
-    CreateActualEventComponent,
     NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,
     SearchLocationComponent,
     SearchEventsComponent,
-    SearchTimeComponent
+    SearchTimeComponent,
+    EditPaymentInformationDialogComponent,
+    NewsViewComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +99,10 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    MatGridListModule
+    MatGridListModule,
+    NgImageSliderModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

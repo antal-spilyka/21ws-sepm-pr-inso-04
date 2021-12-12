@@ -11,10 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 // This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
@@ -365,7 +362,7 @@ public class UserRepositoryTest implements TestData {
     public void givenNothing_whenChangeAdminRights_thenFindListUserWithChangedRights() {
         userRepository.save(user1);
         ApplicationUser newUser = userRepository.findUserByEmail(user1.getEmail());
-        newUser.setAdmin(true);
+        newUser.setAdmin(!user1.getAdmin());
         userRepository.save(newUser);
 
         assertAll(
