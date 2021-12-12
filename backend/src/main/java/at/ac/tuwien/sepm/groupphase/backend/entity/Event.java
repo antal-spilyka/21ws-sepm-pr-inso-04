@@ -37,6 +37,17 @@ public class Event {
     @Column
     private String description;
 
+    @Column (nullable = false)
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public Long getId() {
         return id;
     }

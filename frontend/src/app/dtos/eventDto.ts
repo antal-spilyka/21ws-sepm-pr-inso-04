@@ -9,4 +9,5 @@ export class EventDto {
   performances: Performance[];
   eventPlace: EventPlace;
   description: string;
+  category: string;
 }

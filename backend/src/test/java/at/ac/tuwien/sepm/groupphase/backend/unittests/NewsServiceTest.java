@@ -133,6 +133,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -221,6 +222,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         this.event = eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -286,6 +288,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -344,6 +347,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();

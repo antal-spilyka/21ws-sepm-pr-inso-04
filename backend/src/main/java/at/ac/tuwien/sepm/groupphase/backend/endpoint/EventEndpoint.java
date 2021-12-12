@@ -50,12 +50,12 @@ public class EventEndpoint {
         }
     }
 
-    @Secured("ROLE_USER")
+    /*@Secured("ROLE_USER")
     @GetMapping("/dateTime")
     @Operation(summary = "Find events by search parameters.")
     public ResponseEntity findEventsByDateTime(@Validated EventDateTimeSearchDto eventDateTimeSearchDto) {
         return new ResponseEntity(eventService.findEventsByDateTime(eventDateTimeSearchDto).stream(), HttpStatus.OK);
-    }
+    }*/
 
     @Secured("ROLE_USER")
     @GetMapping("/news")

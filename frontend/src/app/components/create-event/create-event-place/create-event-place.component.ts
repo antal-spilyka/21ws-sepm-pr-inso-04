@@ -30,6 +30,7 @@ export class CreateEventPlaceComponent implements OnInit {
     name: [null, Validators.required],
     startTime: [this.now[0] + ':' + this.now[1], Validators.required],
     description: [null, Validators.required],
+    category: [null, Validators.required],
   });
   isNewEventPlace = false;
 
@@ -117,6 +118,7 @@ export class CreateEventPlaceComponent implements OnInit {
     console.log('2'+this.selectedEventPlace);
     event.eventPlace = this.selectedEventPlace;
     event.description = this.form.value.description;
+    event.category = this.form.value.category;
     console.log(event);
     this.eventPlaceService.createEventPlace(event.eventPlace).subscribe({
       next: async next => {
