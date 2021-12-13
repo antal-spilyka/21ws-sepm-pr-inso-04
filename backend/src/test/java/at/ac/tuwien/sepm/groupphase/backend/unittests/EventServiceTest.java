@@ -104,6 +104,7 @@ public class EventServiceTest {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -134,6 +135,7 @@ public class EventServiceTest {
         event2.setPerformances(eventPers.getPerformances());
         event2.setEventPlace(eventPers.getEventPlace());
         event2.setDescription(eventPers.getDescription());
+        event2.setCategory(eventPers.getCategory());
 
         assertEquals(eventPers, event2);
     }
@@ -146,6 +148,7 @@ public class EventServiceTest {
         event.setPerformances(this.performances);
         event.setEventPlace(this.eventPlace);
         event.setDescription("testDescription");
+        event.setCategory("testCategory");
         assertThrows(DataIntegrityViolationException.class, () -> eventService.saveEvent(eventMapper.entityToDto(event)));
     }
 
@@ -154,6 +157,7 @@ public class EventServiceTest {
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDuration(1000);
         eventSearchDto.setDescription("not found");
+        eventSearchDto.setCategory("no category");
         List<Event> events = eventService.findEvents(eventSearchDto);
         assertTrue(events.isEmpty());
     }

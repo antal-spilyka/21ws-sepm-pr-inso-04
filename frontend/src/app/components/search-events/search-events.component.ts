@@ -10,8 +10,9 @@ import {EventSearchDto} from '../../dtos/eventSearchDto';
 })
 export class SearchEventsComponent implements OnInit {
   searchEvent: EventSearchDto = {
-    duration: null, content: '', categoryName: '', description: null,
+    duration: null, description: '', category: '',
   };
+  submitted = false;
   eventList: EventDto[] = [];
   error = false;
   errorMessage: string;
@@ -29,6 +30,7 @@ export class SearchEventsComponent implements OnInit {
       this.eventService.findEvent(this.searchEvent).subscribe(
         {
           next: events => {
+            this.submitted = true;
             console.log(this.eventList);
             this.eventList = events;
             console.log(this.eventList);

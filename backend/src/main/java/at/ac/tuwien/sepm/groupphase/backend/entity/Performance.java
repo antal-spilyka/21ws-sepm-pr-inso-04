@@ -96,6 +96,18 @@ public class Performance {
     }
 
     @Override
+    public String toString() {
+        return "Performance{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", startTime=" + startTime +
+            ", duration=" + duration +
+            ", artist=" + artist +
+            ", hall=" + hall +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

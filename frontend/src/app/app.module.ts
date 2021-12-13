@@ -43,6 +43,9 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { EditPaymentInformationDialogComponent } from
+    './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -69,6 +72,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     SearchLocationComponent,
     SearchEventsComponent,
     SearchTimeComponent,
+    EditPaymentInformationDialogComponent,
     NewsViewComponent
   ],
   imports: [
@@ -97,7 +101,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatSlideToggleModule,
     MatGridListModule,
     NgImageSliderModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
