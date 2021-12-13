@@ -18,9 +18,14 @@ public interface NewsService {
     News save(NewsDto newsDto);
 
     /**
-     * Persists a new event.
+     * Returns a list of all unseen news.
      */
     List<News> getNewNews(String email);
+
+    /**
+     * Returns a list of all seen news.
+     */
+    List<News> getOldNews(String email);
 
     /**
      * Returns NewsDto with id.

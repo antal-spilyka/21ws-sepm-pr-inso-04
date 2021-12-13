@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { NewsService } from 'src/app/services/news.service';
-import {SimpleSeenNewsDto} from "../../dtos/simpleSeenNewsDto";
-import jwt_decode from "jwt-decode";
+import {SimpleSeenNewsDto} from '../../dtos/simpleSeenNewsDto';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-news-view',

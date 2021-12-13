@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SeenNews {
@@ -15,11 +15,11 @@ public class SeenNews {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(nullable = false)
     private ApplicationUser user;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(nullable = false, name = "news_id")
     private News news;
 

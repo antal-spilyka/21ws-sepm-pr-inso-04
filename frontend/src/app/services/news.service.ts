@@ -26,13 +26,25 @@ export class NewsService {
   }
 
   /**
-   * Get all news stored in the system
+   * Get all unseen news stored in the system.
    *
+   * @param email from the loggedIn User.
    * @return observable list of found news.
    */
   getNewNews(email: string): Observable<News[]> {
-    console.log('Load all news');
-    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email);
+    console.log('Load all new news');
+    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email + '/new');
+  }
+
+  /**
+   * Get all seen news stored in the system.
+   *
+   * @param email from the loggedIn User.
+   * @return observable list of found news.
+   */
+  getOldNews(email: string): Observable<News[]> {
+    console.log('Load all old news');
+    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email + '/old');
   }
 
   /**

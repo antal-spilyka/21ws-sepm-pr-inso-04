@@ -49,6 +49,7 @@ import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { OldNewsComponent } from './components/old-news/old-news.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     SearchEventsComponent,
     SearchTimeComponent,
     EditPaymentInformationDialogComponent,
-    NewsViewComponent
+    NewsViewComponent,
+    OldNewsComponent
   ],
   imports: [
     BrowserModule,

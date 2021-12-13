@@ -52,7 +52,7 @@ public class NewsEndpoint {
      *
      * @return observable list of found news.
      */
-    @GetMapping("/{email}")
+    @GetMapping("/{email}/new")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     public List<NewsDto> getNewNews(@PathVariable String email) {
@@ -60,7 +60,19 @@ public class NewsEndpoint {
         try {
             return newsMapper.entityToDto(newsService.getNewNews(email));
         } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading new news", e);
+        }
+    }
+
+    @GetMapping("/{email}/old")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    public List<NewsDto> getOldNews(@PathVariable String email) {
+        LOGGER.info("GET /api/v1/news : oldNews");
+        try {
+            return newsMapper.entityToDto(newsService.getOldNews(email));
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading old news", e);
         }
     }
 

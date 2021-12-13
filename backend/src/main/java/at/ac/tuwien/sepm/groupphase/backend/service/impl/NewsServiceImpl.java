@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeenNews;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -60,11 +61,35 @@ public class NewsServiceImpl implements NewsService {
         }*/
         ApplicationUser user = userRepository.findUserByEmail(email);
         List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
+        List<News> newsList = newsRepository.findAll();
+        for (SeenNews e : seenNewsList) {
+            newsList.remove(e.getNews());
+        }
+        for (News news : newsList) {
+            for (Performance performance : news.getEvent().getPerformances()) {
+                performance.setEvent(null);
+            }
+        }
+        LOGGER.info("" + newsList.size());
+
+        return newsList;
+    }
+
+    @Transactional
+    @Override
+    public List<News> getOldNews(String email) {
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
         List<News> newsList = new ArrayList<>();
         for (SeenNews e : seenNewsList) {
             newsList.add(e.getNews());
         }
-
+        for (News news : newsList) {
+            for (Performance performance : news.getEvent().getPerformances()) {
+                performance.setEvent(null);
+            }
+        }
+        LOGGER.info("" + newsList.size());
         return newsList;
     }
 
