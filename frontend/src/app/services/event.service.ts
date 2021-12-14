@@ -6,6 +6,7 @@ import {Globals} from '../global/globals';
 import {EventSearchDto} from '../dtos/eventSearchDto';
 import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
 import {PerformanceSearchDto} from '../dtos/performanceSearchDto';
+import {Performance} from '../dtos/performance';
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +59,9 @@ export class EventService {
     params = params.set('name', searchName);
     console.log(`searching for ${searchName}`);
     return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/news', { params });
+  }
+
+  findPerformancesByEvent(id: number): Observable<Performance[]> {
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/' + id + '/performances');
   }
 }

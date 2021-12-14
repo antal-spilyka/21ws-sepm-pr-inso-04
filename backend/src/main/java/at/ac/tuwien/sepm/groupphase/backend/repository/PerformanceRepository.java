@@ -32,6 +32,9 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
         "UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
         "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))")
     List<Performance> findPerformanceByEventAndHall(@Param("eventName") String eventName, @Param("hall") String hall,
-                                                   Pageable pageable);
+                                                    Pageable pageable);
+
+    @Query("SELECT p FROM Performance p WHERE p.artist.id=:id")
+    List<Performance> findPerformanceForArtist(@Param("id") Long id, Pageable pageable);
 
 }

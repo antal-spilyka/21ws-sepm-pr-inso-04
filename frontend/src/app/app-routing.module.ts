@@ -14,6 +14,9 @@ import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
 import { NewsViewComponent } from './components/news-view/news-view.component';
+import {ArtistPerformancesComponent} from './components/artist-performances/artist-performances.component';
+import {EventPerformancesComponent} from './components/event-performances/event-performances.component';
+import {LocationPerformancesComponent} from './components/location-performances/location-performances.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -28,7 +31,10 @@ const routes: Routes = [
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
   {path: 'search-time', component: SearchTimeComponent},
-  {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent}
+  {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
+  {path: 'artists/:id/performances', component: ArtistPerformancesComponent},
+  {path: 'events/:id/performances', component: EventPerformancesComponent},
+  {path: 'locations/:id/performances', component: LocationPerformancesComponent}
 ];
 
 @NgModule({

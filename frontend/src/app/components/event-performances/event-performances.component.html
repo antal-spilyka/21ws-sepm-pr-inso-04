@@ -1,0 +1,24 @@
+<div *ngIf="performancesList.length === 0 ">
+  No Performances were found for this event!
+</div>
+<div *ngIf="performancesList !== []">
+  <table class="table table-hover">
+    <thead>
+    <th>Performances</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let performance of performancesList">
+      <td>
+        <div class="flex"><span>Name: {{performance.name}}</span>
+          <div>
+            <!--button type="submit" class="button" mat-raised-button color="primary" (click)="loadPerformances(artist)">Performances
+            </button-->
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+

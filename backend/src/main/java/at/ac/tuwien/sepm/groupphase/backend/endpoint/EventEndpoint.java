@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,5 +73,13 @@ public class EventEndpoint {
     public EventDto saveEvent(@RequestBody @Validated EventDto eventDto) {
         LOGGER.info("POST /api/v1/events/{}", eventDto);
         return eventMapper.entityToDto(eventService.saveEvent(eventDto));
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/{id}/performances")
+    @Operation(summary = "Find performances for specified event.")
+    public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/events/{}/performances", id);
+        return this.eventService.getPerformances(id);
     }
 }
