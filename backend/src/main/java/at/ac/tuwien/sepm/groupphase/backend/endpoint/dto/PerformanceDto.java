@@ -66,4 +66,17 @@ public class PerformanceDto {
     public void setHall(HallDto hall) {
         this.hall = hall;
     }
+
+    @Override
+    public String toString() {
+        return "PerformanceDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", startTime=" + startTime +
+            ", duration=" + duration +
+            ", event=" + null +
+            ", artist=" + artist +
+            ", hall=" + hall +
+            '}';
+    }
 }
