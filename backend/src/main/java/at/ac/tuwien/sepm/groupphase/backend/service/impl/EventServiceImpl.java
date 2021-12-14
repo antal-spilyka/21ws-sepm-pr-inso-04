@@ -27,6 +27,8 @@ import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -127,10 +129,14 @@ public class EventServiceImpl implements EventService {
         try {
             Event event = eventRepository.getById(id);
             List<Performance> performances = event.getPerformances();
+            List<Performance> performancesCopy = new  ArrayList<>();
             for (Performance performance : performances) {
-                performance.setEvent(null);
+                Performance copyPerformance = new Performance(performance.getId(), performance.getName(), performance.getStartTime(),
+                    performance.getDuration(), null, performance.getArtist(), performance.getHall());
+                performancesCopy.add(copyPerformance);
             }
-            return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+            Stream<PerformanceDto> performanceDtoStream = performancesCopy.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+            return performanceDtoStream;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
