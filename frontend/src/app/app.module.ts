@@ -25,7 +25,6 @@ import {MatInputModule} from '@angular/material/input';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {CreateEventPlaceComponent} from './components/create-event/create-event-place/create-event-place.component';
 import {CreateArtistComponent} from './components/create-event/create-artist/create-artist.component';
-import {CreateActualEventComponent} from './components/create-event/create-actual-event/create-actual-event.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -70,7 +69,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     CreateEventComponent,
     CreateEventPlaceComponent,
     CreateArtistComponent,
-    CreateActualEventComponent,
     CreateHallplanComponent,
     HallplanElementComponent,
     NewsMainPageComponent,
