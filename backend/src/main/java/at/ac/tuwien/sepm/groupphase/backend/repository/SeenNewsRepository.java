@@ -13,4 +13,6 @@ import java.util.List;
 @Repository
 public interface SeenNewsRepository extends JpaRepository<SeenNews, SeenNewsKey> {
     List<SeenNews> findByUser(ApplicationUser user);
+
+    Long deleteByUser(ApplicationUser user);
 }

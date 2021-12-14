@@ -86,7 +86,6 @@ public class NewsServiceTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
         newsRepository.deleteAll();
     }
 
