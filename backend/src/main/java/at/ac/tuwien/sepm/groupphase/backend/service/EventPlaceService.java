@@ -5,8 +5,10 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -21,16 +23,17 @@ public interface EventPlaceService {
      * @return List of eventPlaces matching properties
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
+    List<EventPlace> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
+    EventPlace findEventPlace(EventPlaceDto eventPlace); // TODO delete
 
     /**
-     * FInds eventLocations with matching properties.
+     * Finds eventLocations with matching properties.
      *
      * @param eventLocationSearchDto dto for storing the search information.
      * @return a list with all the addresses that meet search criteria.
      */
-    List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
+    List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
 
     /**
@@ -39,5 +42,5 @@ public interface EventPlaceService {
      * @param eventPlaceDto to be persisted
      * @return persisted eventPlace
      */
-    EventPlaceDto save(EventPlaceDto eventPlaceDto);
+    EventPlace save(EventPlaceDto eventPlaceDto);
 }

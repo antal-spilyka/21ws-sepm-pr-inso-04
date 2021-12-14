@@ -15,7 +15,7 @@ export class User {
     public country: string,
     public street: string,
     public lockedCounter: number,
-    public paymentInformation: PaymentInformation
+    public paymentInformation: PaymentInformation[]
   ) {
   }
 }

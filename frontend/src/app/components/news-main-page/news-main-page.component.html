@@ -1,12 +1,13 @@
 <h1>Welcome</h1>
 
 <mat-grid-list cols="4" rowHeight="4:5">
-  <div *ngFor="let news of news; index as i">
+  <div *ngFor="let news of news; index as i" (click)="redirect(news)">
     <mat-grid-tile>
       <mat-card class="news-card">
         <mat-card-header>
           <mat-card-title>{{news.event.name}}</mat-card-title>
-          <mat-card-subtitle>{{news.event.dateTime.toDateString()}}</mat-card-subtitle>
+          <mat-card-title>{{news.event.category}}</mat-card-title>
+          <mat-card-subtitle>{{news.event.startTime.toDateString()}}</mat-card-subtitle>
         </mat-card-header>
         <img mat-card-md-image src="favicon.ico">
         <mat-card-content>
@@ -23,4 +24,3 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-

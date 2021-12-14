@@ -1,19 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.aspectj.lang.annotation.Before;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,12 +35,14 @@ public class CustomUserDetailService implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     private final PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
     }
 
@@ -67,7 +72,6 @@ public class CustomUserDetailService implements UserService {
         if (applicationUser == null) {
             throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
         } else {
-            userRepository.save(applicationUser);
             return applicationUser;
         }
     }
@@ -81,12 +85,7 @@ public class CustomUserDetailService implements UserService {
         } else {
             users = userRepository.findByEmailContains(email);
         }
-        if (users == null || users.size() <= 0) {
-            throw new NotFoundException("No user found in the repository");
-        } else {
-            userRepository.saveAll(users);
-            return users;
-        }
+        return users;
     }
 
     @Override
@@ -107,16 +106,16 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     @Transactional
-    public void setAdmin(UserAdminDto request) {
-        if (request.getAdminEmail() == null || userRepository.findUserByEmail(request.getAdminEmail()) == null) {
+    public void setAdmin(String email, Principal principal) {
+        if (principal == null || principal.getName() == null) {
             throw new ServiceException("No administrator found with the given e-mail");
-        } else if (request.getAdmin() == null || userRepository.findUserByEmail(request.getEmail()) == null) {
+        } else if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new ServiceException("No user found with the given e-mail");
-        } else if (request.getEmail().equals(request.getAdminEmail())) {
+        } else if (principal.getName().equals(email)) {
             throw new ServiceException("You can not change your own admin rights");
         } else {
-            ApplicationUser currentUser = userRepository.findUserByEmail(request.getEmail());
-            currentUser.setAdmin(request.getAdmin());
+            ApplicationUser currentUser = userRepository.findUserByEmail(email);
+            currentUser.setAdmin(!currentUser.getAdmin()); // changing the admin rights of the user
             userRepository.save(currentUser);
         }
     }
@@ -150,24 +149,40 @@ public class CustomUserDetailService implements UserService {
             } else {
                 toUpdateUser.setEmail(updatedUser.getNewEmail());
             }
-            toUpdateUser.setDisabled(updatedUser.getDisabled());
-            if (updatedUser.getPaymentInformation() != null) {
-                PaymentInformation paymentInformation;
-                if (toUpdateUser.getPaymentInformation() == null) {
-                    paymentInformation = new PaymentInformation();
-                } else {
-                    paymentInformation = paymentInformationRepository.findByUser(toUpdateUser);
+            this.deletePaymentInformations(updatedUser);
+            if (!updatedUser.getPaymentInformation().isEmpty()) {
+                List<PaymentInformation> paymentInformationList = new ArrayList<>();
+                for (PaymentInformationDto e : updatedUser.getPaymentInformation()) {
+                    PaymentInformation p = userMapper.paymentInformationDtoToPaymentInformation(e);
+                    p.setUser(toUpdateUser);
+                    paymentInformationList.add(p);
                 }
-                paymentInformation.setUser(toUpdateUser);
-                paymentInformation.setCreditCardName(updatedUser.getPaymentInformation().getCreditCardName());
-                paymentInformation.setCreditCardCvv(updatedUser.getPaymentInformation().getCreditCardCvv());
-                paymentInformation.setCreditCardExpirationDate(updatedUser.getPaymentInformation().getCreditCardExpirationDate());
-                paymentInformation.setCreditCardNr(updatedUser.getPaymentInformation().getCreditCardNr());
-                paymentInformationRepository.save(paymentInformation);
+                paymentInformationRepository.saveAll(paymentInformationList);
             }
             userRepository.save(toUpdateUser);
         } else {
             throw new ServiceException("No User found");
+        }
+    }
+
+    // removes all existing paymentInformations of updatedUser to owerwrite the new data
+    @Transactional
+    public void deletePaymentInformations(UserEditDto updatedUser) {
+        ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
+        List<PaymentInformation> paymentInformationList = paymentInformationRepository.findByUser(user);
+        for (PaymentInformation e : paymentInformationList) {
+            paymentInformationRepository.deleteById(e.getId());
+        }
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        LOGGER.debug("Delete user with the email {}", email);
+        if (email == null || userRepository.findUserByEmail(email) == null) {
+            throw new NotFoundException("No user found with the given e-mail address");
+        } else {
+            ApplicationUser userToDelete = userRepository.findUserByEmail(email);
+            userRepository.deleteById(userToDelete.getId());
         }
     }
 

@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @ActiveProfiles("test")
 public class UserMappingTest implements TestData {
+
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+    }
 
     @Test
     public void givenNothing_whenMapPaymentInformationDtoToEntity_thenEntityHasAllProperties() {
@@ -57,10 +68,10 @@ public class UserMappingTest implements TestData {
             () -> assertEquals(user.getDisabled(), userDto.getDisabled()),
             () -> assertEquals(user.getZip(), userDto.getZip()),
             () -> assertEquals(user.getStreet(), userDto.getStreet()),
-            () -> assertEquals(user.getPaymentInformation().getCreditCardCvv(), userDto.getPaymentInformation().getCreditCardCvv()),
-            () -> assertEquals(user.getPaymentInformation().getCreditCardName(), userDto.getPaymentInformation().getCreditCardName()),
-            () -> assertEquals(user.getPaymentInformation().getCreditCardExpirationDate(), userDto.getPaymentInformation().getCreditCardExpirationDate()),
-            () -> assertEquals(user.getPaymentInformation().getCreditCardNr(), userDto.getPaymentInformation().getCreditCardNr()),
+            () -> assertEquals(user.getPaymentInformation().get(0).getCreditCardCvv(), userDto.getPaymentInformation().get(0).getCreditCardCvv()),
+            () -> assertEquals(user.getPaymentInformation().get(0).getCreditCardName(), userDto.getPaymentInformation().get(0).getCreditCardName()),
+            () -> assertEquals(user.getPaymentInformation().get(0).getCreditCardExpirationDate(), userDto.getPaymentInformation().get(0).getCreditCardExpirationDate()),
+            () -> assertEquals(user.getPaymentInformation().get(0).getCreditCardNr(), userDto.getPaymentInformation().get(0).getCreditCardNr()),
             () -> assertEquals(user.getPhone(), userDto.getPhone()),
             () -> assertEquals(user.getPassword(), userDto.getPassword())
         );

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class NewsDto {
 
@@ -21,6 +22,7 @@ public class NewsDto {
 
     private String shortDescription;
     private String longDescription;
+    private List<PictureDto> pictures;
 
     public Long getId() {
         return id;
@@ -32,6 +34,10 @@ public class NewsDto {
 
     public EventDto getEvent() {
         return event;
+    }
+
+    public List<PictureDto> getPictures() {
+        return pictures;
     }
 
     public void setEvent(EventDto event) {
@@ -76,6 +82,10 @@ public class NewsDto {
 
     public LocalDateTime getCreateDate() {
         return createDate;
+    }
+
+    public void setPictures(List<PictureDto> pictures) {
+        this.pictures = pictures;
     }
 
     public static final class NewsDtoBuilder {

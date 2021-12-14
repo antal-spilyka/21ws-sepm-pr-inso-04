@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import javax.validation.constraints.NotNull;
 
 public class PaymentInformationDto {
+    private Long id;
+
     @NotNull(message = "creditCardName must not be null")
     private String creditCardName;
 
@@ -14,6 +16,14 @@ public class PaymentInformationDto {
 
     @NotNull(message = "creditCardCvv must not be null")
     private String creditCardCvv;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCreditCardName() {
         return creditCardName;
@@ -50,6 +60,7 @@ public class PaymentInformationDto {
     @Override
     public String toString() {
         return "PaymentInformationDto{"
+            + "id='" + id + '\''
             + "creditCardName='" + creditCardName + '\''
             + ", creditCardNr='" + creditCardNr + '\''
             + ", creditCardExpirationDate='" + creditCardExpirationDate + '\''

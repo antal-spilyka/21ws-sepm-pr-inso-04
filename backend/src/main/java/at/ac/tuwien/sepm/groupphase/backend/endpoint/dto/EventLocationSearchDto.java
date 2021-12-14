@@ -4,7 +4,6 @@ public class EventLocationSearchDto {
     private String city;
     private String state;
     private String country;
-    private String description;
     private String street;
     private String zip;
 
@@ -30,14 +29,6 @@ public class EventLocationSearchDto {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getStreet() {

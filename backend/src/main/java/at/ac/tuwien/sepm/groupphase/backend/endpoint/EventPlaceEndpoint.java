@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,31 +22,31 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.invoke.MethodHandles;
 
 @RestController
-@RequestMapping("/api/v1/eventplaces")
+@RequestMapping("/api/v1/eventplaces") // todo ist das nicht das gleiche iw EventLocationEndpoint
 public class EventPlaceEndpoint {
 
-    private EventPlaceService eventPlaceService;
+    private final EventPlaceService eventPlaceService;
+    private final EventPlaceMapper eventPlaceMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public EventPlaceEndpoint(EventPlaceService eventPlaceService) {
+    public EventPlaceEndpoint(EventPlaceService eventPlaceService, EventPlaceMapper eventPlaceMapper) {
         this.eventPlaceService = eventPlaceService;
+        this.eventPlaceMapper = eventPlaceMapper;
     }
 
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Find EventPlace by search parameters.")
     public ResponseEntity findEventPlace(EventPlaceSearchDto eventPlaceSearchDto) {
-        ResponseEntity response = new ResponseEntity(eventPlaceService.findEventPlace(eventPlaceSearchDto).stream(), HttpStatus.OK);
-        return response;
+        return new ResponseEntity(eventPlaceService.findEventPlace(eventPlaceSearchDto).stream(), HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new eventPlace.")
-    public ResponseEntity saveEventPlace(@RequestBody @Validated EventPlaceDto eventPlaceDto) {
+    public EventPlaceDto saveEventPlace(@RequestBody @Validated EventPlaceDto eventPlaceDto) {
         try {
-            ResponseEntity response = new ResponseEntity(eventPlaceService.save(eventPlaceDto), HttpStatus.CREATED);
-            return response;
+            return eventPlaceMapper.entityToDto(eventPlaceService.save(eventPlaceDto));
         } catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "EventPlace already exists:  " + e.getLocalizedMessage(), e);

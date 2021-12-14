@@ -9,7 +9,7 @@
 <h1 *ngIf="isAdmin()">Users</h1>
 
 <div *ngIf="isAdmin()">
-  <table *ngIf="this.userList && this.userList.length > 0" class="table table-striped">
+  <table *ngIf="this.userList" class="table table-striped">
     <thead>
     <tr>
       <th class="column">
@@ -44,7 +44,7 @@
       <td class="column"> {{getRole(user)}} </td>
       <td class="column"> {{getPhone(user)}} </td>
       <td class="column">
-        <mat-slide-toggle *ngIf="!(this.currentUser.email === user.email)" class="slider" (change)="setAdmin(user)"
+        <mat-slide-toggle *ngIf="!userEquals(user)" (change)="setAdmin(user)"
                           [(ngModel)]="user.admin">
         </mat-slide-toggle>
       </td>

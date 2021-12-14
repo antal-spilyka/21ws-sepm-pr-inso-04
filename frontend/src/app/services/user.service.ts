@@ -5,7 +5,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {User} from '../dtos/user';
 import {UpdateUserRequest} from '../dtos/updateUser-request';
-import {AdminRequest} from '../dtos/admin-request';
 
 @Injectable({
   providedIn: 'root'
@@ -64,10 +63,20 @@ export class UserService {
   /**
    * Changes the admin attribute of the given user.
    *
-   * @param request containing the user to be changed and the admin who sends the request.
+   * @param email of the user to be changed and the admin who sends the request.
    */
-  setAdmin(request: AdminRequest): Observable<string> {
-    console.log('Setting admin attribute of the user with email ' + request.email);
-    return this.httpClient.put(this.registerBaseUri + '/' + request.email, request, {responseType: 'text'});
+  setAdmin(email: string): Observable<string> {
+    console.log('Setting admin attribute of the user with email ' + email);
+    return this.httpClient.put(this.registerBaseUri + '/' + email, null, {responseType: 'text'});
+  }
+
+  /**
+   * Deletes the given user.
+   *
+   * @param user object to delete
+   */
+  deleteUser(user: User) {
+    console.log('Delete user with email ' + user.email);
+    return this.httpClient.delete<User>(this.registerBaseUri + '/' + user.email);
   }
 }

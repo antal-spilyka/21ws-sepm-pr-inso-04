@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import jwt_decode from 'jwt-decode';
 import {UserService} from '../../services/user.service';
@@ -11,6 +11,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {EditEmailDialogComponent} from './edit-email-dialog/edit-email-dialog.component';
 import {EditPasswordDialogComponent} from './edit-password-dialog/edit-password-dialog.component';
 import {PaymentInformation} from '../../dtos/paymentInformation';
+import {EditPaymentInformationDialogComponent} from './edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTable} from '@angular/material/table';
 
 export interface DialogData {
   email: string;
@@ -22,6 +24,8 @@ export interface DialogData {
   styleUrls: ['./edit-user.component.scss'],
 })
 export class EditUserComponent implements OnInit {
+  @ViewChild(MatTable) table: MatTable<any>;
+
   emailControl = new FormControl('', [Validators.required, Validators.email]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
   firstNameControl = new FormControl('', [Validators.required]);
@@ -34,24 +38,19 @@ export class EditUserComponent implements OnInit {
   streetControl = new FormControl('', [Validators.required]);
   salutationControl = new FormControl('mr', [Validators.required]);
 
-  creditCardNumberControl = new FormControl('', [Validators.required,
-    // eslint-disable-next-line max-len
-    Validators.pattern(/^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/im)]);
-
-  creditCardNameControl = new FormControl('', [Validators.required]);
-  creditCardExperationMonthControl = new FormControl('', [Validators.required,
-    Validators.pattern(/^0[1-9]|1[0-2]$/im)]);
-  creditCardExperationYearControl = new FormControl('', [Validators.required, Validators.pattern(/^19[5-9]\d|20[0-4]\d|2050$/im)]);
-  creditCardCvvControl = new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{3}$/im)]);
   disabledControl = new FormControl();
 
   errorMessage = '';
   error = false;
   countries = countries;
+  paymentInformations: PaymentInformation[];
+
+  displayedColumns: string[] = ['name', 'number', 'expirationDate', 'cvv', 'editButton', 'deleteButton'];
 
   user: User;
 
-  constructor(public dialog: MatDialog, private router: Router, private userService: UserService, private authService: AuthService) {
+  constructor(public dialog: MatDialog, private router: Router,
+              private userService: UserService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -82,14 +81,10 @@ export class EditUserComponent implements OnInit {
           this.phoneControl.setValue(user.phone);
           this.emailControl.setValue(user.email);
           this.disabledControl.setValue(user.disabled);
-          if (user.paymentInformation != null) {
-            this.creditCardNameControl.setValue(user.paymentInformation.creditCardName);
-            this.creditCardCvvControl.setValue(user.paymentInformation.creditCardCvv);
-            this.creditCardExperationMonthControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(0, 2));
-            this.creditCardExperationYearControl.setValue(user.paymentInformation.creditCardExpirationDate.substring(2));
-            this.creditCardNumberControl.setValue(user.paymentInformation.creditCardNr);
+          if (user.paymentInformation.length !== 0) {
+            this.paymentInformations = user.paymentInformation;
           }
-          console.log(this.user);
+          console.log(user);
         },
         error => {
           this.defaultServiceErrorHandling(error);
@@ -114,24 +109,29 @@ export class EditUserComponent implements OnInit {
     return '';
   }
 
-  updateUser() {
-    let paymentInformation: PaymentInformation = null;
-    if (this.creditCardCvvControl.valid && this.creditCardNumberControl.valid && this.creditCardExperationYearControl.valid &&
-      this.creditCardExperationMonthControl.valid && this.creditCardNameControl.valid) {
-      paymentInformation = {
-        creditCardName: this.creditCardNameControl.value,
-        creditCardCvv: this.creditCardCvvControl.value, creditCardNr: this.creditCardNumberControl.value,
-        creditCardExpirationDate: this.creditCardExperationMonthControl.value + this.creditCardExperationYearControl.value
-      };
+  deleteUser() {
+    if (window.confirm('Are you sure that you want to permanently delete your account?')) {
+      this.userService.deleteUser(this.user).subscribe({
+        next: () => {
+          this.authService.logoutUser();
+          this.router.navigate(['/login']);
+          window.alert('Successfully deleted the User');
+        },
+        error: (error) => {
+          window.alert('Error during deleting User: ' + error.error.message);
+        }
+      });
     }
+  }
 
+  updateUser() {
     const updatedUser: UpdateUserRequest = {
       email: this.user.email, newEmail: this.emailControl.value,
       admin: this.user.admin,
       firstName: this.firstNameControl.value, lastName: this.lastNameControl.value, phone: this.phoneControl.value,
       salutation: this.salutationControl.value, street: this.streetControl.value, zip: this.zipControl.value,
       country: this.countryControl.value, city: this.cityControl.value, password: this.user.password,
-      disabled: this.disabledControl.value, paymentInformation
+      disabled: this.disabledControl.value, paymentInformation: this.paymentInformations
     };
     if (this.emailControl.dirty && !(this.emailControl.value === this.user.email)) {     //email has changed
       const dialogRef = this.dialog.open(EditEmailDialogComponent);
@@ -189,12 +189,43 @@ export class EditUserComponent implements OnInit {
     });
   }
 
-  getToken() {
-    return localStorage.getItem('authToken');
+  editPaymentInformation(paymentInformation: PaymentInformation) {
+    const dialogRef = this.dialog.open(EditPaymentInformationDialogComponent, {
+      data: paymentInformation,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result != null) {
+        this.paymentInformations = this.paymentInformations.filter(obj => obj !== paymentInformation);
+        this.paymentInformations.push(result);
+        this.table.renderRows();
+      }
+    });
   }
 
-  setToken(authResponse: string) {
-    localStorage.setItem('authToken', authResponse);
+  addPaymentInformation() {
+    const dialogRef = this.dialog.open(EditPaymentInformationDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result != null) {
+        if (!this.paymentInformations) {
+          this.paymentInformations = [];
+        }
+        this.paymentInformations.push(result);
+        this.table.renderRows();
+      }
+    });
+  }
+
+  deletePaymentInformation(paymentInformation: PaymentInformation) {
+    this.paymentInformations = this.paymentInformations.filter(obj => obj !== paymentInformation);
+    this.table.renderRows();
+  }
+
+  getToken() {
+    return localStorage.getItem('authToken');
   }
 
   defaultServiceErrorHandling(error: any) {

@@ -3,13 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserAdminDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,9 +45,6 @@ public class UserEndpointTest implements TestData {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    @Autowired
     private SecurityProperties securityProperties;
 
     @BeforeEach
@@ -84,7 +79,7 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // this should be changed to the event list route in the future
-        MvcResult mvcResult3 = this.mockMvc.perform(get(MESSAGE_BASE_URI)
+        MvcResult mvcResult3 = this.mockMvc.perform(get(EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), response2.getContentAsString()))
@@ -264,7 +259,7 @@ public class UserEndpointTest implements TestData {
             .withCountry("AL").withDisabled(false).withFirstName("Gucci").withLastName("King").withPhone("0664 123 456")
             .withSalutation("mr").withStreet("street 1").withZip("1010").build();
 
-        // Post first user
+        // Register first user
         String body = objectMapper.writeValueAsString(user);
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -274,7 +269,7 @@ public class UserEndpointTest implements TestData {
         MockHttpServletResponse response1 = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
 
-        // Post second User
+        // Register second User
         body = objectMapper.writeValueAsString(toUpdateUser);
         mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -371,12 +366,43 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // Make user admin
-        String body3 = objectMapper.writeValueAsString(UserAdminDto.UserAdminDtoBuilder.anUserAdminDto()
-            .withEmail(user2.getEmail()).withAdminEmail(user1.getEmail()).withAdmin(true).build());
         MvcResult mvcResult3 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
-                .header(securityProperties.getAuthHeader(), response2.getContentAsString())
+                .header(securityProperties.getAuthHeader(), response2.getContentAsString()))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
+    }
+
+    @Test
+    public void deletingOthersAccountShouldReturnHttpStatusForbidden() throws Exception {
+        String body = objectMapper.writeValueAsString(user1);
+
+        // Register user to be changed
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(body3))
+                .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+
+
+        String body2 = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user1.getEmail()).withPassword(user1.getPassword()).build());
+
+        // Login
+        MvcResult mvcResult2 = this.mockMvc.perform(post(AUTHENTICATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body2))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        MvcResult mvcResult3 = this.mockMvc.perform(put(USER_BASE_URI + "/" + user2.getEmail())
+            .header(securityProperties.getAuthHeader(), response2.getContentAsString()))
             .andDo(print())
             .andReturn();
 

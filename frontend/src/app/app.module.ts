@@ -9,7 +9,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -48,6 +47,12 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
 import {HallplanElementComponent} from './components/create-hallplan/components/hallplan-element/hallplan-element.component';
 import {MatRadioModule} from '@angular/material/radio';
+import { EditPaymentInformationDialogComponent } from
+    './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
+import {MatTableModule} from '@angular/material/table';
+import { NewsViewComponent } from './components/news-view/news-view.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -57,7 +62,6 @@ import {MatRadioModule} from '@angular/material/radio';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    MessageComponent,
     EditUserComponent,
     EditEmailDialogComponent,
     EditPasswordDialogComponent,
@@ -74,7 +78,9 @@ import {MatRadioModule} from '@angular/material/radio';
     SearchArtistComponent,
     SearchLocationComponent,
     SearchEventsComponent,
-    SearchTimeComponent
+    SearchTimeComponent,
+    EditPaymentInformationDialogComponent,
+    NewsViewComponent
   ],
   imports: [
     BrowserModule,
@@ -101,7 +107,11 @@ import {MatRadioModule} from '@angular/material/radio';
     MatNativeDateModule,
     MatSlideToggleModule,
     MatGridListModule,
-    MatRadioModule
+    MatRadioModule,
+    MatGridListModule,
+    NgImageSliderModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

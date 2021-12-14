@@ -4,6 +4,5 @@ export class Address {
   state: string;
   zip: string;
   country: string;
-  description: string;
   street: string;
 }

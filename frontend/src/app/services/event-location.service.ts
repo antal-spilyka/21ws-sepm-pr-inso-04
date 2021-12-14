@@ -32,9 +32,6 @@ export class EventLocationService {
     if(searchAddress.country !== '' && searchAddress.country !== null ){
       params=params.set('country', searchAddress.country.trim());
     }
-    if(searchAddress.description !== '' && searchAddress.description !== null){
-      params=params.set('description', searchAddress.description.trim());
-    }
     if(searchAddress.street !== '' && searchAddress.street !== null){
       params=params.set('street', searchAddress.street.trim());
     }

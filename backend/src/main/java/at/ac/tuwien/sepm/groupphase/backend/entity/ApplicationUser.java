@@ -2,14 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ApplicationUser {
@@ -50,10 +52,10 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToOne(cascade = CascadeType.ALL,
-        fetch = FetchType.LAZY,
+    @OneToMany(cascade = CascadeType.REMOVE,
+        fetch = FetchType.EAGER,
         mappedBy = "user")
-    private PaymentInformation paymentInformation;
+    private List<PaymentInformation> paymentInformation = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean disabled;
@@ -195,12 +197,16 @@ public class ApplicationUser {
         this.lockedCounter = lockedCounter;
     }
 
-    public PaymentInformation getPaymentInformation() {
+    public List<PaymentInformation> getPaymentInformation() {
         return paymentInformation;
     }
 
-    public void setPaymentInformation(PaymentInformation paymentInformation) {
+    public void setPaymentInformation(List<PaymentInformation> paymentInformation) {
         this.paymentInformation = paymentInformation;
+    }
+
+    public void addPaymentInformation(PaymentInformation paymentInformation) {
+        this.paymentInformation.add(paymentInformation);
     }
 
     @Override
@@ -338,7 +344,9 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
-            applicationUser.setPaymentInformation(paymentInformation);
+            if (paymentInformation != null) {
+                applicationUser.addPaymentInformation(paymentInformation);
+            }
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

@@ -1,25 +1,100 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Event {
-    Long id;
-    String name;
-    Integer duration;
-    String content;
-    LocalDateTime dateTime;
-    Category category;
-    Room room;
-    Artist artist;
-    String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(nullable = false)
+    private Long duration;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<Performance> performances = new ArrayList<>();
+
+    @OneToOne
+    private EventPlace eventPlace;
+
+    @Column
+    private String description;
+
+    @Column (nullable = false)
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public List<Performance> getPerformances() {
+        return performances;
+    }
+
+    public void setPerformances(List<Performance> performances) {
+        this.performances = performances;
+    }
+
+    public EventPlace getEventPlace() {
+        return eventPlace;
+    }
+
+    public void setEventPlace(EventPlace eventPlace) {
+        this.eventPlace = eventPlace;
+    }
 
     public String getDescription() {
         return description;
@@ -29,77 +104,24 @@ public class Event {
         this.description = description;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
+    @Override
+    public String toString() {
+        String performanceToString;
+        if (performances == null || performances.size() <= 0) {
+            performanceToString = "null";
+        } else {
+            performanceToString = performances.toString();
+        }
 
-    @Column(nullable = false, length = 100)
-    public String getName() {
-        return name;
-    }
-
-    @Column(nullable = false, length = 100)
-    public Integer getDuration() {
-        return duration;
-    }
-
-    @Column(nullable = false, length = 1000)
-    public String getContent() {
-        return content;
-    }
-
-    @Column(nullable = false)
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    @ManyToOne()
-    public Category getCategory() {
-        return category;
-    }
-
-    @ManyToOne()
-    public Room getRoom() {
-        return room;
-    }
-
-    @ManyToOne()
-    public Artist getArtist() {
-        return artist;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public void setArtist(Artist artist) {
-        this.artist = artist;
+        return "Event{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", startTime=" + startTime +
+            ", duration=" + duration +
+            ", performances=" + performanceToString +
+            ", eventPlace=" + eventPlace +
+            ", description='" + description + '\'' +
+            '}';
     }
 
     @Override
@@ -107,34 +129,18 @@ public class Event {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Event)) {
             return false;
         }
         Event event = (Event) o;
-        return Objects.equals(id, event.id)
-            && Objects.equals(name, event.name)
-            && Objects.equals(duration, event.duration)
-            && Objects.equals(content, event.content)
-            && Objects.equals(dateTime, event.dateTime)
-            && Objects.equals(category, event.category)
-            && Objects.equals(room, event.room);
+        return Objects.equals(id, event.id) && Objects.equals(name, event.name)
+            && Objects.equals(startTime, event.startTime) && Objects.equals(duration, event.duration)
+            && Objects.equals(performances, event.performances) && Objects.equals(eventPlace, event.eventPlace)
+            && Objects.equals(description, event.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, duration, content, dateTime, category, room);
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", duration=" + duration +
-            ", content='" + content + '\'' +
-            ", dateTime=" + dateTime +
-            ", category=" + category +
-            ", room=" + room +
-            '}';
+        return Objects.hash(id, name, startTime, duration, performances, eventPlace, description);
     }
 }

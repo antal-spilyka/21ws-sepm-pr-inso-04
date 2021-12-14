@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class UserEditDto {
@@ -47,7 +49,7 @@ public class UserEditDto {
     @NotNull(message = "Disabled must not be null")
     private Boolean disabled;
 
-    private PaymentInformationDto paymentInformation;
+    private List<PaymentInformationDto> paymentInformation = new ArrayList<>();
 
     public String getEmail() {
         return email;
@@ -145,12 +147,16 @@ public class UserEditDto {
         this.zip = zip;
     }
 
-    public PaymentInformationDto getPaymentInformation() {
+    public List<PaymentInformationDto> getPaymentInformation() {
         return paymentInformation;
     }
 
-    public void setPaymentInformation(PaymentInformationDto paymentInformation) {
+    public void setPaymentInformation(List<PaymentInformationDto> paymentInformation) {
         this.paymentInformation = paymentInformation;
+    }
+
+    public void addPaymentInformation(PaymentInformationDto paymentInformation) {
+        this.paymentInformation.add(paymentInformation);
     }
 
     public void setDisabled(Boolean disabled) {
@@ -297,7 +303,9 @@ public class UserEditDto {
             userEditDto.setStreet(street);
             userEditDto.setZip(zip);
             userEditDto.setDisabled(disabled);
-            userEditDto.setPaymentInformation(paymentInformation);
+            if (paymentInformation != null) {
+                userEditDto.addPaymentInformation(paymentInformation);
+            }
             return userEditDto;
         }
     }
