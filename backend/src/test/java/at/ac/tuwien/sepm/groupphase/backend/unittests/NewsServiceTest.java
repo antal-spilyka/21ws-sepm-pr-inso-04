@@ -324,6 +324,8 @@ public class NewsServiceTest implements TestData {
         userRepository.save(TestData.user1);
 
         // Size of new news before read operation
+        int oldSize = newsService.getOldNews(TestData.user1.getEmail()).size();
+        // Size of new news before read operation
         int newSize = newsService.getNewNews(TestData.user1.getEmail()).size();
 
         SimpleSeenNewsDto simpleSeenNewsDto = new SimpleSeenNewsDto();
@@ -331,8 +333,8 @@ public class NewsServiceTest implements TestData {
         simpleSeenNewsDto.setUserEmail(TestData.user1.getEmail());
         newsService.readNews(simpleSeenNewsDto);
 
-        assertEquals(1, newsService.getOldNews(TestData.user1.getEmail()).size());
-        assertEquals(0, newsService.getNewNews(TestData.user1.getEmail()).size());
+        assertEquals(oldSize + 1, newsService.getOldNews(TestData.user1.getEmail()).size());
+        assertEquals(newSize - 1, newsService.getNewNews(TestData.user1.getEmail()).size());
     }
 
     @Test
@@ -392,11 +394,6 @@ public class NewsServiceTest implements TestData {
         simpleSeenNewsDto.setUserEmail(TestData.user1.getEmail());
         newsService.readNews(simpleSeenNewsDto);
         userRepository.save(user1);
-
-        assertAll(
-            () -> assertEquals(1, userService.findUsers(null).size()),
-            () -> assertEquals(1, userService.findUsers("user").size())
-        );
 
         userService.deleteUser(user1.getEmail());
 
