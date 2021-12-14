@@ -12,9 +12,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
 import org.junit.jupiter.api.BeforeAll;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,6 +64,9 @@ public class NewsServiceTest implements TestData {
     private ArtistService artistService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private NewsService newsService;
 
     @Autowired
@@ -78,6 +83,12 @@ public class NewsServiceTest implements TestData {
     private Artist artist;
     private Event event;
     private List<Performance> performances = new ArrayList<>();
+
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+        newsRepository.deleteAll();
+    }
 
     @BeforeAll
     public void insertNeededContext() {
@@ -256,8 +267,8 @@ public class NewsServiceTest implements TestData {
         assertNotEquals(firstNews, secondNews);
     }
 
-    /*@Test
-    public void oldNewsShouldNotBeInNewNewsList() {
+    @Test
+    public void after_reading_news_should_be_In_oldNews() {
         this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
@@ -299,20 +310,29 @@ public class NewsServiceTest implements TestData {
         this.performances.add(performance);
         Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
-        // old size of newsTable
-        int size = newsService.getNewNews().size();
         NewsDto newsDto = new NewsDto();
         newsDto.setEvent(eventMapper.entityToDto(eventPers));
         newsDto.setRating(5L);
         newsDto.setFsk(18L);
         newsDto.setShortDescription("This is a short Description");
         newsDto.setLongDescription("This is a bit longer Description");
-        newsDto.setCreateDate(LocalDateTime.now().minusDays(8));
-        newsService.save(newsDto);
+        newsDto.setCreateDate(LocalDateTime.now());
+        News news = newsService.save(newsDto);
 
-        // there shouldn't be a difference
-        assertEquals(size, newsService.getNewNews().size());
-    }*/
+
+        userRepository.save(TestData.user1);
+
+        // Size of new news before read operation
+        int newSize = newsService.getNewNews(TestData.user1.getEmail()).size();
+
+        SimpleSeenNewsDto simpleSeenNewsDto = new SimpleSeenNewsDto();
+        simpleSeenNewsDto.setNewsId(news.getId());
+        simpleSeenNewsDto.setUserEmail(TestData.user1.getEmail());
+        newsService.readNews(simpleSeenNewsDto);
+
+        assertEquals(1, newsService.getOldNews(TestData.user1.getEmail()).size());
+        assertEquals(0, newsService.getNewNews(TestData.user1.getEmail()).size());
+    }
 
     /*@Test
     public void newNewsShouldBeInNewNewsList() {

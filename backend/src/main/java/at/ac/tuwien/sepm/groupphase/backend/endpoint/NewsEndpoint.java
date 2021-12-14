@@ -77,6 +77,7 @@ public class NewsEndpoint {
     }
 
     @PostMapping("/read")
+    @PermitAll
     @ResponseStatus(HttpStatus.CREATED)
     public NewsDto readNews(@RequestBody SimpleSeenNewsDto simpleSeenNewsDto) {
         LOGGER.info("POST /api/v1/news/read : readNews");
