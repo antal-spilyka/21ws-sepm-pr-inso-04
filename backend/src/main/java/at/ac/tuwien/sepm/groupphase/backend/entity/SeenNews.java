@@ -1,34 +1,32 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 @Entity
-public class SeenNews {
+@IdClass(SeenNewsKey.class)
+public class SeenNews implements Serializable {
     @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     private ApplicationUser user;
 
-    @OneToOne
-    @JoinColumn(nullable = false, name = "news_id")
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "newsId", nullable = false)
     private News news;
 
-    public Long getId() {
-        return id;
+    public SeenNews(ApplicationUser user, News news) {
+        this.user = user;
+        this.news = news;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public SeenNews() {
+
     }
 
     public ApplicationUser getUser() {
@@ -50,7 +48,6 @@ public class SeenNews {
     @Override
     public String toString() {
         return "SeenNews{"
-            + "id=" + id
             + ", user=" + user
             + ", news=" + news
             + '}';

@@ -99,9 +99,10 @@ public class NewsServiceImpl implements NewsService {
         LOGGER.debug("Get news by id");
         try {
             News news = newsRepository.getById(simpleSeenNewsDto.getNewsId());
+            ApplicationUser user = userRepository.findUserByEmail(simpleSeenNewsDto.getUserEmail());
             SeenNews seenNews = new SeenNews();
             seenNews.setNews(news);
-            seenNews.setUser(userRepository.findUserByEmail(simpleSeenNewsDto.getUserEmail()));
+            seenNews.setUser(user);
             seenNewsRepository.save(seenNews);
 
             List<Picture> pictures = pictureRepository.findByNewsId(news);

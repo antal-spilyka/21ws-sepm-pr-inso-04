@@ -19,4 +19,12 @@ public class SimpleSeenNewsDto {
     public void setNewsId(Long newsId) {
         this.newsId = newsId;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleSeenNewsDto{"
+            + "userEmail='" + userEmail + '\''
+            + ", newsId=" + newsId
+            + '}';
+    }
 }
