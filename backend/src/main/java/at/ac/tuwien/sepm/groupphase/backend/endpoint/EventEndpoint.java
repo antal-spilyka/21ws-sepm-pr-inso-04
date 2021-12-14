@@ -78,8 +78,16 @@ public class EventEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/{id}/performances")
     @Operation(summary = "Find performances for specified event.")
-    public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
+    public Stream<PerformanceDto> findPerformancesByEvent(@PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/events/{}/performances", id);
         return this.eventService.getPerformances(id);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/location/{id}/performances")
+    @Operation(summary = "Find performances for specified location.")
+    public Stream<PerformanceDto> findPerformancesByLocation(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/events/location/{}/performances", id);
+        return this.eventService.getPerformancesByLocation(id);
     }
 }

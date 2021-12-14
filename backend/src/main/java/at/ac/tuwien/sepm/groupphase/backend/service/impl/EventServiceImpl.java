@@ -129,11 +129,33 @@ public class EventServiceImpl implements EventService {
         try {
             Event event = eventRepository.getById(id);
             List<Performance> performances = event.getPerformances();
-            List<Performance> performancesCopy = new  ArrayList<>();
+            List<Performance> performancesCopy = new ArrayList<>();
             for (Performance performance : performances) {
                 Performance copyPerformance = new Performance(performance.getId(), performance.getName(), performance.getStartTime(),
                     performance.getDuration(), null, performance.getArtist(), performance.getHall());
                 performancesCopy.add(copyPerformance);
+            }
+            Stream<PerformanceDto> performanceDtoStream = performancesCopy.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+            return performanceDtoStream;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public Stream<PerformanceDto> getPerformancesByLocation(Long id) {
+        LOGGER.debug("Handling in service {}", id);
+        try {
+            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(0, 15));
+            List<Performance> performancesCopy = new ArrayList<>();
+            for (Event event : events) {
+                List<Performance> performances = event.getPerformances();
+                for (Performance performance : performances) {
+                    Performance copyPerformance = new Performance(performance.getId(), performance.getName(), performance.getStartTime(),
+                        performance.getDuration(), null, performance.getArtist(), performance.getHall());
+                    performancesCopy.add(copyPerformance);
+                }
             }
             Stream<PerformanceDto> performanceDtoStream = performancesCopy.stream().map(performance -> performanceMapper.entityToDto(performance, null));
             return performanceDtoStream;

@@ -64,4 +64,7 @@ export class EventService {
   findPerformancesByEvent(id: number): Observable<Performance[]> {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/' + id + '/performances');
   }
+  findPerformancesByLocation(id: number): Observable<Performance[]> {
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/location/' + id + '/performances');
+  }
 }

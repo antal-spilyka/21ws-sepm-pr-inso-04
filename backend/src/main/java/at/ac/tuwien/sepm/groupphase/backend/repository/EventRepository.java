@@ -32,8 +32,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
-    //Event findById(Long id, Pageable pageable);
-
     /**
      * Finds all the events which suit the criteria from parameters.
      *
@@ -61,4 +59,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventsWithoutDateTime(@Param("eventName") String eventName, @Param("hall") Long hallId);
 
     List<Event> findByNameContainsIgnoreCase(String name);
+
+    @Query("SELECT e FROM Event e WHERE :id=e.eventPlace.address.id")
+    List<Event> findEventsByLocation(@Param("id") Long id, Pageable pageable);
 }

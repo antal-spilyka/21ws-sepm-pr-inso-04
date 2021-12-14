@@ -61,6 +61,11 @@
               <span>ZIP-Code: {{eventLocation.zip}}</span>
               <span>State: {{eventLocation.state}}</span>
               <span>Country: {{eventLocation.country}}</span>
+              <div>
+                <button type="submit" class="button" mat-raised-button color="primary"
+                        (click)="loadPerformances(eventLocation)">Performances
+                </button>
+              </div>
             </div>
           </td>
         </tr>
