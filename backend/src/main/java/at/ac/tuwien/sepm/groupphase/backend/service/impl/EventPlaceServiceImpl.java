@@ -46,34 +46,11 @@ public class EventPlaceServiceImpl implements EventPlaceService {
 
     @Transactional
     @Override
-    public List<EventPlace> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto) {
+    public List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto) {
         LOGGER.debug("Handling in Service {}", eventPlaceSearchDto);
         try {
-            return eventPlaceRepository.findEventPlace(eventPlaceSearchDto.getName(), PageRequest.of(0, 2));
-        } catch (PersistenceException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
-
-    @Transactional
-    @Override
-    public EventPlace findEventPlace(EventPlaceDto eventPlace) {
-        LOGGER.debug("Handling in Service {}", eventPlace);
-        try {
-            Address address;
-            if (eventPlace.getId() != null) {
-                address = addressRepository.getById(eventPlace.getAddressDto().getId());
-            } else {
-                address = addressRepository.save(addressMapper.dtoToEntity(eventPlace.getAddressDto()));
-            }
-            eventPlace.setAddressDto(addressMapper.entityToDto(address));
-            EventPlace newEventPlace = eventPlaceRepository.findByIdEquals(eventPlace.getId());
-            if (newEventPlace == null) {
-                newEventPlace = eventPlaceRepository.save(eventPlaceMapper.dtoToEntity(eventPlace));
-            }
-            return newEventPlace;
-        } catch (EntityExistsException e) {
-            throw new ContextException(e);
+            List<EventPlace> eventPlaces = eventPlaceRepository.findEventPlace(eventPlaceSearchDto.getName(), PageRequest.of(0, 2));
+            return eventPlaces.stream().map(eventPlace -> eventPlaceMapper.entityToDto(eventPlace)).collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }

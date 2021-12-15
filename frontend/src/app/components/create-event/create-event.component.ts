@@ -43,5 +43,6 @@ export class CreateEventComponent implements OnInit {
       this.selectedEvent = event;
       this.step = Step.performances;
     }
+    this.vanishError();
   };
 }

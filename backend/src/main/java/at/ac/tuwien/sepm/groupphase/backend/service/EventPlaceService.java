@@ -23,9 +23,7 @@ public interface EventPlaceService {
      * @return List of eventPlaces matching properties
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<EventPlace> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
-
-    EventPlace findEventPlace(EventPlaceDto eventPlace); // TODO delete
+    List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
     /**
      * Finds eventLocations with matching properties.

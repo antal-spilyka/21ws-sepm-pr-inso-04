@@ -22,7 +22,7 @@ export class PerformanceService {
    * @param searchEvent dto for storing the search information.
    * @returns an array of events which suit the search query.
    */
-  findPerformanceByDateTime(searchEvent: PerformanceSearchDto): Observable<Performance[]>{
+  findPerformanceByDateTime(searchEvent: PerformanceSearchDto): Observable<Performance[]> {
     let params = new HttpParams();
     if(searchEvent.startTime && searchEvent.startTime !== ''){
       params=params.set('startTime', searchEvent.startTime);
@@ -34,5 +34,10 @@ export class PerformanceService {
       params=params.set('hallName', searchEvent.hallName.trim());
     }
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/search', { params });
+  }
+
+  savePerformace(performance: Performance): Observable<Performance> {
+    console.log(performance);
+    return this.httpClient.post<Performance>(this.messageBaseUri, performance);
   }
 }

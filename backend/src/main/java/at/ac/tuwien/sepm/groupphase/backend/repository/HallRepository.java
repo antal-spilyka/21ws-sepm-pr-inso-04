@@ -37,7 +37,7 @@ public interface HallRepository extends JpaRepository<Hall, Long> {
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
     @Query("SELECT r FROM Hall r WHERE :name is null OR :name='' OR UPPER(r.name) LIKE UPPER(CONCAT('%', :name, '%'))")
-    List<Hall> findHall(@Param("name") String name);
+    List<Hall> findHall(@Param("name") String name, Pageable pageable);
 
     /**
      * Gets Hall by primary key (id).

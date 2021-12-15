@@ -7,7 +7,7 @@ public class PerformanceDto {
     private String name;
     private LocalDateTime startTime;
     private Long duration;
-    private EventDto event;
+    private EventDto eventDto;
     private ArtistDto artist;
     private HallDto hall;
 
@@ -43,12 +43,12 @@ public class PerformanceDto {
         this.duration = duration;
     }
 
-    public EventDto getEvent() {
-        return event;
+    public EventDto getEventDto() {
+        return eventDto;
     }
 
-    public void setEvent(EventDto event) {
-        this.event = event;
+    public void setEventDto(EventDto eventDto) {
+        this.eventDto = eventDto;
     }
 
     public ArtistDto getArtist() {
