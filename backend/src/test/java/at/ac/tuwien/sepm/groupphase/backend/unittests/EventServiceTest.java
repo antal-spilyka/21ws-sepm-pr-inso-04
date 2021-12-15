@@ -189,7 +189,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void getPerformances_for_existing_eventID(){
+    public void getPerformances_for_event_withPerformances(){
         Event testEvent = new Event();
         testEvent.setName("TestPerformances");
         testEvent.setStartTime(LocalDateTime.now());
@@ -217,7 +217,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void getPerformances_for_event_withNoPerformances(){
+    public void getPerformances_for_event_withoutPerformances(){
         Event testEvent = new Event();
         testEvent.setName("TestPerformances");
         testEvent.setStartTime(LocalDateTime.now());
@@ -227,6 +227,61 @@ public class EventServiceTest {
         testEvent.setCategory("TestPerformancesCategory");
         Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
         Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertTrue(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(testEvent);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        List<Performance> testPerformances = new ArrayList<>();
+        testPerformances.add(performance);
+        testEvent.setPerformances(testPerformances);
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertFalse(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withoutPerformances(){
+
+        AddressDto testAddressDto = new AddressDto();
+        testAddressDto.setStreet("testLocationStreet");
+        testAddressDto.setCity("testLocationCity");
+        testAddressDto.setCountry("testLocationCountry");
+        testAddressDto.setState("testLocationState");
+        testAddressDto.setZip("0000");
+
+        EventPlaceDto testEventPlaceDto = new EventPlaceDto();
+        testEventPlaceDto.setAddressDto(addressDto);
+        testEventPlaceDto.setName("testLocationEventPlace");
+        EventPlace testEventPlace = eventPlaceService.save(testEventPlaceDto);
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(testEventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(testEventPlace.getAddress().getId());
         List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
         assertTrue(perfList.isEmpty());
     }

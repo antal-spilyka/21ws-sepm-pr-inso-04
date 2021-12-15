@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class PerformanceDto {
     private Long id;
@@ -65,6 +66,25 @@ public class PerformanceDto {
 
     public void setHall(HallDto hall) {
         this.hall = hall;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PerformanceDto that = (PerformanceDto) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(startTime, that.startTime)
+               && Objects.equals(duration, that.duration) && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
+               && Objects.equals(hall, that.hall);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, startTime, duration, event, artist, hall);
     }
 
     @Override
