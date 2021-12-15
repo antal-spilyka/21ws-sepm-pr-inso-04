@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.aspectj.lang.annotation.Before;
@@ -36,14 +37,16 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.seenNewsRepository = seenNewsRepository;
     }
 
     @Override
@@ -176,12 +179,14 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String email) {
         LOGGER.debug("Delete user with the email {}", email);
         if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new NotFoundException("No user found with the given e-mail address");
         } else {
             ApplicationUser userToDelete = userRepository.findUserByEmail(email);
+            seenNewsRepository.deleteByUser(userToDelete);
             userRepository.deleteById(userToDelete.getId());
         }
     }

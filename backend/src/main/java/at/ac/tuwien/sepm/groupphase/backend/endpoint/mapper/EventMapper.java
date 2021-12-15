@@ -26,7 +26,7 @@ public class EventMapper {
 
     public EventDto entityToDto(Event event) {
         LOGGER.trace("Mapping {}", event);
-        LOGGER.info("mapping " + event);
+        //LOGGER.info("mapping " + event);
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
         eventDto.setName(event.getName());
@@ -45,7 +45,7 @@ public class EventMapper {
         } else {
             eventDto.setPerformances(null);
         }
-        LOGGER.info("mapped" + eventDto);
+        //LOGGER.info("mapped" + eventDto);
         return eventDto;
     }
 

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import {NewsService} from '../../services/news.service';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import jwt_decode from 'jwt-decode';
 import {SimpleNewsDto} from '../../dtos/simpleNewsDto';
 
 @Component({
-  selector: 'app-news-main-page',
-  templateUrl: './news-main-page.component.html',
-  styleUrls: ['./news-main-page.component.scss']
+  selector: 'app-old-news',
+  templateUrl: './old-news.component.html',
+  styleUrls: ['./old-news.component.scss']
 })
-export class NewsMainPageComponent implements OnInit {
+export class OldNewsComponent implements OnInit {
 
   news: SimpleNewsDto[];
   error = false;
@@ -21,15 +21,8 @@ export class NewsMainPageComponent implements OnInit {
     this.loadNews();
   }
 
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
-  }
-
   loadNews(): void {
-    this.newsService.getNewNews(this.getEmail()).subscribe(
+    this.newsService.getOldNews(this.getEmail()).subscribe(
       (news: SimpleNewsDto[]) => {
         this.news = news;
         console.log(this.news);
@@ -67,15 +60,18 @@ export class NewsMainPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Error flag will be deactivated, which clears the error message
+   */
+  vanishError() {
+    this.error = false;
+  }
+
   redirect(news: SimpleNewsDto) {
     console.log(news);
     if(news.id) {
       this.router.navigateByUrl(`/news/${news.id}`);
     }
-  }
-
-  redirectToOldNews() {
-    this.router.navigateByUrl(`/oldNews`);
   }
 
 }
