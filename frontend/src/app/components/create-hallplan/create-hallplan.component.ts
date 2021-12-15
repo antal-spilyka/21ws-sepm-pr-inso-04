@@ -26,7 +26,7 @@ export class CreateHallplanComponent implements OnInit {
 
   radioControl = new FormControl(HallplanElementType.seat);
   editModes = HallplanElementType;
-  page = 1;
+  page = 0;
   nameControl = new FormControl('', [Validators.required]);
   eventPlaceId: string;
 
