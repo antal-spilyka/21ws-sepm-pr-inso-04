@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {SimpleSeenNewsDto} from '../dtos/simpleSeenNewsDto';
+import {SimpleNewsDto} from "../dtos/simpleNewsDto";
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +32,9 @@ export class NewsService {
    * @param email from the loggedIn User.
    * @return observable list of found news.
    */
-  getNewNews(email: string): Observable<News[]> {
+  getNewNews(email: string): Observable<SimpleNewsDto[]> {
     console.log('Load all new news');
-    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email + '/new');
+    return this.httpClient.get<SimpleNewsDto[]>(this.newsBaseUri+ '/' + email + '/new');
   }
 
   /**
@@ -42,9 +43,9 @@ export class NewsService {
    * @param email from the loggedIn User.
    * @return observable list of found news.
    */
-  getOldNews(email: string): Observable<News[]> {
+  getOldNews(email: string): Observable<SimpleNewsDto[]> {
     console.log('Load all old news');
-    return this.httpClient.get<News[]>(this.newsBaseUri+ '/' + email + '/old');
+    return this.httpClient.get<SimpleNewsDto[]>(this.newsBaseUri+ '/' + email + '/old');
   }
 
   /**

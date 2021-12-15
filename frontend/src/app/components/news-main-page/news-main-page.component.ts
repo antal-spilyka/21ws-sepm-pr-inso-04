@@ -3,6 +3,7 @@ import {NewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
+import {SimpleNewsDto} from "../../dtos/simpleNewsDto";
 
 @Component({
   selector: 'app-news-main-page',
@@ -11,7 +12,7 @@ import jwt_decode from 'jwt-decode';
 })
 export class NewsMainPageComponent implements OnInit {
 
-  news: News[];
+  news: SimpleNewsDto[];
   error = false;
   errorMessage = '';
 
@@ -30,7 +31,7 @@ export class NewsMainPageComponent implements OnInit {
 
   loadNews(): void {
     this.newsService.getNewNews(this.getEmail()).subscribe(
-      (news: News[]) => {
+      (news: SimpleNewsDto[]) => {
         this.news = news;
         console.log(this.news);
         this.formatDate();
@@ -49,7 +50,7 @@ export class NewsMainPageComponent implements OnInit {
   formatDate(): void {
     for (const val of this.news) {
       val.createDate = new Date(val.createDate);
-      val.event.startTime = new Date(val.event.startTime);
+      val.eventDate = new Date(val.eventDate);
     }
   }
 
@@ -67,11 +68,15 @@ export class NewsMainPageComponent implements OnInit {
     }
   }
 
-  redirect(news: News) {
+  redirect(news: SimpleNewsDto) {
     console.log(news);
     if(news.id) {
       this.router.navigateByUrl(`/news/${news.id}`);
     }
+  }
+
+  redirectToOldNews() {
+    this.router.navigateByUrl(`/oldNews`);
   }
 
 }

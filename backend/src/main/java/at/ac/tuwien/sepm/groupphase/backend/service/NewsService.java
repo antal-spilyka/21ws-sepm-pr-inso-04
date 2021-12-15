@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 
@@ -20,12 +21,12 @@ public interface NewsService {
     /**
      * Returns a list of all unseen news.
      */
-    List<News> getNewNews(String email);
+    List<SimpleNewsDto> getNewNews(String email);
 
     /**
      * Returns a list of all seen news.
      */
-    List<News> getOldNews(String email);
+    List<SimpleNewsDto> getOldNews(String email);
 
     /**
      * Returns NewsDto with id.

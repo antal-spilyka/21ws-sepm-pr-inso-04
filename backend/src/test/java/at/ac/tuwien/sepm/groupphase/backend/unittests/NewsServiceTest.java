@@ -12,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PictureRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
@@ -82,6 +83,9 @@ public class NewsServiceTest implements TestData {
     @Autowired
     private NewsMapper newsMapper;
 
+    @Autowired
+    private PictureRepository pictureRepository;
+
     private HallDto hallDto;
     private Hall hall;
     private AddressDto addressDto;
@@ -94,6 +98,7 @@ public class NewsServiceTest implements TestData {
     @BeforeEach
     public void beforeEach() {
         seenNewsRepository.deleteAll();
+        pictureRepository.deleteAll();
         newsRepository.deleteAll();
         userRepository.deleteAll();
     }

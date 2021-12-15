@@ -30,7 +30,10 @@ public class News {
     @Column(nullable = false)
     private LocalDateTime createDate;
 
+    @Column(columnDefinition = "VARCHAR(255)")
     private String shortDescription;
+
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String longDescription;
 
     public Long getId() {

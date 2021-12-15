@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -55,10 +56,10 @@ public class NewsEndpoint {
     @GetMapping("/{email}/new")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public List<NewsDto> getNewNews(@PathVariable String email) {
+    public List<SimpleNewsDto> getNewNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : newNews");
         try {
-            return newsMapper.entityToDto(newsService.getNewNews(email));
+            return newsService.getNewNews(email);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading new news", e);
         }
@@ -67,10 +68,10 @@ public class NewsEndpoint {
     @GetMapping("/{email}/old")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public List<NewsDto> getOldNews(@PathVariable String email) {
+    public List<SimpleNewsDto> getOldNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : oldNews");
         try {
-            return newsMapper.entityToDto(newsService.getOldNews(email));
+            return newsService.getOldNews(email);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading old news", e);
         }

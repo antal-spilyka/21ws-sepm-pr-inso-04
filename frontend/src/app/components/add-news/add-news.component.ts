@@ -22,8 +22,8 @@ export class AddNewsComponent implements OnInit {
     chosenEvent: ['', Validators.required],
     rating: [null, Validators.required],
     fsk: [18, Validators.required],
-    shortDescription: ['',],
-    longDescription: ['',]
+    shortDescription: ['', [Validators.required, Validators.maxLength(255)]],
+    longDescription: ['', [Validators.required, Validators.maxLength(1000)]]
   });
 
   constructor(
@@ -53,7 +53,20 @@ export class AddNewsComponent implements OnInit {
     history.back();
   }
 
+  getErrorMessage(control) {
+    if (control.hasError('required')) {
+      return 'You must enter a value';
+    }
+    if (control.hasError('maxlength')) {
+      return 'The description is too long';
+    }
+    return '';
+  }
+
   save() {
+    if (this.form.invalid) {
+      return;
+    }
     const newsRequest = {
       event: this.currentEvent,
       rating: this.form.controls.rating.value,

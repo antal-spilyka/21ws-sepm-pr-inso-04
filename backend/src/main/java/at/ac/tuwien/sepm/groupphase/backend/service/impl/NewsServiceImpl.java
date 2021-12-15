@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -50,45 +52,53 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public List<News> getNewNews(String email) {
-        LOGGER.debug("Get all News");
-        /*LocalDateTime beforeSevenDays = LocalDateTime.now().minusDays(7);
-        List<News> filteredList = newsRepository.findByCreateDateAfter(beforeSevenDays);
-        for (News news : filteredList) {
-            for (Performance performance : news.getEvent().getPerformances()) {
-                performance.setEvent(null);
-            }
-        }*/
+    public List<SimpleNewsDto> getNewNews(String email) {
+        LOGGER.debug("Get all new News");
         ApplicationUser user = userRepository.findUserByEmail(email);
         List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
         List<News> newsList = newsRepository.findAll();
         for (SeenNews e : seenNewsList) {
             newsList.remove(e.getNews());
         }
-        for (News news : newsList) {
+        List<SimpleNewsDto> simpleNewsList = new ArrayList<>();
+        for (News e : newsList) {
+            List<Picture> pictures = pictureRepository.findByNewsId(e);
+            if (pictures.size() != 0) {
+                simpleNewsList.add(newsMapper.entityToSimpleDto(e, pictures.get(0)));
+            } else {
+                simpleNewsList.add(newsMapper.entityToSimpleDto(e, null));
+            }
+        }
+        /*for (News news : newsList) {
             for (Performance performance : news.getEvent().getPerformances()) {
                 performance.setEvent(null);
             }
-        }
-        LOGGER.info("" + newsList.size());
+        }*/
+        LOGGER.info("" + simpleNewsList.size());
 
-        return newsList;
+        return simpleNewsList;
     }
 
     @Transactional
     @Override
-    public List<News> getOldNews(String email) {
+    public List<SimpleNewsDto> getOldNews(String email) {
+        LOGGER.debug("Get all old News");
         ApplicationUser user = userRepository.findUserByEmail(email);
         List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
-        List<News> newsList = new ArrayList<>();
+        List<SimpleNewsDto> newsList = new ArrayList<>();
         for (SeenNews e : seenNewsList) {
-            newsList.add(e.getNews());
-        }
-        for (News news : newsList) {
-            for (Performance performance : news.getEvent().getPerformances()) {
-                performance.setEvent(null);
+            List<Picture> pictures = pictureRepository.findByNewsId(e.getNews());
+            if (pictures.size() != 0) {
+                newsList.add(newsMapper.entityToSimpleDto(e.getNews(), pictures.get(0)));
+            } else {
+                newsList.add(newsMapper.entityToSimpleDto(e.getNews(), null));
             }
         }
+        /*for (NewsDto news : newsList) {
+            for (PerformanceDto performance : news.getEvent().getPerformances()) {
+                performance.setEvent(null);
+            }
+        }*/
         LOGGER.info("" + newsList.size());
         return newsList;
     }
