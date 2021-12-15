@@ -5,7 +5,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {AddSectionDialogComponent} from './components/add-section-dialog/add-section-dialog.component';
 import {HallAddRequest} from '../../dtos/hall-add-request';
 import {EventPlaceService} from '../../services/event-place.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-create-hallplan',

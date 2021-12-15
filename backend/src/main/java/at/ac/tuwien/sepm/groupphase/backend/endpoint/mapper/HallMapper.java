@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -41,7 +42,7 @@ public class HallMapper {
         return hall;
     }
 
-    public Hall dtoToEntity(HallAddDto hallAddDto, EventPlace eventPlace, ArrayList<HallplanElement> rows) {
+    public Hall dtoToEntity(HallAddDto hallAddDto, EventPlace eventPlace, List<HallplanElement> rows) {
         LOGGER.trace("Mapping {}", hallAddDto);
         Hall hall = new Hall();
         hall.setName(hallAddDto.getName());

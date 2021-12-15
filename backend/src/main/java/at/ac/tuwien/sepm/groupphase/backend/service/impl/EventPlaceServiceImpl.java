@@ -8,15 +8,18 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallplanElementMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -38,22 +41,29 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     EventPlaceMapper eventPlaceMapper;
     AddressMapper addressMapper;
     AddressRepository addressRepository;
+    private SectorRepository sectorRepository;
     HallRepository hallRepository;
     private HallplanElementRepository hallplanElementRepository;
     HallMapper hallMapper;
+    private SectorMapper sectorMapper;
+    private HallplanElementMapper hallplanElementMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public EventPlaceServiceImpl(EventPlaceRepository eventPlaceRepository, EventPlaceMapper eventPlaceMapper,
-                                 AddressMapper addressMapper, AddressRepository addressRepository,
-                                 HallRepository hallRepository, HallplanElementRepository hallplanElementRepository, HallMapper hallMapper) {
+                                 AddressMapper addressMapper, AddressRepository addressRepository, SectorRepository sectorRepository,
+                                 HallRepository hallRepository, HallplanElementRepository hallplanElementRepository, HallMapper hallMapper,
+                                 SectorMapper sectorMapper, HallplanElementMapper hallplanElementMapper) {
         this.eventPlaceRepository = eventPlaceRepository;
         this.eventPlaceMapper = eventPlaceMapper;
         this.addressMapper = addressMapper;
         this.addressRepository = addressRepository;
+        this.sectorRepository = sectorRepository;
         this.hallRepository = hallRepository;
         this.hallplanElementRepository = hallplanElementRepository;
         this.hallMapper = hallMapper;
+        this.sectorMapper = sectorMapper;
+        this.hallplanElementMapper = hallplanElementMapper;
     }
 
     @Transactional
@@ -136,18 +146,11 @@ public class EventPlaceServiceImpl implements EventPlaceService {
                 throw new ServiceException("Event Place not found");
             }
 
-            ArrayList<HallplanElement> rows = new ArrayList<>();
-            for (int rowIndex = 0; rowIndex < hallAddDto.getRows().length; rowIndex++) {
-                for (int seatIndex = 0; seatIndex < hallAddDto.getRows()[0].length; seatIndex++) {
-                    HallplanElement hallplanElement = new HallplanElement();
-                    hallplanElement.setRowIndex(rowIndex);
-                    hallplanElement.setSeatIndex(seatIndex);
-                    hallplanElement.setType(hallAddDto.getRows()[rowIndex][seatIndex].getType());
-                    hallplanElement.setAdded(hallAddDto.getRows()[rowIndex][seatIndex].isAdded());
-                    rows.add(hallplanElement);
-                    hallplanElementRepository.save(hallplanElement);
-                }
-            }
+            List<Sector> sectors = sectorMapper.dtoToEntity(hallAddDto.getSectors());
+            sectorRepository.saveAll(sectors);
+
+            List<HallplanElement> rows = hallplanElementMapper.dtoToEntity(hallAddDto.getRows(), sectors);
+            hallplanElementRepository.saveAll(rows);
             hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows));
         } catch (EntityExistsException e) {
             throw new ContextException(e);

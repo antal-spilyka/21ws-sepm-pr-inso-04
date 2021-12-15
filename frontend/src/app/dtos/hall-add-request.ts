@@ -1,5 +1,4 @@
-import {EventPlace} from './eventPlace';
-import {IHallplanElement, Sector} from "../components/create-hallplan/types";
+import {IHallplanElement, Sector} from '../components/create-hallplan/types';
 
 export class HallAddRequest {
   constructor(

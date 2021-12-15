@@ -49,7 +49,7 @@ export class HallplanElementComponent implements OnChanges {
         this.add(this.rowIndex, this.seatIndex);
       }
     } else {
-      const sector = this.sectors.findIndex(sector => sector.selected);
+      const sector = this.sectors.findIndex(sector2 => sector2.selected);
       if (sector !== -1) {
         this.hallplanElement.setSector(sector);
       }

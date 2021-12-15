@@ -53,7 +53,7 @@ import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
-import {ColorPickerModule} from "ngx-color-picker";
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   declarations: [

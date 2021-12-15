@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class HallplanElement {
@@ -21,9 +22,8 @@ public class HallplanElement {
     @Column(nullable = false)
     boolean added;
 
-    //    @Column(nullable = false)
-    //    int sector;
-
+    @ManyToOne
+    Sector sector;
 
     @Column(nullable = false)
     String type;
@@ -62,5 +62,13 @@ public class HallplanElement {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Sector getSector() {
+        return sector;
+    }
+
+    public void setSector(Sector sector) {
+        this.sector = sector;
     }
 }

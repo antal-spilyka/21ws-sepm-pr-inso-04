@@ -3,8 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {EventPlace} from '../dtos/eventPlace';
 import {Globals} from '../global/globals';
-import {Address} from '../dtos/address';
-import {HallAddRequest} from "../dtos/hall-add-request";
+import {HallAddRequest} from '../dtos/hall-add-request';
 
 @Injectable({
   providedIn: 'root'
