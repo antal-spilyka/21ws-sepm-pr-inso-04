@@ -53,6 +53,7 @@ import { ArtistPerformancesComponent } from './components/artist-performances/ar
 import { LocationPerformancesComponent } from './components/location-performances/location-performances.component';
 import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
 import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
+import { OldNewsComponent } from './components/old-news/old-news.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,9 @@ import { PerformanceDetailedComponent } from './components/performance-detailed/
     ArtistPerformancesComponent,
     LocationPerformancesComponent,
     EventPerformancesComponent,
-    PerformanceDetailedComponent
+    PerformanceDetailedComponent,
+    NewsViewComponent,
+    OldNewsComponent
   ],
   imports: [
     BrowserModule,

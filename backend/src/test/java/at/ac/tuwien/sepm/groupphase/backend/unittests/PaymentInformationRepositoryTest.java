@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class PaymentInformationRepositoryTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+        paymentInformationRepository.deleteAll();
+    }
 
     @Test()
     public void addingPaymentInformationToUser() {
