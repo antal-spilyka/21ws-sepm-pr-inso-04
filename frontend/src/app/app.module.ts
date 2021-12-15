@@ -52,6 +52,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ArtistPerformancesComponent } from './components/artist-performances/artist-performances.component';
 import { LocationPerformancesComponent } from './components/location-performances/location-performances.component';
 import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
+import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { EventPerformancesComponent } from './components/event-performances/even
     NewsViewComponent,
     ArtistPerformancesComponent,
     LocationPerformancesComponent,
-    EventPerformancesComponent
+    EventPerformancesComponent,
+    PerformanceDetailedComponent
   ],
   imports: [
     BrowserModule,

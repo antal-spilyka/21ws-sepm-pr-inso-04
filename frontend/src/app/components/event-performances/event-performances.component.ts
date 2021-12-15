@@ -31,7 +31,11 @@ export class EventPerformancesComponent implements OnInit {
       }
     );
   }
-
+  loadPerformance(performance: Performance){
+    if(performance.id){
+      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+    }
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;

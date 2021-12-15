@@ -17,6 +17,7 @@ import { NewsViewComponent } from './components/news-view/news-view.component';
 import {ArtistPerformancesComponent} from './components/artist-performances/artist-performances.component';
 import {EventPerformancesComponent} from './components/event-performances/event-performances.component';
 import {LocationPerformancesComponent} from './components/location-performances/location-performances.component';
+import {PerformanceDetailedComponent} from './components/performance-detailed/performance-detailed.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -34,7 +35,8 @@ const routes: Routes = [
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'artists/:id/performances', component: ArtistPerformancesComponent},
   {path: 'events/:id/performances', component: EventPerformancesComponent},
-  {path: 'locations/:id/performances', component: LocationPerformancesComponent}
+  {path: 'locations/:id/performances', component: LocationPerformancesComponent},
+  {path: 'performances/:id/:performance', component: PerformanceDetailedComponent}
 ];
 
 @NgModule({

@@ -1,14 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository regarding Event.
@@ -31,6 +30,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
     Event getById(Long id);
+
+    /*@Query("SELECT e FROM Event e WHERE :id=e.id")
+    Event findById(@Param("id") Long id);*/
 
     /**
      * Finds all the events which suit the criteria from parameters.

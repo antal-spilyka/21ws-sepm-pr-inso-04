@@ -27,6 +27,11 @@ export class ArtistPerformancesComponent implements OnInit {
       }
     );
   }
+  loadPerformance(performance: Performance){
+    if(performance.id){
+      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+    }
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;
@@ -38,6 +43,5 @@ export class ArtistPerformancesComponent implements OnInit {
       this.errorMessage = error.error.message;
     }
   }
-
 
 }

@@ -49,6 +49,11 @@
             <div class="flex"><span>Name: {{performance.name}}</span>
               <span>Date/Time: {{performance.startTime}}</span>
               <span>Hall: {{performance.hall.name}}</span>
+              <div>
+                <button type="submit" class="button" mat-raised-button color="primary"
+                        (click)="loadPerformance(performance)">Buy/Book Tickets
+                </button>
+              </div>
             </div>
           </td>
         </tr>
