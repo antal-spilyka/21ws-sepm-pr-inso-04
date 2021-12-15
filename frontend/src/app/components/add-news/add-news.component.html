@@ -9,6 +9,7 @@
       <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
         <mat-label>Fill in the information here</mat-label>
         <textarea matInput rows="15" formControlName="shortDescription"></textarea>
+        <mat-error *ngIf="form.controls.shortDescription.invalid">{{getErrorMessage(form.controls.shortDescription)}}</mat-error>
       </mat-form-field>
 
       <div class="div-additional-info">
@@ -82,5 +83,6 @@
   <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
     <mat-label>Fill in the detailed information here</mat-label>
     <textarea matInput rows="15" formControlName="longDescription"></textarea>
+    <mat-error *ngIf="form.controls.longDescription.invalid">{{getErrorMessage(form.controls.longDescription)}}</mat-error>
   </mat-form-field>
 </form>

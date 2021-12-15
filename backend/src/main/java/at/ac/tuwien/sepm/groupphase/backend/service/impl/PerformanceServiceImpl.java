@@ -127,4 +127,15 @@ public class PerformanceServiceImpl implements PerformanceService {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Stream<PerformanceDto> findPerformanceForArtist(Long id) {
+        LOGGER.debug("Handling in service {}", id);
+        try {
+            List<Performance> performances = performanceRepository.findPerformanceForArtist(id, PageRequest.of(0, 15));
+            return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 }

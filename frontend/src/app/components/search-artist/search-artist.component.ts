@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ArtistService} from '../../services/artist.service';
 import {Artist} from '../../dtos/artist';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-artist',
@@ -13,11 +14,15 @@ export class SearchArtistComponent implements OnInit {
   artistList: Artist[] = [];
   error = false;
   errorMessage: string;
-  constructor(private artistService: ArtistService) { }
+  constructor(private artistService: ArtistService, private router: Router) { }
 
   ngOnInit(): void {
   }
-
+  loadPerformances(artist: Artist){
+    if(artist.id){
+      this.router.navigateByUrl(`/artists/${artist.id}/performances`);
+    }
+  }
    onSubmit() {
     this.artistService.searchArtist(this.artistName).subscribe(
       {

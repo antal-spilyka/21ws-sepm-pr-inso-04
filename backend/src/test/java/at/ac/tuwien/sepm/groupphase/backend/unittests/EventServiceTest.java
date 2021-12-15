@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import org.junit.jupiter.api.BeforeAll;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,6 +55,9 @@ public class EventServiceTest {
 
     @Autowired
     private ArtistService artistService;
+
+    @Autowired
+    private PerformanceMapper performanceMapper;
 
     private HallDto hallDto;
     private Hall hall;
@@ -169,5 +174,105 @@ public class EventServiceTest {
         List<Event> events = eventService.findEvents(eventSearchDto);
         //assertThrows(ServiceException.class, () -> eventService.findEvents(eventSearchDto));
         assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_event_withPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(testEvent);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        List<Performance> testPerformances = new ArrayList<>();
+        testPerformances.add(performance);
+        testEvent.setPerformances(testPerformances);
+        testEvent.setName("event9");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+
+        Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertFalse(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_event_withoutPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+        Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertTrue(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(testEvent);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        List<Performance> testPerformances = new ArrayList<>();
+        testPerformances.add(performance);
+        testEvent.setPerformances(testPerformances);
+        testEvent.setName("event10");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertFalse(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withoutPerformances(){
+
+        AddressDto testAddressDto = new AddressDto();
+        testAddressDto.setStreet("testLocationStreet");
+        testAddressDto.setCity("testLocationCity");
+        testAddressDto.setCountry("testLocationCountry");
+        testAddressDto.setState("testLocationState");
+        testAddressDto.setZip("0000");
+
+        EventPlaceDto testEventPlaceDto = new EventPlaceDto();
+        testEventPlaceDto.setAddressDto(addressDto);
+        testEventPlaceDto.setName("testLocationEventPlace");
+        EventPlace testEventPlace = eventPlaceService.save(testEventPlaceDto);
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances8");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(testEventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(testEventPlace.getAddress().getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertTrue(perfList.isEmpty());
     }
 }

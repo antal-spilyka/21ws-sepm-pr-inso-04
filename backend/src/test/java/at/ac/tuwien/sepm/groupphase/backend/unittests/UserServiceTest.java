@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -42,8 +43,12 @@ public class UserServiceTest implements TestData {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SeenNewsRepository seenNewsRepository;
+
     @BeforeEach
     public void beforeEach() {
+        seenNewsRepository.deleteAll();
         userRepository.deleteAll();
     }
 

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
@@ -23,7 +24,11 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -31,16 +36,19 @@ public class EventServiceImpl implements EventService {
     EventRepository eventRepository;
     HallRepository hallRepository;
     EventMapper eventMapper;
+    PerformanceMapper performanceMapper;
     ArtistRepository artistRepository;
     EventPlaceService eventPlaceService;
     PerformanceService performanceService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public EventServiceImpl(EventRepository eventRepository, HallRepository hallRepository, EventMapper eventMapper,
-                            ArtistRepository artistRepository, EventPlaceService eventPlaceService, PerformanceService performanceService) {
+                            PerformanceMapper performanceMapper, ArtistRepository artistRepository, EventPlaceService eventPlaceService,
+                            PerformanceService performanceService) {
         this.eventRepository = eventRepository;
         this.hallRepository = hallRepository;
         this.eventMapper = eventMapper;
+        this.performanceMapper = performanceMapper;
         this.artistRepository = artistRepository;
         this.eventPlaceService = eventPlaceService;
         this.performanceService = performanceService;
@@ -113,8 +121,50 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
+    public Stream<PerformanceDto> getPerformances(Long id) {
+        LOGGER.debug("Handling in service {}", id);
+        try {
+            Event event = eventRepository.getById(id);
+            List<Performance> performances = event.getPerformances();
+            List<Performance> performancesCopy = new ArrayList<>();
+            for (Performance performance : performances) {
+                Performance copyPerformance = new Performance(performance.getId(), performance.getName(), performance.getStartTime(),
+                    performance.getDuration(), null, performance.getArtist(), performance.getHall());
+                performancesCopy.add(copyPerformance);
+            }
+            Stream<PerformanceDto> performanceDtoStream = performancesCopy.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+            return performanceDtoStream;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public Stream<PerformanceDto> getPerformancesByLocation(Long id) {
+        LOGGER.debug("Handling in service {}", id);
+        try {
+            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(0, 15));
+            List<Performance> performancesCopy = new ArrayList<>();
+            for (Event event : events) {
+                List<Performance> performances = event.getPerformances();
+                for (Performance performance : performances) {
+                    Performance copyPerformance = new Performance(performance.getId(), performance.getName(), performance.getStartTime(),
+                        performance.getDuration(), null, performance.getArtist(), performance.getHall());
+                    performancesCopy.add(copyPerformance);
+                }
+            }
+            Stream<PerformanceDto> performanceDtoStream = performancesCopy.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+            return performanceDtoStream;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
     public Event saveEvent(EventDto eventDto) {
-        LOGGER.info("Update event by adding a performance {}", eventDto);
+        LOGGER.debug("Update event by adding a performance {}", eventDto);
         if (eventDto == null) {
             throw new ServiceException("Event can't be null");
         }
