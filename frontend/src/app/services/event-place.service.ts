@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {EventPlace} from '../dtos/eventPlace';
 import {Globals} from '../global/globals';
 import {Address} from '../dtos/address';
+import {HallAddRequest} from "../dtos/hall-add-request";
 
 @Injectable({
   providedIn: 'root'
@@ -38,4 +39,7 @@ export class EventPlaceService {
     return this.httpClient.post<EventPlace>(this.messageBaseUri, eventPlace);
   }
 
+  addHall(eventPlaceId: string, hallRequest: HallAddRequest): Observable<HallAddRequest> {
+    return this.httpClient.post<HallAddRequest>(this.messageBaseUri + '/' + eventPlaceId + '/halls/add', hallRequest);
+  }
 }

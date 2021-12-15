@@ -52,6 +52,8 @@ import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
+import {ColorPickerModule} from "ngx-color-picker";
 
 @NgModule({
   declarations: [
@@ -78,6 +80,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     SearchEventsComponent,
     SearchTimeComponent,
     EditPaymentInformationDialogComponent,
+    AddSectionDialogComponent,
     NewsViewComponent
   ],
   imports: [
@@ -109,7 +112,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatGridListModule,
     NgImageSliderModule,
     MatProgressSpinnerModule,
-    MatTableModule
+    MatTableModule,
+    ColorPickerModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

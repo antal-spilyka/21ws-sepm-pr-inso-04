@@ -28,7 +28,7 @@ const routes: Routes = [
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
-  {path: 'hallplans/add', component: CreateHallplanComponent},
+  {path: 'locations/:id/halls/add', component: CreateHallplanComponent},
   {path: 'search-time', component: SearchTimeComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent}
 ];

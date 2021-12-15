@@ -1,5 +1,5 @@
-import {AfterViewChecked, AfterViewInit, Component, HostBinding, Input, OnChanges, OnInit} from '@angular/core';
-import {HallplanElement, HallplanElementType, IHallplanElement} from '../../types';
+import {Component, HostBinding, Input, OnChanges} from '@angular/core';
+import {HallplanElement, HallplanElementType, IHallplanElement, Sector} from '../../types';
 
 @Component({
   selector: 'app-hallplan-element',
@@ -26,28 +26,33 @@ export class HallplanElementComponent implements OnChanges {
   @Input() isLastLeft: boolean;
   @Input() isLastBottom: boolean;
   @Input() isLastRight: boolean;
+
+  @Input() disabled: boolean;
   @Input() rows: IHallplanElement[][] = [];
+  @Input() sectors: Sector[];
 
   @Input() hallplanElement: HallplanElement;
 
   @HostBinding('class.zIndex') zIndex = false;
 
   constructor() {
-    this.onAdd = this.onAdd.bind(this);
   }
 
   ngOnChanges() {
-    this.onAdd();
   };
 
-  onAdd(): void {
-  }
-
   hallplanElementClick() {
-    if (this.hallplanElement.added) {
-      this.remove(this.rowIndex, this.seatIndex);
+    if (!this.disabled) {
+      if (this.hallplanElement.added) {
+        this.remove(this.rowIndex, this.seatIndex);
+      } else {
+        this.add(this.rowIndex, this.seatIndex);
+      }
     } else {
-      this.add(this.rowIndex, this.seatIndex);
+      const sector = this.sectors.findIndex(sector => sector.selected);
+      if (sector !== -1) {
+        this.hallplanElement.setSector(sector);
+      }
     }
   }
 
@@ -103,5 +108,12 @@ export class HallplanElementComponent implements OnChanges {
     }
 
     return style;
+  }
+
+  getBackground() {
+    if (this.hallplanElement.type !== HallplanElementType.seat) {
+      return '';
+    }
+    return 'background: ' + this.sectors[this.hallplanElement.sector].color;
   }
 }

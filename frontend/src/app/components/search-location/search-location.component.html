@@ -61,6 +61,8 @@
               <span>ZIP-Code: {{eventLocation.zip}}</span>
               <span>State: {{eventLocation.state}}</span>
               <span>Country: {{eventLocation.country}}</span>
+              <span>
+                <a mat-raised-button color="primary" [routerLink]="['/locations', eventLocation.id,'halls', 'add']" routerLinkActive="active">Add Hall</a></span>
             </div>
           </td>
         </tr>

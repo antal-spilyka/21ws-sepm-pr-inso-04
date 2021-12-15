@@ -1,6 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {HallplanElementType, IHallplanElement, HallplanElement} from './types';
+import {FormControl, Validators} from '@angular/forms';
+import {HallplanElementType, IHallplanElement, HallplanElement, Sector} from './types';
+import {MatDialog} from '@angular/material/dialog';
+import {AddSectionDialogComponent} from './components/add-section-dialog/add-section-dialog.component';
+import {HallAddRequest} from '../../dtos/hall-add-request';
+import {EventPlaceService} from '../../services/event-place.service';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-create-hallplan',
@@ -9,14 +14,24 @@ import {HallplanElementType, IHallplanElement, HallplanElement} from './types';
 })
 export class CreateHallplanComponent implements OnInit {
   rows: IHallplanElement[][] = [];
+  sectors: Sector[] = [
+    new Sector('#ffffff', 'default', 30.00),
+    new Sector('#ffff00', 'test', 32.00),
+  ];
+
   defaultRowsNumber = 10;
   defaultSeatsNumber = 10;
   minRowsNumber = 8;
   minSeatsNumber = 8;
+
   radioControl = new FormControl(HallplanElementType.seat);
   editModes = HallplanElementType;
+  page = 1;
+  nameControl = new FormControl('', [Validators.required]);
+  eventPlaceId: string;
 
-  constructor() {
+  constructor(public dialog: MatDialog, private eventPlaceService: EventPlaceService,
+              private route: ActivatedRoute) {
     this.addSeat = this.addSeat.bind(this);
     this.removeSeat = this.removeSeat.bind(this);
     this.mouseOverHallplanElement = this.mouseOverHallplanElement.bind(this);
@@ -24,6 +39,9 @@ export class CreateHallplanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.eventPlaceId = params['id'];
+    });
     const rows: IHallplanElement[][] = [];
     for (let rowIndex = 0; rowIndex < this.defaultRowsNumber; rowIndex++) {
       const row: IHallplanElement[] = [];
@@ -142,5 +160,50 @@ export class CreateHallplanComponent implements OnInit {
       this.rows = this.rows.map(row => row.slice(0, row.length - 1));
       this.removeSeat(this.rows.length - 1, this.rows[0].length - 2);
     }
+  }
+
+  next() {
+    this.page++;
+  }
+
+  addSector() {
+    const dialogRef = this.dialog.open(AddSectionDialogComponent, {
+      width: '250px',
+      data: {
+        color: '#00ffff',
+        name: '',
+        price: 0.0
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      this.sectors.push(new Sector(result.color, result.name, result.price));
+    });
+  }
+
+  setSelectedSection(i: number) {
+    this.sectors.map((sector, index) => sector.withSelected(i === index));
+  }
+
+  finish() {
+    const hallRequest = new HallAddRequest(
+      this.nameControl.value,
+      this.rows.filter(
+        (row, index) => index !== 0 && index !== this.rows.length - 1
+      ).map(row => row.filter(
+        (seat, index) => index !== 0 && index !== row.length - 1)
+      ),
+      this.sectors,
+    );
+    this.eventPlaceService.addHall(this.eventPlaceId, hallRequest).subscribe({
+      next: () => {
+        console.log('success');
+      },
+      error: (error) => {
+
+      }
+    });
   }
 }

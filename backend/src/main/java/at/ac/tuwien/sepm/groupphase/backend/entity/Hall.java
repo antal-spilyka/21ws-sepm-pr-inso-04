@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +21,9 @@ public class Hall {
 
     @ManyToOne()
     EventPlace eventPlace;
+
+    @OneToMany
+    List<HallplanElement> rows;
 
     public Long getId() {
         return id;
@@ -68,5 +73,9 @@ public class Hall {
             ", name='" + name + '\'' +
             ", eventPlace=" + eventPlace +
             '}';
+    }
+
+    public void setRow(List<HallplanElement> rows) {
+        this.rows = rows;
     }
 }

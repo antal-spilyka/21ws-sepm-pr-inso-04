@@ -1,13 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Set;
 
 @Component
 public class HallMapper {
@@ -34,6 +38,15 @@ public class HallMapper {
         hall.setId(hallDto.getId());
         hall.setName(hallDto.getName());
         hall.setEventPlace(eventPlaceMapper.dtoToEntity(hallDto.getEventPlaceDto()));
+        return hall;
+    }
+
+    public Hall dtoToEntity(HallAddDto hallAddDto, EventPlace eventPlace, ArrayList<HallplanElement> rows) {
+        LOGGER.trace("Mapping {}", hallAddDto);
+        Hall hall = new Hall();
+        hall.setName(hallAddDto.getName());
+        hall.setRow(rows);
+        hall.setEventPlace(eventPlace);
         return hall;
     }
 }

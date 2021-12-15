@@ -46,5 +46,46 @@
       bottom: 2rem;
       right: 2rem;
     }
+
+    .sector-wrapper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      border: 1px solid black;
+      border-radius: 10px;
+
+      &.active {
+        border-color: blue;
+        border-width: 2px;
+      }
+
+      .color-marker {
+        width: 2rem;
+        border-right: 1px solid black;
+        border-bottom-left-radius: 9px;
+        border-top-left-radius: 9px;
+      }
+
+      span {
+        padding: 0.5rem;
+      }
+    }
+
+    .add-button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
+}
+
+.dialog {
+  position: absolute;
+  top: 45%;
+  right: 3rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: -1px -1px 8px 1px #00000094;
 }

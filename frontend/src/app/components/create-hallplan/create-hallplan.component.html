@@ -4,6 +4,8 @@
       <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
         <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
                           [rows]="rows"
+                              [disabled]="page !== 0"
+                              [sectors]="sectors"
                           [rowIndex]="rowIndex" [seatIndex]="seatIndex"
                           [add]="addSeat" [remove]="removeSeat"
                           [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
@@ -20,14 +22,43 @@
       </div>
     </div>
   </div>
-  <div class="side-bar">
+  <div class="side-bar" *ngIf="page === 0">
     <h2>What do you want to edit?</h2>
     <mat-radio-group aria-label="Select an option" [formControl]="radioControl">
       <mat-radio-button [value]="editModes.seat">Seats</mat-radio-button>
       <mat-radio-button [value]="editModes.stage">Stage</mat-radio-button>
       <mat-radio-button [value]="editModes.exit">Exit</mat-radio-button>
     </mat-radio-group>
-    <button type="button"mat-raised-button color="primary" class="next-button">Next</button>
+
+    <button type="button"mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
+  </div>
+  <div class="side-bar" *ngIf="page === 1">
+    <h2>Please define your sectors:</h2>
+    <div [class]="'sector-wrapper ' + (sector.selected ? 'active' : '')" *ngFor="let sector of sectors; let i = index" (click)="setSelectedSection(i)">
+      <div [style]="'background: ' + sector.color" class="color-marker"></div>
+      <span>{{sector.name}}</span>
+      <span>{{sector.formatPrice()}}</span>
+    </div>
+
+    <div class="add-button-container">
+      <button mat-mini-fab color="primary" aria-label="icon button with a add icon" (click)="addSector()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <button type="button"mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
+  </div>
+  <div class="side-bar" *ngIf="page === 2">
+    <h2>Provide a name for the hall:</h2>
+    <form>
+      <mat-form-field appearance="fill" class="half-control">
+        <mat-label>Name</mat-label>
+        <input matInput [formControl]="nameControl" required name="phone">
+        <mat-error *ngIf="nameControl.invalid">Please fill in a name</mat-error>
+      </mat-form-field>
+    </form>
+
+    <button type="button"mat-raised-button color="primary" class="next-button" (click)="finish()" [disabled]="!nameControl.valid">Finish</button>
   </div>
 </div>
 
