@@ -39,6 +39,21 @@ public class Performance {
     @OneToOne
     private Hall hall;
 
+    public Performance(Long id, String name, LocalDateTime startTime, Long duration,
+                       Event event, Artist artist, Hall hall) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.event = event;
+        this.artist = artist;
+        this.hall = hall;
+    }
+
+    public Performance() {
+
+    }
+
     public Long getId() {
         return id;
     }

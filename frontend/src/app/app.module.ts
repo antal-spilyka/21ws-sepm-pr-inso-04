@@ -49,6 +49,10 @@ import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ArtistPerformancesComponent } from './components/artist-performances/artist-performances.component';
+import { LocationPerformancesComponent } from './components/location-performances/location-performances.component';
+import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
+import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
 import { OldNewsComponent } from './components/old-news/old-news.component';
 
 @NgModule({
@@ -74,6 +78,11 @@ import { OldNewsComponent } from './components/old-news/old-news.component';
     SearchEventsComponent,
     SearchTimeComponent,
     EditPaymentInformationDialogComponent,
+    NewsViewComponent,
+    ArtistPerformancesComponent,
+    LocationPerformancesComponent,
+    EventPerformancesComponent,
+    PerformanceDetailedComponent,
     NewsViewComponent,
     OldNewsComponent
   ],

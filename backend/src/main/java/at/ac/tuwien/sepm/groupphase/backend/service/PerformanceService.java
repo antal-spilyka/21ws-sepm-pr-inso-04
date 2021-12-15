@@ -16,4 +16,6 @@ public interface PerformanceService {
     Performance save(PerformanceDto performanceDto, Event event);
 
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
+
+    Stream<PerformanceDto> findPerformanceForArtist(Long id);
 }

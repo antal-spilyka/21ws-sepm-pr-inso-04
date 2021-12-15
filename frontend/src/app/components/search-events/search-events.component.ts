@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EventService} from '../../services/event.service';
 import {EventDto} from '../../dtos/eventDto';
 import {EventSearchDto} from '../../dtos/eventSearchDto';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-events',
@@ -17,12 +18,11 @@ export class SearchEventsComponent implements OnInit {
   error = false;
   errorMessage: string;
 
-  constructor(private eventService: EventService) {
+  constructor(private eventService: EventService, private router: Router) {
   }
 
   ngOnInit(): void {
   }
-
   onSubmit() {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
@@ -37,6 +37,11 @@ export class SearchEventsComponent implements OnInit {
           }, error: error => this.handleError(error)
         }
       );
+    }
+  }
+  loadPerformances(event: EventDto){
+    if(event.id){
+      this.router.navigateByUrl(`/events/${event.id}/performances`);
     }
   }
   vanishError(): void {
