@@ -126,6 +126,7 @@ public class NewsServiceTest implements TestData {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
         event.setCategory("TestCategory");
+        event.setName("event15");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
