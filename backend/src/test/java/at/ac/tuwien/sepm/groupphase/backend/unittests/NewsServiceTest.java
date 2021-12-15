@@ -91,6 +91,13 @@ public class NewsServiceTest implements TestData {
     private Event event;
     private List<Performance> performances = new ArrayList<>();
 
+    @BeforeEach
+    public void beforeEach() {
+        seenNewsRepository.deleteAll();
+        newsRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @BeforeAll
     public void insertNeededContext() {
         AddressDto addressDto = new AddressDto();
@@ -392,8 +399,8 @@ public class NewsServiceTest implements TestData {
         SimpleSeenNewsDto simpleSeenNewsDto = new SimpleSeenNewsDto();
         simpleSeenNewsDto.setNewsId(news.getId());
         simpleSeenNewsDto.setUserEmail(TestData.user1.getEmail());
-        newsService.readNews(simpleSeenNewsDto);
         userRepository.save(user1);
+        newsService.readNews(simpleSeenNewsDto);
 
         userService.deleteUser(user1.getEmail());
 
