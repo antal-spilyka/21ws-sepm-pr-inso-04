@@ -37,6 +37,17 @@ public class Event {
     @Column
     private String description;
 
+    @Column (nullable = false)
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public Long getId() {
         return id;
     }
@@ -108,7 +119,7 @@ public class Event {
             ", startTime=" + startTime +
             ", duration=" + duration +
             ", performances=" + performanceToString +
-            ", eventPlace=" + eventPlace.toString() +
+            ", eventPlace=" + eventPlace +
             ", description='" + description + '\'' +
             '}';
     }

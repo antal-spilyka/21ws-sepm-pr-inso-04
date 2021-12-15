@@ -5,6 +5,15 @@ import java.util.Objects;
 public class EventSearchDto {
     Integer duration;
     String description;
+    String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     @Override
     public String toString() {
@@ -39,11 +48,12 @@ public class EventSearchDto {
             return false;
         }
         EventSearchDto that = (EventSearchDto) o;
-        return Objects.equals(duration, that.duration) && Objects.equals(description, that.description);
+        return Objects.equals(duration, that.duration) && Objects.equals(description, that.description)
+               && Objects.equals(category, that.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, description);
+        return Objects.hash(duration, description, category);
     }
 }

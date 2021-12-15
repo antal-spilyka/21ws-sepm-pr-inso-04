@@ -41,11 +41,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return all matching events.
      */
     @Query("SELECT a FROM Event a WHERE (:duration is null OR (a.duration <= :duration+30 AND a.duration >= :duration-30))" +
-        " AND (:description is null OR :description='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%')))")
-    List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description,
+        " AND (:description is null OR :description='' OR UPPER(a.description) LIKE UPPER(CONCAT( '%', :description, '%'))) " +
+        "AND(:category is null OR :category='' OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :category, '%')))")
+    List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description, @Param("category") String category,
                            Pageable pageable);
 
-    /**
+    /*/**
      * Finds all the events which suit the criteria from parameters.
      *
      * @param dateTimeFrom of the event
@@ -54,12 +55,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param hallId       of the event
      * @return all matching events.
      */
-    @Query("SELECT a FROM Event a WHERE (:startTime is null OR (a.startTime <= :dateTimeTill AND a.startTime >= :dateTimeFrom))" +
+    /*@Query("SELECT a FROM Event a WHERE (:startTime is null OR (a.startTime <= :dateTimeTill AND a.startTime >= :dateTimeFrom))" +
         "AND (:eventName is null OR :eventName='' OR UPPER(a.name) LIKE UPPER(CONCAT( '%', :eventName, '%'))) AND (:hallId is null " +
         "OR :hallId in (a.performances))")
     List<Event> findEventsWithDateTime(@Param("dateTimeFrom") LocalDateTime dateTimeFrom, @Param("dateTimeTill") LocalDateTime dateTimeTill,
                                        @Param("eventName") String eventName, @Param("hall") Long hallId);
-
+*/
     /**
      * Finds all the events which suit the criteria from parameters.
      *

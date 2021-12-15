@@ -11,6 +11,7 @@ export class SearchLocationComponent implements OnInit {
   searchAddress: Address = {
     id: null, city: '', state: '', zip: '', country: '', street: '',
 };
+  submitted = false;
   eventLocations: Address[] = [];
   error = false;
   errorMessage: string;
@@ -22,6 +23,7 @@ export class SearchLocationComponent implements OnInit {
     this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
       {
         next: eventLocations => {
+          this.submitted = true;
           console.log(this.eventLocations);
           this.eventLocations = eventLocations;
           console.log(this.eventLocations);

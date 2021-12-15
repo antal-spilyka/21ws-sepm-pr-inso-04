@@ -12,6 +12,15 @@ public class EventDto {
     private List<PerformanceDto> performances;
     private EventPlaceDto eventPlace;
     private String description;
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public Long getId() {
         return id;
@@ -89,7 +98,8 @@ public class EventDto {
             ", duration=" + duration +
             ", performances=" + performanceToString +
             ", eventPlace=" + eventPlace.toString() +
-            ", description='" + description + '\'' +
+            ", description='" + description  +
+            ", category='" + category + '\'' +
             '}';
     }
 
@@ -104,11 +114,12 @@ public class EventDto {
         EventDto eventDto = (EventDto) o;
         return Objects.equals(id, eventDto.id) && Objects.equals(name, eventDto.name) && Objects.equals(startTime, eventDto.startTime)
             && Objects.equals(duration, eventDto.duration) && Objects.equals(performances, eventDto.performances)
-            && Objects.equals(eventPlace, eventDto.eventPlace) && Objects.equals(description, eventDto.description);
+            && Objects.equals(eventPlace, eventDto.eventPlace) && Objects.equals(description, eventDto.description)
+            && Objects.equals(category, eventDto.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, performances, eventPlace, description);
+        return Objects.hash(id, name, startTime, duration, performances, eventPlace, description, category);
     }
 }

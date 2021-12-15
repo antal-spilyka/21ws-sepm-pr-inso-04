@@ -99,7 +99,6 @@ public class NewsServiceTest implements TestData {
     public void beforeEach() {
         seenNewsRepository.deleteAll();
         pictureRepository.deleteAll();
-        newsRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -157,6 +156,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -245,6 +245,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         this.event = eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -310,6 +311,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -379,6 +381,7 @@ public class NewsServiceTest implements TestData {
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();

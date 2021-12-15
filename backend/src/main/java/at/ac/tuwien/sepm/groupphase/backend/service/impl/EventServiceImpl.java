@@ -53,48 +53,54 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> findEvents(EventSearchDto eventSearchDto) {
         LOGGER.debug("Handling in Service {}", eventSearchDto);
-        if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null) {
-            throw new NotFoundException("No address was found for this query");
+        if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null
+            && eventSearchDto.getCategory() == null) {
+            return new ArrayList<Event>();
         }
         try {
-            return eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(),
+            List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
                 PageRequest.of(0, 10));
-        } catch (PersistenceException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
-        LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
-        try {
-            List<Hall> halls = new ArrayList<>();
-            eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
-            List<Event> events = new ArrayList<>();
-            if (eventDateTimeSearchDto.getStartTime() != null) {
-                LocalDateTime dateTimeFrom = eventDateTimeSearchDto.getStartTime().minusMinutes(30);
-                LocalDateTime dateTimeTill = eventDateTimeSearchDto.getStartTime().plusMinutes(30);
-                for (Hall hall : halls) {
-                    List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
-                        eventDateTimeSearchDto.getEventName(), hall.getId());
-                    events.addAll(eventsForRoom);
-                    //roomIds.add(room.getId());
-                }
-                //events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
-                //eventDateTimeSearchDto.getEvent(), roomIds, PageRequest.of(0, 10));
-            } else {
-                for (Hall hall : halls) {
-                    List<Event> eventsForRoom = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEventName(), hall.getId());
-                    events.addAll(eventsForRoom);
-                }
-                /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
-                    PageRequest.of(0, 10));*/
+            for (Event event : events) {
+                event.setPerformances(null);
             }
             return events;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+    /*@Override
+    public List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
+        LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
+        try {
+            List<Hall> halls = new ArrayList<>();
+            List<Long> hallIds = new ArrayList<>();
+            eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
+            List<Event> events = new ArrayList<>();
+            if (eventDateTimeSearchDto.getStartTime() != null) {
+                LocalDateTime dateTimeFrom = eventDateTimeSearchDto.getStartTime().minusMinutes(30);
+                LocalDateTime dateTimeTill = eventDateTimeSearchDto.getStartTime().plusMinutes(30);
+                for (Hall hall : halls) {
+                    /*List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                        eventDateTimeSearchDto.getEventName(), hall.getId());
+                    events.addAll(eventsForRoom);
+                    hallIds.add(hall.getId());
+                }
+                events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
+                eventDateTimeSearchDto.getEvent(), hallIds, PageRequest.of(0, 10));
+            } else {
+                for (Hall hall : halls) {
+                    List<Event> eventsForRoom = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEventName(), hall.getId());
+                    events.addAll(eventsForRoom);
+                }
+                /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
+                    PageRequest.of(0, 10));
+            }
+            return events;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }*/
 
     @Transactional
     @Override
@@ -111,19 +117,27 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Event saveEvent(EventDto event) {
-        LOGGER.debug("Update event by adding a performance {}", event);
-        long durationCounter = 0L;
-        if (event != null) {
-            if (event.getPerformances() != null && 0 < event.getPerformances().size()) {
-                for (PerformanceDto performance : event.getPerformances()) {
-                    performance.setStartTime(event.getStartTime().plusMinutes(5 + durationCounter));
-                    durationCounter += 5 + performance.getDuration();
-                    performanceService.save(performance);
-                }
-            }
-            event.setDuration(durationCounter);
+    public Event saveEvent(EventDto eventDto) {
+        LOGGER.debug("Update event by adding a performance {}", eventDto);
+        if (eventDto == null) {
+            throw new ServiceException("Event can't be null");
         }
-        return eventRepository.save(eventMapper.dtoToEntity(event));
+        long durationCounter = 0L;
+        List<PerformanceDto> temp = new ArrayList<>();
+        if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
+            for (PerformanceDto performanceDto : eventDto.getPerformances()) {
+                performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
+                durationCounter += 5 + performanceDto.getDuration();
+                performanceDto.setEvent(eventDto);
+                temp.add(performanceDto);
+
+            }
+            eventDto.setDuration(durationCounter);
+        }
+        Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
+        for (PerformanceDto performanceDto : temp) {
+            performanceService.save(performanceDto, event);
+        }
+        return event;
     }
 }
