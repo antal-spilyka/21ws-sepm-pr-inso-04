@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {SimpleSeenNewsDto} from '../dtos/simpleSeenNewsDto';
-import {SimpleNewsDto} from "../dtos/simpleNewsDto";
+import {SimpleNewsDto} from '../dtos/simpleNewsDto';
 
 @Injectable({
   providedIn: 'root'

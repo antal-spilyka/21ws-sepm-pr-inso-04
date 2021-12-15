@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {NewsService} from '../../services/news.service';
-import {News} from '../../dtos/news';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
-import {SimpleNewsDto} from "../../dtos/simpleNewsDto";
+import {SimpleNewsDto} from '../../dtos/simpleNewsDto';
 
 @Component({
   selector: 'app-news-main-page',

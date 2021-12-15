@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {News} from '../../dtos/news';
 import {NewsService} from '../../services/news.service';
 import {Router} from '@angular/router';
 import jwt_decode from 'jwt-decode';
