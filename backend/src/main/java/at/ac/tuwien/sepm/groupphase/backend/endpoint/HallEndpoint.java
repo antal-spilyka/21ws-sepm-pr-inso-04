@@ -44,7 +44,6 @@ public class HallEndpoint {
         return hallService.findHall(name).stream().map(hallMapper::entityToDto);
     }
 
-    //    @Secured("ROLE_USER")
     @PermitAll
     @GetMapping("/{hallId:^[0-9]+$}")
     @Operation(summary = "Get hall by id.")

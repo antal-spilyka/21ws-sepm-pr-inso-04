@@ -36,11 +36,14 @@ public class HallplanElementMapper {
     public List<HallplanElement> dtoToEntity(HallplanElementDto[][] rowsDto, List<Sector> sectors) {
         List<HallplanElement> rows = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < rowsDto.length; rowIndex++) {
-            for (int seatIndex = 0; seatIndex < rowsDto.length; seatIndex++) {
+            for (int seatIndex = 0; seatIndex < rowsDto[rowIndex].length; seatIndex++) {
                 HallplanElement hallplanElement = new HallplanElement();
                 hallplanElement.setRowIndex(rowIndex);
                 hallplanElement.setSeatIndex(seatIndex);
                 hallplanElement.setSector(sectors.get(rowsDto[rowIndex][seatIndex].getSector()));
+                if (!rowsDto[rowIndex][seatIndex].getType().equals("seat")) {
+                    System.out.println(rowsDto[rowIndex][seatIndex].getType());
+                }
                 hallplanElement.setType(rowsDto[rowIndex][seatIndex].getType());
                 hallplanElement.setAdded(rowsDto[rowIndex][seatIndex].isAdded());
                 rows.add(hallplanElement);
