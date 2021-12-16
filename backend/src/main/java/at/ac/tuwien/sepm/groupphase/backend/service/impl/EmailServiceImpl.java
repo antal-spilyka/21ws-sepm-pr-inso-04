@@ -22,6 +22,10 @@ public class EmailServiceImpl {
     public void sendEmail(String to, String subject, String text) {
         LOGGER.info("sendEmail to: {}", to);
 
+        if (to.contains("@email.com")) {
+            return;
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("sepmticketline1@gmail.com");
         message.setTo(to);
