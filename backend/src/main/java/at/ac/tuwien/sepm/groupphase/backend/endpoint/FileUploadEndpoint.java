@@ -49,7 +49,7 @@ public class FileUploadEndpoint {
             String mimeType = Files.probeContentType(Path.of(file.getFilename()));
             return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-        } catch (NotFoundException | ServiceException | IOException e) {
+        } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "File not found: " + e.getLocalizedMessage(), e);
         }

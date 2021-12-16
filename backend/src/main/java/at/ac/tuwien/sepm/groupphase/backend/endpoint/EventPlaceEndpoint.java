@@ -48,12 +48,12 @@ public class EventPlaceEndpoint {
     @PostMapping
     @Operation(summary = "persist new eventPlace.")
     public EventPlaceDto saveEventPlace(@RequestBody @Validated EventPlaceDto eventPlaceDto) {
-        try {
-            return eventPlaceMapper.entityToDto(eventPlaceService.save(eventPlaceDto));
-        } catch (ContextException e) {
+        //try {
+        return eventPlaceMapper.entityToDto(eventPlaceService.save(eventPlaceDto));
+        /*} catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "EventPlace already exists:  " + e.getLocalizedMessage(), e);
-        }
+        }*/
     }
 
     @Secured("ROLE_ADMIN")

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.service.spi.ServiceException;
@@ -41,7 +42,7 @@ public class StorageServiceImpl implements StorageService {
             }
             if (originalFilename.contains("..")) {
                 // This is a security check
-                throw new ServiceException(
+                throw new IllegalArgumentException(
                     "Cannot store file with relative path outside current directory "
                         + originalFilename);
             }
@@ -72,11 +73,11 @@ public class StorageServiceImpl implements StorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new ServiceException(
+                throw new NotFoundException(
                     "Could not read file: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new ServiceException("Could not read file: " + filename, e);
+            throw new IllegalArgumentException("Could not read file: " + filename, e);
         }
     }
 }

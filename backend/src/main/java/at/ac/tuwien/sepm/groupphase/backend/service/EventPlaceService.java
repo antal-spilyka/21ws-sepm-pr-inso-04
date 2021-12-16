@@ -28,6 +28,7 @@ public interface EventPlaceService {
      *
      * @param eventLocationSearchDto dto for storing the search information.
      * @return a list with all the addresses that meet search criteria.
+     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
     List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
@@ -37,6 +38,8 @@ public interface EventPlaceService {
      *
      * @param eventPlaceDto to be persisted
      * @return persisted eventPlace
+     * @throws javax.persistence.EntityExistsException when entity already exists
+     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
     EventPlace save(EventPlaceDto eventPlaceDto);
 
