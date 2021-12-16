@@ -219,7 +219,7 @@ public class EventServiceTest {
         Event testEvent = new Event();
         testEvent.setName("TestPerformances");
         testEvent.setStartTime(LocalDateTime.now());
-        testEvent.setDuration(710L);
+        testEvent.setDuration(690L);
         testEvent.setEventPlace(eventPlace);
         testEvent.setDescription("TestPerformancesDesc");
         testEvent.setCategory("TestPerformancesCategory");

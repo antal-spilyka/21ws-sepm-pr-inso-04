@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -115,7 +117,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
+        assertThrows(ContextException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test
@@ -135,7 +137,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
+        assertThrows(NotFoundException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test

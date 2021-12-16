@@ -73,50 +73,21 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    /*@Override
-    public List<Event> findEventsByDateTime(EventDateTimeSearchDto eventDateTimeSearchDto) {
-        LOGGER.debug("Handling in Service {}", eventDateTimeSearchDto);
-        try {
-            List<Hall> halls = new ArrayList<>();
-            List<Long> hallIds = new ArrayList<>();
-            eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
-            List<Event> events = new ArrayList<>();
-            if (eventDateTimeSearchDto.getStartTime() != null) {
-                LocalDateTime dateTimeFrom = eventDateTimeSearchDto.getStartTime().minusMinutes(30);
-                LocalDateTime dateTimeTill = eventDateTimeSearchDto.getStartTime().plusMinutes(30);
-                for (Hall hall : halls) {
-                    /*List<Event> eventsForRoom = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
-                        eventDateTimeSearchDto.getEventName(), hall.getId());
-                    events.addAll(eventsForRoom);
-                    hallIds.add(hall.getId());
-                }
-                events = eventRepository.findEventsWithDateTime(dateTimeFrom, dateTimeTill,
-                eventDateTimeSearchDto.getEvent(), hallIds, PageRequest.of(0, 10));
-            } else {
-                for (Hall hall : halls) {
-                    List<Event> eventsForRoom = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEventName(), hall.getId());
-                    events.addAll(eventsForRoom);
-                }
-                /*events = eventRepository.findEventsWithoutDateTime(eventDateTimeSearchDto.getEvent(), roomIds,
-                    PageRequest.of(0, 10));
-            }
-            return events;
-        } catch (PersistenceException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }*/
-
     @Transactional
     @Override
     public List<Event> findEvent(String name) {
         LOGGER.debug("Find events with name {}.", name);
-        List<Event> filteredList = this.eventRepository.findByNameContainsIgnoreCase(name, PageRequest.of(0, 2));
-        for (Event event : filteredList) {
-            for (Performance performance : event.getPerformances()) {
-                performance.setEvent(null);
+        try {
+            List<Event> filteredList = this.eventRepository.findByNameContainsIgnoreCase(name, PageRequest.of(0, 2));
+            for (Event event : filteredList) {
+                for (Performance performance : event.getPerformances()) {
+                    performance.setEvent(null);
+                }
             }
+            return filteredList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return filteredList;
     }
 
     @Transactional
@@ -168,25 +139,29 @@ public class EventServiceImpl implements EventService {
         if (eventDto == null) {
             throw new ServiceException("Event can't be null");
         }
-        if (eventRepository.existsByName(eventDto.getName())) {
+        /*if (eventRepository.existsByName(eventDto.getName())) {
             throw new ContextException("Event name already exists");
-        }
-        long durationCounter = 0L;
-        List<PerformanceDto> temp = new ArrayList<>();
-        if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
-            for (PerformanceDto performanceDto : eventDto.getPerformances()) {
-                performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
-                durationCounter += 5 + performanceDto.getDuration();
-                performanceDto.setEventDto(eventDto);
-                temp.add(performanceDto);
+        }*/
+        try {
+            long durationCounter = 0L;
+            List<PerformanceDto> temp = new ArrayList<>();
+            if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
+                for (PerformanceDto performanceDto : eventDto.getPerformances()) {
+                    performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
+                    durationCounter += 5 + performanceDto.getDuration();
+                    performanceDto.setEventDto(eventDto);
+                    temp.add(performanceDto);
 
+                }
+                eventDto.setDuration(durationCounter);
             }
-            eventDto.setDuration(durationCounter);
+            Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
+            for (PerformanceDto performanceDto : temp) {
+                performanceService.save(performanceDto, event);
+            }
+            return event;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
-        for (PerformanceDto performanceDto : temp) {
-            performanceService.save(performanceDto, event);
-        }
-        return event;
     }
 }
