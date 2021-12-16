@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
+import at.ac.tuwien.sepm.groupphase.backend.exception.MappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,13 @@ public class NewsMapper {
         LOGGER.trace("Mapping {}", newsDto);
         News news = new News();
         news.setEvent(eventMapper.dtoToEntity(newsDto.getEvent()));
+        if (newsDto.getRating() != null && (newsDto.getRating() < 0 || newsDto.getRating() > 5)) {
+            throw new MappingException("Rating has to be between 0 and 5");
+        }
         news.setRating(newsDto.getRating());
+        if (newsDto.getRating() != null && newsDto.getFsk() < 0) {
+            throw new MappingException("Age cannot be under 0!");
+        }
         news.setFsk(newsDto.getFsk());
         news.setShortDescription(newsDto.getShortDescription());
         news.setLongDescription(newsDto.getLongDescription());
