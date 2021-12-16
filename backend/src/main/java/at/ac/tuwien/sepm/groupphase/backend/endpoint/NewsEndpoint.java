@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleSeenNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
@@ -10,11 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,23 +53,35 @@ public class NewsEndpoint {
      *
      * @return observable list of found news.
      */
-    @GetMapping
+    @GetMapping("/{email}/new")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public List<NewsDto> getNewNews() {
+    public List<SimpleNewsDto> getNewNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : newNews");
         try {
-            return newsMapper.entityToDto(newsService.getNewNews());
+            return newsService.getNewNews(email);
         } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading all news", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading new news", e);
         }
     }
 
-    @GetMapping("/{id}")
-    @Secured("ROLE_USER")
+    @GetMapping("/{email}/old")
+    @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    public NewsDto getNewsById(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/news : getById");
-        return newsService.getById(id);
+    public List<SimpleNewsDto> getOldNews(@PathVariable String email) {
+        LOGGER.info("GET /api/v1/news : oldNews");
+        try {
+            return newsService.getOldNews(email);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading old news", e);
+        }
+    }
+
+    @PostMapping("/read")
+    @PermitAll
+    @ResponseStatus(HttpStatus.CREATED)
+    public NewsDto readNews(@RequestBody SimpleSeenNewsDto simpleSeenNewsDto) {
+        LOGGER.info("POST /api/v1/news/read : readNews");
+        return newsService.readNews(simpleSeenNewsDto);
     }
 }

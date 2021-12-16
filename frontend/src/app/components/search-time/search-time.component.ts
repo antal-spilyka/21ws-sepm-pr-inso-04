@@ -7,6 +7,7 @@ import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
 import {PerformanceSearchDto} from '../../dtos/performanceSearchDto';
 import {PerformanceService} from '../../services/performance.service';
 import {Performance} from '../../dtos/performance';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-time',
@@ -24,7 +25,8 @@ export class SearchTimeComponent implements OnInit {
   private error = false;
   private errorMessage: string;
 
-  constructor(private performanceService: PerformanceService, private roomService: HallService) {
+  constructor(private performanceService: PerformanceService, private roomService: HallService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -62,7 +64,11 @@ export class SearchTimeComponent implements OnInit {
       }
     );
   }
-
+  loadPerformance(performance: Performance){
+    if(performance.id){
+      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+    }
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;

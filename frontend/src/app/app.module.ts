@@ -55,6 +55,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {HallDetailComponent} from './components/hall-detail/hall-detail.component';
+import { ArtistPerformancesComponent } from './components/artist-performances/artist-performances.component';
+import { LocationPerformancesComponent } from './components/location-performances/location-performances.component';
+import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
+import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
+import { OldNewsComponent } from './components/old-news/old-news.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +88,13 @@ import {HallDetailComponent} from './components/hall-detail/hall-detail.componen
     EditPaymentInformationDialogComponent,
     AddSectionDialogComponent,
     HallDetailComponent,
-    NewsViewComponent
+    NewsViewComponent,
+    ArtistPerformancesComponent,
+    LocationPerformancesComponent,
+    EventPerformancesComponent,
+    PerformanceDetailedComponent,
+    NewsViewComponent,
+    OldNewsComponent
   ],
   imports: [
     BrowserModule,

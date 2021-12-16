@@ -30,7 +30,10 @@ public class News {
     @Column(nullable = false)
     private LocalDateTime createDate;
 
+    @Column(columnDefinition = "VARCHAR(255)")
     private String shortDescription;
+
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String longDescription;
 
     public Long getId() {
@@ -105,5 +108,18 @@ public class News {
     @Override
     public int hashCode() {
         return Objects.hash(id, event, rating, fsk, shortDescription, longDescription, createDate);
+    }
+
+    @Override
+    public String toString() {
+        return "News{"
+            + "id=" + id
+            + ", event=" + event
+            + ", rating=" + rating
+            + ", fsk=" + fsk
+            + ", createDate=" + createDate
+            + ", shortDescription='" + shortDescription + '\''
+            + ", longDescription='" + longDescription + '\''
+            + '}';
     }
 }
