@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Picture;
 import org.slf4j.Logger;
@@ -71,5 +72,18 @@ public class NewsMapper {
             all.add(this.entityToDto(news.get(i)));
         }
         return all;
+    }
+
+    public SimpleNewsDto entityToSimpleDto(News news, Picture picture) {
+        LOGGER.trace("Mapping {}", news);
+        SimpleNewsDto simpleNewsDto = new SimpleNewsDto();
+        simpleNewsDto.setId(news.getId());
+        simpleNewsDto.setEventDate(news.getEvent().getStartTime());
+        simpleNewsDto.setEventName(news.getEvent().getName());
+        simpleNewsDto.setShortDescription(news.getShortDescription());
+        simpleNewsDto.setLongDescription(news.getLongDescription());
+        simpleNewsDto.setCreateDate(news.getCreateDate());
+        simpleNewsDto.setPicture(picture == null ? null : pictureMapper.entityToDto(picture));
+        return simpleNewsDto;
     }
 }

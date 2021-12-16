@@ -1,0 +1,60 @@
+<div *ngIf="!isOutside()" [class]="getSeatClass()" (click)="hallplanElementClick()"
+     (mouseover)="mouseOverHallplanElement(rowIndex, seatIndex)"
+     (mouseout)="mouseOutHallplanElement(rowIndex, seatIndex)" [style]="getBackground()">
+
+  <span class="exit-text" *ngIf="hallplanElement.type === 'exit'">Exit</span>
+  <mat-icon *ngIf="!disabled && !hallplanElement.added && !isLastTop && !isLastRight && !isLastBottom && !isLastLeft"
+            aria-hidden="false">add
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && hallplanElement.added && !isLastTop && !isLastRight && !isLastBottom && !isLastLeft"
+            aria-hidden="false">remove
+  </mat-icon>
+
+  <mat-icon *ngIf="!disabled && isLastTop && !isLastRight && !isLastLeft" aria-hidden="false" [matTooltip]="getToolTip()">
+    arrow_downward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && isLastRight && !isLastBottom && !isLastTop" aria-hidden="false" [matTooltip]="getToolTip()">
+    arrow_backward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && isLastBottom && !isLastLeft && !isLastRight" aria-hidden="false" [matTooltip]="getToolTip()">
+    arrow_upward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && isLastLeft && !isLastTop && !isLastBottom" aria-hidden="false" [matTooltip]="getToolTip()">
+    arrow_forward
+  </mat-icon>
+
+  <mat-icon *ngIf="!disabled && isLastTop && isLastLeft" class="rotate-45deg" [matTooltip]="getToolTip()">arrow_forward</mat-icon>
+  <mat-icon *ngIf="!disabled && isLastTop && isLastRight" class="rotate-45deg" [matTooltip]="getToolTip()">arrow_downward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && isLastBottom && isLastLeft" class="rotate-45deg" [matTooltip]="getToolTip()">arrow_upward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && isLastBottom && isLastRight" class="rotate-45deg" [matTooltip]="getToolTip()">arrow_backward
+  </mat-icon>
+
+  <div class="center"></div>
+  <div class="left-path"></div>
+  <div class="right-path"></div>
+  <div class="top-path"></div>
+  <div class="bottom-path"></div>
+  <div class="top-left-path"></div>
+  <div class="top-right-path"></div>
+  <div class="bottom-left-path"></div>
+  <div class="bottom-right-path"></div>
+</div>
+
+<div *ngIf="isOutside()" class="hallplan-element-container hallplan-element-placeholder"
+     (click)="hallplanElementClick()"
+     (mouseover)="mouseOverHallplanElement(rowIndex, seatIndex)"
+     (mouseout)="mouseOutHallplanElement(rowIndex, seatIndex)">
+  <mat-icon *ngIf="!disabled && outsideTop && !outsideLeft && !outsideRight" aria-hidden="false">arrow_upward</mat-icon>
+  <mat-icon *ngIf="!disabled && outsideLeft && !outsideTop && !outsideBottom" aria-hidden="false">arrow_backward</mat-icon>
+  <mat-icon *ngIf="!disabled && outsideBottom && !outsideRight && !outsideLeft" aria-hidden="false">arrow_downward</mat-icon>
+  <mat-icon *ngIf="!disabled && outsideRight && !outsideBottom && !outsideTop" aria-hidden="false">arrow_forward</mat-icon>
+
+  <mat-icon *ngIf="!disabled && outsideTop && outsideLeft" class="rotate-45deg">arrow_backward</mat-icon>
+  <mat-icon *ngIf="!disabled && outsideTop && outsideRight" class="rotate-45deg">arrow_upward</mat-icon>
+  <mat-icon *ngIf="!disabled && outsideBottom && outsideLeft" class="rotate-45deg">arrow_downward
+  </mat-icon>
+  <mat-icon *ngIf="!disabled && outsideBottom && outsideRight" class="rotate-45deg">arrow_forward
+  </mat-icon>
+</div>

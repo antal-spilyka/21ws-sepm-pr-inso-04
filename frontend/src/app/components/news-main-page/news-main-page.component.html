@@ -1,15 +1,19 @@
 <h1>Welcome</h1>
 
+<div class="center" *ngIf="news.length === 0">
+  <h1>There are no more new news for you.</h1>
+  <button style="margin-top: 20px" (click)="redirectToOldNews()" mat-raised-button color="primary">Seen News</button>
+</div>
+
 <mat-grid-list cols="4" rowHeight="4:5">
   <div *ngFor="let news of news; index as i" (click)="redirect(news)">
     <mat-grid-tile>
       <mat-card class="news-card">
         <mat-card-header>
-          <mat-card-title>{{news.event.name}}</mat-card-title>
-          <mat-card-title>{{news.event.category}}</mat-card-title>
-          <mat-card-subtitle>{{news.event.startTime.toDateString()}}</mat-card-subtitle>
+          <mat-card-title>{{news.eventName}}</mat-card-title>
+          <mat-card-subtitle>{{news.eventDate.toDateString()}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-md-image src="favicon.ico">
+        <img class="center" *ngIf="news.picture" mat-card-md-image src="{{news.picture.url}}">
         <mat-card-content>
           {{news.shortDescription}}
         </mat-card-content>

@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,10 +46,14 @@ public class UserEndpointTest implements TestData {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private SeenNewsRepository seenNewsRepository;
+
+    @Autowired
     private SecurityProperties securityProperties;
 
     @BeforeEach
     public void beforeEach() {
+        seenNewsRepository.deleteAll();
         userRepository.deleteAll();
     }
 

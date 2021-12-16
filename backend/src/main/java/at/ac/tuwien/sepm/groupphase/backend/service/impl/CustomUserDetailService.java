@@ -2,12 +2,14 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.aspectj.lang.annotation.Before;
@@ -25,9 +27,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -36,14 +40,19 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
+    private final EmailServiceImpl emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository) {
+    public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.seenNewsRepository = seenNewsRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -176,12 +185,14 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String email) {
         LOGGER.debug("Delete user with the email {}", email);
         if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new NotFoundException("No user found with the given e-mail address");
         } else {
             ApplicationUser userToDelete = userRepository.findUserByEmail(email);
+            seenNewsRepository.deleteByUser(userToDelete);
             userRepository.deleteById(userToDelete.getId());
         }
     }
@@ -208,5 +219,41 @@ public class CustomUserDetailService implements UserService {
             user.setLockedCounter(0);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void sendEmailToResetPassword(String email) {
+        LOGGER.debug("Send email to reset password");
+        if (email.contains("@email.com")) {
+            return;
+        }
+        ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
+        if (applicationUser != null) {
+            String newPassword = generateNewPassword();
+            applicationUser.setPassword(passwordEncoder.encode(newPassword));
+
+            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + newPassword + "\n\n Thanks for using Ticketline.";
+            String mailSubject = "Password Reset";
+            emailService.sendEmail(email, mailSubject, mailText);
+            userRepository.save(applicationUser);
+        } else {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        }
+    }
+
+    public String generateNewPassword() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+
+        System.out.println(generatedString);
+        return generatedString;
     }
 }

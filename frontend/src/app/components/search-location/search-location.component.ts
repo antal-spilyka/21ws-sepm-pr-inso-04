@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Address} from '../../dtos/address';
 import {EventLocationService} from '../../services/event-location.service';
+import {EventDto} from '../../dtos/eventDto';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-location',
@@ -15,7 +17,7 @@ export class SearchLocationComponent implements OnInit {
   eventLocations: Address[] = [];
   error = false;
   errorMessage: string;
-  constructor(private eventLocationService: EventLocationService) { }
+  constructor(private eventLocationService: EventLocationService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -30,6 +32,11 @@ export class SearchLocationComponent implements OnInit {
         }, error: error => this.handleError(error)
       }
     );
+  }
+  loadPerformances(eventLocation: Address){
+    if(eventLocation.id){
+      this.router.navigateByUrl(`/locations/${eventLocation.id}/performances`);
+    }
   }
   vanishError(): void {
     this.errorMessage = null;

@@ -25,7 +25,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -69,7 +71,7 @@ public class EventPlaceServiceTest {
     public void search_for_notExisting() {
         EventPlaceSearchDto eventPlaceSearchDto = new EventPlaceSearchDto();
         eventPlaceSearchDto.setName("not existing");
-        List<EventPlace> eventPlacesFound = eventPlaceService.findEventPlace(eventPlaceSearchDto);
+        List<EventPlaceDto> eventPlacesFound = eventPlaceService.findEventPlace(eventPlaceSearchDto);
         assertEquals(eventPlacesFound.size(), 0);
     }
 
@@ -98,6 +100,6 @@ public class EventPlaceServiceTest {
         eventLocationSearchDto.setCity("SearchCity");
         eventLocationSearchDto.setCountry("SearchCountry");
         List<Address> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
-        assertEquals(1, events.size());
+        assertFalse(events.isEmpty());
     }
 }

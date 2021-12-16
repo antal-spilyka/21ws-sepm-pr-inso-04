@@ -119,7 +119,7 @@ public class Event {
             ", startTime=" + startTime +
             ", duration=" + duration +
             ", performances=" + performanceToString +
-            ", eventPlace=" + eventPlace.toString() +
+            ", eventPlace=" + eventPlace +
             ", description='" + description + '\'' +
             '}';
     }

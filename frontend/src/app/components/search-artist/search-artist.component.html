@@ -28,7 +28,11 @@
       <tr *ngFor="let artist of artistList">
         <td>
           <div class="flex"><span>Name: {{artist.bandName}}</span>
+            <div>
+              <button type="submit" class="button" mat-raised-button color="primary" (click)="loadPerformances(artist)">Performances
+              </button>
             </div>
+          </div>
         </td>
       </tr>
       </tbody>

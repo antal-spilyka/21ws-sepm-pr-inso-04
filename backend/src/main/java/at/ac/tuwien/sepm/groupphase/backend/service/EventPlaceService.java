@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
-import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -23,9 +21,7 @@ public interface EventPlaceService {
      * @return List of eventPlaces matching properties
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<EventPlace> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
-
-    EventPlace findEventPlace(EventPlaceDto eventPlace); // TODO delete
+    List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
     /**
      * Finds eventLocations with matching properties.
@@ -43,4 +39,12 @@ public interface EventPlaceService {
      * @return persisted eventPlace
      */
     EventPlace save(EventPlaceDto eventPlaceDto);
+
+    /**
+     * Adds an hall to an event place.
+     *
+     * @param eventPlaceId the event place to which the hall is added
+     * @param hallAddDto to be persisted
+     */
+    void addHall(String eventPlaceId, HallAddDto hallAddDto);
 }

@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -22,7 +23,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.Principal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -42,8 +46,12 @@ public class UserServiceTest implements TestData {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SeenNewsRepository seenNewsRepository;
+
     @BeforeEach
     public void beforeEach() {
+        seenNewsRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -205,5 +213,14 @@ public class UserServiceTest implements TestData {
             () -> assertEquals(0, userService.findUsers("user").size()),
             () -> assertEquals(0, paymentInformationRepository.findByUser(user).size())
         );
+    }
+
+    @Test
+    public void sendEmailToResetPasswordWithNotExistingEmail_shouldThrowNotFoundException() {
+        try {
+            userService.sendEmailToResetPassword("notExistingEmail");
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
     }
 }

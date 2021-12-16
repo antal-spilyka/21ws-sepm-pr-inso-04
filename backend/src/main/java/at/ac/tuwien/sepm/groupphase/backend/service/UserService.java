@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -82,4 +83,11 @@ public interface UserService extends UserDetailsService {
      * @param email of the user
      */
     void resetLockedCounter(String email);
+
+    /**
+     * Send a email to reset the password.
+     *
+     * @param email of the user
+     */
+    void sendEmailToResetPassword(String email);
 }

@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class EventPlaceDto {
@@ -17,13 +15,10 @@ public class EventPlaceDto {
         this.id = id;
     }
 
-    @NotNull()
-    @NotBlank
     public String getName() {
         return name;
     }
 
-    @NotNull()
     public AddressDto getAddressDto() {
         return addressDto;
     }
