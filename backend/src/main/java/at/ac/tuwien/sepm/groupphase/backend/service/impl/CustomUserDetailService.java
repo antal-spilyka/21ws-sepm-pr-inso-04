@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -39,14 +40,17 @@ public class CustomUserDetailService implements UserService {
     private final UserMapper userMapper;
     private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
+    private final EmailServiceImpl emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
+    public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
         this.seenNewsRepository = seenNewsRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -213,5 +217,22 @@ public class CustomUserDetailService implements UserService {
             user.setLockedCounter(0);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void sendEmailToResetPassword(String email) {
+        LOGGER.debug("Send email to reset password");
+        ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
+        if (applicationUser != null) {
+            applicationUser.setPassword(passwordEncoder.encode(applicationUser.getPassword()));
+
+            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + applicationUser.getPassword() + "\n\n Thanks for using Ticketline.";
+            String mailSubject = "Password Reset";
+            emailService.sendEmail(email, mailSubject, mailText);
+            userRepository.save(applicationUser);
+        } else {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        }
+
     }
 }
