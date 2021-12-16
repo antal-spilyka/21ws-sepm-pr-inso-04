@@ -113,13 +113,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> findEvent(String name) {
         LOGGER.debug("Find events with name {}.", name);
-        List<Event> filteredList = this.eventRepository.findByNameContainsIgnoreCase(name);
-        for (Event event : filteredList) {
-            for (Performance performance : event.getPerformances()) {
-                performance.setEvent(null);
+        try {
+            List<Event> filteredList = this.eventRepository.findByNameContainsIgnoreCase(name);
+            for (Event event : filteredList) {
+                for (Performance performance : event.getPerformances()) {
+                    performance.setEvent(null);
+                }
             }
+            return filteredList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return filteredList;
     }
 
     @Transactional
@@ -171,22 +175,26 @@ public class EventServiceImpl implements EventService {
         if (eventDto == null) {
             throw new ServiceException("Event can't be null");
         }
-        long durationCounter = 0L;
-        List<PerformanceDto> temp = new ArrayList<>();
-        if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
-            for (PerformanceDto performanceDto : eventDto.getPerformances()) {
-                performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
-                durationCounter += 5 + performanceDto.getDuration();
-                performanceDto.setEvent(eventDto);
-                temp.add(performanceDto);
+        try {
+            long durationCounter = 0L;
+            List<PerformanceDto> temp = new ArrayList<>();
+            if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
+                for (PerformanceDto performanceDto : eventDto.getPerformances()) {
+                    performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
+                    durationCounter += 5 + performanceDto.getDuration();
+                    performanceDto.setEvent(eventDto);
+                    temp.add(performanceDto);
 
+                }
+                eventDto.setDuration(durationCounter);
             }
-            eventDto.setDuration(durationCounter);
+            Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
+            for (PerformanceDto performanceDto : temp) {
+                performanceService.save(performanceDto, event);
+            }
+            return event;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        Event event = eventRepository.save(eventMapper.dtoToEntity(eventDto));
-        for (PerformanceDto performanceDto : temp) {
-            performanceService.save(performanceDto, event);
-        }
-        return event;
     }
 }

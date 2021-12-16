@@ -15,11 +15,13 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PictureRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
@@ -54,53 +56,61 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<SimpleNewsDto> getNewNews(String email) {
         LOGGER.debug("Get all new News");
-        ApplicationUser user = userRepository.findUserByEmail(email);
-        List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
-        List<News> newsList = newsRepository.findAll();
-        for (SeenNews e : seenNewsList) {
-            newsList.remove(e.getNews());
-        }
-        List<SimpleNewsDto> simpleNewsList = new ArrayList<>();
-        for (News e : newsList) {
-            List<Picture> pictures = pictureRepository.findByNewsId(e);
-            if (pictures.size() != 0) {
-                simpleNewsList.add(newsMapper.entityToSimpleDto(e, pictures.get(0)));
-            } else {
-                simpleNewsList.add(newsMapper.entityToSimpleDto(e, null));
+        try {
+            ApplicationUser user = userRepository.findUserByEmail(email);
+            List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
+            List<News> newsList = newsRepository.findAll();
+            for (SeenNews e : seenNewsList) {
+                newsList.remove(e.getNews());
             }
-        }
-        /*for (News news : newsList) {
+            List<SimpleNewsDto> simpleNewsList = new ArrayList<>();
+            for (News e : newsList) {
+                List<Picture> pictures = pictureRepository.findByNewsId(e);
+                if (pictures.size() != 0) {
+                    simpleNewsList.add(newsMapper.entityToSimpleDto(e, pictures.get(0)));
+                } else {
+                    simpleNewsList.add(newsMapper.entityToSimpleDto(e, null));
+                }
+            }
+            /*for (News news : newsList) {
             for (Performance performance : news.getEvent().getPerformances()) {
                 performance.setEvent(null);
             }
-        }*/
-        LOGGER.info("" + simpleNewsList.size());
+            }*/
+            LOGGER.info("" + simpleNewsList.size());
 
-        return simpleNewsList;
+            return simpleNewsList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
     @Transactional
     @Override
     public List<SimpleNewsDto> getOldNews(String email) {
         LOGGER.debug("Get all old News");
-        ApplicationUser user = userRepository.findUserByEmail(email);
-        List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
-        List<SimpleNewsDto> newsList = new ArrayList<>();
-        for (SeenNews e : seenNewsList) {
-            List<Picture> pictures = pictureRepository.findByNewsId(e.getNews());
-            if (pictures.size() != 0) {
-                newsList.add(newsMapper.entityToSimpleDto(e.getNews(), pictures.get(0)));
-            } else {
-                newsList.add(newsMapper.entityToSimpleDto(e.getNews(), null));
+        try {
+            ApplicationUser user = userRepository.findUserByEmail(email);
+            List<SeenNews> seenNewsList = seenNewsRepository.findByUser(user);
+            List<SimpleNewsDto> newsList = new ArrayList<>();
+            for (SeenNews e : seenNewsList) {
+                List<Picture> pictures = pictureRepository.findByNewsId(e.getNews());
+                if (pictures.size() != 0) {
+                    newsList.add(newsMapper.entityToSimpleDto(e.getNews(), pictures.get(0)));
+                } else {
+                    newsList.add(newsMapper.entityToSimpleDto(e.getNews(), null));
+                }
             }
-        }
-        /*for (NewsDto news : newsList) {
+            /*for (NewsDto news : newsList) {
             for (PerformanceDto performance : news.getEvent().getPerformances()) {
                 performance.setEvent(null);
             }
-        }*/
-        LOGGER.info("" + newsList.size());
-        return newsList;
+            }*/
+            LOGGER.info("" + newsList.size());
+            return newsList;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
     @Transactional
@@ -120,7 +130,8 @@ public class NewsServiceImpl implements NewsService {
         } catch (EntityNotFoundException e) {
             LOGGER.debug("News with id {} not found", simpleSeenNewsDto.getNewsId());
             throw new EntityNotFoundException(e.getMessage());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-
     }
 }

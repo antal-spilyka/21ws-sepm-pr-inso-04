@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
@@ -67,7 +68,7 @@ public class UserEndpoint {
 
         try {
             userService.createUser(user);
-        } catch (ServiceException e) {
+        } catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
         }
@@ -87,7 +88,7 @@ public class UserEndpoint {
         }
         try {
             userService.updateUser(user);
-        } catch (ServiceException e) {
+        } catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
         }

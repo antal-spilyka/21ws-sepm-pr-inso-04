@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
@@ -70,8 +72,8 @@ public class UserServiceTest implements TestData {
         try {
             userService.createUser(newUser1);
             userService.createUser(user);
-            fail("ServiceException should occur!");
-        } catch (ServiceException e) {
+            fail("ContextException should occur!");
+        } catch (ContextException e) {
             // Should be the case
         }
     }
@@ -125,8 +127,8 @@ public class UserServiceTest implements TestData {
 
         try {
             userService.setAdmin(newAdminUser1.getEmail(), principal);
-            fail("ServiceException should occur");
-        } catch (ServiceException e) {
+            fail("ConflictException should occur");
+        } catch (ConflictException e) {
             // Should be the case
         }
     }

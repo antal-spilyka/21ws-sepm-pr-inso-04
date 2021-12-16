@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
@@ -24,6 +26,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.security.Principal;
@@ -82,24 +86,28 @@ public class CustomUserDetailService implements UserService {
     @Override
     public List<ApplicationUser> findUsers(String email) {
         LOGGER.debug("Find all application users");
-        List<ApplicationUser> users;
-        if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
-            users = userRepository.findAll();
-        } else {
-            users = userRepository.findByEmailContains(email);
+        try {
+            List<ApplicationUser> users;
+            if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
+                users = userRepository.findAll();
+            } else {
+                users = userRepository.findByEmailContains(email);
+            }
+            return users;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return users;
     }
 
     @Override
     public void createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         if (user == null) {
-            throw new ServiceException("Please fill out all the mandatory fields");
+            throw new IllegalArgumentException("Please fill out all the mandatory fields");
         }
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
         if (foundUser != null) {
-            throw new ServiceException("E-mail already used");
+            throw new ContextException("E-mail already used");
         } else {
             userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
@@ -111,11 +119,11 @@ public class CustomUserDetailService implements UserService {
     @Transactional
     public void setAdmin(String email, Principal principal) {
         if (principal == null || principal.getName() == null) {
-            throw new ServiceException("No administrator found with the given e-mail");
+            throw new ConflictException("No administrator found with the given e-mail");
         } else if (email == null || userRepository.findUserByEmail(email) == null) {
-            throw new ServiceException("No user found with the given e-mail");
+            throw new NotFoundException("No user found with the given e-mail");
         } else if (principal.getName().equals(email)) {
-            throw new ServiceException("You can not change your own admin rights");
+            throw new ConflictException("You can not change your own admin rights");
         } else {
             ApplicationUser currentUser = userRepository.findUserByEmail(email);
             currentUser.setAdmin(!currentUser.getAdmin()); // changing the admin rights of the user
@@ -131,7 +139,7 @@ public class CustomUserDetailService implements UserService {
 
         if (updatedUser.getNewEmail() != null) {
             if (userRepository.findUserByEmail(updatedUser.getNewEmail()) != null && !updatedUser.getNewEmail().equals(updatedUser.getEmail())) {
-                throw new ServiceException("E-mail already used");
+                throw new ContextException("E-mail already used");
             }
         }
 
@@ -164,7 +172,7 @@ public class CustomUserDetailService implements UserService {
             }
             userRepository.save(toUpdateUser);
         } else {
-            throw new ServiceException("No User found");
+            throw new NotFoundException("No User found");
         }
     }
 
@@ -172,6 +180,9 @@ public class CustomUserDetailService implements UserService {
     @Transactional
     public void deletePaymentInformations(UserEditDto updatedUser) {
         ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
+        if (user == null) {
+            throw new NotFoundException("No user found with the given e-mail address");
+        }
         List<PaymentInformation> paymentInformationList = paymentInformationRepository.findByUser(user);
         for (PaymentInformation e : paymentInformationList) {
             paymentInformationRepository.deleteById(e.getId());
@@ -196,7 +207,7 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Update the locker counter of the user");
         ApplicationUser user = userRepository.findUserByEmail(email);
         if (user == null) {
-            throw new ServiceException("No user found with the given e-mail address");
+            throw new NotFoundException("No user found with the given e-mail address");
         } else {
             user.setLockedCounter(user.getLockedCounter() + 1);
             userRepository.save(user);
@@ -208,7 +219,7 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Reset the locker counter of the user");
         ApplicationUser user = userRepository.findUserByEmail(email);
         if (user == null) {
-            throw new ServiceException("No user found with the given e-mail address");
+            throw new NotFoundException("No user found with the given e-mail address");
         } else {
             user.setLockedCounter(0);
             userRepository.save(user);
