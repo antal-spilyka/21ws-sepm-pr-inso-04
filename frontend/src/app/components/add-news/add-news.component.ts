@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {takeWhile, tap} from 'rxjs/operators';
 import {debounceTime, distinctUntilChanged, interval, Observable, switchMap} from 'rxjs';
 import {EventService} from '../../services/event.service';
 import {EventDto} from '../../dtos/eventDto';
 import {FormBuilder, Validators} from '@angular/forms';
 import {News} from '../../dtos/news';
 import {NewsService} from '../../services/news.service';
+import { FileService } from 'src/app/services/file.service';
+import { Picture } from 'src/app/dtos/picture';
 
 @Component({
   selector: 'app-add-news',
@@ -17,6 +18,16 @@ export class AddNewsComponent implements OnInit {
   errorMessage = '';
   events: Observable<EventDto[]>;
   currentEvent: EventDto;
+  images: Array<object> = [
+    {
+      image: '../../../assets/noImage.jpg',
+      thumbImage: '../../../assets/noImage.jpg'
+    }
+  ];
+  filesToUpload = [];
+  imageUrl;
+  filesUploaded: Picture[] = [];
+
   form = this.formBuilder.group({
     id: ['',],
     chosenEvent: ['', Validators.required],
@@ -30,6 +41,7 @@ export class AddNewsComponent implements OnInit {
     private eventService: EventService,
     private formBuilder: FormBuilder,
     private newsService: NewsService,
+    private fileService: FileService
   ) {
     this.events = this.form.get('chosenEvent').valueChanges.pipe(
       distinctUntilChanged(),
@@ -45,12 +57,12 @@ export class AddNewsComponent implements OnInit {
     this.currentEvent = event;
   }
 
-  setRating(rating: number) {
-    this.form.controls.rating.setValue(rating);
-  }
-
   goBack() {
     history.back();
+  }
+
+  setRating(rating: number) {
+    this.form.controls.rating.setValue(rating);
   }
 
   getErrorMessage(control) {
@@ -65,6 +77,7 @@ export class AddNewsComponent implements OnInit {
 
   save() {
     if (this.form.invalid) {
+      this.setErrorFlag('Please fill out the form');
       return;
     }
     const newsRequest = {
@@ -73,46 +86,57 @@ export class AddNewsComponent implements OnInit {
       fsk: this.form.controls.fsk.value,
       shortDescription: this.form.controls.shortDescription.value,
       longDescription: this.form.controls.longDescription.value,
-      createDate: new Date()} as News;
+      createDate: new Date(),
+      pictures: this.filesUploaded.length === 0 ? null : this.filesUploaded
+    } as News;
     console.log(newsRequest);
     this.newsService.save(newsRequest).subscribe({
-      next: () => {
-        console.log('News was created successfully: ' + newsRequest.toString());
-        alert('News were added!');
+      error: error => {
+        this.setErrorFlag();
       },
-      error: (error) => {
-        console.log(`could not create news due to: ${error}`);
-        this.error = true;
-        this.errorMessage = error;
+      complete: () => {
+        history.back();
       }
     });
   }
 
-  // region horizontal scroll
-
-  scrollLeft(el: Element) {
-    const animTimeMs = 400;
-    const pixelsToMove = 315;
-    const stepArray = [0.001, 0.021, 0.136, 0.341, 0.341, 0.136, 0.021, 0.001];
-    interval(animTimeMs / 8)
-      .pipe(
-        takeWhile(value => value < 8),
-        tap(value => el.scrollLeft -= (pixelsToMove * stepArray[value])),
-      )
-      .subscribe();
+  handleFileInput(files: FileList) {
+    const file = files.item(0);
+    this.filesToUpload.push(file);
+    if(this.filesToUpload.length === 0) {
+      this.images = [];
+    }
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.imageUrl = event.target.result;
+      this.images.push(
+        {
+          image: this.imageUrl,
+          thumbImage: this.imageUrl
+        }
+      );
+    };
+    this.fileService.saveFile(file).subscribe({
+      next: next => {
+        this.filesUploaded.push({
+          url: next.uri
+        });
+        console.log(this.filesUploaded);
+        reader.readAsDataURL(this.filesToUpload[this.filesToUpload.length - 1]);
+      },
+      error: error => {
+        this.setErrorFlag('Could not upload image (max size: 1 MB)');
+      }
+    });
   }
 
-  scrollRight(el: Element) {
-    const animTimeMs = 400;
-    const pixelsToMove = 315;
-    const stepArray = [0.001, 0.021, 0.136, 0.341, 0.341, 0.136, 0.021, 0.001];
-    interval(animTimeMs / 8)
-      .pipe(
-        takeWhile(value => value < 8),
-        tap(value => el.scrollLeft += (pixelsToMove * stepArray[value])),
-      )
-      .subscribe();
+  vanishError() {
+    this.error = false;
+    this.errorMessage = '';
   }
 
-  // endregion
+  setErrorFlag(message?: string) {
+    this.errorMessage = message ? message : 'Unknown Error';
+    this.error = true;
+  }
 }

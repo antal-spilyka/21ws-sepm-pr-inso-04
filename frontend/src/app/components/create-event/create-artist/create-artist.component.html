@@ -80,7 +80,7 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
       <button mat-raised-button color="primary" type="submit">Add</button>
-      <button mat-raised-button color="primary" [disabled]="canSaveEvent" (click)="addEvent()">Finish</button>
+      <button mat-raised-button color="primary" [disabled]="!canSaveEvent" (click)="addEvent()">Finish</button>
     </div>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
       <mat-option *ngFor="let artist of artists | async" [value]="artist">

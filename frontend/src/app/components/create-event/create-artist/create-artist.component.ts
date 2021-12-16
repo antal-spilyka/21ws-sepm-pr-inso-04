@@ -26,7 +26,7 @@ export class CreateArtistComponent implements OnInit {
   halls: Observable<Hall[]>;
   selectedHall: Hall;
   isNewHall = false;
-  canSaveEvent = true;
+  canSaveEvent = false;
   performances: Performance[] = [];
   now = new Date().toISOString().split(':');
 
