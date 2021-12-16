@@ -15,6 +15,7 @@ import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
 import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
 import { NewsViewComponent } from './components/news-view/news-view.component';
+import {HallDetailComponent} from "./components/hall-detail/hall-detail.component";
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
   {path: 'locations/:id/halls/add', component: CreateHallplanComponent},
+  {path: 'halls/:hallId', component: HallDetailComponent},
   {path: 'search-time', component: SearchTimeComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent}
 ];

@@ -31,7 +31,7 @@ export class HallplanElementComponent implements OnChanges {
   @Input() rows: IHallplanElement[][] = [];
   @Input() sectors: Sector[];
 
-  @Input() hallplanElement: HallplanElement;
+  @Input() hallplanElement: IHallplanElement;
 
   @HostBinding('class.zIndex') zIndex = false;
 
@@ -51,7 +51,7 @@ export class HallplanElementComponent implements OnChanges {
     } else {
       const sector = this.sectors.findIndex(sector2 => sector2.selected);
       if (sector !== -1) {
-        this.hallplanElement.setSector(sector);
+        this.hallplanElement.withSector(sector);
       }
     }
   }

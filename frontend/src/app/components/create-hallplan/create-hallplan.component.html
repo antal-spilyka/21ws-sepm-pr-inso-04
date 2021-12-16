@@ -3,26 +3,27 @@
     <div class="hallplan-container">
       <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
         <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
-                          [rows]="rows"
-                              [disabled]="page !== 0"
+                              [rows]="rows"
+                              [disabled]="page !== 0 || viewMode"
                               [sectors]="sectors"
-                          [rowIndex]="rowIndex" [seatIndex]="seatIndex"
-                          [add]="addSeat" [remove]="removeSeat"
-                          [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
-                          [outsideBottom]="rowIndex === rows.length - 1"
-                          [outsideRight]="seatIndex === rows[0].length - 1"
-                          [hallplanElement]="rows[rowIndex][seatIndex]"
-                          [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
-                          [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
-                          [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
-                          [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
-                          [mouseOverHallplanElement]="mouseOverHallplanElement" [mouseOutHallplanElement]="mouseOutHallplanElement"
-                          [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
-                          [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
+                              [rowIndex]="rowIndex" [seatIndex]="seatIndex"
+                              [add]="addSeat" [remove]="removeSeat"
+                              [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
+                              [outsideBottom]="rowIndex === rows.length - 1"
+                              [outsideRight]="seatIndex === rows[0].length - 1"
+                              [hallplanElement]="rows[rowIndex][seatIndex]"
+                              [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
+                              [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
+                              [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
+                              [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
+                              [mouseOverHallplanElement]="mouseOverHallplanElement"
+                              [mouseOutHallplanElement]="mouseOutHallplanElement"
+                              [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
+                              [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
       </div>
     </div>
   </div>
-  <div class="side-bar" *ngIf="page === 0">
+  <div class="side-bar" *ngIf="!viewMode && page === 0">
     <h2>What do you want to edit?</h2>
     <mat-radio-group aria-label="Select an option" [formControl]="radioControl">
       <mat-radio-button [value]="editModes.seat">Seats</mat-radio-button>
@@ -30,11 +31,12 @@
       <mat-radio-button [value]="editModes.exit">Exit</mat-radio-button>
     </mat-radio-group>
 
-    <button type="button"mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
+    <button type="button" mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
   </div>
   <div class="side-bar" *ngIf="page === 1">
     <h2>Please define your sectors:</h2>
-    <div [class]="'sector-wrapper ' + (sector.selected ? 'active' : '')" *ngFor="let sector of sectors; let i = index" (click)="setSelectedSection(i)">
+    <div [class]="'sector-wrapper ' + (sector.selected ? 'active' : '')" *ngFor="let sector of sectors; let i = index"
+         (click)="setSelectedSection(i)">
       <div [style]="'background: ' + sector.color" class="color-marker"></div>
       <span>{{sector.name}}</span>
       <span>{{sector.formatPrice()}}</span>
@@ -46,7 +48,7 @@
       </button>
     </div>
 
-    <button type="button"mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
+    <button type="button" mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
   </div>
   <div class="side-bar" *ngIf="page === 2">
     <h2>Provide a name for the hall:</h2>
@@ -58,7 +60,9 @@
       </mat-form-field>
     </form>
 
-    <button type="button"mat-raised-button color="primary" class="next-button" (click)="finish()" [disabled]="!nameControl.valid">Finish</button>
+    <button type="button" mat-raised-button color="primary" class="next-button" (click)="finish()"
+            [disabled]="!nameControl.valid">Finish
+    </button>
   </div>
 </div>
 

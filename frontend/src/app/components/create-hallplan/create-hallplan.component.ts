@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {HallplanElementType, IHallplanElement, HallplanElement, Sector} from './types';
 import {MatDialog} from '@angular/material/dialog';
@@ -6,6 +6,8 @@ import {AddSectionDialogComponent} from './components/add-section-dialog/add-sec
 import {HallAddRequest} from '../../dtos/hall-add-request';
 import {EventPlaceService} from '../../services/event-place.service';
 import {ActivatedRoute} from '@angular/router';
+import {HallService} from "../../services/hall.service";
+import {Hall} from "../../dtos/hall";
 
 @Component({
   selector: 'app-create-hallplan',
@@ -13,6 +15,9 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./create-hallplan.component.scss']
 })
 export class CreateHallplanComponent implements OnInit {
+  @Input() viewMode: boolean;
+  @Input() hallId: string;
+
   rows: IHallplanElement[][] = [];
   sectors: Sector[] = [
     new Sector('#ffffff', 'default', 30.00),
@@ -30,7 +35,7 @@ export class CreateHallplanComponent implements OnInit {
   nameControl = new FormControl('', [Validators.required]);
   eventPlaceId: string;
 
-  constructor(public dialog: MatDialog, private eventPlaceService: EventPlaceService,
+  constructor(public dialog: MatDialog, private eventPlaceService: EventPlaceService, private hallService: HallService,
               private route: ActivatedRoute) {
     this.addSeat = this.addSeat.bind(this);
     this.removeSeat = this.removeSeat.bind(this);
@@ -54,11 +59,28 @@ export class CreateHallplanComponent implements OnInit {
       }
       this.rows.push(row);
     }
+
+    if (this.hallId) {
+      this.hallService.getHallId(this.hallId).subscribe({
+        next: (result: HallAddRequest) => {
+          console.log("test");
+          const rowsTmp = result.rows.map((row): IHallplanElement[] => [new HallplanElement(false), ...row.map(
+            h => new HallplanElement().withAdded(h.added).withType(h.type).withSector(h.sector)
+          ), new HallplanElement(false)]);
+          this.rows = [this.createRow(false, rowsTmp[0].length)].concat(rowsTmp).concat([this.createRow(false, rowsTmp[0].length)]);
+          this.sectors = result.sectors;
+          console.log(this.rows);
+        },
+        error: (error) => {
+
+        }
+      });
+    }
   }
 
-  createRow(added: boolean): IHallplanElement[] {
+  createRow(added: boolean, length = this.rows[0].length): IHallplanElement[] {
     const row: IHallplanElement[] = [];
-    for (const seat of this.rows[0]) {
+    for (let i = 0; i < length; i++) {
       row.push(new HallplanElement(added));
     }
     return row;

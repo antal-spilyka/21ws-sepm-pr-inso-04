@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Hall} from '../dtos/hall';
 import {Globals} from '../global/globals';
+import {HallAddRequest} from "../dtos/hall-add-request";
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,9 @@ export class HallService {
   getAllRooms(): Observable<Hall[]> {
     console.log('Getting the list of all rooms');
     return this.httpClient.get<Hall[]>(this.messageBaseUri + '/search');
+  }
+
+  getHallId(hallId: string): Observable<HallAddRequest> {
+    return this.httpClient.get<HallAddRequest>(this.messageBaseUri + '/' + hallId);
   }
 }
