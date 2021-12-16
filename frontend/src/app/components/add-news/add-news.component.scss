@@ -4,6 +4,14 @@
   margin-bottom: 1em;
 }
 
+.fileInput {
+  display: none;
+}
+
+.images {
+  margin-top: 15px;
+}
+
 .event-image {
   width: 40em;
   max-width: 70%;
@@ -42,7 +50,10 @@
     display: flex;
     overflow: hidden;
     flex-direction: row-reverse;
-    margin-top: 4rem;
+  }
+
+  .shortDescription {
+    resize: none;
   }
 
   .rating-0 {
@@ -78,54 +89,4 @@
 .additional-event-image {
   width: 25em;
   max-width: 50%;
-}
-
-.scrolling-wrapper {
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
-  border-radius: 30px;
-
-  .card {
-    display: inline;
-  }
-}
-
-.scrolling-wrapper-flexbox {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: fragments;
-}
-
-.scrolling-wrapper, .scrolling-wrapper-flexbox {
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.additional-events {
-  display: flex;
-  align-items: center;
-  position: static;
-}
-
-.space-div {
-  background: gray;
-  border-radius: 20px;
-  height: 50px;
-  margin: 2rem auto;
-}
-
-.arrow-left {
-  position: absolute;
-  left: 2rem;
-  background: rgba(128, 128, 128, 0.5);
-}
-
-.arrow-right {
-  position: absolute;
-  right: 2rem;
-  background: rgba(128, 128, 128, 0.5);
 }

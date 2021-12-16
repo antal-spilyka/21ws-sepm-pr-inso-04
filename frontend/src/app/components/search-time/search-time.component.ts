@@ -1,10 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {EventDto} from '../../dtos/eventDto';
 import {EventService} from '../../services/event.service';
-import {EventInquiry} from '../../dtos/eventInquiry';
-import {Room} from '../../dtos/room';
-import {RoomService} from '../../services/room.service';
+import {Hall} from '../../dtos/hall';
+import {HallService} from '../../services/hall.service';
 import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
+import {PerformanceSearchDto} from '../../dtos/performanceSearchDto';
+import {PerformanceService} from '../../services/performance.service';
+import {Performance} from '../../dtos/performance';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-time',
@@ -12,16 +15,18 @@ import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
   styleUrls: ['./search-time.component.scss']
 })
 export class SearchTimeComponent implements OnInit {
-  searchEvent: EventDateTimeSearchDto = {
-    dateTime: null, event: '', room: '',
+  performanceSearchDto: PerformanceSearchDto = {
+    eventName: '', startTime: '', hallName: '',
   };
-  eventList: EventDto[] = [];
-  roomsList: Room[] = [];
+  performanceList: Performance[] = [];
+  roomsList: Hall[] = [];
   roomMap = new Map();
+  submitted = false;
   private error = false;
   private errorMessage: string;
 
-  constructor(private eventService: EventService, private roomService: RoomService) {
+  constructor(private performanceService: PerformanceService, private roomService: HallService,
+              private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -46,17 +51,24 @@ export class SearchTimeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.eventService.findEventByDateTime(this.searchEvent).subscribe(
+    this.performanceList = [];
+    console.log(this.performanceSearchDto);
+    this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
       {
-        next: events => {
-          console.log(this.eventList);
-          this.eventList = events;
-          console.log(this.eventList);
+        next: performances => {
+          this.submitted = true;
+          console.log(this.performanceList);
+          this.performanceList = performances;
+          console.log(this.performanceList);
         }, error: error => this.handleError(error)
       }
     );
   }
-
+  loadPerformance(performance: Performance){
+    if(performance.id){
+      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+    }
+  }
   private handleError(error: any) {
     console.log(error);
     this.error = true;

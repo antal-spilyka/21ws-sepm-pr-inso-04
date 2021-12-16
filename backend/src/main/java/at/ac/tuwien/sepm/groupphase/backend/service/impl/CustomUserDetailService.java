@@ -1,13 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.aspectj.lang.annotation.Before;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +27,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -31,13 +43,20 @@ public class CustomUserDetailService implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
+    private final EmailServiceImpl emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
+    public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.seenNewsRepository = seenNewsRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -73,24 +92,28 @@ public class CustomUserDetailService implements UserService {
     @Override
     public List<ApplicationUser> findUsers(String email) {
         LOGGER.debug("Find all application users");
-        List<ApplicationUser> users;
-        if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
-            users = userRepository.findAll();
-        } else {
-            users = userRepository.findByEmailContains(email);
+        try {
+            List<ApplicationUser> users;
+            if (email == null || email.length() <= 0 || email.trim().length() == 0 || email.equals("null")) {
+                users = userRepository.findAll();
+            } else {
+                users = userRepository.findByEmailContains(email);
+            }
+            return users;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return users;
     }
 
     @Override
     public void createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         if (user == null) {
-            throw new ServiceException("Please fill out all the mandatory fields");
+            throw new IllegalArgumentException("Please fill out all the mandatory fields");
         }
         ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
         if (foundUser != null) {
-            throw new ServiceException("E-mail already used");
+            throw new ContextException("E-mail already used");
         } else {
             userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
@@ -102,11 +125,11 @@ public class CustomUserDetailService implements UserService {
     @Transactional
     public void setAdmin(String email, Principal principal) {
         if (principal == null || principal.getName() == null) {
-            throw new ServiceException("No administrator found with the given e-mail");
+            throw new ConflictException("No administrator found with the given e-mail");
         } else if (email == null || userRepository.findUserByEmail(email) == null) {
-            throw new ServiceException("No user found with the given e-mail");
+            throw new NotFoundException("No user found with the given e-mail");
         } else if (principal.getName().equals(email)) {
-            throw new ServiceException("You can not change your own admin rights");
+            throw new ConflictException("You can not change your own admin rights");
         } else {
             ApplicationUser currentUser = userRepository.findUserByEmail(email);
             currentUser.setAdmin(!currentUser.getAdmin()); // changing the admin rights of the user
@@ -122,7 +145,7 @@ public class CustomUserDetailService implements UserService {
 
         if (updatedUser.getNewEmail() != null) {
             if (userRepository.findUserByEmail(updatedUser.getNewEmail()) != null && !updatedUser.getNewEmail().equals(updatedUser.getEmail())) {
-                throw new ServiceException("E-mail already used");
+                throw new ContextException("E-mail already used");
             }
         }
 
@@ -143,34 +166,44 @@ public class CustomUserDetailService implements UserService {
             } else {
                 toUpdateUser.setEmail(updatedUser.getNewEmail());
             }
-            toUpdateUser.setDisabled(updatedUser.getDisabled());
-            if (updatedUser.getPaymentInformation() != null) {
-                PaymentInformation paymentInformation;
-                if (toUpdateUser.getPaymentInformation() == null) {
-                    paymentInformation = new PaymentInformation();
-                } else {
-                    paymentInformation = paymentInformationRepository.findByUser(toUpdateUser);
+            this.deletePaymentInformations(updatedUser);
+            if (!updatedUser.getPaymentInformation().isEmpty()) {
+                List<PaymentInformation> paymentInformationList = new ArrayList<>();
+                for (PaymentInformationDto e : updatedUser.getPaymentInformation()) {
+                    PaymentInformation p = userMapper.paymentInformationDtoToPaymentInformation(e);
+                    p.setUser(toUpdateUser);
+                    paymentInformationList.add(p);
                 }
-                paymentInformation.setUser(toUpdateUser);
-                paymentInformation.setCreditCardName(updatedUser.getPaymentInformation().getCreditCardName());
-                paymentInformation.setCreditCardCvv(updatedUser.getPaymentInformation().getCreditCardCvv());
-                paymentInformation.setCreditCardExpirationDate(updatedUser.getPaymentInformation().getCreditCardExpirationDate());
-                paymentInformation.setCreditCardNr(updatedUser.getPaymentInformation().getCreditCardNr());
-                paymentInformationRepository.save(paymentInformation);
+                paymentInformationRepository.saveAll(paymentInformationList);
             }
             userRepository.save(toUpdateUser);
         } else {
-            throw new ServiceException("No User found");
+            throw new NotFoundException("No User found");
+        }
+    }
+
+    // removes all existing paymentInformations of updatedUser to owerwrite the new data
+    @Transactional
+    public void deletePaymentInformations(UserEditDto updatedUser) {
+        ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
+        if (user == null) {
+            throw new NotFoundException("No user found with the given e-mail address");
+        }
+        List<PaymentInformation> paymentInformationList = paymentInformationRepository.findByUser(user);
+        for (PaymentInformation e : paymentInformationList) {
+            paymentInformationRepository.deleteById(e.getId());
         }
     }
 
     @Override
+    @Transactional
     public void deleteUser(String email) {
         LOGGER.debug("Delete user with the email {}", email);
         if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new NotFoundException("No user found with the given e-mail address");
         } else {
             ApplicationUser userToDelete = userRepository.findUserByEmail(email);
+            seenNewsRepository.deleteByUser(userToDelete);
             userRepository.deleteById(userToDelete.getId());
         }
     }
@@ -180,7 +213,7 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Update the locker counter of the user");
         ApplicationUser user = userRepository.findUserByEmail(email);
         if (user == null) {
-            throw new ServiceException("No user found with the given e-mail address");
+            throw new NotFoundException("No user found with the given e-mail address");
         } else {
             user.setLockedCounter(user.getLockedCounter() + 1);
             userRepository.save(user);
@@ -192,10 +225,46 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Reset the locker counter of the user");
         ApplicationUser user = userRepository.findUserByEmail(email);
         if (user == null) {
-            throw new ServiceException("No user found with the given e-mail address");
+            throw new NotFoundException("No user found with the given e-mail address");
         } else {
             user.setLockedCounter(0);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void sendEmailToResetPassword(String email) {
+        LOGGER.debug("Send email to reset password");
+        if (email.contains("@email.com")) {
+            return;
+        }
+        ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
+        if (applicationUser != null) {
+            String newPassword = generateNewPassword();
+            applicationUser.setPassword(passwordEncoder.encode(newPassword));
+
+            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + newPassword + "\n\n Thanks for using Ticketline.";
+            String mailSubject = "Password Reset";
+            emailService.sendEmail(email, mailSubject, mailText);
+            userRepository.save(applicationUser);
+        } else {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        }
+    }
+
+    public String generateNewPassword() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+
+        System.out.println(generatedString);
+        return generatedString;
     }
 }

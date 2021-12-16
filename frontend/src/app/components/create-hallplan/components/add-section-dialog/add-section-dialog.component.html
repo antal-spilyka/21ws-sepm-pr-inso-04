@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Create a section</h1>
+<div mat-dialog-content>
+  <label>
+    Color:
+    <input
+      [(colorPicker)]="data.color"
+           [style.background]="data.color">
+  </label>
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Price</mat-label>
+    <input matInput [(ngModel)]="data.price" type="number">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [disabled]="data.name.length === 0 || data.price === 0.0 || data.price === 0.0" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class AddressDto {
@@ -9,18 +8,8 @@ public class AddressDto {
     String state;
     String zip;
     String country;
-    String description;
     String street;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @NotNull()
     public String getStreet() {
         return street;
     }
@@ -37,7 +26,6 @@ public class AddressDto {
         this.id = id;
     }
 
-    @NotNull()
     public String getCity() {
         return city;
     }
@@ -46,7 +34,6 @@ public class AddressDto {
         this.city = city;
     }
 
-    @NotNull()
     public String getState() {
         return state;
     }
@@ -55,7 +42,6 @@ public class AddressDto {
         this.state = state;
     }
 
-    @NotNull()
     public String getZip() {
         return zip;
     }

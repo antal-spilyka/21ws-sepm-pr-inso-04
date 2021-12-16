@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class PaymentInformationRepositoryTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    public void beforeEach() {
+        userRepository.deleteAll();
+        paymentInformationRepository.deleteAll();
+    }
 
     @Test()
     public void addingPaymentInformationToUser() {
@@ -58,9 +65,9 @@ public class PaymentInformationRepositoryTest implements TestData {
 
         assertAll(
             () -> assertEquals(1, paymentInformationRepository.findAll().size()),
-            () -> assertNotNull(paymentInformationRepository.findById(user.getId())),
+            () -> assertNotNull(paymentInformationRepository.findByUser(user)),
             () -> assertEquals(userRepository.findUserByEmail(user.getEmail()).getEmail(),
-                paymentInformationRepository.findByUser(user).getUser().getEmail())
+                paymentInformationRepository.findByUser(user).get(0).getUser().getEmail())
         );
     }
 }

@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 
 import java.util.List;
 
@@ -21,14 +23,14 @@ public interface EventPlaceService {
      */
     List<EventPlaceDto> findEventPlace(EventPlaceSearchDto eventPlaceSearchDto);
 
-
     /**
-     * FInds eventLocations with matching properties.
+     * Finds eventLocations with matching properties.
      *
      * @param eventLocationSearchDto dto for storing the search information.
      * @return a list with all the addresses that meet search criteria.
+     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<AddressDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
+    List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
 
     /**
@@ -36,6 +38,16 @@ public interface EventPlaceService {
      *
      * @param eventPlaceDto to be persisted
      * @return persisted eventPlace
+     * @throws javax.persistence.EntityExistsException when entity already exists
+     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    EventPlaceDto save(EventPlaceDto eventPlaceDto);
+    EventPlace save(EventPlaceDto eventPlaceDto);
+
+    /**
+     * Adds an hall to an event place.
+     *
+     * @param eventPlaceId the event place to which the hall is added
+     * @param hallAddDto to be persisted
+     */
+    void addHall(String eventPlaceId, HallAddDto hallAddDto);
 }

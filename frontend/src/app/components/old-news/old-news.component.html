@@ -1,0 +1,25 @@
+<h1>Seen News</h1>
+
+<mat-grid-list cols="4" rowHeight="4:5">
+  <div *ngFor="let news of news; index as i" (click)="redirect(news)">
+    <mat-grid-tile>
+      <mat-card class="news-card">
+        <mat-card-header>
+          <mat-card-title>{{news.eventName}}</mat-card-title>
+          <mat-card-subtitle>{{news.eventDate.toDateString()}}</mat-card-subtitle>
+        </mat-card-header>
+        <img class="picture" *ngIf="news.picture" mat-card-md-image src="{{news.picture.url}}">
+        <mat-card-content>
+          {{news.shortDescription}}
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </div>
+</mat-grid-list>
+
+<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{ errorMessage }}</strong>
+  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>

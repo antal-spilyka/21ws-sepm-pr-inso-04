@@ -2,25 +2,24 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CategoryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.RoomInquiryDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import org.junit.jupiter.api.BeforeAll;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
-import at.ac.tuwien.sepm.groupphase.backend.service.CategoryService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
-import at.ac.tuwien.sepm.groupphase.backend.service.RoomService;
+import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,11 +30,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -50,130 +54,124 @@ public class EventServiceTest {
     private EventPlaceMapper eventPlaceMapper;
 
     @Autowired
+    private EventMapper eventMapper;
+
+    @Autowired
     private EventPlaceService eventPlaceService;
 
     @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private CategoryService categoryService;
+    private HallService hallService;
 
     @Autowired
     private ArtistService artistService;
 
-    private RoomDto roomDto;
-    private CategoryDto categoryDto;
-    private ArtistDto artistDto;
-    private EventDto eventDto;
+    @Autowired
+    private PerformanceMapper performanceMapper;
+
+    private HallDto hallDto;
+    private Hall hall;
+    private AddressDto addressDto;
+    private EventPlaceDto eventPlaceDto;
+    private EventPlace eventPlace;
+    private Artist artist;
+    private Event event;
+    private List<Performance> performances = new ArrayList<>();
 
     @BeforeAll
     public void insertNeededContext() {
-        AddressDto addressDto = new AddressDto();
+        this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
         addressDto.setCountry("TestCountry");
         addressDto.setCity("TestCity");
+        addressDto.setStreet("TestStreet");
 
-        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        this.eventPlaceDto = new EventPlaceDto();
         eventPlaceDto.setName("TestPlace2");
         eventPlaceDto.setAddressDto(addressDto);
-        EventPlace eventPlace = eventPlaceMapper.dtoToEntity(eventPlaceService.save(eventPlaceDto));
-
-        RoomInquiryDto roomInquiryDto = new RoomInquiryDto();
-        roomInquiryDto.setName("TestRoom");
-        roomInquiryDto.setEventPlaceName(eventPlace.getName());
-        roomDto = roomService.save(roomInquiryDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
 
         ArtistDto artistDto = new ArtistDto();
         artistDto.setBandName("TestArtist");
         artistDto.setDescription("an artist");
-        this.artistDto = artistService.save(artistDto);
+        this.artist = artistService.save(artistDto);
 
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName("testCategory");
-        this.categoryDto = categoryService.save(categoryDto);
+        this.hallDto = new HallDto();
+        hallDto.setName("TestHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        this.hall = hallService.save(hallDto);
 
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testName");
-        eventInquiryDto.setContent("testContent1234");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(710);
-        eventInquiryDto.setCategoryName(this.categoryDto.getName());
-        eventInquiryDto.setRoomId(this.roomDto.getId());
-        eventInquiryDto.setArtistId(this.artistDto.getId());
-        this.eventDto = eventService.createEvent(eventInquiryDto);
+        this.event = new Event();
+        event.setName("TestNameX");
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestDescription");
+        event.setCategory("TestCategory");
+        eventService.saveEvent(eventMapper.entityToDto(event));
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setEvent(this.event);
+        this.performances.add(performance);
     }
 
     @Test
     public void insert_valid_event() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setCategoryName(categoryDto.getName());
-        eventInquiryDto.setRoomId(roomDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        EventDto eventDtoPers = eventService.createEvent(eventInquiryDto);
+        EventPlaceDto eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPlace2");
+        eventPlaceDto.setAddressDto(addressDto);
+        eventPlaceService.save(eventPlaceDto);
 
-        EventDto eventDtoExp = new EventDto();
-        eventDtoExp.setName(eventInquiryDto.getName());
-        eventDtoExp.setContent(eventInquiryDto.getContent());
-        eventDtoExp.setDateTime(eventInquiryDto.getDateTime());
-        eventDtoExp.setDuration(eventInquiryDto.getDuration());
-        eventDtoExp.setCategory(categoryDto);
-        eventDtoExp.setRoom(roomDto);
-        eventDtoExp.setArtist(artistDto);
+        Event event2 = new Event();
+        event2.setId(this.event.getId());
+        event2.setName(this.event.getName());
+        event2.setStartTime(this.event.getStartTime());
+        event2.setDuration(this.event.getDuration());
+        event2.setPerformances(this.event.getPerformances());
+        event2.setEventPlace(this.event.getEventPlace());
+        event2.setDescription(this.event.getDescription());
+        event2.setCategory(this.event.getCategory());
 
-        assertEquals(eventDtoPers, eventDtoExp);
+        assertEquals(this.event, event2);
     }
 
     @Test
-    public void insert_event_invalid_room() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setCategoryName(categoryDto.getName());
-        eventInquiryDto.setRoomId(-123L);
-        eventInquiryDto.setArtistId(artistDto.getId());
-        assertThrows(DataIntegrityViolationException.class, () -> eventService.createEvent(eventInquiryDto));
+    public void insert_event_without_name() {
+        Event event = new Event();
+        event.setStartTime(LocalDateTime.now());
+        event.setDuration(120L);
+        event.setPerformances(this.performances);
+        event.setEventPlace(this.eventPlace);
+        event.setDescription("testDescription");
+        event.setCategory("testCategory");
+        assertThrows(DataIntegrityViolationException.class, () -> eventService.saveEvent(eventMapper.entityToDto(event)));
     }
 
     @Test
-    public void insert_event_invalid_category() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setCategoryName("not existing");
-        eventInquiryDto.setRoomId(roomDto.getId());
-        eventInquiryDto.setArtistId(artistDto.getId());
-        assertThrows(ContextException.class, () -> eventService.createEvent(eventInquiryDto));
-    }
-
-    @Test
-    public void insert_event_invalid_artist() {
-        EventInquiryDto eventInquiryDto = new EventInquiryDto();
-        eventInquiryDto.setName("testEvent");
-        eventInquiryDto.setContent("testContent");
-        eventInquiryDto.setDateTime(LocalDateTime.now());
-        eventInquiryDto.setDuration(120);
-        eventInquiryDto.setCategoryName(categoryDto.getName());
-        eventInquiryDto.setRoomId(roomDto.getId());
-        eventInquiryDto.setArtistId(-123L);
-        assertThrows(DataIntegrityViolationException.class, () -> eventService.createEvent(eventInquiryDto));
-    }
-
-    @Test
-    public void search_for_valid_event() {
-
+    public void search_for_valid_event_not_found() {
         EventSearchDto eventSearchDto = new EventSearchDto();
-        eventSearchDto.setContent("testContent123");
-        eventSearchDto.setDuration(700);
-        List<EventDto> events = eventService.findEvents(eventSearchDto);
+        eventSearchDto.setDuration(1000);
+        eventSearchDto.setDescription("not found");
+        eventSearchDto.setCategory("no category");
+        List<Event> events = eventService.findEvents(eventSearchDto);
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void search_for_valid_event_found() {
+        System.out.println(event);
+        event.setName("eventX");
+        event = eventService.saveEvent(eventMapper.entityToDto(event));
+        EventSearchDto eventSearchDto = new EventSearchDto();
+        eventSearchDto.setDuration(this.event.getDuration().intValue());
+        eventSearchDto.setDescription(this.event.getDescription());
+        List<Event> events = eventService.findEvents(eventSearchDto);
         assertFalse(events.isEmpty());
     }
 
@@ -181,8 +179,109 @@ public class EventServiceTest {
     public void search_for_invalid_event() {
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDescription("desc");
-        eventSearchDto.setContent("dataThatWasSurelyNotInserted");
-        eventSearchDto.setDuration(120);
-        assertThrows(NotFoundException.class, () -> eventService.findEvents(eventSearchDto));
+        eventSearchDto.setDuration(9999999);
+        List<Event> events = eventService.findEvents(eventSearchDto);
+        //assertThrows(ServiceException.class, () -> eventService.findEvents(eventSearchDto));
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_event_withPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(testEvent);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        List<Performance> testPerformances = new ArrayList<>();
+        testPerformances.add(performance);
+        testEvent.setPerformances(testPerformances);
+        testEvent.setName("event9");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+
+        Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertFalse(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_event_withoutPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(690L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+        Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertTrue(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withPerformances(){
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(eventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+
+
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(testEvent);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        List<Performance> testPerformances = new ArrayList<>();
+        testPerformances.add(performance);
+        testEvent.setPerformances(testPerformances);
+        testEvent.setName("event10");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertFalse(perfList.isEmpty());
+    }
+
+    @Test
+    public void getPerformances_for_Location_withoutPerformances(){
+
+        AddressDto testAddressDto = new AddressDto();
+        testAddressDto.setStreet("testLocationStreet");
+        testAddressDto.setCity("testLocationCity");
+        testAddressDto.setCountry("testLocationCountry");
+        testAddressDto.setState("testLocationState");
+        testAddressDto.setZip("0000");
+
+        EventPlaceDto testEventPlaceDto = new EventPlaceDto();
+        testEventPlaceDto.setAddressDto(addressDto);
+        testEventPlaceDto.setName("testLocationEventPlace");
+        EventPlace testEventPlace = eventPlaceService.save(testEventPlaceDto);
+        Event testEvent = new Event();
+        testEvent.setName("TestPerformances8");
+        testEvent.setStartTime(LocalDateTime.now());
+        testEvent.setDuration(710L);
+        testEvent.setEventPlace(testEventPlace);
+        testEvent.setDescription("TestPerformancesDesc");
+        testEvent.setCategory("TestPerformancesCategory");
+        Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(testEventPlace.getAddress().getId());
+        List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
+        assertTrue(perfList.isEmpty());
     }
 }

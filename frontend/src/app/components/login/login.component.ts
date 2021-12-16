@@ -94,6 +94,23 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  resetEmail() {
+    if (this.emailControl.valid) {
+      this.userService.resetPassword(this.emailControl.value).subscribe({
+        next: () => {
+          window.alert('Please check your email inbox and your spam');
+        },
+        error: (err) => {
+          this.error = true;
+          this.errorMessage = 'There is something wrong';
+        }
+      });
+    } else {
+      this.error = true;
+      this.errorMessage = 'Not a valid email';
+    }
+  }
+
   /**
    * Error flag will be deactivated, which clears the error message
    */

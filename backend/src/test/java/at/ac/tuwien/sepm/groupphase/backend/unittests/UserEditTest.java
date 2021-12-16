@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -112,7 +117,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
+        assertThrows(ContextException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test
@@ -132,7 +137,7 @@ public class UserEditTest implements TestData {
             .withZip("12345")
             .build();
 
-        assertThrows(ServiceException.class, () -> userService.updateUser(toUpdate));
+        assertThrows(NotFoundException.class, () -> userService.updateUser(toUpdate));
     }
 
     @Test
@@ -151,5 +156,45 @@ public class UserEditTest implements TestData {
             .build();
 
         assertThrows(DataIntegrityViolationException.class, () -> userService.updateUser(toUpdate));
+    }
+
+    @Test
+    public void updatePaymentInformations() {
+        List<PaymentInformationDto> paymentInformationDtoList = new ArrayList<>();
+        PaymentInformationDto paymentInformation1 = new PaymentInformationDto();
+        paymentInformation1.setCreditCardNr("1234123412341234");
+        paymentInformation1.setCreditCardExpirationDate("202022");
+        paymentInformation1.setCreditCardCvv("123");
+        paymentInformation1.setCreditCardName("Test");
+        paymentInformationDtoList.add(paymentInformation1);
+
+        PaymentInformationDto paymentInformation2 = new PaymentInformationDto();
+        paymentInformation2.setCreditCardNr("5555555555555555");
+        paymentInformation2.setCreditCardExpirationDate("202022");
+        paymentInformation2.setCreditCardCvv("456");
+        paymentInformation2.setCreditCardName("Test2");
+        paymentInformationDtoList.add(paymentInformation2);
+
+        UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail("hallo@test.com")
+            .withNewEmail("hallo@test.com")
+            .withAdmin(false)
+            .withPassword("testPassword")
+            .withFirstName("firstName")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Test City")
+            .withStreet("Test Street")
+            .withDisabled(true)
+            .withZip("12345")
+            .build();
+        toUpdate.setPaymentInformation(paymentInformationDtoList);
+        userService.updateUser(toUpdate);
+
+        assertEquals(userService.findApplicationUserByEmail("hallo@test.com").getCity(), toUpdate.getCity());  //edited
+        assertEquals(userService.findApplicationUserByEmail("hallo@test.com").getLastName(), toUpdate.getLastName());  //not edited
+        assertEquals(userService.findApplicationUserByEmail("hallo@test.com").getPaymentInformation().size(), 2);  // size of paymentinformations should be 2
     }
 }

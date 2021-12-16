@@ -16,6 +16,9 @@
            aria-describedby="titleHelp" placeholder="Enter Artist Name" [(ngModel)]="artistName">
   </div>
   <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
+  <div *ngIf="artistList.length === 0 && submitted">
+    No Artists were found for this search criteria!
+  </div>
   <div *ngIf="artistList !== []">
     <table class="table table-hover">
       <thead>
@@ -25,7 +28,11 @@
       <tr *ngFor="let artist of artistList">
         <td>
           <div class="flex"><span>Name: {{artist.bandName}}</span>
+            <div>
+              <button type="submit" class="button" mat-raised-button color="primary" (click)="loadPerformances(artist)">Performances
+              </button>
             </div>
+          </div>
         </td>
       </tr>
       </tbody>

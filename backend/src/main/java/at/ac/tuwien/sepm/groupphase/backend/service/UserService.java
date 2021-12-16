@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,6 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Find a user in the context of Spring Security based on the email address
-     * <br>
      * For more information have a look at this tutorial:
      * https://www.baeldung.com/spring-security-authentication-with-a-database
      *
@@ -83,4 +83,11 @@ public interface UserService extends UserDetailsService {
      * @param email of the user
      */
     void resetLockedCounter(String email);
+
+    /**
+     * Send a email to reset the password.
+     *
+     * @param email of the user
+     */
+    void sendEmailToResetPassword(String email);
 }

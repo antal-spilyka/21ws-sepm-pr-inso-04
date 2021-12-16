@@ -27,7 +27,7 @@ import java.lang.invoke.MethodHandles;
 public class ArtistEndpoint {
 
     private ArtistService artistService;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()); // todo logger verwenden
 
     public ArtistEndpoint(ArtistService artistService) {
         this.artistService = artistService;
@@ -37,33 +37,32 @@ public class ArtistEndpoint {
     @GetMapping
     @Operation(summary = "Find artist by search parameters.")
     public ResponseEntity findArtists(@Validated ArtistSearchDto artistSearchDto) {
-        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 2).stream(), HttpStatus.OK);
-        return response;
+        return new ResponseEntity(artistService.findArtist(artistSearchDto, 2).stream(), HttpStatus.OK);
     }
 
     @Secured("ROLE_USER")
     @GetMapping("/search")
     @Operation(summary = "Search artists by search parameters.")
     public ResponseEntity searchArtists(@Validated ArtistSearchDto artistSearchDto) {
-        try {
-            ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
-            return response;
-        } catch (NotFoundException e) {
+        //try {
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
+        return response;
+        /*} catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
-        }
+        }*/
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new artist.", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity saveArtist(@RequestBody @Validated ArtistDto artistDto) {
-        try {
-            ResponseEntity response = new ResponseEntity(artistService.save(artistDto), HttpStatus.CREATED);
-            return response;
-        } catch (ContextException e) {
+        //try {
+        ResponseEntity response = new ResponseEntity(artistService.save(artistDto), HttpStatus.CREATED);
+        return response;
+        /*} catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Artist already exists:  " + e.getLocalizedMessage(), e);
-        }
+        }*/
     }
 }

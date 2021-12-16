@@ -1,0 +1,97 @@
+.create-hallplan-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 8rem;
+  width: 100%;
+  height: calc(100% - 8rem);
+  margin-bottom: -2rem;
+  display: flex;
+  cursor: pointer;
+
+  .main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(222, 218, 218, 0.15);
+
+    .hallplan-container {
+      box-shadow: -1px -1px 8px 1px #00000094;
+      width: 50rem;
+      height: 50rem;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      background: white;
+
+      .hallplan-row {
+        flex: 1;
+        display: flex;
+      }
+    }
+  }
+
+  .side-bar {
+    width: 20rem;
+    box-shadow: -1px -1px 8px 1px #00000094;
+    border-top-left-radius: 10px;
+    padding: 3rem 1rem 1rem 3rem;
+    background: white;
+    position: relative;
+
+    mat-radio-button {
+      display: block;
+      font-size: 1.05rem;
+      padding-bottom: 1rem;
+    }
+
+    .next-button {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+    }
+
+    .sector-wrapper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      border: 1px solid black;
+      border-radius: 10px;
+
+      &.active {
+        border-color: blue;
+        border-width: 2px;
+      }
+
+      .color-marker {
+        width: 2rem;
+        border-right: 1px solid black;
+        border-bottom-left-radius: 9px;
+        border-top-left-radius: 9px;
+      }
+
+      span {
+        padding: 0.5rem;
+      }
+    }
+
+    .add-button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.dialog {
+  position: absolute;
+  top: 45%;
+  right: 3rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: -1px -1px 8px 1px #00000094;
+}

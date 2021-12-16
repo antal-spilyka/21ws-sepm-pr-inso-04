@@ -1,10 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormGroupDirective, Validators} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, Observable, switchMap} from 'rxjs';
 import {Artist} from 'src/app/dtos/artist';
-import {Category} from 'src/app/dtos/category';
+import { EventDto } from 'src/app/dtos/eventDto';
 import {ArtistService} from 'src/app/services/artist.service';
-import {CategoryService} from 'src/app/services/category.service';
+import {Hall} from '../../../dtos/hall';
+import {HallService} from '../../../services/hall.service';
+import {Performance} from '../../../dtos/performance';
+import { PerformanceService } from 'src/app/services/performance.service';
 
 @Component({
   selector: 'app-create-artist',
@@ -13,30 +16,36 @@ import {CategoryService} from 'src/app/services/category.service';
 })
 export class CreateArtistComponent implements OnInit {
 
-  @Input() handleNext: (values: any) => void;
+  @Input() event: EventDto;
   @Input() setErrorFlag: (message?: string) => void;
+  formDirective: FormGroupDirective;
 
   artists: Observable<Artist[]>;
-  categories: Observable<Category[]>;
   selectedArtist: Artist;
-  selectedCategory: Category;
   isNewArtist = false;
-  isNewCategory = false;
-  artistSubmitted = false;
-  categorySubmitted = false;
+  halls: Observable<Hall[]>;
+  selectedHall: Hall;
+  isNewHall = false;
+  canSaveEvent = false;
+  performances: Performance[] = [];
+  now = new Date().toISOString().split(':');
 
   form = this.formBuilder.group({
     name: [null, Validators.required],
-    description: [{value: null, disabled: true}],
-    categoryName: [null, Validators.required]
+    duration: [null, Validators.required],
+    artistName: [null, Validators.required],
+    artistDescription: [null, Validators.required],
+    hallName: [null, Validators.required],
+    startTime: [this.now[0] + ':' + this.now[1], Validators.required]
   });
 
   constructor(
     private formBuilder: FormBuilder,
     private artistService: ArtistService,
-    private categoryService: CategoryService
+    private hallService: HallService,
+    private performanceService: PerformanceService
   ) {
-    this.artists = this.form.get('name').valueChanges.pipe(
+    this.artists = this.form.get('artistName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(name => !this.isNewArtist ?
@@ -44,14 +53,21 @@ export class CreateArtistComponent implements OnInit {
         new Observable<Artist[]>()
       )
     );
-    this.categories = this.form.get('categoryName').valueChanges.pipe(
+    this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => !this.isNewCategory ?
-        this.categoryService.findCategory(name) :
-        new Observable<Category[]>()
+      switchMap(name => !this.isNewHall ?
+        this.hallService.findHall(name) : new Observable<Hall[]>()
       )
     );
+  }
+
+  handleNewHall() {
+    this.isNewHall = !this.isNewHall;
+    if (this.isNewHall) {
+      this.selectedHall = null;
+      this.form.controls.hallName.setValue(null);
+    }
   }
 
   ngOnInit(): void {
@@ -61,94 +77,142 @@ export class CreateArtistComponent implements OnInit {
     this.isNewArtist = !this.isNewArtist;
     if (this.isNewArtist) {
       this.selectedArtist = null;
-      this.form.controls.name.setValue(null);
-      this.form.controls.description.enable();
-    } else {
-      this.form.controls.description.disable();
+      this.form.controls.artistName.setValue(null);
+      this.form.controls.artistDescription.setValue(null);
     }
   }
 
-  handleNewCategory() {
-    this.isNewCategory = !this.isNewCategory;
-    if (this.isNewCategory) {
-      this.selectedCategory = null;
-      this.form.controls.categoryName.setValue(null);
-    }
+  clearForm() {
+    this.formDirective.resetForm();
+    this.form.reset();
+    this.form.controls.startTime.setValue(this.now[0] + ':' + this.now[1]);
   }
 
-  async nextStep() {
+  async addPerformance(formDirective: FormGroupDirective) {
+    console.log(formDirective);
+    this.formDirective = formDirective;
     if (!this.form.valid) {
+      this.setErrorFlag('Please fill out the form.');
       return;
     }
-    if (this.isNewArtist) {
-      await this.submitArtistChanges();
-    } else {
-      this.artistSubmitted = true;
+    if(new Date() > new Date(this.form.value.startTime)) {
+      this.setErrorFlag('The start time must be in the future');
+      return;
     }
-    if (this.isNewCategory) {
-      await this.submitCategoryChanges();
-    } else {
-      this.categorySubmitted = true;
+    if(!this.selectedArtist || ( this.selectedArtist.bandName !== this.form.value.artistName && this.isNewArtist )) {
+      this.setErrorFlag('Please select an Artist from the Dropdown Menu or create a new one.');
+      return;
     }
-    if (!this.isNewArtist && !this.isNewCategory) {
-      if (!this.selectedArtist || !this.selectedCategory) {
-        this.setErrorFlag('Please Select Artist and Category from Dropdown or create new ones.');
-      } else {
-        this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
-      }
+    if(!this.selectedHall || ( this.selectedHall.name !== this.form.value.hallName && this.isNewHall )) {
+      this.setErrorFlag('Please select a Hall from the Dropdown Menu or create a new one.');
+      return;
     }
+    await this.submitHallChanges();
+  }
+
+  onSelectHall(hall: Hall) {
+    const { name } = hall;
+    this.selectedHall = hall;
+    this.form.controls.hallName.setValue(name);
   }
 
   onSelectArtist(artist: Artist) {
-    const {bandName, description} = artist;
+    const { bandName, description } = artist;
     this.selectedArtist = artist;
-    this.form.controls.name.setValue(bandName);
-    this.form.controls.description.setValue(description);
+    this.form.controls.artistName.setValue(bandName);
+    this.form.controls.artistDescription.setValue(description);
   }
 
-  onSelectCategory(category: Category) {
-    const {name} = category;
-    this.selectedCategory = category;
-    this.form.controls.categoryName.setValue(name);
+  async submitHallChanges() {
+    if (this.isNewHall) {
+      this.selectedHall = {
+        name: this.form.value.hallName,
+        eventPlaceDto: this.event.eventPlace
+      } as Hall;
+    } else {
+      if (!this.selectedHall) {
+        this.setErrorFlag('Choose a hall for your performance');
+        await this.submitArtistChanges();
+        return;
+      }
+    }
+    this.hallService.saveHall(this.selectedHall).subscribe({
+      next: async hall => {
+        this.selectedHall =  hall;
+        console.log(hall);
+      },
+      error: error => {
+        if(error.status === 409) {
+          this.setErrorFlag('A hall with the same name already exists.');
+        } else {
+          this.setErrorFlag('Could not save Hall. (unknown error)');
+        }
+      },
+      complete: async () => {
+        await this.submitArtistChanges();
+      }
+    });
   }
 
   async submitArtistChanges() {
-    const artist = new Artist();
-    artist.bandName = this.form.value.name;
-    artist.description = this.form.value.description;
-    this.artistService.createArtist(artist).subscribe({
-      next: next => {
+    if (this.isNewArtist) {
+      this.selectedArtist = {
+        bandName: this.form.value.artistName,
+        description: this.form.value.artistDescription
+      } as Artist;
+    } else {
+      if (!this.selectedArtist) {
+        this.setErrorFlag('Choose an artist for your performance');
+        return;
+      }
+    }
+    this.artistService.createArtist(this.selectedArtist).subscribe({
+      next: async next => {
+        console.log(next);
         this.selectedArtist = next;
       },
       error: error => {
-        this.setErrorFlag();
-      },
-      complete: () => {
-        this.artistSubmitted = true;
-        if (this.categorySubmitted) {
-          this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
+        if(error.status === 409) {
+          this.setErrorFlag('An artist with the same name already exists.');
+        } else {
+          this.setErrorFlag('Could not save Artist. (unknown error)');
         }
+      },
+      complete: async () => {
+        await this.submitPerformance();
       }
     });
   }
 
-  async submitCategoryChanges() {
-    const category = new Category();
-    category.name = this.form.value.categoryName;
-    this.categoryService.createCategory(category).subscribe({
+  async submitPerformance() {
+    const performance = {
+      name: this.form.value.name,
+      startTime: this.form.value.startTime,
+      duration: this.form.value.duration,
+      artist: this.selectedArtist,
+      hall: this.selectedHall,
+      eventDto: this.event,
+    } as Performance;
+
+    this.performanceService.savePerformace(performance).subscribe({
       next: next => {
-        this.selectedCategory = next;
+        this.performances.push(next);
+        this.canSaveEvent = true;
       },
       error: error => {
-        this.setErrorFlag();
+        if(error.status === 409) {
+          this.setErrorFlag('An artist with the same name already exists.');
+        } else {
+          this.setErrorFlag('Could not save Performance. (unknown error)');
+        }
       },
       complete: () => {
-        this.categorySubmitted = true;
-        if (this.artistSubmitted) {
-          this.handleNext({selectedArtist: this.selectedArtist, selectedCategory: this.selectedCategory});
-        }
+        this.clearForm();
       }
     });
   }
 
+  async addEvent() {
+    history.back();
+  }
 }

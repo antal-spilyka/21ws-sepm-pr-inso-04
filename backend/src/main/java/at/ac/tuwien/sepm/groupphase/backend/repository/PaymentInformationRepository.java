@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PaymentInformationRepository extends JpaRepository<PaymentInformation, Long> {
     /**
@@ -12,5 +14,5 @@ public interface PaymentInformationRepository extends JpaRepository<PaymentInfor
      *
      * @return a user
      */
-    PaymentInformation findByUser(ApplicationUser user);
+    List<PaymentInformation> findByUser(ApplicationUser user);
 }

@@ -1,29 +1,41 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 public class EventPlace {
-    private String name;
-    private Address address;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    public EventPlace() {}
+    @Column(nullable = false)
+    String name;
 
-    public EventPlace(String name, Address address) {
-        this.name = name;
-        this.address = address;
+    @OneToOne(
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
+    Address address;
+
+    public Long getId() {
+        return id;
     }
 
-    @Id
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    @ManyToOne()
     public Address getAddress() {
         return address;
     }
@@ -41,23 +53,24 @@ public class EventPlace {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof EventPlace)) {
             return false;
         }
         EventPlace that = (EventPlace) o;
-        return Objects.equals(name, that.name) && Objects.equals(address, that.address);
+        return id.equals(that.id) && name.equals(that.name) && address.equals(that.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, address);
+        return Objects.hash(id, name, address);
     }
 
     @Override
     public String toString() {
         return "EventPlace{" +
-            "name='" + name + '\'' +
-            ", address=" + address +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", address=" + address.toString() +
             '}';
     }
 

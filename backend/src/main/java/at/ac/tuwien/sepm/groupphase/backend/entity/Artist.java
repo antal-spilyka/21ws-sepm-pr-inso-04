@@ -9,22 +9,24 @@ import java.util.Objects;
 
 @Entity
 public class Artist {
-    Long id;
-    String bandName;
-    String description;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @Column(nullable = false)
+    String bandName;
+
+    @Column(nullable = false)
+    String description;
+
     public Long getId() {
         return id;
     }
 
-    @Column(length = 100)
     public String getBandName() {
         return bandName;
     }
 
-    @Column(length = 1000)
     public String getDescription() {
         return description;
     }

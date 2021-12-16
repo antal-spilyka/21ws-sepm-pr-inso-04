@@ -1,3 +1,11 @@
 .button {
   margin-top: 8px;
 }
+
+.flex {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0em 1em;
+  justify-content: space-between;
+}

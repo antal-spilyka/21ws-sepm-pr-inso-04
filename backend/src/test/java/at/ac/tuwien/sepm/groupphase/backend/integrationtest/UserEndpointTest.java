@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -45,10 +47,14 @@ public class UserEndpointTest implements TestData {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private SeenNewsRepository seenNewsRepository;
+
+    @Autowired
     private SecurityProperties securityProperties;
 
     @BeforeEach
     public void beforeEach() {
+        seenNewsRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -79,7 +85,7 @@ public class UserEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
 
         // this should be changed to the event list route in the future
-        MvcResult mvcResult3 = this.mockMvc.perform(get(MESSAGE_BASE_URI)
+        MvcResult mvcResult3 = this.mockMvc.perform(get(EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), response2.getContentAsString()))

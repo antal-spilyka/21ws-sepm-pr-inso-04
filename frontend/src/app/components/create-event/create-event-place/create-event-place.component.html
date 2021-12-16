@@ -1,5 +1,33 @@
 <div>
   <form [formGroup]="form">
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <h2>General Information</h2>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput required formControlName="name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Date and Time</mat-label>
+        <input matInput min="today" type="datetime-local" formControlName="startTime">
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+      <mat-form-field>
+        <mat-label>Category</mat-label>
+        <input matInput required type="text" formControlName="category">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea class="textArea" cdkTestareaAutosize required matInput formControlName="description"
+          cdkAutosizeMinRows="4" cdkAutosizeMaxRows="5"></textarea>
+      </mat-form-field>
+    </div>
+    <br>
+    <br>
     <div fxLayout="column" fxLayoutGap="32px">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <h2>Event Place</h2>
@@ -7,57 +35,8 @@
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" required [matAutocomplete]="auto">
+          <input matInput formControlName="eventPlaceName" required [matAutocomplete]="auto">
         </mat-form-field>
-        <mat-checkbox [checked]="isNewEventPlace" (change)="handleNewEventPlace()">
-          Create new Event Place
-        </mat-checkbox>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <mat-form-field>
-          <mat-label>Country</mat-label>
-          <input matInput required formControlName="country">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>State</mat-label>
-          <input matInput required formControlName="state">
-        </mat-form-field>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <mat-form-field>
-          <mat-label>City</mat-label>
-          <input matInput required formControlName="city">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Zip Code</mat-label>
-          <input matInput required type="number" formControlName="zip">
-        </mat-form-field>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <mat-form-field>
-                    <mat-label>Street</mat-label>
-                    <input matInput required formControlName="street">
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Description</mat-label>
-                    <textarea cdkTestareaAutosize matInput formControlName="description" cdkAutosizeMinRows="3"
-                        cdkAutosizeMaxRows="5"></textarea>
-                </mat-form-field>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-                <hr class="line">
-      </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <h2>Room</h2>
-      </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput required formControlName="roomName" [matAutocomplete]="autoRoom">
-        </mat-form-field>
-        <mat-checkbox [checked]="isNewRoom" (change)="handleNewRoom()">
-          Create new Room
-        </mat-checkbox>
       </div>
     </div>
   </form>
@@ -67,11 +46,6 @@
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectEventPlace($event.option.value)">
     <mat-option *ngFor="let eventPlace of eventPlaces | async" [value]="eventPlace">
       {{eventPlace.name}}
-    </mat-option>
-  </mat-autocomplete>
-  <mat-autocomplete #autoRoom="matAutocomplete" (optionSelected)="onSelectRoom($event.option.value)">
-    <mat-option *ngFor="let room of rooms | async" [value]="room">
-      {{room.name}}
     </mat-option>
   </mat-autocomplete>
 </div>

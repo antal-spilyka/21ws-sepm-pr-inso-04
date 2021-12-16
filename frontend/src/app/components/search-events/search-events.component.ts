@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {EventInquiry} from '../../dtos/eventInquiry';
 import {EventService} from '../../services/event.service';
 import {EventDto} from '../../dtos/eventDto';
 import {EventSearchDto} from '../../dtos/eventSearchDto';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-search-events',
@@ -11,18 +11,18 @@ import {EventSearchDto} from '../../dtos/eventSearchDto';
 })
 export class SearchEventsComponent implements OnInit {
   searchEvent: EventSearchDto = {
-    duration: null, content: '', categoryName: '', description: null,
+    duration: null, description: '', category: '',
   };
+  submitted = false;
   eventList: EventDto[] = [];
   error = false;
   errorMessage: string;
 
-  constructor(private eventService: EventService) {
+  constructor(private eventService: EventService, private router: Router) {
   }
 
   ngOnInit(): void {
   }
-
   onSubmit() {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
@@ -30,12 +30,18 @@ export class SearchEventsComponent implements OnInit {
       this.eventService.findEvent(this.searchEvent).subscribe(
         {
           next: events => {
+            this.submitted = true;
             console.log(this.eventList);
             this.eventList = events;
             console.log(this.eventList);
           }, error: error => this.handleError(error)
         }
       );
+    }
+  }
+  loadPerformances(event: EventDto){
+    if(event.id){
+      this.router.navigateByUrl(`/events/${event.id}/performances`);
     }
   }
   vanishError(): void {
