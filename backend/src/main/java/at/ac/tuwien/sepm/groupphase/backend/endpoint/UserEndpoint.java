@@ -150,9 +150,9 @@ public class UserEndpoint {
     }
 
     @PermitAll
-    @PostMapping("/{email}/resetPassword")
+    @GetMapping("/{email}/resetPassword")
     public void resetPassword(@PathVariable String email) {
-        LOGGER.info("POST" + BASE_URL + "/{}/resetPassword", email);
+        LOGGER.info("GET" + BASE_URL + "/{}/resetPassword", email);
         try {
             this.userService.sendEmailToResetPassword(email);
         } catch (NotFoundException e) {

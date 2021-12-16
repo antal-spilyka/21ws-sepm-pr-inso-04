@@ -27,9 +27,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -224,15 +226,31 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Send email to reset password");
         ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
         if (applicationUser != null) {
-            applicationUser.setPassword(passwordEncoder.encode(applicationUser.getPassword()));
+            String newPassword = generateNewPassword();
+            applicationUser.setPassword(passwordEncoder.encode(newPassword));
 
-            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + applicationUser.getPassword() + "\n\n Thanks for using Ticketline.";
+            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + newPassword + "\n\n Thanks for using Ticketline.";
             String mailSubject = "Password Reset";
             emailService.sendEmail(email, mailSubject, mailText);
             userRepository.save(applicationUser);
         } else {
             throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
         }
+    }
 
+    public String generateNewPassword() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+
+        System.out.println(generatedString);
+        return generatedString;
     }
 }
