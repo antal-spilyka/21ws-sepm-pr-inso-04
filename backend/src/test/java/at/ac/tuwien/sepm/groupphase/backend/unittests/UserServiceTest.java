@@ -211,4 +211,13 @@ public class UserServiceTest implements TestData {
             () -> assertEquals(0, paymentInformationRepository.findByUser(user).size())
         );
     }
+
+    @Test
+    public void sendEmailToResetPasswordWithNotExistingEmail_shouldThrowNotFoundException() {
+        try {
+            userService.sendEmailToResetPassword("notExistingEmail");
+        } catch (NotFoundException e) {
+            // Should be the case
+        }
+    }
 }
