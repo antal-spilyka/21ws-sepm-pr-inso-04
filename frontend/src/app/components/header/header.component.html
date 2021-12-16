@@ -27,11 +27,6 @@
           routerLinkActive="active">Add
           Events</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/eventPlaces/add"
-          routerLinkActive="active">Add
-          Event-Places</a>
-      </li>
       <li>
         <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users"
           routerLinkActive="active">Users</a>

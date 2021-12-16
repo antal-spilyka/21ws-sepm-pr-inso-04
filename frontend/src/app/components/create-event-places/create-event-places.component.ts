@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Address } from 'src/app/dtos/address';
 import { EventPlace } from 'src/app/dtos/eventPlace';
 import { EventPlaceService } from 'src/app/services/event-place.service';
+import { AddHallDialogComponent } from './add-hall-dialog/add-hall-dialog.component';
 
 @Component({
   selector: 'app-create-event-places',
@@ -13,6 +15,7 @@ export class CreateEventPlacesComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  id;
 
   form = this.formBuilder.group({
     name: [null, Validators.required],
@@ -23,7 +26,7 @@ export class CreateEventPlacesComponent implements OnInit {
     street: [null, Validators.required]
   });
 
-  constructor(private formBuilder: FormBuilder, private eventPlaceService: EventPlaceService) { }
+  constructor(public dialog: MatDialog, private formBuilder: FormBuilder, private eventPlaceService: EventPlaceService) { }
 
   ngOnInit(): void {
   }
@@ -48,14 +51,21 @@ export class CreateEventPlacesComponent implements OnInit {
     } as EventPlace;
 
     this.eventPlaceService.createEventPlace(eventPlace).subscribe({
-      next: () => {
-        history.back();
+      next: next => {
+        this.id = next.id;
       },
       error: error => {
         if(error.status === 409) {
           this.setErrorFlag('An Event Place with the same name already exists.');
         } else {
           this.setErrorFlag();
+        }
+      },
+      complete: () => {
+        if(this.id) {
+          const dialogRef = this.dialog.open(AddHallDialogComponent, {
+            data: { id: this.id },
+          });
         }
       }
     });

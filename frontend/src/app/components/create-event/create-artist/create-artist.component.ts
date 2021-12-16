@@ -25,7 +25,6 @@ export class CreateArtistComponent implements OnInit {
   isNewArtist = false;
   halls: Observable<Hall[]>;
   selectedHall: Hall;
-  isNewHall = false;
   canSaveEvent = false;
   performances: Performance[] = [];
   now = new Date().toISOString().split(':');
@@ -56,18 +55,9 @@ export class CreateArtistComponent implements OnInit {
     this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => !this.isNewHall ?
-        this.hallService.findHall(name) : new Observable<Hall[]>()
+      switchMap(name => this.hallService.findHall(name)
       )
     );
-  }
-
-  handleNewHall() {
-    this.isNewHall = !this.isNewHall;
-    if (this.isNewHall) {
-      this.selectedHall = null;
-      this.form.controls.hallName.setValue(null);
-    }
   }
 
   ngOnInit(): void {
@@ -99,15 +89,16 @@ export class CreateArtistComponent implements OnInit {
       this.setErrorFlag('The start time must be in the future');
       return;
     }
-    if(!this.selectedArtist || ( this.selectedArtist.bandName !== this.form.value.artistName && this.isNewArtist )) {
+    if(((!this.selectedArtist || this.selectedArtist.bandName !== this.form.value.artistName) && !this.isNewArtist) ||
+        !this.form.value.artistName ) {
       this.setErrorFlag('Please select an Artist from the Dropdown Menu or create a new one.');
       return;
     }
-    if(!this.selectedHall || ( this.selectedHall.name !== this.form.value.hallName && this.isNewHall )) {
-      this.setErrorFlag('Please select a Hall from the Dropdown Menu or create a new one.');
+    if(!this.selectedHall || ( this.selectedHall.name !== this.form.value.hallName)) {
+      this.setErrorFlag('Please select a Hall from the Dropdown Menu.');
       return;
     }
-    await this.submitHallChanges();
+    await this.submitArtistChanges();
   }
 
   onSelectHall(hall: Hall) {
@@ -121,37 +112,6 @@ export class CreateArtistComponent implements OnInit {
     this.selectedArtist = artist;
     this.form.controls.artistName.setValue(bandName);
     this.form.controls.artistDescription.setValue(description);
-  }
-
-  async submitHallChanges() {
-    if (this.isNewHall) {
-      this.selectedHall = {
-        name: this.form.value.hallName,
-        eventPlaceDto: this.event.eventPlace
-      } as Hall;
-    } else {
-      if (!this.selectedHall) {
-        this.setErrorFlag('Choose a hall for your performance');
-        await this.submitArtistChanges();
-        return;
-      }
-    }
-    this.hallService.saveHall(this.selectedHall).subscribe({
-      next: async hall => {
-        this.selectedHall =  hall;
-        console.log(hall);
-      },
-      error: error => {
-        if(error.status === 409) {
-          this.setErrorFlag('A hall with the same name already exists.');
-        } else {
-          this.setErrorFlag('Could not save Hall. (unknown error)');
-        }
-      },
-      complete: async () => {
-        await this.submitArtistChanges();
-      }
-    });
   }
 
   async submitArtistChanges() {
@@ -201,7 +161,7 @@ export class CreateArtistComponent implements OnInit {
       },
       error: error => {
         if(error.status === 409) {
-          this.setErrorFlag('An artist with the same name already exists.');
+          this.setErrorFlag('A Performance with the same name for this event already exists.');
         } else {
           this.setErrorFlag('Could not save Performance. (unknown error)');
         }

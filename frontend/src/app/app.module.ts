@@ -61,6 +61,7 @@ import { EventPerformancesComponent } from './components/event-performances/even
 import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
 import { OldNewsComponent } from './components/old-news/old-news.component';
 import { CreateEventPlacesComponent } from './components/create-event-places/create-event-places.component';
+import { AddHallDialogComponent } from './components/create-event-places/add-hall-dialog/add-hall-dialog.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { CreateEventPlacesComponent } from './components/create-event-places/cre
     PerformanceDetailedComponent,
     NewsViewComponent,
     OldNewsComponent,
-    CreateEventPlacesComponent
+    CreateEventPlacesComponent,
+    AddHallDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -15,32 +15,32 @@
 
     <div class="form-group">
       <label for="street">Street</label>
-      <input type="text" name="street" class="form-control" id="street"
-             aria-describedby="titleHelp" placeholder="Enter Street" [(ngModel)]="searchAddress.street">
+      <input type="text" name="street" class="form-control" id="street" aria-describedby="titleHelp"
+        placeholder="Enter Street" [(ngModel)]="searchAddress.street">
     </div>
 
     <div class="form-group">
       <label for="city">City</label>
-      <input type="text" name="city" class="form-control" id="city"
-             aria-describedby="titleHelp" placeholder="Enter City" [(ngModel)]="searchAddress.city">
+      <input type="text" name="city" class="form-control" id="city" aria-describedby="titleHelp"
+        placeholder="Enter City" [(ngModel)]="searchAddress.city">
     </div>
 
     <div class="form-group">
       <label for="zip">ZIP-Code</label>
-      <input type="text" name="zip" class="form-control" id="zip"
-             aria-describedby="titleHelp" placeholder="Enter ZIP-Code" [(ngModel)]="searchAddress.zip">
+      <input type="text" name="zip" class="form-control" id="zip" aria-describedby="titleHelp"
+        placeholder="Enter ZIP-Code" [(ngModel)]="searchAddress.zip">
     </div>
 
     <div class="form-group">
       <label for="state">State</label>
-      <input type="text" name="state" class="form-control" id="state"
-             aria-describedby="titleHelp" placeholder="Enter State" [(ngModel)]="searchAddress.state">
+      <input type="text" name="state" class="form-control" id="state" aria-describedby="titleHelp"
+        placeholder="Enter State" [(ngModel)]="searchAddress.state">
     </div>
 
     <div class="form-group">
       <label for="country">Country</label>
-      <input type="text" name="country" class="form-control" id="country"
-             aria-describedby="titleHelp" placeholder="Enter Country" [(ngModel)]="searchAddress.country">
+      <input type="text" name="country" class="form-control" id="country" aria-describedby="titleHelp"
+        placeholder="Enter Country" [(ngModel)]="searchAddress.country">
     </div>
 
     <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
@@ -50,31 +50,27 @@
     <div *ngIf="eventLocations !== []">
       <table class="table table-hover">
         <thead>
-        <th>Locations</th>
+          <th>Locations</th>
         </thead>
         <tbody>
-        <tr *ngFor="let eventLocation of eventLocations">
-          <td>
-            <div class="flex">
-              <span>Street: {{eventLocation.street}}</span>
-              <span>City: {{eventLocation.city}}</span>
-              <span>ZIP-Code: {{eventLocation.zip}}</span>
-              <span>State: {{eventLocation.state}}</span>
-              <span>Country: {{eventLocation.country}}</span>
-              <span>
-                <a mat-raised-button color="primary" [routerLink]="['/locations', eventLocation.id,'halls', 'add']" routerLinkActive="active">Add Hall</a>
-              </span>
-              <div>
-                <button type="submit" class="button" mat-raised-button color="primary"
-                        (click)="loadPerformances(eventLocation)">Performances
-                </button>
+          <tr *ngFor="let eventLocation of eventLocations">
+            <td>
+              <div class="flex">
+                <span>Street: {{eventLocation.street}}</span>
+                <span>City: {{eventLocation.city}}</span>
+                <span>ZIP-Code: {{eventLocation.zip}}</span>
+                <span>State: {{eventLocation.state}}</span>
+                <span>Country: {{eventLocation.country}}</span>
+                <div>
+                  <button type="submit" class="button" mat-raised-button color="primary"
+                    (click)="loadPerformances(eventLocation)">Performances
+                  </button>
+                </div>
               </div>
-            </div>
-          </td>
-        </tr>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-
