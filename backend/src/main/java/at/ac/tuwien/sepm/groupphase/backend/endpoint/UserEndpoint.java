@@ -66,12 +66,12 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + e.getDefaultMessage());
         }
 
-        try {
-            userService.createUser(user);
-        } catch (ContextException e) {
+        //try {
+        userService.createUser(user);
+        /*} catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }
+        }*/
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -86,12 +86,12 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
-        try {
-            userService.updateUser(user);
-        } catch (ContextException e) {
+        //try {
+        userService.updateUser(user);
+        /*} catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }
+        }*/
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -111,21 +111,21 @@ public class UserEndpoint {
     @GetMapping
     public List<UserDto> findUsers(String email) {
         LOGGER.info("GET " + BASE_URL + "?email=" + email);
-        try {
-            List<ApplicationUser> result = userService.findUsers(email);
-            // Mapping the users
-            List<UserDto> returnValue = new ArrayList<>();
-            for (ApplicationUser user : result) {
-                if (user != null) {
-                    returnValue.add(userMapper.applicationUserToUserDto(user));
-                }
+        //try {
+        List<ApplicationUser> result = userService.findUsers(email);
+        // Mapping the users
+        List<UserDto> returnValue = new ArrayList<>();
+        for (ApplicationUser user : result) {
+            if (user != null) {
+                returnValue.add(userMapper.applicationUserToUserDto(user));
             }
+        }
 
-            return returnValue;
-        } catch (ServiceException e) {
+        return returnValue;
+        /*} catch (ServiceException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find users: " + e.getLocalizedMessage(), e);
-        }
+        }*/
     }
 
     @PermitAll

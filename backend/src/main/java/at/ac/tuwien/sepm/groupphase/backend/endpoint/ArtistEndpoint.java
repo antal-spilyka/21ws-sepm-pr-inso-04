@@ -44,25 +44,25 @@ public class ArtistEndpoint {
     @GetMapping("/search")
     @Operation(summary = "Search artists by search parameters.")
     public ResponseEntity searchArtists(@Validated ArtistSearchDto artistSearchDto) {
-        try {
-            ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
-            return response;
-        } catch (NotFoundException e) {
+        //try {
+        ResponseEntity response = new ResponseEntity(artistService.findArtist(artistSearchDto, 10).stream(), HttpStatus.OK);
+        return response;
+        /*} catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
-        }
+        }*/
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new artist.", security = @SecurityRequirement(name = "apiKey"))
     public ResponseEntity saveArtist(@RequestBody @Validated ArtistDto artistDto) {
-        try {
-            ResponseEntity response = new ResponseEntity(artistService.save(artistDto), HttpStatus.CREATED);
-            return response;
-        } catch (ContextException e) {
+        //try {
+        ResponseEntity response = new ResponseEntity(artistService.save(artistDto), HttpStatus.CREATED);
+        return response;
+        /*} catch (ContextException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Artist already exists:  " + e.getLocalizedMessage(), e);
-        }
+        }*/
     }
 }
