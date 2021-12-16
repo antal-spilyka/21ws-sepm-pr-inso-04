@@ -1,5 +1,18 @@
 <div>
-  <form [formGroup]="form">
+  <div fxLayoutAlign="center center" *ngIf="performances.length > 0">
+    <div fxLayout="column" class="addedPerfContainer" fxLayoutAlign="center center">
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <h3>Added Performances</h3>
+      </div>
+      <div class="perfContainer" fxLayout="row" fxFlex="auto" *ngFor="let performance of performances">
+        <div class="addedPerf" fxFlex="auto" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+          <b>{{performance.name}}</b>
+          <span>{{performance.hall.name}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="addPerformance(formDirective)">
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
       <h2>Performance</h2>
     </div>
@@ -16,6 +29,11 @@
       <mat-form-field>
         <mat-label>Duration (minutes)</mat-label>
         <input matInput required type="number" formControlName="duration">
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+      <mat-form-field>
+        <input matInput min="today" required type="datetime-local" formControlName="startTime">
       </mat-form-field>
     </div>
     <br>
@@ -38,7 +56,7 @@
       <mat-form-field>
         <mat-label>Description</mat-label>
         <textarea cdkTestareaAutosize matInput formControlName="artistDescription" cdkAutosizeMinRows="3"
-                  cdkAutosizeMaxRows="5"></textarea>
+          cdkAutosizeMaxRows="5"></textarea>
       </mat-form-field>
     </div>
     <br>
@@ -55,29 +73,14 @@
         Create new Hall
       </mat-checkbox>
     </div>
-    <!--div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <hr class="line">
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <h2>Category</h2>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput required formControlName="categoryName" [matAutocomplete]="autoCategory">
-      </mat-form-field>
-      <mat-checkbox [checked]="isNewCategory" (change)="handleNewCategory()">
-        Create new Category
-      </mat-checkbox>
-    </div-->
     <br>
     <br>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
       <hr class="line">
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <button mat-raised-button color="primary" (click)="addPerformance()">Add</button>
-      <button mat-raised-button color="primary" [disabled]="canSaveEvent" (click)="addEvent()">Finish</button>
+      <button mat-raised-button color="primary" type="submit">Add</button>
+      <button mat-raised-button color="primary" [disabled]="!canSaveEvent" (click)="addEvent()">Finish</button>
     </div>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
       <mat-option *ngFor="let artist of artists | async" [value]="artist">

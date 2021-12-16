@@ -60,8 +60,16 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         "AND (:hallId is null OR :hallId in (a.performances))")
     List<Event> findEventsWithoutDateTime(@Param("eventName") String eventName, @Param("hall") Long hallId);
 
-    List<Event> findByNameContainsIgnoreCase(String name);
+    List<Event> findByNameContainsIgnoreCase(String name, Pageable pageable);
 
     @Query("SELECT e FROM Event e WHERE :id=e.eventPlace.address.id")
     List<Event> findEventsByLocation(@Param("id") Long id, Pageable pageable);
+
+    /**
+     * Return true iff event with name already exists.
+     *
+     * @param name to be searched for
+     * @return boolean if event with name exists
+     */
+    Boolean existsByName(String name);
 }

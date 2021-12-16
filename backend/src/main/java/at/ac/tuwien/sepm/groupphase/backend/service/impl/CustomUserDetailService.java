@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -30,9 +31,11 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -43,14 +46,17 @@ public class CustomUserDetailService implements UserService {
     private final UserMapper userMapper;
     private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
+    private final EmailServiceImpl emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
+    public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
         this.seenNewsRepository = seenNewsRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -224,5 +230,41 @@ public class CustomUserDetailService implements UserService {
             user.setLockedCounter(0);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void sendEmailToResetPassword(String email) {
+        LOGGER.debug("Send email to reset password");
+        if (email.contains("@email.com")) {
+            return;
+        }
+        ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
+        if (applicationUser != null) {
+            String newPassword = generateNewPassword();
+            applicationUser.setPassword(passwordEncoder.encode(newPassword));
+
+            String mailText = "Dear Ticketline User, \nYou can now login with this generated password: " + newPassword + "\n\n Thanks for using Ticketline.";
+            String mailSubject = "Password Reset";
+            emailService.sendEmail(email, mailSubject, mailText);
+            userRepository.save(applicationUser);
+        } else {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        }
+    }
+
+    public String generateNewPassword() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+            .limit(targetStringLength)
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+
+        System.out.println(generatedString);
+        return generatedString;
     }
 }

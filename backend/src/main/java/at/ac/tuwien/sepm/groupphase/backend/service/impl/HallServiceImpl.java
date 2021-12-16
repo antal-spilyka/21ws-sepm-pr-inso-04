@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
@@ -41,7 +42,7 @@ public class HallServiceImpl implements HallService {
     public List<Hall> findHall(String name) {
         LOGGER.debug("Handeling in Service {}", name);
         try {
-            return hallRepository.findHall(name);
+            return hallRepository.findHall(name, PageRequest.of(0, 2));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -82,6 +83,20 @@ public class HallServiceImpl implements HallService {
                 throw new ContextException("EventPlace does not exist");
             }
             return hallRepository.save(hallMapper.dtoToEntity(hallDto));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException(e);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public HallDetailDto getHall(String hallId) {
+        LOGGER.debug("Handling in Service {}", hallId);
+        try {
+            Hall hall = hallRepository.getById(Long.parseLong(hallId));
+            return hallMapper.entityToDetailDto(hall);
         } catch (EntityNotFoundException e) {
             throw new NotFoundException(e);
         } catch (PersistenceException e) {

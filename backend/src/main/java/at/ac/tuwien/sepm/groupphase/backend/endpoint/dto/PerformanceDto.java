@@ -8,7 +8,7 @@ public class PerformanceDto {
     private String name;
     private LocalDateTime startTime;
     private Long duration;
-    private EventDto event;
+    private EventDto eventDto;
     private ArtistDto artist;
     private HallDto hall;
 
@@ -44,12 +44,12 @@ public class PerformanceDto {
         this.duration = duration;
     }
 
-    public EventDto getEvent() {
-        return event;
+    public EventDto getEventDto() {
+        return eventDto;
     }
 
-    public void setEvent(EventDto event) {
-        this.event = event;
+    public void setEventDto(EventDto eventDto) {
+        this.eventDto = eventDto;
     }
 
     public ArtistDto getArtist() {
@@ -78,13 +78,13 @@ public class PerformanceDto {
         }
         PerformanceDto that = (PerformanceDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(startTime, that.startTime)
-               && Objects.equals(duration, that.duration) && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
+               && Objects.equals(duration, that.duration) && Objects.equals(eventDto, that.eventDto) && Objects.equals(artist, that.artist)
                && Objects.equals(hall, that.hall);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, event, artist, hall);
+        return Objects.hash(id, name, startTime, duration, eventDto, artist, hall);
     }
 
     @Override

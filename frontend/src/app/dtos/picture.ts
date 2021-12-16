@@ -1,4 +1,4 @@
 export class Picture {
-    id: number;
+    id?: number;
     url: string;
 }

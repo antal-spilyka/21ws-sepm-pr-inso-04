@@ -150,5 +150,15 @@ public class UserEndpoint {
         }
     }
 
+    @PermitAll
+    @GetMapping("/{email}/resetPassword")
+    public void resetPassword(@PathVariable String email) {
+        LOGGER.info("GET" + BASE_URL + "/{}/resetPassword", email);
+        try {
+            this.userService.sendEmailToResetPassword(email);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
+        }
+    }
 }
 

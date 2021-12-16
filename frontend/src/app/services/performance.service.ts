@@ -41,4 +41,9 @@ export class PerformanceService {
   findPerformancesByArtist(id: number): Observable<Performance[]> {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
   }
+
+  savePerformace(performance: Performance): Observable<Performance> {
+    console.log(performance);
+    return this.httpClient.post<Performance>(this.messageBaseUri, performance);
+  }
 }

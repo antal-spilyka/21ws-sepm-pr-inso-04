@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,6 @@ import java.util.List;
 
 
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
@@ -36,5 +36,8 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
 
     @Query("SELECT p FROM Performance p WHERE p.artist.id=:id")
     List<Performance> findPerformanceForArtist(@Param("id") Long id, Pageable pageable);
+
+    @Query("SELECT CASE WHEN count(p)> 0 THEN true ELSE false END FROM Performance p WHERE p.name = :name AND p.event = :event")
+    Boolean existsByNameAndEvent(@Param("name") String name, @Param("event") Event event);
 
 }

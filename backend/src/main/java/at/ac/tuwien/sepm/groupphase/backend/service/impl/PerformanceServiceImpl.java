@@ -11,7 +11,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
@@ -28,7 +30,6 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -41,12 +42,13 @@ public class PerformanceServiceImpl implements PerformanceService {
     HallMapper hallMapper;
     PerformanceMapper performanceMapper;
     EventMapper eventMapper;
+    EventRepository eventRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PerformanceServiceImpl(PerformanceRepository performanceRepository, ArtistRepository artistRepository,
                                   HallRepository hallRepository, ArtistMapper artistMapper, HallMapper hallMapper,
-                                  PerformanceMapper performanceMapper, EventMapper eventMapper) {
+                                  PerformanceMapper performanceMapper, EventMapper eventMapper, EventRepository eventRepository) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.hallRepository = hallRepository;
@@ -54,6 +56,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.hallMapper = hallMapper;
         this.performanceMapper = performanceMapper;
         this.eventMapper = eventMapper;
+        this.eventRepository = eventRepository;
     }
 
     @Transactional
@@ -77,6 +80,32 @@ public class PerformanceServiceImpl implements PerformanceService {
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+        if (
+            performanceRepository.existsByNameAndEvent(performanceDto.getName(),
+                eventMapper.dtoToEntity(performanceDto.getEventDto()))
+        ) {
+            throw new ContextException();
+        }
+        ArtistDto artistDto = performanceDto.getArtist();
+        if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
+            Artist artist = artistMapper.dtoToEntity(artistDto);
+            performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+        }
+        HallDto hallDto = performanceDto.getHall();
+        if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
+            Hall hall = hallMapper.dtoToEntity(hallDto);
+            performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
+        }
+        performanceDto.getEventDto().setPerformances(null);
+        Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
+        Performance performancePers = performanceRepository.save(performance);
+        Event event = performancePers.getEvent();
+        event.setDuration(event.getDuration() + performancePers.getDuration());
+        List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
+        eventPerformances.add(performancePers);
+        event.setPerformances(eventPerformances);
+        eventRepository.save(event);
+        return performancePers;
     }
 
     @Transactional
