@@ -6,8 +6,7 @@ import {AddSectionDialogComponent} from './components/add-section-dialog/add-sec
 import {HallAddRequest} from '../../dtos/hall-add-request';
 import {EventPlaceService} from '../../services/event-place.service';
 import {ActivatedRoute} from '@angular/router';
-import {HallService} from "../../services/hall.service";
-import {Hall} from "../../dtos/hall";
+import {HallService} from '../../services/hall.service';
 
 @Component({
   selector: 'app-create-hallplan',
@@ -63,7 +62,6 @@ export class CreateHallplanComponent implements OnInit {
     if (this.hallId) {
       this.hallService.getHallId(this.hallId).subscribe({
         next: (result: HallAddRequest) => {
-          console.log("test");
           const rowsTmp = result.rows.map((row): IHallplanElement[] => [new HallplanElement(false), ...row.map(
             h => new HallplanElement().withAdded(h.added).withType(h.type).withSector(h.sector)
           ), new HallplanElement(false)]);
