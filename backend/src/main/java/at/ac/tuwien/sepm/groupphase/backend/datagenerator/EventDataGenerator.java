@@ -40,6 +40,418 @@ public class EventDataGenerator {
 
     private final RoomRepository roomRepository;
 
+    private String[] categories = {
+        "Pop", "Hip Hop", "Rock", "Blues", "Reggae", "Country", "Funk", "Dubstep", "Jazz",
+        "Disco", "Electronic", "Punk", "Alternative Rock", "Deep House", "Jumpstyle", "House",
+        "Techno", "Trap", "Drum & Bass", "Gangsta Rap", "Heavy Metal", "R&B", "Rap", "Vocal", "Minimal"
+    };
+
+    private String[] roomNames = {
+        "Ideas Hall",
+        "Decisions HQ",
+        "The Conference Space",
+        "Kickstart Meetings",
+        "Leaders Think Space",
+        "Banding Together",
+        "The Capital City",
+        "Chromatic Commons",
+        "Collective IQ",
+        "Convening Space",
+        "Cranium Focus",
+        "Creative Arena",
+        "Crowd Pleaser",
+        "Crucial Conference",
+        "Edge Conference",
+        "Energy Boost",
+        "Engagement Center",
+        "Fellowship Hall",
+        "Gathering Place",
+        "Gig Gallery",
+        "The Steam Room",
+        "Alpha Room",
+        "All Arrears",
+        "Assembly Hall",
+        "Away Bleachers",
+        "Banding Together",
+        "The Batcave",
+        "Be Biggie",
+        "Boardroom Bebop",
+        "Bookworm badge",
+        "Bored Room",
+        "Break Up Room",
+        "Bromance Chamber",
+        "Carnegie Room",
+        "Chromatic Commons",
+        "Collective IQ Room",
+        "Community Spot",
+        "Convening Space",
+        "Cranium Focus",
+        "Creative Arena",
+        "Crowd Pleaser",
+        "Crown Down",
+        "Dakota Room",
+        "Dam Square",
+        "Death Star",
+        "Decision Accelerator",
+        "Disappointment Beach",
+        "Dragonstone",
+        "Engagement Center",
+        "Executive Playground",
+        "Fellowship Hall",
+        "First World Problems",
+        "Flatiron Room",
+        "Gathering Field",
+        "Gathering Place",
+        "Germination Potential",
+        "Gig Gallery",
+        "Classic Talk",
+        "Designated Area",
+        "Organizational Space",
+        "Local Landmarks",
+        "Digital Signage",
+        "Amber",
+        "Entire Company",
+        "Strategic Thought",
+        "Traditional Approach",
+        "Meeting Spaces",
+        "Office Space",
+        "Ginsberg",
+        "City Hall",
+        "City Lights",
+        "Fourth Floor",
+        "Office Culture",
+        "Core Values",
+        "Learning Space",
+        "Art Director",
+        "Page One",
+        "Modern Workspace",
+        "Interactive Wayfinding",
+        "Potential Themes",
+        "Space Utilization",
+        "Space Travel",
+        "Tech Leaders",
+        "Hall of Justice",
+        "Harmony Place",
+        "Heroes Square",
+        "Hospitality Hub",
+        "Harmony Studio",
+        "Mind Mansion",
+        "Inspiration Station",
+        "Motivational Space",
+        "Huddle Up",
+        "Ideas Pressure",
+        "Jammin’ Junction",
+        "Learning Loft",
+        "Meet Up & Coffee",
+        "Harmony Palace",
+        "Melody Chamber",
+        "National Lodges",
+        "Noggin Chamber",
+        "Noodlin’ Space",
+        "Options Chamber",
+        "Romping Room",
+        "Ronaldo",
+        "Room for Jello",
+        "Social Sphere",
+        "Socialite badge",
+        "Soul Station",
+        "Spider Skull Island",
+        "Swarm badge",
+        "Team Territory",
+        "Tempo Territory",
+        "The Fountain from ‘Friends’",
+        "The Kitchen Sync",
+        "The Link",
+        "The Meet & Greet",
+        "The Sync",
+        "This Used To Be a Forest",
+        "Thunderdome",
+        "Tiger Woods",
+        "Tiny House for Big Ideas",
+        "Toe Tapping Territory",
+        "Tune Arena",
+        "Tupac",
+        "Unavailable",
+        "Unite Site",
+        "Unlimited Salad and Breadsticks",
+        "Vaudeville",
+        "Vibrato Valley",
+        "Facilitated Learning Space",
+        "Vocal Arena",
+        "Golden Gate",
+        "Little Things",
+        "The Earth",
+        "Red Velvet",
+        "London",
+        "Einstein",
+        "Popular Items",
+        "Famous Squares",
+        "Batcave",
+        "Creative Conference",
+        "Craft Beer",
+        "Outlook",
+        "Davinci",
+        "Fortune",
+        "Creative Ideas",
+        "Space Travel",
+        "Stark",
+        "United Nations",
+        "Food Network",
+        "Meeting Room",
+        "Peak Performance",
+        "Ostrich",
+        "Bluebird",
+        "Famous People",
+        "Small Detail",
+        "Dumbledore",
+        "Work Culture",
+        "Weather Formations",
+        "Central Park",
+        "Oakland",
+        "Popular Cities",
+        "Wizard",
+        "Giant",
+        "John Glenn",
+        "Cheese",
+        "Potential Space",
+        "Torque Meeting Room",
+        "Equilibrium Space",
+        "Soul Station",
+        "Specialist Meetings",
+        "Pitch Place Toe",
+        "Pop In",
+        "Prefrontal Engagement",
+        "Que Conference",
+        "Rally Scope",
+        "Picture Sessions",
+        "Rappin’ Range",
+        "Revolution Studio",
+        "Rockin’ Rocks",
+        "Social Sphere",
+        "The Springfield",
+        "Stars Vault",
+        "Huddle Up",
+        "Ideation Zone",
+        "Indoctrination Location",
+        "Inspiration Station",
+        "Jamming Junction",
+        "John McEnroe",
+        "King’s Landing",
+        "King’s Landing",
+        "Lafayette Square",
+        "Learning Loft",
+        "Liberty Square",
+        "Meet Up",
+        "Buzz Aldrin",
+        "Washington Heights",
+        "Easy Orientation",
+        "Red Velvet",
+        "Better Meetings"
+    };
+
+    private String[] eventNames = {
+        "Fearless Festival",
+        "Come One Come Festivall",
+        "Festival Facilitators",
+        "Fixed Fests",
+        "Fest Pros",
+        "Festival Victories",
+        "The Victory Fest",
+        "Success Fest",
+        "Success - Val Fest",
+        "Festival For All",
+        "Festival Formen",
+        "Oasis Makers",
+        "Field Fests",
+        "Field Vision",
+        "In The Field",
+        "Out In The Field",
+        "Field Of Dreams",
+        "Party Fest",
+        "Field Of Friends",
+        "Friendly Fields",
+        "Friendly Fests",
+        "Feast On Festivals",
+        "Valley Festivals",
+        "Wide Open Festivals",
+        "Open Field Fests",
+        "Tent Terrific",
+        "Single Tent Times",
+        "Under The Tent",
+        "Tent Terrific",
+        "Follow Us Festival",
+        "Followers Fest",
+        "Open Lands Fest",
+        "Fest Nests",
+        "Best Fests",
+        "Come All Festivals",
+        "Freelance Festival",
+        "Freedom Festival",
+        "Fortunate Fest",
+        "Fortune Festival",
+        "Fever Fest",
+        "Fervent Fest",
+        "Fire Festivals",
+        "Flame Fests",
+        "Festivals For Good",
+        "Greatness Festival",
+        "Forever Festival",
+        "Forest Fests",
+        "Frequent Fest",
+        "Fun Fest",
+        "Outdoor Oasis",  // 50
+        "The Local Festival",
+        "The Festival Crowd",
+        "Happy Hippie",
+        "Fresh Fest",
+        "Glow Fest",
+        "River Float Fest",
+        "The Flashy Fest",
+        "Best Of The Fest",
+        "Festival People",
+        "The Gathering",
+        "The Yearly Fest",
+        "Blues Fest On Main",
+        "Downtown Disco",
+        "By The Water",
+        "By The Bay",
+        "On The Coast",
+        "Beachside Fest",
+        "Hillside Fest",
+        "Up In The Hills",
+        "Local Food Fest",
+        "The Cornucopia",
+        "The Big Fiesta",
+        "Dance Fest",
+        "The Dance-Off",
+        "Fans Of The Fest",
+        "Sound Fest",
+        "Move To The Rhythm",
+        "The Vibe Fest",
+        "Good Vibrations",
+        "Only Good Vibes",
+        "All Smiles Fest",
+        "Mr. Happy’S Fest",
+        "Rhythm Of Life Fest",
+        "Better Than The Rest Fest",
+        "Sunset Fest",
+        "Silver Sun Fest",
+        "Moonlight Festival",
+        "Summer Moon",
+        "Stars Align",
+        "Full Moon Fest",
+        "Song And Dance Fest",
+        "Music Note Fest",
+        "Gathering Of The Bands",
+        "Down In The Valley",
+        "Trickle Of The Creek",
+        "Family Fest",
+        "Positive Vibes Fest",
+        "Go With The Flow Fest",
+        "New Year New Fest",
+        "The Circus Festival", // 100
+        "Always Festive",
+        "Let’s Get Festive",
+        "Feeling Festive",
+        "Festive Makers",
+        "Festive Mood",
+        "Be Our Fest",
+        "Best of Festive",
+        "Family Fest",
+        "Bless This Fest",
+        "Best Fest",
+        "Fun Fest",
+        "Festival Fun",
+        "Party Planners",
+        "Party On",
+        "Let’s Party",
+        "Festive Party",
+        "Party Favors",
+        "Party Girl",
+        "After Party",
+        "Party Hearty",
+        "Grand gala",
+        "Gala gang",
+        "Gala Day",
+        "Gala for a Day",
+        "Festival day",
+        "A Gala Affair",
+        "That’s Entertainment",
+        "let us Entertain You",
+        "Entertainment Purposes",
+        "All Entertainment",
+        "Full Entertainment",
+        "Entertain the idea",
+        "We Entertain",
+        "Party Planners",
+        "Event Planners",
+        "Gala Events",
+        "All Events",
+        "What’s The Plan",
+        "That’s a Plan",
+        "That’s the Plan",
+        "Master Plan",
+        "Master Planners",
+        "Plan of Action",
+        "Plan on It",
+        "Plan of Attack",
+        "Game Plan",
+        "Party Plan",
+        "Plan Ahead",
+        "Golden Jubilee",
+        "Diamond Jubilee", // 150
+        "Cherries Jubilee",
+        "In The Event",
+        "Blessed Event",
+        "Happy Event",
+        "The New Star Festival",
+        "All Headline Music Festival",
+        "Annual Edition Festival",
+        "The Expansion Art Festival",
+        "The Next Lineup Music Festival",
+        "Circle Of Love Festival",
+        "The Unravelled Art Festival",
+        "Plenty Real Cultural Festival",
+        "Sunrise Place Festival",
+        "Summer-Set Music Festival",
+        "Springtime Isle Music Festival",
+        "The Grand Classic Art Festival",
+        "The First Journey Music Festival",
+        "Lineup Roots Music Festival",
+        "Paints And Science Art Festival",
+        "Pop Take Over Festival",
+        "The Connected Music Festival",
+        "Center Park Festival",
+        "Elevation",
+        "Blue Culture Festival",
+        "Chilled Out Music Festival",
+        "Nature And Music",
+        "Open Dance Festival",
+        "Cultural Gathering",
+        "Beachview Festival",
+        "Set In Abundance Festival",
+        "All Edition Music Festival",
+        "Mountain Vibe Festival",
+        "Wired And Wonderful",
+        "Blended Acts Festival",
+        "Double Bill Music Festival",
+        "Meadows And Mountains Festival",
+        "Dance Field Festival",
+        "Youthful Love Festival",
+        "Leading Stages",
+        "Festival For Cure",
+        "The Proof Art Festival",
+        "Seaside Town Festival",
+        "Journey Begins Festival",
+        "Tug And War Festival",
+        "Primary Scene Festival",
+        "Green Setting Festivals",
+        "Beach Shore Isle Festival",
+        "Color Of Love Festival",
+        "Access Summer Festival",
+        "Before October Festival",  // 200
+    };
+
     private String[] names = {
         // #1
         "LDS Conference Centre",
@@ -296,7 +708,7 @@ public class EventDataGenerator {
             "and can hold up to 16,000 people for sporting events)."
     };
 
-    // Test durations
+    // Durations
     private final Integer[] durations = new Integer[150];
 
     // Months
@@ -350,40 +762,41 @@ public class EventDataGenerator {
             this.setArray(this.days, 0, 28);
 
             for (int i = 1; i <= 200; i++) {
-                // Different names to test the search
-                String eventName;
-                if (i < 75) {
-                    eventName = "event";
-                } else if (i < 150) {
-                    eventName = "concert";
-                } else {
-                    eventName = "meeting";
-                }
+                // Event name
+                final String eventName = this.eventNames[i - 1];
+
                 // Event duration
                 final Integer duration = getRandom(this.durations);
+
                 // Event datetime
-                final int year = (i * 11) % 2030;
+                int min = 2022;
+                int max = 2050;
+                final int year = (int) Math.floor(Math.random() * (max - min + 1) + min);
                 final int month = getRandom(this.months);
                 final int day = getRandom(this.days);
                 final int hour = i % 24;
                 final int minute = i % 60;
                 final int second = (i * 7) % 60;
-                final int nanosecond = (i * 3) % 60;
+                final int nanosecond = (i * 7) % 60;
                 final LocalDateTime dateTime =
                     LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
-                // Event category
-                final long categoryId = i % 25 == 0 ? 1 : i % 25;
-                final Category category = new Category("category" + categoryId);
+
+                // Category
+                final long categoryId = i % 26 == 0 ? 1 : i % 25;
+                final Category category = new Category(getRandomName(this.categories));
                 categoryRepository.save(category);
+
                 // Room
-                final Room room = new Room((long) i, "room" + i,
+                final Room room = new Room((long) i, this.roomNames[i - 1],
                     eventPlaceRepository.getById(getRandomName(this.names)));
                 roomRepository.save(room);
-                // Event artist
+
+                // Artist
                 final Artist artist = artistRepository.getById((long) getRandom(this.ids));
+
                 // Saving the event
                 eventRepository.save(Event.EventBuilder.anEvent().withId((long) i)
-                    .withName(eventName + i).withDuration(duration).withContent("content for the event with name " + eventName)
+                    .withName(eventName).withDuration(duration).withContent("content for the event with name " + eventName)
                     .withDateTime(dateTime).withCategory(category).withRoom(room).withArtist(artist)
                     .withDescription("Test description for the event with name " + eventName).build());
             }
@@ -400,13 +813,13 @@ public class EventDataGenerator {
         }
     }
 
-    // Pick random duration from the list
+    // Pick random integer from the given list
     public static Integer getRandom(Integer[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }
 
-    // Pick random name from the list
+    // Pick random string from the given list
     public static String getRandomName(String[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];

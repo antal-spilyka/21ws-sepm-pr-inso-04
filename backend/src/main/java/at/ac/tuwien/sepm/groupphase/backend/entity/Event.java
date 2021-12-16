@@ -133,12 +133,15 @@ public class Event {
             && Objects.equals(content, event.content)
             && Objects.equals(dateTime, event.dateTime)
             && Objects.equals(category, event.category)
+            && Objects.equals(artist, event.artist)
+            && Objects.equals(description, event.description)
             && Objects.equals(room, event.room);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, duration, content, dateTime, category, room);
+        return Objects.hash(id, name, duration, content, dateTime,
+            category, room, artist, description);
     }
 
     @Override
@@ -151,6 +154,8 @@ public class Event {
             ", dateTime=" + dateTime +
             ", category=" + category +
             ", room=" + room +
+            ", artist='" + artist +
+            ", description='" + description +
             '}';
     }
 
