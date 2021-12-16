@@ -13,12 +13,13 @@ import {SearchTimeComponent} from './components/search-time/search-time.componen
 import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
-import { NewsViewComponent } from './components/news-view/news-view.component';
+import {NewsViewComponent} from './components/news-view/news-view.component';
 import {ArtistPerformancesComponent} from './components/artist-performances/artist-performances.component';
 import {EventPerformancesComponent} from './components/event-performances/event-performances.component';
 import {LocationPerformancesComponent} from './components/location-performances/location-performances.component';
 import {PerformanceDetailedComponent} from './components/performance-detailed/performance-detailed.component';
 import {OldNewsComponent} from './components/old-news/old-news.component';
+import {CreateEventPlacesComponent} from './components/create-event-places/create-event-places.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -39,7 +40,8 @@ const routes: Routes = [
   {path: 'locations/:id/performances', component: LocationPerformancesComponent},
   {path: 'performances/:id/:performance', component: PerformanceDetailedComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
-  {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent}
+  {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},
+  {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent}
 ];
 
 @NgModule({
