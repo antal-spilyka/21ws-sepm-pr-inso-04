@@ -224,6 +224,9 @@ public class CustomUserDetailService implements UserService {
     @Override
     public void sendEmailToResetPassword(String email) {
         LOGGER.debug("Send email to reset password");
+        if (email.contains("@email.com")) {
+            return;
+        }
         ApplicationUser applicationUser = this.findApplicationUserByEmail(email);
         if (applicationUser != null) {
             String newPassword = generateNewPassword();
