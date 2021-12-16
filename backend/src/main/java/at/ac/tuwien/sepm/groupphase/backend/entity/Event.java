@@ -15,39 +15,6 @@ import java.util.Objects;
 
 @Entity
 public class Event {
-    private Long id;
-    private String name;
-    private Integer duration;
-    private String content;
-    private LocalDateTime dateTime;
-    private Category category;
-    private Room room;
-    private Artist artist;
-    private String description;
-
-    public Event() {}
-
-    public Event(Long id, String name, Integer duration, String content, LocalDateTime dateTime,
-                 Category category, Room room, Artist artist, String description) {
-        this.id = id;
-        this.name = name;
-        this.duration = duration;
-        this.content = content;
-        this.dateTime = dateTime;
-        this.category = category;
-        this.room = room;
-        this.artist = artist;
-        this.description = description;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +40,20 @@ public class Event {
 
     @Column (nullable = false)
     private String category;
+
+    public Event() {}
+
+    public Event(Long id, String name, Long duration, List<Performance> performances, LocalDateTime startTime,
+                 String category, EventPlace eventPlace, String description) {
+        this.id = id;
+        this.name = name;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.performances = performances;
+        this.category = category;
+        this.description = description;
+        this.eventPlace = eventPlace;
+    }
 
     public String getCategory() {
         return category;
@@ -181,13 +162,12 @@ public class Event {
     public static final class EventBuilder {
         private Long id;
         private String name;
-        private Integer duration;
-        private String content;
-        private LocalDateTime dateTime;
-        private Category category;
-        private Room room;
-        private Artist artist;
+        private LocalDateTime startTime;
+        private Long duration;
+        private List<Performance> performances = new ArrayList<>();
+        private EventPlace eventPlace;
         private String description;
+        private String category;
 
         private EventBuilder() {
         }
@@ -206,33 +186,28 @@ public class Event {
             return this;
         }
 
-        public Event.EventBuilder withDuration(Integer duration) {
+        public Event.EventBuilder withDuration(Long duration) {
             this.duration = duration;
             return this;
         }
 
-        public Event.EventBuilder withContent(String content) {
-            this.content = content;
+        public Event.EventBuilder withPerformances(List<Performance> performances) {
+            this.performances = performances;
             return this;
         }
 
-        public Event.EventBuilder withDateTime(LocalDateTime dateTime) {
-            this.dateTime = dateTime;
+        public Event.EventBuilder withStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
             return this;
         }
 
-        public Event.EventBuilder withCategory(Category category) {
+        public Event.EventBuilder withEventPlacee(EventPlace eventPlace) {
+            this.eventPlace = eventPlace;
+            return this;
+        }
+
+        public Event.EventBuilder withCategory(String category) {
             this.category = category;
-            return this;
-        }
-
-        public Event.EventBuilder withRoom(Room room) {
-            this.room = room;
-            return this;
-        }
-
-        public Event.EventBuilder withArtist(Artist artist) {
-            this.artist = artist;
             return this;
         }
 
@@ -246,11 +221,9 @@ public class Event {
             event.setId(id);
             event.setName(name);
             event.setDuration(duration);
-            event.setContent(content);
-            event.setDateTime(dateTime);
+            event.setEventPlace(eventPlace);
+            event.setStartTime(startTime);
             event.setCategory(category);
-            event.setRoom(room);
-            event.setArtist(artist);
             event.setDescription(description);
             return event;
         }
