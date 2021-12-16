@@ -43,12 +43,18 @@ import { SearchEventsComponent } from './components/search-events/search-events.
 import { SearchTimeComponent } from './components/search-time/search-time.component';
 import { NewsMainPageComponent } from './components/news-main-page/news-main-page.component';
 import {MatGridListModule} from '@angular/material/grid-list';
+import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
+import {HallplanElementComponent} from './components/create-hallplan/components/hallplan-element/hallplan-element.component';
+import {MatRadioModule} from '@angular/material/radio';
 import { EditPaymentInformationDialogComponent } from
     './components/edit-user/edit-payment-information-dialog/edit-payment-information-dialog.component';
 import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
+import {ColorPickerModule} from 'ngx-color-picker';
+import {HallDetailComponent} from './components/hall-detail/hall-detail.component';
 import { ArtistPerformancesComponent } from './components/artist-performances/artist-performances.component';
 import { LocationPerformancesComponent } from './components/location-performances/location-performances.component';
 import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
@@ -71,6 +77,8 @@ import { OldNewsComponent } from './components/old-news/old-news.component';
     CreateEventComponent,
     CreateEventPlaceComponent,
     CreateArtistComponent,
+    CreateHallplanComponent,
+    HallplanElementComponent,
     NewsMainPageComponent,
     SearchComponent,
     SearchArtistComponent,
@@ -78,6 +86,8 @@ import { OldNewsComponent } from './components/old-news/old-news.component';
     SearchEventsComponent,
     SearchTimeComponent,
     EditPaymentInformationDialogComponent,
+    AddSectionDialogComponent,
+    HallDetailComponent,
     NewsViewComponent,
     ArtistPerformancesComponent,
     LocationPerformancesComponent,
@@ -111,9 +121,12 @@ import { OldNewsComponent } from './components/old-news/old-news.component';
     MatNativeDateModule,
     MatSlideToggleModule,
     MatGridListModule,
+    MatRadioModule,
+    MatGridListModule,
     NgImageSliderModule,
     MatProgressSpinnerModule,
-    MatTableModule
+    MatTableModule,
+    ColorPickerModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

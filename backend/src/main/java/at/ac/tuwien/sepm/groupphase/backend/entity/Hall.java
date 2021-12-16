@@ -1,11 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +25,13 @@ public class Hall {
 
     @ManyToOne()
     EventPlace eventPlace;
+
+    @ManyToOne()
+    Sector sector;
+
+    @OneToMany(cascade = CascadeType.REMOVE,
+        fetch = FetchType.EAGER)
+    List<HallplanElement> rows;
 
     public Long getId() {
         return id;
@@ -42,6 +55,14 @@ public class Hall {
 
     public void setEventPlace(EventPlace eventPlace) {
         this.eventPlace = eventPlace;
+    }
+
+    public List<HallplanElement> getRows() {
+        return rows;
+    }
+
+    public Sector getSector() {
+        return sector;
     }
 
     @Override
@@ -68,5 +89,9 @@ public class Hall {
             ", name='" + name + '\'' +
             ", eventPlace=" + eventPlace +
             '}';
+    }
+
+    public void setRow(List<HallplanElement> rows) {
+        this.rows = rows;
     }
 }
