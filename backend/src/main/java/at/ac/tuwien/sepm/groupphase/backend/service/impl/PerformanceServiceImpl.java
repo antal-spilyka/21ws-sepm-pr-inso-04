@@ -13,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
@@ -41,12 +42,13 @@ public class PerformanceServiceImpl implements PerformanceService {
     HallMapper hallMapper;
     PerformanceMapper performanceMapper;
     EventMapper eventMapper;
+    EventRepository eventRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PerformanceServiceImpl(PerformanceRepository performanceRepository, ArtistRepository artistRepository,
                                   HallRepository hallRepository, ArtistMapper artistMapper, HallMapper hallMapper,
-                                  PerformanceMapper performanceMapper, EventMapper eventMapper) {
+                                  PerformanceMapper performanceMapper, EventMapper eventMapper, EventRepository eventRepository) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.hallRepository = hallRepository;
@@ -54,6 +56,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.hallMapper = hallMapper;
         this.performanceMapper = performanceMapper;
         this.eventMapper = eventMapper;
+        this.eventRepository = eventRepository;
     }
 
     @Transactional
@@ -78,7 +81,14 @@ public class PerformanceServiceImpl implements PerformanceService {
         }
         performanceDto.getEventDto().setPerformances(null);
         Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
-        return performanceRepository.save(performance);
+        Performance performancePers = performanceRepository.save(performance);
+        Event event = performancePers.getEvent();
+        event.setDuration(event.getDuration() + performancePers.getDuration());
+        List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
+        eventPerformances.add(performancePers);
+        event.setPerformances(eventPerformances);
+        eventRepository.save(event);
+        return performancePers;
     }
 
     @Transactional
