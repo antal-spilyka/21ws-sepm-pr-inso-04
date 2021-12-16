@@ -79,4 +79,14 @@ export class UserService {
     console.log('Delete user with email ' + user.email);
     return this.httpClient.delete<User>(this.registerBaseUri + '/' + user.email);
   }
+
+  /**
+   * Sends a email with a generated password.
+   *
+   * @param user object to delete
+   */
+  resetPassword(email: string) {
+    console.log('Reset password for user with email ' + email);
+    return this.httpClient.get(this.registerBaseUri + '/' + email + '/resetPassword');
+  }
 }
