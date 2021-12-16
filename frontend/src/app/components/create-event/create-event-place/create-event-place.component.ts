@@ -5,7 +5,7 @@ import {EventPlace} from 'src/app/dtos/eventPlace';
 import {EventPlaceService} from 'src/app/services/event-place.service';
 import {Address} from 'src/app/dtos/address';
 import {EventDto} from '../../../dtos/eventDto';
-import {EventService} from '../../../services/event.service';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-create-event-place',
@@ -36,8 +36,8 @@ export class CreateEventPlaceComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private eventService: EventService,
     private eventPlaceService: EventPlaceService,
+    private eventService: EventService
   ) {
     this.eventPlaces = this.form.get('eventPlaceName').valueChanges.pipe(
       distinctUntilChanged(),
@@ -50,42 +50,26 @@ export class CreateEventPlaceComponent implements OnInit {
   }
 
   onSelectEventPlace(eventPlace: EventPlace) {
+    console.log(eventPlace);
     this.selectedEventPlace = eventPlace;
     console.log(eventPlace);
     const {name} = eventPlace;
-    const {country, city, state, zip, street} = eventPlace.addressDto;
     this.form.controls.eventPlaceName.setValue(name);
-    this.form.controls.country.setValue(country);
-    this.form.controls.city.setValue(city);
-    this.form.controls.state.setValue(state);
-    this.form.controls.zip.setValue(zip);
-    this.form.controls.street.setValue(street);
-  }
-
-  handleNewEventPlace() {
-    this.isNewEventPlace = !this.isNewEventPlace;
-    if (!this.isNewEventPlace) {
-      this.form.controls.country.disable();
-      this.form.controls.city.disable();
-      this.form.controls.state.disable();
-      this.form.controls.zip.disable();
-      this.form.controls.street.disable();
-    } else {
-      this.form.controls.country.enable();
-      this.form.controls.city.enable();
-      this.form.controls.state.enable();
-      this.form.controls.zip.enable();
-      this.form.controls.street.enable();
-      this.selectedEventPlace = null;
-    }
   }
 
   async nextStep() {
-    console.log(this.form.valid);
     if (!this.form.valid) {
+      this.setErrorFlag('Please fill out the form.');
       return;
     }
-    console.log(this.isNewEventPlace, this.selectedEventPlace);
+    if(!this.selectedEventPlace || this.selectedEventPlace.name !== this.form.value.eventPlaceName) {
+      this.setErrorFlag('Please select an Event Place from the Dropdown Menu.');
+      return;
+    }
+    if(new Date() > new Date(this.form.value.startTime)) {
+      this.setErrorFlag('The start time must be in the future');
+      return;
+    }
     await this.submitChanges();
   }
 
@@ -95,39 +79,11 @@ export class CreateEventPlaceComponent implements OnInit {
     event.startTime = this.form.value.startTime;
     event.duration = 0;
     event.performances = [];
-    let eventPlace;
-    console.log(this.isNewEventPlace);
-    if (this.isNewEventPlace) {
-      eventPlace = new EventPlace();
-      const address = new Address();
-      address.city = this.form.value.city;
-      address.country = this.form.value.country;
-      address.state = this.form.value.state;
-      address.zip = this.form.value.zip;
-      address.street = this.form.value.street;
-      eventPlace.name = this.form.value.eventPlaceName;
-      eventPlace.addressDto = address;
-      this.selectedEventPlace = eventPlace;
-      console.log('1'+this.selectedEventPlace);
-    } else {
-      if (!this.selectedEventPlace) {
-        this.setErrorFlag('Choose an eventPlace for your event');
-        return;
-      }
-    }
-    console.log('2'+this.selectedEventPlace);
     event.eventPlace = this.selectedEventPlace;
     event.description = this.form.value.description;
     event.category = this.form.value.category;
     console.log(event);
-    this.eventPlaceService.createEventPlace(event.eventPlace).subscribe({
-      next: async next => {
-        console.log(next);
-        this.selectedEventPlace = next;
-        this.selectedEvent.eventPlace = next;
-      }
-    });
-    /*this.eventService.saveEvent(event).subscribe({
+    this.eventService.saveEvent(event).subscribe({
       next: async next => {
         console.log(next);
         this.selectedEvent = next;
@@ -142,9 +98,7 @@ export class CreateEventPlaceComponent implements OnInit {
       complete: () => {
         this.handleNext(this.selectedEvent);
       }
-    });*/
-    this.selectedEvent = event;
-    this.handleNext(this.selectedEvent);
+    });
   }
 
   ngOnInit(): void {

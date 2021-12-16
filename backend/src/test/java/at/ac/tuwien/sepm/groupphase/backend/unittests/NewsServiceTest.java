@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.*;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
@@ -157,6 +156,7 @@ public class NewsServiceTest implements TestData {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
         event.setCategory("TestCategory");
+        event.setName("event15");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -168,6 +168,7 @@ public class NewsServiceTest implements TestData {
         performance.setHall(hall);
         performance.setEvent(this.event);
         this.performances.add(performance);
+        event.setName("event1");
         Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         LocalDateTime date = LocalDateTime.now();
@@ -246,6 +247,7 @@ public class NewsServiceTest implements TestData {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
         event.setCategory("TestCategory");
+        event.setName("event2");
         this.event = eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -312,6 +314,7 @@ public class NewsServiceTest implements TestData {
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
         event.setCategory("TestCategory");
+        event.setName("event3");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -323,6 +326,7 @@ public class NewsServiceTest implements TestData {
         performance.setHall(hall);
         performance.setEvent(this.event);
         this.performances.add(performance);
+        event.setName("event5");
         Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         NewsDto newsDto = new NewsDto();
@@ -376,12 +380,13 @@ public class NewsServiceTest implements TestData {
         this.hall = hallService.save(hallDto);
 
         this.event = new Event();
-        event.setName("TestName");
+        event.setName("TestName4");
         event.setStartTime(LocalDateTime.now());
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
         event.setDescription("TestDescription");
         event.setCategory("TestCategory");
+        event.setName("event4");
         eventService.saveEvent(eventMapper.entityToDto(event));
 
         Performance performance = new Performance();
@@ -393,6 +398,7 @@ public class NewsServiceTest implements TestData {
         performance.setHall(hall);
         performance.setEvent(this.event);
         this.performances.add(performance);
+        event.setName("event0");
         Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
 
         NewsDto newsDto = new NewsDto();

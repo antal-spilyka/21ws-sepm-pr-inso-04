@@ -64,4 +64,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e WHERE :id=e.eventPlace.address.id")
     List<Event> findEventsByLocation(@Param("id") Long id, Pageable pageable);
+
+    /**
+     * Return true iff event with name already exists.
+     *
+     * @param name to be searched for
+     * @return boolean if event with name exists
+     */
+    Boolean existsByName(String name);
 }

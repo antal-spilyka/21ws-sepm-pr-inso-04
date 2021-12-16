@@ -1,15 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -171,13 +168,16 @@ public class EventServiceImpl implements EventService {
         if (eventDto == null) {
             throw new ServiceException("Event can't be null");
         }
+        if (eventRepository.existsByName(eventDto.getName())) {
+            throw new ContextException("Event name already exists");
+        }
         long durationCounter = 0L;
         List<PerformanceDto> temp = new ArrayList<>();
         if (eventDto.getPerformances() != null && 0 < eventDto.getPerformances().size()) {
             for (PerformanceDto performanceDto : eventDto.getPerformances()) {
                 performanceDto.setStartTime(eventDto.getStartTime().plusMinutes(5 + durationCounter));
                 durationCounter += 5 + performanceDto.getDuration();
-                performanceDto.setEvent(eventDto);
+                performanceDto.setEventDto(eventDto);
                 temp.add(performanceDto);
 
             }

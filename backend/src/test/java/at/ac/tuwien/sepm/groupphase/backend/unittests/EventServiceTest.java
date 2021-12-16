@@ -3,18 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.*;
-import ch.qos.logback.classic.util.StatusViaSLF4JLoggerFactory;
-import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -22,24 +16,18 @@ import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,7 +93,7 @@ public class EventServiceTest {
         this.hall = hallService.save(hallDto);
 
         this.event = new Event();
-        event.setName("TestName");
+        event.setName("TestNameX");
         event.setStartTime(LocalDateTime.now());
         event.setDuration(710L);
         event.setEventPlace(eventPlace);
@@ -131,19 +119,17 @@ public class EventServiceTest {
         eventPlaceDto.setAddressDto(addressDto);
         eventPlaceService.save(eventPlaceDto);
 
-        Event eventPers = eventService.saveEvent(eventMapper.entityToDto(this.event));
-
         Event event2 = new Event();
-        event2.setId(eventPers.getId());
-        event2.setName(eventPers.getName());
-        event2.setStartTime(eventPers.getStartTime());
-        event2.setDuration(eventPers.getDuration());
-        event2.setPerformances(eventPers.getPerformances());
-        event2.setEventPlace(eventPers.getEventPlace());
-        event2.setDescription(eventPers.getDescription());
-        event2.setCategory(eventPers.getCategory());
+        event2.setId(this.event.getId());
+        event2.setName(this.event.getName());
+        event2.setStartTime(this.event.getStartTime());
+        event2.setDuration(this.event.getDuration());
+        event2.setPerformances(this.event.getPerformances());
+        event2.setEventPlace(this.event.getEventPlace());
+        event2.setDescription(this.event.getDescription());
+        event2.setCategory(this.event.getCategory());
 
-        assertEquals(eventPers, event2);
+        assertEquals(this.event, event2);
     }
 
     @Test
@@ -170,10 +156,12 @@ public class EventServiceTest {
 
     @Test
     public void search_for_valid_event_found() {
-        Event result = eventService.saveEvent(eventMapper.entityToDto(this.event));
+        System.out.println(event);
+        event.setName("eventX");
+        event = eventService.saveEvent(eventMapper.entityToDto(event));
         EventSearchDto eventSearchDto = new EventSearchDto();
-        eventSearchDto.setDuration(result.getDuration().intValue());
-        eventSearchDto.setDescription(result.getDescription());
+        eventSearchDto.setDuration(this.event.getDuration().intValue());
+        eventSearchDto.setDescription(this.event.getDescription());
         List<Event> events = eventService.findEvents(eventSearchDto);
         assertFalse(events.isEmpty());
     }
@@ -209,6 +197,7 @@ public class EventServiceTest {
         List<Performance> testPerformances = new ArrayList<>();
         testPerformances.add(performance);
         testEvent.setPerformances(testPerformances);
+        testEvent.setName("event9");
         Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
 
         Stream<PerformanceDto> performances = eventService.getPerformances(copyEvent.getId());
@@ -252,6 +241,7 @@ public class EventServiceTest {
         List<Performance> testPerformances = new ArrayList<>();
         testPerformances.add(performance);
         testEvent.setPerformances(testPerformances);
+        testEvent.setName("event10");
         Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
 
         Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId());
@@ -274,7 +264,7 @@ public class EventServiceTest {
         testEventPlaceDto.setName("testLocationEventPlace");
         EventPlace testEventPlace = eventPlaceService.save(testEventPlaceDto);
         Event testEvent = new Event();
-        testEvent.setName("TestPerformances");
+        testEvent.setName("TestPerformances8");
         testEvent.setStartTime(LocalDateTime.now());
         testEvent.setDuration(710L);
         testEvent.setEventPlace(testEventPlace);

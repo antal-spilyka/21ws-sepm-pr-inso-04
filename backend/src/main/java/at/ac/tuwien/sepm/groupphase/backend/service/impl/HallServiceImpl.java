@@ -41,7 +41,7 @@ public class HallServiceImpl implements HallService {
     public List<Hall> findHall(String name) {
         LOGGER.debug("Handeling in Service {}", name);
         try {
-            return hallRepository.findHall(name);
+            return hallRepository.findHall(name, PageRequest.of(0, 2));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
