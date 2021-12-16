@@ -60,6 +60,9 @@ import { LocationPerformancesComponent } from './components/location-performance
 import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
 import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
 import { OldNewsComponent } from './components/old-news/old-news.component';
+import {
+  RemoveSectionDialogComponent
+} from './components/create-hallplan/components/remove-section-dialog/remove-section-dialog.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +97,7 @@ import { OldNewsComponent } from './components/old-news/old-news.component';
     EventPerformancesComponent,
     PerformanceDetailedComponent,
     NewsViewComponent,
+    RemoveSectionDialogComponent,
     OldNewsComponent
   ],
   imports: [

@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Create a section</h1>
+<h1 *ngIf="data.editIndex === -1" mat-dialog-title>Create a section</h1>
+<h1 *ngIf="data.editIndex > -1" mat-dialog-title>Edit section</h1>
 <div mat-dialog-content>
   <label>
     Color:
@@ -14,8 +15,9 @@
     <mat-label>Price</mat-label>
     <input matInput [(ngModel)]="data.price" type="number">
   </mat-form-field>
+  <mat-error>{{getErrorMessage()}}</mat-error>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [disabled]="data.name.length === 0 || data.price === 0.0 || data.price === 0.0" [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+  <button mat-button [disabled]="shouldBeDisabled()" [mat-dialog-close]="data">Ok</button>
 </div>

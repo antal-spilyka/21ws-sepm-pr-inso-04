@@ -8,6 +8,8 @@ export interface AddSectionDialogData {
   color: string;
   name: string;
   price: number;
+  sectors: Sector[];
+  editIndex: number;
 }
 
 export interface IHallplanElement {
@@ -32,6 +34,21 @@ export class Sector {
 
   withSelected(b: boolean) {
     this.selected = b;
+    return this;
+  }
+
+  withColor(color) {
+    this.color = color;
+    return this;
+  }
+
+  withPrice(price) {
+    this.price = price;
+    return this;
+  }
+
+  withName(name) {
+    this.name = name;
     return this;
   }
 }
