@@ -15,7 +15,7 @@ import {UserListComponent} from './components/user-list/user-list.component';
 import {NewsMainPageComponent} from './components/news-main-page/news-main-page.component';
 import {CreateHallplanComponent} from './components/create-hallplan/create-hallplan.component';
 import { NewsViewComponent } from './components/news-view/news-view.component';
-import {HallDetailComponent} from "./components/hall-detail/hall-detail.component";
+import {HallDetailComponent} from './components/hall-detail/hall-detail.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},

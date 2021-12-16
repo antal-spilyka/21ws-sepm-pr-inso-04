@@ -54,7 +54,7 @@ import { NgImageSliderModule } from 'ng-image-slider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {HallDetailComponent} from "./components/hall-detail/hall-detail.component";
+import {HallDetailComponent} from './components/hall-detail/hall-detail.component';
 
 @NgModule({
   declarations: [
