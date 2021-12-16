@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 public class SectorDto {
@@ -16,6 +17,9 @@ public class SectorDto {
     @NotNull(message = "Price must not be null")
     @DecimalMin("0.0")
     private double price;
+
+    @Null
+    private Long id;
 
     public String getColor() {
         return color;
@@ -39,5 +43,13 @@ public class SectorDto {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

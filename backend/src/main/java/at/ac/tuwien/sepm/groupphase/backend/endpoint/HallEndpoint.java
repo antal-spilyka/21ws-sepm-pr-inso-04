@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
@@ -12,12 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
@@ -39,6 +42,15 @@ public class HallEndpoint {
     @Operation(summary = "Find hall by search parameters.")
     public Stream<HallDto> findHall(String name) {
         return hallService.findHall(name).stream().map(hallMapper::entityToDto);
+    }
+
+    //    @Secured("ROLE_USER")
+    @PermitAll
+    @GetMapping("/{hallId:^[0-9]+$}")
+    @Operation(summary = "Get hall by id.")
+    public HallDetailDto getHall(@PathVariable String hallId) {
+        LOGGER.info("GET /api/v1/halls/" + hallId);
+        return hallService.getHall(hallId);
     }
 
     @Secured("ROLE_USER")

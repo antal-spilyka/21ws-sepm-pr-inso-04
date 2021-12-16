@@ -28,12 +28,21 @@ public class SectorMapper {
 
     public List<Sector> dtoToEntity(SectorDto[] sectors) {
         LOGGER.trace("Mapping {}", sectors);
-        return Arrays.stream(sectors).map((sectorDto -> {
+        return Arrays.stream(sectors).map(((sectorDto) -> {
             Sector sector = new Sector();
             sector.setName(sectorDto.getName());
             sector.setColor(sectorDto.getColor());
             sector.setPrice(sectorDto.getPrice());
             return sector;
         })).toList();
+    }
+
+    public SectorDto entityToDto(Sector sector) {
+        SectorDto sectorDto = new SectorDto();
+        sectorDto.setId(sector.getId());
+        sectorDto.setName(sector.getName());
+        sectorDto.setColor(sector.getColor());
+        sectorDto.setPrice(sector.getPrice());
+        return sectorDto;
     }
 }
