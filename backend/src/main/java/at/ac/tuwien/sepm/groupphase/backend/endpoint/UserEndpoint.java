@@ -100,7 +100,6 @@ public class UserEndpoint {
     /**
      * Updates the admin rights of an existing user.
      */
-//    @Secured("ROLE_ADMIN")
     @PermitAll
     @PutMapping("/{email}")
     public ResponseEntity<String> setAdmin(@PathVariable String email, Principal principal) {
