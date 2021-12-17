@@ -31,11 +31,12 @@ public class EventLocationEndpoint {
     @GetMapping
     @Operation(summary = "Find Event Location by search parameters.")
     public ResponseEntity findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
-        try {
-            return new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
-        } catch (NotFoundException e) {
+        //try {
+        return new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
+        /*} catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
-        }
+        */
     }
 }
+//}

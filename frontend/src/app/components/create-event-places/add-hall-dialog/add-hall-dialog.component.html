@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>New Hall</h1>
+<div mat-dialog-content>
+    <p>The Event Place has been created succesfully.</p>
+    <p>Do you want to create a new Hall for it?</p>
+</div>
+<div mat-dialog-actions>
+    <span>
+        <a mat-raised-button color="primary" (click)="closeDialog()"
+            [routerLink]="['/eventPlaces', data.id,'halls', 'add']" routerLinkActive="active">Yes</a>
+    </span>
+    <span>
+        <a mat-raised-button class="noButton" (click)="closeDialog()" color="warn" [routerLink]="['/']"
+            routerLinkActive="active">No</a>
+    </span>
+
+</div>

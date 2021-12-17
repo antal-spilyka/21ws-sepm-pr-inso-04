@@ -69,58 +69,59 @@ public class PerformanceServiceImpl implements PerformanceService {
         ) {
             throw new ContextException();
         }
-        ArtistDto artistDto = performanceDto.getArtist();
-        if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
-            Artist artist = artistMapper.dtoToEntity(artistDto);
-            performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+        try {
+            ArtistDto artistDto = performanceDto.getArtist();
+            if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
+                Artist artist = artistMapper.dtoToEntity(artistDto);
+                performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+            }
+            HallDto hallDto = performanceDto.getHall();
+            if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
+                Hall hall = hallMapper.dtoToEntity(hallDto);
+                performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
+            }
+            performanceDto.getEventDto().setPerformances(null);
+            Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
+            Performance performancePers = performanceRepository.save(performance);
+            Event event = performancePers.getEvent();
+            event.setDuration(event.getDuration() + performancePers.getDuration());
+            List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
+            eventPerformances.add(performancePers);
+            event.setPerformances(eventPerformances);
+            eventRepository.save(event);
+            return performancePers;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        HallDto hallDto = performanceDto.getHall();
-        if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
-            Hall hall = hallMapper.dtoToEntity(hallDto);
-            performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
-        }
-        performanceDto.getEventDto().setPerformances(null);
-        Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
-        Performance performancePers = performanceRepository.save(performance);
-        Event event = performancePers.getEvent();
-        event.setDuration(event.getDuration() + performancePers.getDuration());
-        List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
-        eventPerformances.add(performancePers);
-        event.setPerformances(eventPerformances);
-        eventRepository.save(event);
-        return performancePers;
     }
 
     @Transactional
     @Override
     public Performance save(PerformanceDto performanceDto, Event event) {
         LOGGER.debug("Handeling in Service {}", performanceDto);
-        ArtistDto artistDto = performanceDto.getArtist();
-        if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
-            Artist artist = artistMapper.dtoToEntity(artistDto);
-            performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+        try {
+            ArtistDto artistDto = performanceDto.getArtist();
+            if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
+                Artist artist = artistMapper.dtoToEntity(artistDto);
+                performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
+            }
+            HallDto hallDto = performanceDto.getHall();
+            if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
+                Hall hall = hallMapper.dtoToEntity(hallDto);
+                performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
+            }
+            //performanceDto.getEvent().setPerformances(null);
+            Performance performance = performanceMapper.dtoToEntity(performanceDto, event);
+            return performanceRepository.save(performance);
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        HallDto hallDto = performanceDto.getHall();
-        if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
-            Hall hall = hallMapper.dtoToEntity(hallDto);
-            performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
-        }
-        //performanceDto.getEvent().setPerformances(null);
-        Performance performance = performanceMapper.dtoToEntity(performanceDto, event);
-        return performanceRepository.save(performance);
     }
 
     @Override
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
         LOGGER.debug("Handling in Service {}", performanceSearchDto);
-        if (performanceSearchDto.getHallName() == null && performanceSearchDto.getEventName() == null
-            && performanceSearchDto.getStartTime() == null) {
-            return new ArrayList<PerformanceDto>().stream();
-        }
         try {
-            //List<Hall> halls = new ArrayList<>();
-            //List<Long> hallIds = new ArrayList<>();
-            //eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
             List<Performance> performances;
             if (performanceSearchDto.getStartTime() != null) {
                 LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);

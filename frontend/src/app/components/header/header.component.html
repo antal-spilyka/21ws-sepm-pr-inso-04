@@ -1,15 +1,13 @@
 <div class="header">
   <div class="headerButtons">
-    <button *ngIf="authService.isLoggedIn()" routerLink="/edit" mat-icon-button
-            matTooltip="Your Account">
+    <button *ngIf="authService.isLoggedIn()" routerLink="/edit" mat-icon-button matTooltip="Your Account">
       <mat-icon>person</mat-icon>
     </button>
-    <button *ngIf="authService.isLoggedIn()" mat-icon-button
-            matTooltip="Settings">
+    <button *ngIf="authService.isLoggedIn()" mat-icon-button matTooltip="Settings">
       <mat-icon>settings</mat-icon>
     </button>
-    <button *ngIf="authService.isLoggedIn()" routerLink="/login" mat-icon-button
-            matTooltip="Logout" (click)="authService.logoutUser()" name="logout">
+    <button *ngIf="authService.isLoggedIn()" routerLink="/login" mat-icon-button matTooltip="Logout"
+      (click)="authService.logoutUser()" name="logout">
       <mat-icon>logout</mat-icon>
     </button>
   </div>
@@ -20,15 +18,23 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/news/add" routerLinkActive="active">Add
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/news/add"
+          routerLinkActive="active">Add
           News</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/events/add" routerLinkActive="active">Add
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/events/add"
+          routerLinkActive="active">Add
           Events</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/eventPlaces/add"
+          routerLinkActive="active">Add Event
+          Place</a>
+      </li>
       <li>
-        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users" routerLinkActive="active">Users</a>
+        <a class="nav-link" *ngIf="authService.isLoggedIn() && isAdmin()" routerLink="/users"
+          routerLinkActive="active">Users</a>
       </li>
     </ul>
 
@@ -41,15 +47,15 @@
     </ul>
 
     <ul class="navbar-nav mr-5">
-    <div class="dropdown">
-      <button class="dropbtn">Search</button>
-      <div class="dropdown-content">
-        <a class="nav-link" routerLink="/search-artist" routerLinkActive="active">Search by Artist</a>
-        <a class="nav-link" routerLink="/search-location" routerLinkActive="active">Search by Location</a>
-        <a class="nav-link" routerLink="/search-event" routerLinkActive="active">Search by Event</a>
-        <a class="nav-link" routerLink="/search-time" routerLinkActive="active">Search by Time</a>
+      <div class="dropdown">
+        <button class="dropbtn">Search</button>
+        <div class="dropdown-content">
+          <a class="nav-link" routerLink="/search-artist" routerLinkActive="active">Search by Artist</a>
+          <a class="nav-link" routerLink="/search-location" routerLinkActive="active">Search by Location</a>
+          <a class="nav-link" routerLink="/search-event" routerLinkActive="active">Search by Event</a>
+          <a class="nav-link" routerLink="/search-time" routerLinkActive="active">Search by Time</a>
+        </div>
       </div>
-    </div>
     </ul>
   </div>
 </nav>

@@ -3,13 +3,13 @@
 <div mat-dialog-content>
   <label>
     Color:
-    <input
+    <input [disabled]="data.onlyPriceEditable"
       [(colorPicker)]="data.color"
            [style.background]="data.color">
   </label>
   <mat-form-field appearance="fill">
     <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="data.name">
+    <input [disabled]="data.onlyPriceEditable" matInput [(ngModel)]="data.name">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Price</mat-label>

@@ -58,11 +58,11 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public List<SimpleNewsDto> getNewNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : newNews");
-        try {
-            return newsService.getNewNews(email);
-        } catch (NotFoundException e) {
+        //try {
+        return newsService.getNewNews(email);
+        /*} catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading new news", e);
-        }
+        }*/
     }
 
     @GetMapping("/{email}/old")
@@ -70,11 +70,11 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public List<SimpleNewsDto> getOldNews(@PathVariable String email) {
         LOGGER.info("GET /api/v1/news : oldNews");
-        try {
-            return newsService.getOldNews(email);
-        } catch (NotFoundException e) {
+        //try {
+        return newsService.getOldNews(email);
+        /*} catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading old news", e);
-        }
+        }*/
     }
 
     @PostMapping("/read")

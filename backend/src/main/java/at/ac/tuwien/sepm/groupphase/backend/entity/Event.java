@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Entity
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,6 +40,20 @@ public class Event {
 
     @Column (nullable = false)
     private String category;
+
+    public Event() {}
+
+    public Event(Long id, String name, Long duration, List<Performance> performances, LocalDateTime startTime,
+                 String category, EventPlace eventPlace, String description) {
+        this.id = id;
+        this.name = name;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.performances = performances;
+        this.category = category;
+        this.description = description;
+        this.eventPlace = eventPlace;
+    }
 
     public String getCategory() {
         return category;
@@ -142,5 +157,75 @@ public class Event {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, startTime, duration, performances, eventPlace, description);
+    }
+
+    public static final class EventBuilder {
+        private Long id;
+        private String name;
+        private LocalDateTime startTime;
+        private Long duration;
+        private List<Performance> performances = new ArrayList<>();
+        private EventPlace eventPlace;
+        private String description;
+        private String category;
+
+        private EventBuilder() {
+        }
+
+        public static Event.EventBuilder anEvent() {
+            return new Event.EventBuilder();
+        }
+
+        public Event.EventBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Event.EventBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Event.EventBuilder withDuration(Long duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Event.EventBuilder withPerformances(List<Performance> performances) {
+            this.performances = performances;
+            return this;
+        }
+
+        public Event.EventBuilder withStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Event.EventBuilder withEventPlacee(EventPlace eventPlace) {
+            this.eventPlace = eventPlace;
+            return this;
+        }
+
+        public Event.EventBuilder withCategory(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Event.EventBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Event build() {
+            Event event = new Event();
+            event.setId(id);
+            event.setName(name);
+            event.setDuration(duration);
+            event.setEventPlace(eventPlace);
+            event.setStartTime(startTime);
+            event.setCategory(category);
+            event.setDescription(description);
+            return event;
+        }
     }
 }

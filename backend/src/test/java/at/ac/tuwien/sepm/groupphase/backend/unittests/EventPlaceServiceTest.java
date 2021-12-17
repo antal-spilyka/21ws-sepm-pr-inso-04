@@ -76,8 +76,9 @@ public class EventPlaceServiceTest {
     }
 
     @Test
-    public void search_forLocation_withNoInputs() {
+    public void search_forNonExistingLocation() {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
+        eventLocationSearchDto.setZip("" + Math.random());
         assertEquals(0, eventPlaceService.findEventLocation(eventLocationSearchDto).size());
     }
 

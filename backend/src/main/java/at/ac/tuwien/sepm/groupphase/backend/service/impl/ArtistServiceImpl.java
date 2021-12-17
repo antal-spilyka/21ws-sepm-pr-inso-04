@@ -37,11 +37,12 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public List<Artist> findArtist(ArtistSearchDto artistSearchDto, Integer number) {
         LOGGER.debug("Handling in Service {}", artistSearchDto);
-        if (artistSearchDto.getMisc() == null) {
-            return new ArrayList<Artist>();
-        }
         try {
-            return artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
+            if (number == 2) {
+                return artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
+            } else {
+                return artistRepository.searchArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
+            }
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -71,5 +72,34 @@ public class EventPlace {
             ", name='" + name + '\'' +
             ", address=" + address.toString() +
             '}';
+    }
+
+    public static final class EventPlaceBuilder {
+        private String name;
+        private Address address;
+
+        private EventPlaceBuilder() {
+        }
+
+        public static EventPlace.EventPlaceBuilder anEventPlace() {
+            return new EventPlace.EventPlaceBuilder();
+        }
+
+        public EventPlace.EventPlaceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EventPlace.EventPlaceBuilder withAddress(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public EventPlace build() {
+            EventPlace eventPlace = new EventPlace();
+            eventPlace.setName(name);
+            eventPlace.setAddress(address);
+            return eventPlace;
+        }
     }
 }

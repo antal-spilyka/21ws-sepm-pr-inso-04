@@ -3,6 +3,7 @@
      (mouseout)="mouseOutHallplanElement(rowIndex, seatIndex)" [style]="getBackground()">
 
   <span class="exit-text" *ngIf="hallplanElement.type === 'exit'">Exit</span>
+  <span class="standing-text" *ngIf="hallplanElement.type === 'standing'">Standing</span>
   <mat-icon *ngIf="!disabled && !hallplanElement.added && !isLastTop && !isLastRight && !isLastBottom && !isLastLeft"
             aria-hidden="false">add
   </mat-icon>

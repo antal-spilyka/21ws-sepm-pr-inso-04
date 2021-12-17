@@ -69,9 +69,10 @@
         <mat-label>Name</mat-label>
         <input matInput required formControlName="hallName" [matAutocomplete]="autoRoom">
       </mat-form-field>
-      <mat-checkbox [checked]="isNewHall" (change)="handleNewHall()">
-        Create new Hall
-      </mat-checkbox>
+      <span>
+        <a mat-raised-button target="_blank" color="primary"
+          [routerLink]="['/eventPlaces', event.eventPlace.id,'halls', 'add']" routerLinkActive="active">Add Hall</a>
+      </span>
     </div>
     <br>
     <br>

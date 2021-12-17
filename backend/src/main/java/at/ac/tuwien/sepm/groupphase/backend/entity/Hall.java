@@ -18,13 +18,21 @@ import java.util.Objects;
 public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @ManyToOne()
-    EventPlace eventPlace;
+    private EventPlace eventPlace;
+
+    public Hall() {}
+
+    public Hall(Long id, String name, EventPlace eventPlace) {
+        this.id = id;
+        this.name = name;
+        this.eventPlace = eventPlace;
+    }
 
     @ManyToOne()
     Sector sector;
