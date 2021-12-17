@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -99,7 +100,8 @@ public class UserEndpoint {
     /**
      * Updates the admin rights of an existing user.
      */
-    @Secured("ROLE_ADMIN")
+//    @Secured("ROLE_ADMIN")
+    @PermitAll
     @PutMapping("/{email}")
     public ResponseEntity<String> setAdmin(@PathVariable String email, Principal principal) {
         LOGGER.info("PUT /api/v1/users/{}", email);
