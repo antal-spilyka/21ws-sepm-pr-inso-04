@@ -47,7 +47,7 @@ export class HallService {
     return this.httpClient.get<Hall[]>(this.messageBaseUri + '/search');
   }
 
-  getHallId(hallId: string): Observable<HallAddRequest> {
+  getHallId(hallId: number): Observable<HallAddRequest> {
     return this.httpClient.get<HallAddRequest>(this.messageBaseUri + '/' + hallId);
   }
 }

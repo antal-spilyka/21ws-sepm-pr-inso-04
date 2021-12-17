@@ -26,6 +26,9 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     @Query("SELECT a FROM Artist a WHERE UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
     List<Artist> findArtist(@Param("name") String name, Pageable pageable);
 
+    @Query("SELECT a FROM Artist a WHERE :name is null OR :name='' OR UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
+    List<Artist> searchArtist(@Param("name") String name, Pageable pageable);
+
     /**
      * Gets artist by primary key (id).
      *

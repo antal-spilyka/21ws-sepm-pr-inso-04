@@ -7,6 +7,7 @@ import {HallAddRequest} from '../../dtos/hall-add-request';
 import {EventPlaceService} from '../../services/event-place.service';
 import {ActivatedRoute} from '@angular/router';
 import {HallService} from '../../services/hall.service';
+import {RemoveSectionDialogComponent} from './components/remove-section-dialog/remove-section-dialog.component';
 
 @Component({
   selector: 'app-create-hallplan',
@@ -15,12 +16,12 @@ import {HallService} from '../../services/hall.service';
 })
 export class CreateHallplanComponent implements OnInit {
   @Input() viewMode: boolean;
-  @Input() hallId: string;
+  @Input() hallId: number;
 
   rows: IHallplanElement[][] = [];
   sectors: Sector[] = [
-    new Sector('#ffffff', 'default', 30.00),
-    new Sector('#ffff00', 'test', 32.00),
+    new Sector('#ffffff', 'default', 29.99),
+    new Sector('#ffffff', 'Standing', 29.99),
   ];
 
   defaultRowsNumber = 10;
@@ -33,6 +34,7 @@ export class CreateHallplanComponent implements OnInit {
   page = 0;
   nameControl = new FormControl('', [Validators.required]);
   eventPlaceId: string;
+  errorMsg = '';
 
   constructor(public dialog: MatDialog, private eventPlaceService: EventPlaceService, private hallService: HallService,
               private route: ActivatedRoute) {
@@ -186,23 +188,6 @@ export class CreateHallplanComponent implements OnInit {
     this.page++;
   }
 
-  addSector() {
-    const dialogRef = this.dialog.open(AddSectionDialogComponent, {
-      width: '250px',
-      data: {
-        color: '#00ffff',
-        name: '',
-        price: 0.0
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
-      this.sectors.push(new Sector(result.color, result.name, result.price));
-    });
-  }
-
   setSelectedSection(i: number) {
     this.sectors.map((sector, index) => sector.withSelected(i === index));
   }
@@ -219,11 +204,84 @@ export class CreateHallplanComponent implements OnInit {
     );
     this.eventPlaceService.addHall(this.eventPlaceId, hallRequest).subscribe({
       next: () => {
-        console.log('success');
+        this.page++;
       },
       error: (error) => {
-
+        console.log(error);
+        this.errorMsg = 'The hall can\'t be saved.';
       }
     });
+  }
+
+  addSector() {
+    const dialogRef = this.dialog.open(AddSectionDialogComponent, {
+      width: '250px',
+      data: {
+        color: '#00ffff',
+        name: '',
+        price: 0.0,
+        sectors: this.sectors,
+        editIndex: -1,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      this.sectors.push(new Sector(result.color, result.name, result.price));
+    });
+  }
+
+  editSector() {
+    const sectorIndex = this.sectors.findIndex(s => s.selected);
+    const dialogRef = this.dialog.open(AddSectionDialogComponent, {
+      width: '250px',
+      data: {
+        ...this.sectors[sectorIndex],
+        sectors: this.sectors,
+        editIndex: sectorIndex,
+        onlyPriceEditable: sectorIndex === 1,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      this.sectors[sectorIndex] = this.sectors[sectorIndex].withColor(result.color).withName(result.name).withPrice(result.price);
+    });
+  }
+
+  removeSector() {
+    const sectorIndex = this.sectors.findIndex(s => s.selected);
+    const dialogRef = this.dialog.open(RemoveSectionDialogComponent, {
+      width: '250px',
+      data: {
+        name: this.sectors[sectorIndex].name,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.rows = this.rows.map(row => row.map(elem => {
+        if (elem.sector === sectorIndex) {
+          return elem.withSector(0);
+        } else if (elem.sector > sectorIndex) {
+          return elem.withSector(elem.sector - 1);
+        }
+        return elem;
+      }));
+      this.sectors.splice(sectorIndex, 1);
+    });
+  }
+
+  shouldShowBin() {
+    return this.sectors.findIndex(s => s.selected) > 1;
+  }
+
+  shouldShowEdit() {
+    return this.sectors.findIndex(s => s.selected) > -1;
+  }
+
+  back() {
+    this.page--;
   }
 }

@@ -29,11 +29,20 @@
       <mat-radio-button [value]="editModes.seat">Seats</mat-radio-button>
       <mat-radio-button [value]="editModes.stage">Stage</mat-radio-button>
       <mat-radio-button [value]="editModes.exit">Exit</mat-radio-button>
+      <mat-radio-button [value]="editModes.standing">Standing place</mat-radio-button>
     </mat-radio-group>
 
     <button type="button" mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
   </div>
   <div class="side-bar" *ngIf="page === 1">
+    <button *ngIf="shouldShowEdit()" mat-icon-button aria-label="icon button with a add icon" class="edit"
+            (click)="editSector()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button *ngIf="shouldShowBin()" mat-icon-button aria-label="icon button with a add icon" class="bin"
+            (click)="removeSector()">
+      <mat-icon>delete</mat-icon>
+    </button>
     <h2>Please define your sectors:</h2>
     <div [class]="'sector-wrapper ' + (sector.selected ? 'active' : '')" *ngFor="let sector of sectors; let i = index"
          (click)="setSelectedSection(i)">
@@ -48,6 +57,7 @@
       </button>
     </div>
 
+    <button type="button" mat-icon-button class="back-button" (click)="back()">Back</button>
     <button type="button" mat-raised-button color="primary" class="next-button" (click)="next()">Next</button>
   </div>
   <div class="side-bar" *ngIf="page === 2">
@@ -59,10 +69,16 @@
         <mat-error *ngIf="nameControl.invalid">Please fill in a name</mat-error>
       </mat-form-field>
     </form>
+    <mat-error *ngIf="errorMsg">{{errorMsg}}</mat-error>
 
+    <button type="button" mat-icon-button class="back-button" (click)="back()">Back</button>
     <button type="button" mat-raised-button color="primary" class="next-button" (click)="finish()"
             [disabled]="!nameControl.valid">Finish
     </button>
+  </div>
+  <div class="side-bar" *ngIf="page === 3">
+    <h2>Success</h2>
+    <span>You created the hall!</span>
   </div>
 </div>
 

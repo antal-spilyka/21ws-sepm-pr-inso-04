@@ -37,8 +37,7 @@ public class ArtistDataGenerator {
         // #2
         "Taylor Swift is an American pop and country music singer-songwriter. Five of her " +
             "songs, including “Shake It Off” (2014), “Blank Space” (2014), and “Look What You" +
-            " Made Me Do” (2017), topped the Billboard Hot 100. She received a number of awards" +
-            " for her music.",
+            " Made Me Do” (2017), topped the Billboard Hot 100",
         // #3
         "English artist Ed Sheeran is a Grammy-winning singer/songwriter known for hit songs " +
             "like 'Thinking Out Loud,' 'Photograph,' 'Shape of You' and 'Perfect.'",

@@ -28,6 +28,17 @@ public class Address {
     @Column(nullable = false)
     String street;
 
+    public Address() {}
+
+    public Address(Long id, String city, String state, String zip, String country, String street) {
+        this.id = id;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.country = country;
+        this.street = street;
+    }
+
     public String getStreet() {
         return street;
     }

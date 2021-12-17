@@ -3,11 +3,15 @@ export enum HallplanElementType {
   hallway = 'hallway',
   stage = 'stage',
   exit = 'exit',
+  standing = 'standing',
 }
 export interface AddSectionDialogData {
   color: string;
   name: string;
   price: number;
+  sectors: Sector[];
+  editIndex: number;
+  onlyPriceEditable: boolean;
 }
 
 export interface IHallplanElement {
@@ -32,6 +36,21 @@ export class Sector {
 
   withSelected(b: boolean) {
     this.selected = b;
+    return this;
+  }
+
+  withColor(color) {
+    this.color = color;
+    return this;
+  }
+
+  withPrice(price) {
+    this.price = price;
+    return this;
+  }
+
+  withName(name) {
+    this.name = name;
     return this;
   }
 }

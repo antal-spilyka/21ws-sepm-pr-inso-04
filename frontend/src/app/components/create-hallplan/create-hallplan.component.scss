@@ -41,6 +41,18 @@
     background: white;
     position: relative;
 
+    & > .edit {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+    }
+
+    & > .bin {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+
     mat-radio-button {
       display: block;
       font-size: 1.05rem;
@@ -51,6 +63,12 @@
       position: absolute;
       bottom: 2rem;
       right: 2rem;
+    }
+
+    .back-button {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
     }
 
     .sector-wrapper {

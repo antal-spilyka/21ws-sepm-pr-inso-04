@@ -26,9 +26,9 @@ public class Hall {
     @ManyToOne()
     private EventPlace eventPlace;
 
-    public Room() {}
+    public Hall() {}
 
-    public Room(Long id, String name, EventPlace eventPlace) {
+    public Hall(Long id, String name, EventPlace eventPlace) {
         this.id = id;
         this.name = name;
         this.eventPlace = eventPlace;
