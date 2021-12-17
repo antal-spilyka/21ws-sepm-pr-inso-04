@@ -57,10 +57,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> findEvents(EventSearchDto eventSearchDto) {
         LOGGER.debug("Handling in Service {}", eventSearchDto);
-        if (eventSearchDto.getDescription() == null && eventSearchDto.getDuration() == null
-            && eventSearchDto.getCategory() == null) {
-            return new ArrayList<Event>();
-        }
         try {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
                 PageRequest.of(0, 10));

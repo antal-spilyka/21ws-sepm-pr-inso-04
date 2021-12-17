@@ -82,11 +82,6 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     @Override
     public List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         LOGGER.debug("Handling in Service {}", eventLocationSearchDto);
-        if (eventLocationSearchDto.getZip() == null && eventLocationSearchDto.getStreet() == null
-            && eventLocationSearchDto.getCountry() == null && eventLocationSearchDto.getState() == null
-            && eventLocationSearchDto.getCity() == null) {
-            return new ArrayList<Address>();
-        }
         try {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
                 eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(),

@@ -63,23 +63,6 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     public Performance save(PerformanceDto performanceDto) {
         LOGGER.debug("Handling in Service {}", performanceDto);
-        /*try {
-            ArtistDto artistDto = performanceDto.getArtist();
-            if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
-                Artist artist = artistMapper.dtoToEntity(artistDto);
-                performanceDto.setArtist(artistMapper.entityToDto(artistRepository.save(artist)));
-            }
-            HallDto hallDto = performanceDto.getHall();
-            if (hallDto.getId() == null || hallRepository.getById(hallDto.getId()) == null) {
-                Hall hall = hallMapper.dtoToEntity(hallDto);
-                performanceDto.setHall(hallMapper.entityToDto(hallRepository.save(hall)));
-            }
-            performanceDto.getEventDto().setPerformances(null);
-            Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
-            return performanceRepository.save(performance);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }*/
         if (
             performanceRepository.existsByNameAndEvent(performanceDto.getName(),
                 eventMapper.dtoToEntity(performanceDto.getEventDto()))
@@ -138,14 +121,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
         LOGGER.debug("Handling in Service {}", performanceSearchDto);
-        if (performanceSearchDto.getHallName() == null && performanceSearchDto.getEventName() == null
-            && performanceSearchDto.getStartTime() == null) {
-            return new ArrayList<PerformanceDto>().stream();
-        }
         try {
-            //List<Hall> halls = new ArrayList<>();
-            //List<Long> hallIds = new ArrayList<>();
-            //eventDateTimeSearchDto.getPerformances().forEach(performance -> halls.add(performance.getHall()));
             List<Performance> performances;
             if (performanceSearchDto.getStartTime() != null) {
                 LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);
