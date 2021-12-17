@@ -51,7 +51,7 @@ import { EditPaymentInformationDialogComponent } from
 import {MatTableModule} from '@angular/material/table';
 import { NewsViewComponent } from './components/news-view/news-view.component';
 import { NgImageSliderModule } from 'ng-image-slider';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {AddSectionDialogComponent} from './components/create-hallplan/components/add-section-dialog/add-section-dialog.component';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {HallDetailComponent} from './components/hall-detail/hall-detail.component';
@@ -60,6 +60,8 @@ import { LocationPerformancesComponent } from './components/location-performance
 import { EventPerformancesComponent } from './components/event-performances/event-performances.component';
 import { PerformanceDetailedComponent } from './components/performance-detailed/performance-detailed.component';
 import { OldNewsComponent } from './components/old-news/old-news.component';
+import { CreateEventPlacesComponent } from './components/create-event-places/create-event-places.component';
+import { AddHallDialogComponent } from './components/create-event-places/add-hall-dialog/add-hall-dialog.component';
 import {
   RemoveSectionDialogComponent
 } from './components/create-hallplan/components/remove-section-dialog/remove-section-dialog.component';
@@ -98,7 +100,9 @@ import {
     PerformanceDetailedComponent,
     NewsViewComponent,
     RemoveSectionDialogComponent,
-    OldNewsComponent
+    OldNewsComponent,
+    CreateEventPlacesComponent,
+    AddHallDialogComponent
   ],
   imports: [
     BrowserModule,
