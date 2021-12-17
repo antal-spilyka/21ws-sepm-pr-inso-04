@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input, OnChanges} from '@angular/core';
-import {HallplanElement, HallplanElementType, IHallplanElement, Sector} from '../../types';
+import {HallplanElementType, IHallplanElement, Sector} from '../../types';
 
 @Component({
   selector: 'app-hallplan-element',
@@ -111,7 +111,7 @@ export class HallplanElementComponent implements OnChanges {
   }
 
   getBackground() {
-    if (this.hallplanElement.type !== HallplanElementType.seat) {
+    if (!this.hallplanElement.added || this.hallplanElement.type !== HallplanElementType.seat) {
       return '';
     }
     return 'background: ' + this.sectors[this.hallplanElement.sector].color;
