@@ -3,6 +3,7 @@ export enum HallplanElementType {
   hallway = 'hallway',
   stage = 'stage',
   exit = 'exit',
+  standing = 'standing',
 }
 export interface AddSectionDialogData {
   color: string;
@@ -10,6 +11,7 @@ export interface AddSectionDialogData {
   price: number;
   sectors: Sector[];
   editIndex: number;
+  onlyPriceEditable: boolean;
 }
 
 export interface IHallplanElement {

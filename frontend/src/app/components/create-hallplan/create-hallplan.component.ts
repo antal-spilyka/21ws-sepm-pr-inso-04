@@ -21,6 +21,7 @@ export class CreateHallplanComponent implements OnInit {
   rows: IHallplanElement[][] = [];
   sectors: Sector[] = [
     new Sector('#ffffff', 'default', 29.99),
+    new Sector('#ffffff', 'Standing', 29.99),
   ];
 
   defaultRowsNumber = 10;
@@ -239,6 +240,7 @@ export class CreateHallplanComponent implements OnInit {
         ...this.sectors[sectorIndex],
         sectors: this.sectors,
         editIndex: sectorIndex,
+        onlyPriceEditable: sectorIndex === 1,
       }
     });
 
@@ -272,7 +274,7 @@ export class CreateHallplanComponent implements OnInit {
   }
 
   shouldShowBin() {
-    return this.sectors.findIndex(s => s.selected) > 0;
+    return this.sectors.findIndex(s => s.selected) > 1;
   }
 
   shouldShowEdit() {
