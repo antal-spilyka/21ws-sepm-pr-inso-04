@@ -23,10 +23,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Profile("generateData")
 @Component
@@ -793,21 +795,15 @@ public class EventDataGenerator {
                 final String eventName = this.eventNames[i - 1];
 
                 // Event datetime
-                int min = 2022;
-                int max = 2050;
-                final int year = (int) Math.floor(Math.random() * (max - min + 1) + min);
-                final int month = getRandom(this.months);
-                final int day = getRandom(this.days);
-                final int hour = i % 24;
-                final int minute = i % 60;
-                final int second = (i * 7) % 60;
-                final int nanosecond = (i * 7) % 60;
-                final LocalDateTime dateTime =
-                    LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
+                long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
+                long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
+                long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+                final LocalDateTime dateTime = LocalDate.ofEpochDay(randomDay).atStartOfDay();
+
 
                 // Artist
-                //final Artist artist = artistRepository.getById((long) getRandom(this.ids));
-                final String name = "performance";
+                final long artistId = (long) getRandom(this.ids);
+                final Artist artist = artistRepository.getById(artistId);
 
                 // Sector
                 final Sector sector = new Sector();
@@ -849,31 +845,37 @@ public class EventDataGenerator {
                 // Performance
                 Performance performance = new Performance();
                 performance.setId((long) i);
-                performance.setName("Live concert of " + name);
+                performance.setName("Live concert");
                 performance.setStartTime(dateTime);
                 performance.setDuration((long) getRandom(this.durations));
-                //performance.setArtist(artist);
+                performance.setArtist(artist);
                 performance.setHall(hall);
                 performanceRepository.save(performance);
 
-                // Event duration
-                //final Integer duration = performance.getDuration().intValue();
-                final Integer duration = 50;
-
                 // Saving the event
+                final EventPlace eventPlace = eventPlaceRepository.findByIdEquals((long) id);
                 Event event = new Event();
-                event.setId((long) id);
+                event.setId((long) i);
                 event.setName(eventName);
                 event.setStartTime(dateTime);
-                event.setDuration((long) duration);
                 List<Performance> performances = new ArrayList<>();
                 performances.add(performance);
                 event.setPerformances(performances);
-                event.setDescription("Live event at " + eventName + " with exciting performances, such as the ");
-                //performance.getName());
-                event.setEventPlace(eventPlaceRepository.findByIdEquals((long) id));
+                // Event duration
+                int duration = 0;
+                for (Performance perf : performances) {
+                    duration += perf.getDuration();
+                }
+                event.setDuration((long) duration);
+                event.setDescription("Live event of the " + eventName + " with exciting performances taking place at " +
+                    eventPlace.getName() + ".");
+                event.setEventPlace(eventPlace);
                 event.setCategory(getRandomName(this.categories));
                 eventRepository.save(event);
+
+                // Saving the event of the performance
+                performance.setEvent(event);
+                performanceRepository.save(performance);
             }
         }
     }

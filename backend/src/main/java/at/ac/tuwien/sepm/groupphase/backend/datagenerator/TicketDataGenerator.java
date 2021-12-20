@@ -2,24 +2,29 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
+@Profile("generateData")
+@Component
 public class TicketDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -32,33 +37,77 @@ public class TicketDataGenerator {
 
     private final UserRepository userRepository;
 
-    private List<Event> events;
+    private final HallplanElementRepository hallplanElementRepository;
+
+    private final PerformanceRepository performanceRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
 
     private final String[] ticketTypes = {"Seated", "Standing", "Disabled"};
 
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
-                               ArtistRepository artistRepository, UserRepository userRepository) {
+                               ArtistRepository artistRepository, UserRepository userRepository,
+                               HallplanElementRepository hallplanElementRepository,
+                               PerformanceRepository performanceRepository,
+                               PasswordEncoder passwordEncoder) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
         this.userRepository = userRepository;
-        this.events = eventRepository.findAll();
+        this.hallplanElementRepository = hallplanElementRepository;
+        this.performanceRepository = performanceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Durations
     private final Integer[] durations = new Integer[150];
 
-    // Months
-    private final Integer[] months = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-
-    // Days
-    private final Integer[] days = new Integer[28];
-
-    // Artist ids
-    private final Integer[] ids = new Integer[25];
-
     // Array used to pick a random value for boolean variables
     private final boolean[] decision = {true, false};
+
+    // Contains a set of cities
+    private final String[] cities = {"Vienna", "Budapest", "Paris", "New York", "Berlin", "Tallinn", "Athens",
+        "Dublin", "Tel Aviv", "Bratislava", "Singapore", "London", "Rome", "Zagreb"};
+
+    // Contains set of country codes
+    private final String[] countries = {"AT", "HU", "FR", "US", "DE", "EE", "GR", "IE",
+        "IL", "SK", "SG", "UK", "IT", "HR"};
+
+    // Contains a set of cities
+    private final String[] salutations = {"mr", "ms"};
+
+    @PostConstruct
+    private void generateUser() {
+        if (userRepository.findAll().size() > 0) {
+            LOGGER.debug("users already generated");
+        } else {
+            for (int i = 1; i <= 1000; i++) {
+                // Different names to test the search
+                String baseName;
+                if (i < 250) {
+                    baseName = "user";
+                } else if (i < 500) {
+                    baseName = "customer";
+                } else {
+                    baseName = "employee";
+                }
+                int min = 0;
+                int max = 13;
+                final int randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
+                String city = this.cities[randomIndex];
+                boolean admin = getRandomDecision(this.decision);
+                boolean disabled = getRandomDecision(this.decision);
+                String salutation = getRandomString(this.salutations);
+                String country = this.countries[randomIndex];
+                userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
+                    .withPassword(passwordEncoder.encode("password" + i)).withAdmin(admin).withId((long) i).withCity(city)
+                    .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
+                    .withPhone("0664 123 45" + i % 9).withSalutation(salutation).withStreet("Street " + i).withZip("100" + (i % 9))
+                    .withLockedCounter(0).build());
+            }
+        }
+    }
 
     @PostConstruct
     private void generateTicket() {
@@ -66,24 +115,13 @@ public class TicketDataGenerator {
             LOGGER.debug("tickets already generated");
         } else {
             for (int i = 1; i <= 1000; i++) {
-                // Performance
-                int min = 2022;
-                int max = 2050;
-                final int year = (int) Math.floor(Math.random() * (max - min + 1) + min);
-                final int month = getRandom(this.months);
-                final int day = getRandom(this.days);
-                final int hour = i % 24;
-                final int minute = i % 60;
-                final int second = (i * 7) % 60;
-                final int nanosecond = (i * 7) % 60;
-                final LocalDateTime startTime =
-                    LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
+                long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
+                long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
+                long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
+                LocalDateTime startTime = LocalDate.ofEpochDay(randomDay).atStartOfDay();
 
                 // Event duration
                 final Integer duration = getRandom(this.durations);
-
-                // User
-                ApplicationUser user = userRepository.getById((long) i);
 
                 // Artist
                 int artistId = (i % 26) == 0 ? 1 : i % 26;
@@ -97,16 +135,15 @@ public class TicketDataGenerator {
                 int priceMax = 5000;
                 Long price = (long) Math.floor(Math.random() * (priceMax - priceMin + 1) + priceMin);
 
-                Performance performance = Performance.PerformanceBuilder.aPerformance().withId((long) i)
-                    .withName("Live concert of " + artist.getBandName())
-                    .withStartTime(startTime).build();
+                final long id = i % 200 == 0 ? 1 : i % 200;
+
                 ticketRepository.save(Ticket.TicketBuilder.aTicket()
                     .withId((long) i)
-                    .withPerformance(null)
+                    .withPerformance(performanceRepository.getById(id))
                     .withTypeOfTicket(type)
-                    .withPosition(null)
+                    .withPosition(hallplanElementRepository.getById(id))
                     .withPrice(price)
-                    .withUser(user)
+                    .withUser(userRepository.getById((long) i))
                     .withUsed(getRandomDecision(this.decision))
                     .withBought(getRandomDecision(this.decision))
                     .build());
