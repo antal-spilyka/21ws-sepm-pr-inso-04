@@ -55,13 +55,16 @@ public class UserDataGenerator {
                 } else if (i < 500) {
                     baseName = "customer";
                 } else {
-                    baseName = "test";
+                    baseName = "employee";
                 }
-                String city = getRandom(this.cities);
+                int min = 0;
+                int max = 13;
+                final int randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
+                String city = this.cities[randomIndex];
                 boolean admin = getRandomDecision(this.decision);
                 boolean disabled = getRandomDecision(this.decision);
                 String salutation = getRandom(this.salutations);
-                String country = getRandom(this.countries); // countries not related to cities in the test dataset
+                String country = this.countries[randomIndex];
                 userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
                     .withPassword(passwordEncoder.encode("password" + i)).withAdmin(admin).withId((long) i).withCity(city)
                     .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
@@ -71,7 +74,7 @@ public class UserDataGenerator {
         }
     }
 
-    // Pick random city from the list
+    // Pick random string from the list
     public static String getRandom(String[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
@@ -82,5 +85,4 @@ public class UserDataGenerator {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }
-
 }

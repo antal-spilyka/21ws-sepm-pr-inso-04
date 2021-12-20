@@ -141,4 +141,69 @@ public class Performance {
     public int hashCode() {
         return Objects.hash(id, name, startTime, duration, event, artist, hall);
     }
+
+    public static final class PerformanceBuilder {
+        private Long id;
+        private String name;
+        private LocalDateTime startTime;
+        private Long duration;
+        private Event event;
+        private Artist artist;
+        private Hall hall;
+
+        private PerformanceBuilder() {
+        }
+
+        public static Performance.PerformanceBuilder aPerformance() {
+            return new Performance.PerformanceBuilder();
+        }
+
+        public Performance.PerformanceBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withDuration(Long duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withEvent(Event event) {
+            this.event = event;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withArtist(Artist artist) {
+            this.artist = artist;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withHall(Hall hall) {
+            this.hall = hall;
+            return this;
+        }
+
+        public Performance build() {
+            Performance performance = new Performance();
+            performance.setId(id);
+            performance.setName(name);
+            performance.setStartTime(startTime);
+            performance.setDuration(duration);
+            performance.setEvent(event);
+            performance.setDuration(duration);
+            performance.setArtist(artist);
+            performance.setHall(hall);
+            return performance;
+        }
+    }
 }
