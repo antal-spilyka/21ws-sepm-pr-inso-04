@@ -34,6 +34,8 @@ public class TicketDataGenerator {
 
     private List<Event> events;
 
+    private final String[] ticketTypes = {"Seated", "Standing", "Disabled"};
+
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
                                ArtistRepository artistRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
@@ -76,13 +78,20 @@ public class TicketDataGenerator {
                 final int nanosecond = (i * 7) % 60;
                 final LocalDateTime startTime =
                     LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
+
                 // Event duration
                 final Integer duration = getRandom(this.durations);
+
                 // User
                 ApplicationUser user = userRepository.getById((long) i);
+
                 // Artist
                 int artistId = (i % 26) == 0 ? 1 : i % 26;
                 Artist artist = artistRepository.getById((long) artistId);
+
+                // TypeOfTicket
+                String type = getRandomString(this.ticketTypes);
+
                 // Price
                 int priceMin = 10;
                 int priceMax = 5000;
@@ -93,6 +102,9 @@ public class TicketDataGenerator {
                     .withStartTime(startTime).build();
                 ticketRepository.save(Ticket.TicketBuilder.aTicket()
                     .withId((long) i)
+                    .withPerformance(null)
+                    .withTypeOfTicket(type)
+                    .withPosition(null)
                     .withPrice(price)
                     .withUser(user)
                     .withUsed(getRandomDecision(this.decision))
@@ -104,6 +116,12 @@ public class TicketDataGenerator {
 
     // Pick random integer from the given list
     public static Integer getRandom(Integer[] array) {
+        int rnd = new Random().nextInt(array.length);
+        return array[rnd];
+    }
+
+    // Pick random string from the given list
+    public static String getRandomString(String[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }

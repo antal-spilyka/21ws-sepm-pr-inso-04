@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -33,7 +34,7 @@ public class Performance {
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Artist artist;
 
     @OneToOne
@@ -98,6 +99,7 @@ public class Performance {
         return artist;
     }
 
+    @Transactional
     public void setArtist(Artist artist) {
         this.artist = artist;
     }

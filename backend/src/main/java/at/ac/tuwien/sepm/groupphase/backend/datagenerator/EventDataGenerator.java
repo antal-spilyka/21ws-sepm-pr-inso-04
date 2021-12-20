@@ -2,13 +2,20 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventPlaceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +24,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Profile("generateData")
@@ -32,6 +41,28 @@ public class EventDataGenerator {
     private final EventPlaceRepository eventPlaceRepository;
 
     private final AddressRepository addressRepository;
+
+    private final PerformanceRepository performanceRepository;
+
+    private final HallRepository hallRepository;
+
+    private final SectorRepository sectorRepository;
+
+    private final HallplanElementRepository hallplanElementRepository;
+
+    public EventDataGenerator(EventRepository eventRepository, ArtistRepository artistRepository,
+                              EventPlaceRepository eventPlaceRepository, AddressRepository addressRepository,
+                              PerformanceRepository performanceRepository, HallRepository hallRepository,
+                              SectorRepository sectorRepository, HallplanElementRepository hallplanElementRepository) {
+        this.eventRepository = eventRepository;
+        this.artistRepository = artistRepository;
+        this.eventPlaceRepository = eventPlaceRepository;
+        this.addressRepository = addressRepository;
+        this.performanceRepository = performanceRepository;
+        this.hallRepository = hallRepository;
+        this.sectorRepository = sectorRepository;
+        this.hallplanElementRepository = hallplanElementRepository;
+    }
 
     private String[] categories = {
         "Pop", "Hip Hop", "Rock", "Blues", "Reggae", "Country", "Funk", "Dubstep", "Jazz",
@@ -713,13 +744,16 @@ public class EventDataGenerator {
     // Artist ids
     private final Integer[] ids = new Integer[25];
 
-    public EventDataGenerator(EventRepository eventRepository, ArtistRepository artistRepository,
-                              EventPlaceRepository eventPlaceRepository, AddressRepository addressRepository) {
-        this.eventRepository = eventRepository;
-        this.artistRepository = artistRepository;
-        this.eventPlaceRepository = eventPlaceRepository;
-        this.addressRepository = addressRepository;
-    }
+    // Sector colors
+    private final String[] colors = {
+        "red", "green", "blue", "yellow", "purple", "orange",
+        "black", "white", "grey", "brown"
+    };
+
+    // Sector prices
+    private final Integer[] prices = {
+        10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500
+    };
 
     @PostConstruct
     private void generateEventPlace() {
@@ -727,16 +761,19 @@ public class EventDataGenerator {
             LOGGER.debug("event places already generated");
         } else {
             for (int i = 1; i <= 25; i++) {
-                String name = this.names[i - 1];
-                /* Address address = new Address((long) i,
+                final String name = this.names[i - 1];
+                Address address = new Address((long) i,
                     this.cities[i - 1],
                     this.states[i - 1],
                     this.zips[i - 1],
                     this.countries[i - 1],
                     this.streets[i - 1]);
-                addressRepository.save(address);*/
-                eventPlaceRepository.save(EventPlace.EventPlaceBuilder.anEventPlace()
-                    .withName(name).withAddress(null).build());
+                addressRepository.save(address);
+                EventPlace eventPlace = new EventPlace();
+                eventPlace.setId((long) i);
+                eventPlace.setAddress(address);
+                eventPlace.setName(name);
+                eventPlaceRepository.save(eventPlace);
             }
         }
     }
@@ -751,11 +788,9 @@ public class EventDataGenerator {
             this.setArray(this.days, 0, 28);
 
             for (int i = 1; i <= 200; i++) {
+
                 // Event name
                 final String eventName = this.eventNames[i - 1];
-
-                // Event duration
-                final Integer duration = getRandom(this.durations);
 
                 // Event datetime
                 int min = 2022;
@@ -771,13 +806,74 @@ public class EventDataGenerator {
                     LocalDateTime.of(year, month, day, hour, minute, second, nanosecond);
 
                 // Artist
-                final Artist artist = artistRepository.getById((long) getRandom(this.ids));
+                //final Artist artist = artistRepository.getById((long) getRandom(this.ids));
+                final String name = "performance";
+
+                // Sector
+                final Sector sector = new Sector();
+                sector.setId((long) i);
+                sector.setName("Sector " + i);
+                sector.setColor(getRandomName(this.colors));
+                sector.setPrice((double) getRandom(this.prices));
+                sectorRepository.save(sector);
+
+                // HallPlanElement
+                HallplanElement hallplanElement = new HallplanElement();
+                hallplanElement.setId((long) i);
+                int rowMin = 1;
+                int rowMax = 100;
+                final int rowIndex = (int) Math.floor(Math.random() * (rowMax - rowMin + 1) + rowMin);
+                hallplanElement.setRowIndex(rowIndex);
+                int seatMin = 1;
+                int seatMax = 100;
+                final int seatIndex = (int) Math.floor(Math.random() * (seatMax - seatMin + 1) + seatMin);
+                hallplanElement.setSeatIndex(seatIndex);
+                hallplanElement.setSector(sector);
+                boolean[] added = {true, false};
+                hallplanElement.setAdded(getRandomDecision(added));
+                hallplanElement.setType("Hall plan element for sector " + sector.getName());
+                hallplanElementRepository.save(hallplanElement);
+
+                // Hall
+                final Hall hall = new Hall();
+                hall.setId((long) i);
+                hall.setName(getRandomName(this.roomNames));
+                int id = i % 25 == 0 ? 1 : i % 25;
+                hall.setEventPlace(eventPlaceRepository.findByIdEquals((long) id));
+                hall.setSector(sector);
+                List<HallplanElement> hallplanElements = new ArrayList<>();
+                hallplanElements.add(hallplanElement);
+                hall.setRows(hallplanElements);
+                hallRepository.save(hall);
+
+                // Performance
+                Performance performance = new Performance();
+                performance.setId((long) i);
+                performance.setName("Live concert of " + name);
+                performance.setStartTime(dateTime);
+                performance.setDuration((long) getRandom(this.durations));
+                //performance.setArtist(artist);
+                performance.setHall(hall);
+                performanceRepository.save(performance);
+
+                // Event duration
+                //final Integer duration = performance.getDuration().intValue();
+                final Integer duration = 50;
 
                 // Saving the event
-                eventRepository.save(Event.EventBuilder.anEvent().withId((long) i)
-                    .withName(eventName).withDuration((long) duration)
-                    .withStartTime(dateTime).withCategory(getRandomName(this.categories))
-                    .withDescription("Test description for the event with name " + eventName).build());
+                Event event = new Event();
+                event.setId((long) id);
+                event.setName(eventName);
+                event.setStartTime(dateTime);
+                event.setDuration((long) duration);
+                List<Performance> performances = new ArrayList<>();
+                performances.add(performance);
+                event.setPerformances(performances);
+                event.setDescription("Live event at " + eventName + " with exciting performances, such as the ");
+                //performance.getName());
+                event.setEventPlace(eventPlaceRepository.findByIdEquals((long) id));
+                event.setCategory(getRandomName(this.categories));
+                eventRepository.save(event);
             }
         }
     }
@@ -800,6 +896,12 @@ public class EventDataGenerator {
 
     // Pick random string from the given list
     public static String getRandomName(String[] array) {
+        int rnd = new Random().nextInt(array.length);
+        return array[rnd];
+    }
+
+    // Pick a boolean value
+    public static boolean getRandomDecision(boolean[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }
