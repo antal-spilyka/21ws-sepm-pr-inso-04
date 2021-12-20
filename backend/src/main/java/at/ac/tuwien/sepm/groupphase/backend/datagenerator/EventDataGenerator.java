@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -795,10 +796,10 @@ public class EventDataGenerator {
                 final String eventName = this.eventNames[i - 1];
 
                 // Event datetime
-                long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
-                long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
-                long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
-                final LocalDateTime dateTime = LocalDate.ofEpochDay(randomDay).atStartOfDay();
+                long minDay = Timestamp.valueOf("2022-01-01 11:00:00").getTime();
+                long maxDay = Timestamp.valueOf("2050-12-31 23:59:59").getTime();
+                long diff = maxDay - minDay + 1;
+                final LocalDateTime dateTime = new Timestamp(minDay + (long) (Math.random() * diff)).toLocalDateTime();
 
 
                 // Artist
@@ -845,7 +846,7 @@ public class EventDataGenerator {
                 // Performance
                 Performance performance = new Performance();
                 performance.setId((long) i);
-                performance.setName("Live concert");
+                performance.setName("Live concert of");
                 performance.setStartTime(dateTime);
                 performance.setDuration((long) getRandom(this.durations));
                 performance.setArtist(artist);
