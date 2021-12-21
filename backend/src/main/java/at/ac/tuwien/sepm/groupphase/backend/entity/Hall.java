@@ -26,6 +26,13 @@ public class Hall {
     @ManyToOne()
     private EventPlace eventPlace;
 
+    @ManyToOne()
+    private Sector sector;
+
+    @OneToMany(cascade = CascadeType.REMOVE,
+        fetch = FetchType.LAZY)
+    private List<HallplanElement> rows;
+
     public Hall() {}
 
     public Hall(Long id, String name, EventPlace eventPlace) {
@@ -33,13 +40,6 @@ public class Hall {
         this.name = name;
         this.eventPlace = eventPlace;
     }
-
-    @ManyToOne()
-    Sector sector;
-
-    @OneToMany(cascade = CascadeType.REMOVE,
-        fetch = FetchType.EAGER)
-    List<HallplanElement> rows;
 
     public Long getId() {
         return id;
@@ -69,8 +69,16 @@ public class Hall {
         return rows;
     }
 
+    public void setRows(List<HallplanElement> rows) {
+        this.rows = rows;
+    }
+
     public Sector getSector() {
         return sector;
+    }
+
+    public void setSector(Sector sector) {
+        this.sector = sector;
     }
 
     @Override
