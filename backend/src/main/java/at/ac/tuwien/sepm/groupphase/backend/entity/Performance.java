@@ -117,6 +117,14 @@ public class Performance {
         this.hall = hall;
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -126,6 +134,7 @@ public class Performance {
             ", duration=" + duration +
             ", artist=" + artist +
             ", hall=" + hall +
+            ", tickets=" + tickets +
             '}';
     }
 
@@ -141,12 +150,12 @@ public class Performance {
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
             && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
             && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall);
+            && Objects.equals(hall, that.hall) && Objects.equals(tickets, that.tickets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, event, artist, hall);
+        return Objects.hash(id, name, startTime, duration, event, artist, hall, tickets);
     }
 
     public static final class PerformanceBuilder {
@@ -157,6 +166,7 @@ public class Performance {
         private Event event;
         private Artist artist;
         private Hall hall;
+        private List<Ticket> tickets;
 
         private PerformanceBuilder() {
         }
@@ -200,6 +210,11 @@ public class Performance {
             return this;
         }
 
+        public Performance.PerformanceBuilder withTickets(List<Ticket> tickets) {
+            this.tickets = tickets;
+            return this;
+        }
+
         public Performance build() {
             Performance performance = new Performance();
             performance.setId(id);
@@ -210,6 +225,7 @@ public class Performance {
             performance.setDuration(duration);
             performance.setArtist(artist);
             performance.setHall(hall);
+            performance.setTickets(tickets);
             return performance;
         }
     }

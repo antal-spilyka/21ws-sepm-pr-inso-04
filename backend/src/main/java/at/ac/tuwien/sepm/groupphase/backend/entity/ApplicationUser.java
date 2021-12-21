@@ -52,12 +52,12 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToMany(cascade = CascadeType.REMOVE,
+    @OneToMany(cascade = CascadeType.REMOVE, // payment information of user deleted if user deleted
         fetch = FetchType.EAGER,
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE,
+    @OneToMany(cascade = CascadeType.REMOVE, // tickets of user deleted if user deleted
         fetch = FetchType.LAZY,
         mappedBy = "user")
     private List<Ticket> tickets = new ArrayList<>();
@@ -258,7 +258,7 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
-        private PaymentInformation paymentInformation;
+        private List<PaymentInformation> paymentInformation;
         private List<Ticket> tickets;
         private int lockedCounter;
 
@@ -339,7 +339,12 @@ public class ApplicationUser {
             return this;
         }
 
-        public ApplicationUserBuilder withPaymentInformation(PaymentInformation paymentInformation) {
+        public ApplicationUserBuilder withPaymentInformation(List<PaymentInformation> paymentInformation) {
+            this.paymentInformation = paymentInformation;
+            return this;
+        }
+
+        public ApplicationUserBuilder withTickets(List<Ticket> tickets) {
             this.paymentInformation = paymentInformation;
             return this;
         }
@@ -359,9 +364,8 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
-            if (paymentInformation != null) {
-                applicationUser.addPaymentInformation(paymentInformation);
-            }
+            applicationUser.setPaymentInformation(paymentInformation);
+            applicationUser.setTickets(tickets);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

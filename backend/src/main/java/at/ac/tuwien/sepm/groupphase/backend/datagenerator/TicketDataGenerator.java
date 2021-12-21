@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -87,12 +88,12 @@ public class TicketDataGenerator {
         } else {
             // Global admin
             userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail("admin@email.com")
-                .withPassword(passwordEncoder.encode("password")).withAdmin(true).withId(0L).withCity("admin city")
+                .withPassword(passwordEncoder.encode("password")).withAdmin(true).withId(1L).withCity("admin city")
                 .withCountry("country").withDisabled(false).withFirstName("First").withLastName("Last")
                 .withPhone("0664 123 450").withSalutation("mr").withStreet("Street").withZip("1099")
                 .withLockedCounter(0).build());
             // Further 1000 users
-            for (int i = 1; i <= 1000; i++) {
+            for (int i = 2; i <= 1001; i++) {
                 // Different names to test the search
                 String baseName;
                 if (i < 250) {
@@ -104,24 +105,40 @@ public class TicketDataGenerator {
                 }
                 int min = 0;
                 int max = 13;
-                final int randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
+                int randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
                 String city = this.cities[randomIndex];
                 boolean admin = getRandomDecision(this.decision);
                 boolean disabled = getRandomDecision(this.decision);
                 String salutation = getRandomString(this.salutations);
                 String country = this.countries[randomIndex];
+
+                //Saving users
                 userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
                     .withPassword(passwordEncoder.encode("password" + i)).withAdmin(admin).withId((long) i).withCity(city)
                     .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
                     .withPhone("0664 123 45" + i % 9).withSalutation(salutation).withStreet("Street " + i).withZip("100" + (i % 9))
                     .withLockedCounter(0).build());
 
+                // Payment information of users
                 PaymentInformation paymentInformation = new PaymentInformation();
                 paymentInformation.setUser(userRepository.getById((long) i));
-                paymentInformation.setCreditCardCvv("pofnwefow");
-                paymentInformation.setCreditCardExpirationDate("nofwenf");
-                paymentInformation.setCreditCardNr("fnopenfpwoee");
-                paymentInformation.setCreditCardName("onfopne");
+                min = 100;
+                max = 999;
+                randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
+                paymentInformation.setCreditCardCvv(String.valueOf(randomIndex));
+                int creditCardMin1 = 10000000;
+                int creditCardMax1 = 99999999;
+                int creditCardMin2 = 10000000;
+                int creditCardMax2 = 99999999;
+                int randomIndex1 = (int) Math.floor(Math.random() * (creditCardMax1 - creditCardMin1 + 1) + creditCardMin1);
+                int randomIndex2 = (int) Math.floor(Math.random() * (creditCardMax2 - creditCardMin2 + 1) + creditCardMin2);
+                paymentInformation.setCreditCardNr(String.valueOf(randomIndex1) + String.valueOf(randomIndex2));
+                long minDay = Timestamp.valueOf("2022-01-01 11:00:00").getTime();
+                long maxDay = Timestamp.valueOf("2050-12-31 23:59:59").getTime();
+                long diff = maxDay - minDay + 1;
+                final LocalDateTime dateTime = new Timestamp(minDay + (long) (Math.random() * diff)).toLocalDateTime();
+                paymentInformation.setCreditCardExpirationDate(dateTime.toString());
+                paymentInformation.setCreditCardName("First " + i + " Last " + i);
                 paymentInformationRepository.save(paymentInformation);
             }
         }
