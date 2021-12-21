@@ -9,9 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,14 +32,17 @@ public class Performance {
     @Column(nullable = false)
     private Long duration;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
+
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<Ticket> tickets;
 
     @OneToOne(fetch = FetchType.EAGER)
     private Artist artist;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Hall hall;
 
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,

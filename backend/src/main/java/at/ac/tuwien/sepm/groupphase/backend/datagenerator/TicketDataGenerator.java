@@ -2,10 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -42,6 +44,7 @@ public class TicketDataGenerator {
 
     private final PasswordEncoder passwordEncoder;
 
+    private PaymentInformationRepository paymentInformationRepository;
 
     private final String[] ticketTypes = {"Seated", "Standing", "Disabled"};
 
@@ -49,7 +52,7 @@ public class TicketDataGenerator {
                                ArtistRepository artistRepository, UserRepository userRepository,
                                HallplanElementRepository hallplanElementRepository,
                                PerformanceRepository performanceRepository,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
@@ -57,6 +60,7 @@ public class TicketDataGenerator {
         this.hallplanElementRepository = hallplanElementRepository;
         this.performanceRepository = performanceRepository;
         this.passwordEncoder = passwordEncoder;
+        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     // Durations
@@ -81,6 +85,13 @@ public class TicketDataGenerator {
         if (userRepository.findAll().size() > 0) {
             LOGGER.debug("users already generated");
         } else {
+            // Global admin
+            userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail("admin@email.com")
+                .withPassword(passwordEncoder.encode("password")).withAdmin(true).withId(0L).withCity("admin city")
+                .withCountry("country").withDisabled(false).withFirstName("First").withLastName("Last")
+                .withPhone("0664 123 450").withSalutation("mr").withStreet("Street").withZip("1099")
+                .withLockedCounter(0).build());
+            // Further 1000 users
             for (int i = 1; i <= 1000; i++) {
                 // Different names to test the search
                 String baseName;
@@ -104,6 +115,14 @@ public class TicketDataGenerator {
                     .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
                     .withPhone("0664 123 45" + i % 9).withSalutation(salutation).withStreet("Street " + i).withZip("100" + (i % 9))
                     .withLockedCounter(0).build());
+
+                PaymentInformation paymentInformation = new PaymentInformation();
+                paymentInformation.setUser(userRepository.getById((long) i));
+                paymentInformation.setCreditCardCvv("pofnwefow");
+                paymentInformation.setCreditCardExpirationDate("nofwenf");
+                paymentInformation.setCreditCardNr("fnopenfpwoee");
+                paymentInformation.setCreditCardName("onfopne");
+                paymentInformationRepository.save(paymentInformation);
             }
         }
     }

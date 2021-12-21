@@ -30,7 +30,7 @@ public class Hall {
     private Sector sector;
 
     @OneToMany(cascade = CascadeType.REMOVE,
-        fetch = FetchType.EAGER)
+        fetch = FetchType.LAZY)
     private List<HallplanElement> rows;
 
     public Hall() {}

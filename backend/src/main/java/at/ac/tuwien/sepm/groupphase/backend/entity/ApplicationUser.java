@@ -57,6 +57,11 @@ public class ApplicationUser {
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REMOVE,
+        fetch = FetchType.LAZY,
+        mappedBy = "user")
+    private List<Ticket> tickets = new ArrayList<>();
+
     @Column(nullable = false)
     private Boolean disabled;
 
@@ -209,6 +214,14 @@ public class ApplicationUser {
         this.paymentInformation.add(paymentInformation);
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
     @Override
     public String toString() {
         return "ApplicationUser{"
@@ -224,9 +237,10 @@ public class ApplicationUser {
             + ", city='" + city + '\''
             + ", street='" + street + '\''
             + ", zip='" + zip + '\''
-            + ", disabled=" + disabled
-            + ", lockedCounter=" + lockedCounter
-            + ", paymentInformation=" + paymentInformation
+            + ", disabled=" + disabled + '\''
+            + ", lockedCounter=" + lockedCounter + '\''
+            + ", paymentInformation=" + paymentInformation + '\''
+            + ", tickets=" + tickets + + '\''
             + '}';
     }
 
@@ -245,6 +259,7 @@ public class ApplicationUser {
         private String street;
         private Boolean disabled;
         private PaymentInformation paymentInformation;
+        private List<Ticket> tickets;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {

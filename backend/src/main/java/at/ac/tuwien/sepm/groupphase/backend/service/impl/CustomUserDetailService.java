@@ -182,7 +182,7 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
-    // removes all existing paymentInformations of updatedUser to owerwrite the new data
+    // removes all existing paymentInformations of updatedUser to overwrite the new data
     @Transactional
     public void deletePaymentInformations(UserEditDto updatedUser) {
         ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
