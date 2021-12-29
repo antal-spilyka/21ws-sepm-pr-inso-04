@@ -30,7 +30,8 @@ public class HallEndpoint {
 
     private final HallService hallService;
     private final HallMapper hallMapper;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()); // todo logger
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/halls";
 
     public HallEndpoint(HallService hallService, HallMapper hallMapper) {
         this.hallService = hallService;
@@ -41,6 +42,7 @@ public class HallEndpoint {
     @GetMapping
     @Operation(summary = "Find hall by search parameters.")
     public Stream<HallDto> findHall(String name) {
+        LOGGER.info("GET " + BASE_URL + " " + name);
         return hallService.findHall(name).stream().map(hallMapper::entityToDto);
     }
 
@@ -48,7 +50,7 @@ public class HallEndpoint {
     @GetMapping("/{hallId:^[0-9]+$}")
     @Operation(summary = "Get hall by id.")
     public HallDetailDto getHall(@PathVariable String hallId) {
-        LOGGER.info("GET /api/v1/halls/" + hallId);
+        LOGGER.info("GET " + BASE_URL + "/{}", hallId);
         return hallService.getHall(hallId);
     }
 
@@ -56,6 +58,7 @@ public class HallEndpoint {
     @GetMapping(value = "/search")
     @Operation(summary = "Get the list of all hall.")
     public ResponseEntity getAllHalls() {
+        LOGGER.info("GET " + BASE_URL + "/search");
         return new ResponseEntity(hallService.getAll().stream(), HttpStatus.OK);
     }
 
@@ -63,11 +66,7 @@ public class HallEndpoint {
     @PostMapping
     @Operation(summary = "persist new hall.")
     public HallDto saveHall(@RequestBody @Validated HallDto hallDto) {
-        //try {
+        LOGGER.info("POST " + BASE_URL + " " + hallDto.toString());
         return hallMapper.entityToDto(hallService.save(hallDto));
-        /*} catch (ContextException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Hall already exists:  " + e.getLocalizedMessage(), e);
-        }*/
     }
 }

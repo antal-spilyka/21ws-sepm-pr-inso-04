@@ -22,6 +22,7 @@ public class EventLocationEndpoint {
 
     private EventPlaceService eventPlaceService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/eventlocations";
 
     public EventLocationEndpoint(EventPlaceService eventPlaceService) {
         this.eventPlaceService = eventPlaceService;
@@ -31,12 +32,7 @@ public class EventLocationEndpoint {
     @GetMapping
     @Operation(summary = "Find Event Location by search parameters.")
     public ResponseEntity findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
-        //try {
+        LOGGER.info("GET " + BASE_URL + " " + eventLocationSearchDto.toString());
         return new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
-        /*} catch (NotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
-        */
     }
 }
-//}
