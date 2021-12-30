@@ -41,7 +41,7 @@ const routes: Routes = [
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'artists/:id/performances', component: ArtistPerformancesComponent},
   {path: 'events/:id/performances', component: EventPerformancesComponent},
-  {path: 'eventPlaces/:id/performances', component: LocationPerformancesComponent},
+  {path: 'locations/:id/performances', component: LocationPerformancesComponent},
   {path: 'performances/:id/:performance', component: PerformanceDetailedComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},

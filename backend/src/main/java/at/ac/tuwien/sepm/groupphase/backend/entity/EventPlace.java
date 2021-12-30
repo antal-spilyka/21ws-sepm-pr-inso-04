@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,8 @@ public class EventPlace {
 
     @OneToOne(
         orphanRemoval = true,
-        cascade = CascadeType.ALL)
+        cascade = CascadeType.ALL,
+        fetch = FetchType.EAGER)
     Address address;
 
     public Long getId() {

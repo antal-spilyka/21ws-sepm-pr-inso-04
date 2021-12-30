@@ -14,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,6 +43,8 @@ public class UserMappingTest implements TestData {
         paymentInformation.setCreditCardExpirationDate("202022");
         paymentInformation.setCreditCardCvv("123");
         paymentInformation.setCreditCardName("Test");
+        List<PaymentInformation> paymentInformationList = new ArrayList<>();
+        paymentInformationList.add(paymentInformation);
 
         ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
             .withEmail("test@email.com")
@@ -53,7 +58,7 @@ public class UserMappingTest implements TestData {
             .withCity("Vienna")
             .withStreet("Test Street")
             .withZip("12345")
-            .withPaymentInformation(paymentInformation)
+            .withPaymentInformation(paymentInformationList)
             .withDisabled(true)
             .build();
 
