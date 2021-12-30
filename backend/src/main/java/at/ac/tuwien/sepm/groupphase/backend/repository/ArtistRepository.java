@@ -33,7 +33,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
      * Gets artist by primary key (id).
      *
      * @param id of the artist
-     * @return artist with the given id
+     * @return list of fitting artists
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
     Artist getById(Long id);
@@ -45,4 +45,5 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
      * @return persisted Artist
      */
     Artist save(Artist artist);
+
 }

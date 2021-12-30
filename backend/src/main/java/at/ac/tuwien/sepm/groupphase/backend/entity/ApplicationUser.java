@@ -2,14 +2,14 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,15 +52,10 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToMany(cascade = CascadeType.REMOVE, // payment information of user deleted if user deleted
+    @OneToMany(cascade = CascadeType.REMOVE,
         fetch = FetchType.EAGER,
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REMOVE, // tickets of user deleted if user deleted
-        fetch = FetchType.LAZY,
-        mappedBy = "user")
-    private List<Ticket> tickets = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean disabled;
@@ -214,14 +209,6 @@ public class ApplicationUser {
         this.paymentInformation.add(paymentInformation);
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
     @Override
     public String toString() {
         return "ApplicationUser{"
@@ -237,10 +224,9 @@ public class ApplicationUser {
             + ", city='" + city + '\''
             + ", street='" + street + '\''
             + ", zip='" + zip + '\''
-            + ", disabled=" + disabled + '\''
-            + ", lockedCounter=" + lockedCounter + '\''
-            + ", paymentInformation=" + paymentInformation + '\''
-            + ", tickets=" + tickets + + '\''
+            + ", disabled=" + disabled
+            + ", lockedCounter=" + lockedCounter
+            + ", paymentInformation=" + paymentInformation
             + '}';
     }
 
@@ -258,8 +244,7 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
-        private List<PaymentInformation> paymentInformation;
-        private List<Ticket> tickets;
+        private PaymentInformation paymentInformation;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -339,12 +324,7 @@ public class ApplicationUser {
             return this;
         }
 
-        public ApplicationUserBuilder withPaymentInformation(List<PaymentInformation> paymentInformation) {
-            this.paymentInformation = paymentInformation;
-            return this;
-        }
-
-        public ApplicationUserBuilder withTickets(List<Ticket> tickets) {
+        public ApplicationUserBuilder withPaymentInformation(PaymentInformation paymentInformation) {
             this.paymentInformation = paymentInformation;
             return this;
         }
@@ -364,8 +344,9 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
-            applicationUser.setPaymentInformation(paymentInformation);
-            applicationUser.setTickets(tickets);
+            if (paymentInformation != null) {
+                applicationUser.addPaymentInformation(paymentInformation);
+            }
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

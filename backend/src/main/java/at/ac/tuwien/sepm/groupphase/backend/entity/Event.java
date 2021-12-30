@@ -201,7 +201,7 @@ public class Event {
             return this;
         }
 
-        public Event.EventBuilder withEventPlace(EventPlace eventPlace) {
+        public Event.EventBuilder withEventPlacee(EventPlace eventPlace) {
             this.eventPlace = eventPlace;
             return this;
         }
