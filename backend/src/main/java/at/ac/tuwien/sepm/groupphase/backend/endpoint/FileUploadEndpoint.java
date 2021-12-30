@@ -43,6 +43,7 @@ public class FileUploadEndpoint {
     @GetMapping("/{filename:^[\\w,\\s-]+\\.[A-Za-z]{3}$}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        LOGGER.info("GET " + BASE_URL + "/{}", filename);
         try {
             Resource file = storageService.loadAsResource(filename);
 
@@ -58,6 +59,7 @@ public class FileUploadEndpoint {
     @PostMapping("")
     @ResponseBody
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
+        LOGGER.info("POST " + BASE_URL + " " + file.toString());
         String name = storageService.store(file);
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path(BASE_URL + "/")

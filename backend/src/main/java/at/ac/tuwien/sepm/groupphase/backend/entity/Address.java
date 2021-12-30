@@ -11,22 +11,22 @@ import java.util.Objects;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String city;
+    private String city;
 
     @Column(nullable = false)
-    String state;
+    private String state;
 
     @Column(nullable = false)
-    String zip;
+    private String zip;
 
     @Column(nullable = false)
-    String country;
+    private String country;
 
     @Column(nullable = false)
-    String street;
+    private String street;
 
     public Address() {}
 

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Address} from '../../dtos/address';
 import {EventLocationService} from '../../services/event-location.service';
-import {EventDto} from '../../dtos/eventDto';
 import {Router} from '@angular/router';
+import {EventPlace} from '../../dtos/eventPlace';
 
 @Component({
   selector: 'app-search-location',
@@ -12,36 +12,52 @@ import {Router} from '@angular/router';
 export class SearchLocationComponent implements OnInit {
   searchAddress: Address = {
     id: null, city: '', state: '', zip: '', country: '', street: '',
-};
+  };
   submitted = false;
-  eventLocations: Address[] = [];
+  eventLocations: EventPlace[] = [];
   error = false;
   errorMessage: string;
-  constructor(private eventLocationService: EventLocationService, private router: Router) { }
+  locationAddresses: Map<number, Address> = new Map<number, Address>();
+
+  constructor(private eventLocationService: EventLocationService, private router: Router) {
+  }
 
   ngOnInit(): void {
   }
+
   onSubmit() {
     this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
       {
         next: eventLocations => {
           this.submitted = true;
-          console.log(this.eventLocations);
           this.eventLocations = eventLocations;
           console.log(this.eventLocations);
+          for (const i of eventLocations) {
+            this.eventLocationService.getAddress(i.id).subscribe(
+              {
+                next: address => {
+                  console.log(address.city);
+                  this.locationAddresses[i.id] = address;
+                }, error: error => this.handleError(error)
+              }
+            );
+          }
         }, error: error => this.handleError(error)
       }
     );
   }
-  loadPerformances(eventLocation: Address){
-    if(eventLocation.id){
+
+  loadPerformances(eventLocation: Address) {
+    if (eventLocation.id) {
       this.router.navigateByUrl(`/locations/${eventLocation.id}/performances`);
     }
   }
+
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;
   }
+
   private handleError(error: any) {
     console.log(error);
     this.error = true;
@@ -53,5 +69,4 @@ export class SearchLocationComponent implements OnInit {
       this.errorMessage = error.error.message;
     }
   }
-
 }

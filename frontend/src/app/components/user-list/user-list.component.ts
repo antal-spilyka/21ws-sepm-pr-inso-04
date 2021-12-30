@@ -12,7 +12,7 @@ import jwt_decode from 'jwt-decode';
 export class UserListComponent implements OnInit {
   userList: any;
   searchEmail = null;
-  filterToggled = false;
+  filterToggled = true;
   currentUser = null;
 
   error = false;

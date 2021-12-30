@@ -26,20 +26,19 @@ public class PerformanceEndpoint {
 
     private final PerformanceService performanceService;
     private final PerformanceMapper performanceMapper;
-    private final EventMapper eventMapper;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()); // todo logger
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/performances";
 
-    public PerformanceEndpoint(PerformanceService performanceService, PerformanceMapper performanceMapper, EventMapper eventMapper) {
+    public PerformanceEndpoint(PerformanceService performanceService, PerformanceMapper performanceMapper) {
         this.performanceService = performanceService;
         this.performanceMapper = performanceMapper;
-        this.eventMapper = eventMapper;
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     @Operation(summary = "persist new performance.")
     public PerformanceDto savePerformance(@RequestBody @Validated PerformanceDto performanceDto) {
-        LOGGER.info("POST /api/v1/performance/{}", performanceDto);
+        LOGGER.info("POST " + BASE_URL + "/{}", performanceDto);
         return performanceMapper.entityToDto(performanceService.save(performanceDto), performanceDto.getEventDto());
     }
 
@@ -47,7 +46,7 @@ public class PerformanceEndpoint {
     @GetMapping("/search")
     @Operation(summary = "Find events by search parameters.")
     public Stream<PerformanceDto> findEventsByDateTime(@Validated PerformanceSearchDto performanceSearchDto) {
-        LOGGER.info("GET /api/v1/performance/search {}", performanceSearchDto.toString());
+        LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto.toString());
         return this.performanceService.findPerformanceByDateTime(performanceSearchDto);
     }
 
@@ -55,7 +54,7 @@ public class PerformanceEndpoint {
     @GetMapping(value = "/artist/{id}")
     @Operation(summary = "Find performances for specified artist.")
     public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
-        LOGGER.info("GET /api/v1/performance/id {}", id);
+        LOGGER.info("GET " + BASE_URL + "/id {}", id);
         return this.performanceService.findPerformanceForArtist(id);
     }
 }
