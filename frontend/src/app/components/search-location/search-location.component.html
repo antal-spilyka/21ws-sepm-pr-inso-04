@@ -53,18 +53,22 @@
           <th>Locations</th>
         </thead>
         <tbody>
+        <tr>
+        </tr>
           <tr *ngFor="let eventLocation of eventLocations">
             <td>
               <div class="flex">
-                <span>Street: {{eventLocation}}</span>
-                <span>Street: {{eventLocation.street}}</span>
-                <span>City: {{eventLocation.city}}</span>
-                <span>ZIP-Code: {{eventLocation.zip}}</span>
-                <span>State: {{eventLocation.state}}</span>
-                <span>Country: {{eventLocation.country}}</span>
+
+                <span><b>Location Name - </b>{{eventLocation.name}}</span>
+                <span><b>City - </b>{{this.locationAddresses[eventLocation.id].city}}</span>
+                <span><b>State - </b>{{this.locationAddresses[eventLocation.id].state}}</span>
+                <span><b>Zip - </b>{{this.locationAddresses[eventLocation.id].zip}}</span>
+                <span><b>Country - </b>{{this.locationAddresses[eventLocation.id].street}}</span>
+                <span><b>Street - </b>{{this.locationAddresses[eventLocation.id].street}}</span>
+
                 <div>
                   <button type="submit" class="button" mat-raised-button color="primary"
-                    (click)="loadPerformances(eventLocation)">Performances
+                    (click)="loadPerformances(eventLocation.addressDto)">Performances
                   </button>
                 </div>
               </div>

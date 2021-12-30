@@ -100,7 +100,7 @@ public class EventPlaceServiceTest {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
         eventLocationSearchDto.setCity("SearchCity");
         eventLocationSearchDto.setCountry("SearchCountry");
-        List<Address> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
+        List<EventPlace> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
         assertFalse(events.isEmpty());
     }
 }

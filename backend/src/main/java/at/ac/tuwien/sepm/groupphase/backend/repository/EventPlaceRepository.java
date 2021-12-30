@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,6 +27,8 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     @Query("SELECT e FROM EventPlace e WHERE UPPER(e.name) LIKE UPPER(CONCAT('%', :name, '%'))")
     List<EventPlace> findEventPlace(@Param("name") String name, Pageable pageable);
 
+    List<EventPlace> findEventPlaceByAddress(Address address);
+
     /**
      * Persists eventPlace.
      *
@@ -35,6 +38,4 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     EventPlace save(EventPlace eventPlace);
 
     EventPlace findByIdEquals(Long id);
-
-    EventPlace findByNameIgnoreCase(String name);
 }

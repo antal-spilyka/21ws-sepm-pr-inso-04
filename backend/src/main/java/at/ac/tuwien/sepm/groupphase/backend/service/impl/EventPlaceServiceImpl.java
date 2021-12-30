@@ -22,6 +22,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository
 import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import org.hibernate.service.spi.ServiceException;
+import org.hibernate.tool.hbm2ddl.UniqueConstraintSchemaUpdateStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -80,13 +81,21 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     }
 
     @Override
-    public List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
+    public List<EventPlace> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         LOGGER.debug("Handling in Service {}", eventLocationSearchDto);
         try {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
                 eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(),
                 eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(0, 10));
-            return addresses;
+
+            List<EventPlace> eventPlaces = new ArrayList<>();
+            for (Address address : addresses) {
+                if (address != null) {
+                    List<EventPlace> found = eventPlaceRepository.findEventPlaceByAddress(address);
+                    eventPlaces.addAll(found);
+                }
+            }
+            return eventPlaces;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -130,5 +139,20 @@ public class EventPlaceServiceImpl implements EventPlaceService {
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Address findAddress(Long id) {
+        EventPlace eventPlace = eventPlaceRepository.findByIdEquals(id);
+        if (eventPlace == null) {
+            throw new ServiceException("Event place not found");
+        }
+
+        Address address = eventPlace.getAddress();
+        if (address == null) {
+            throw new ServiceException("Address not found");
+        }
+
+        return address;
     }
 }

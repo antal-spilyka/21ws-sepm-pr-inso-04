@@ -30,7 +30,7 @@ public interface EventPlaceService {
      * @return a list with all the addresses that meet search criteria.
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<Address> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
+    List<EventPlace> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
 
     /**
@@ -44,10 +44,20 @@ public interface EventPlaceService {
     EventPlace save(EventPlaceDto eventPlaceDto);
 
     /**
-     * Adds an hall to an event place.
+     * Adds a hall to an event place.
      *
      * @param eventPlaceId the event place to which the hall is added
      * @param hallAddDto to be persisted
+     * @throws org.hibernate.service.spi.ServiceException if the eventPLace is not found
      */
     void addHall(String eventPlaceId, HallAddDto hallAddDto);
+
+    /**
+     * Finds the address of the eventPlace with the given id.
+     *
+     * @param id of the eventPlace
+     * @return the Address object
+     * @throws org.hibernate.service.spi.ServiceException if the eventPlace or the address is not found
+     */
+    Address findAddress(Long id);
 }
