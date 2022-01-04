@@ -4,7 +4,7 @@
       <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
         <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
                               [rows]="rows"
-                              [disabled]="page !== 0 || viewMode"
+                              [disabled]="page !== 0 || viewMode || bookMode"
                               [sectors]="sectors"
                               [rowIndex]="rowIndex" [seatIndex]="seatIndex"
                               [add]="addSeat" [remove]="removeSeat"
@@ -19,11 +19,14 @@
                               [mouseOverHallplanElement]="mouseOverHallplanElement"
                               [mouseOutHallplanElement]="mouseOutHallplanElement"
                               [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
+                              [bookMode]="bookMode"
+                              [alreadyUsed]="isIndexInTickets(rowIndex, seatIndex) && bookMode"
+                              [book]="bookSeat"
                               [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
       </div>
     </div>
   </div>
-  <div class="side-bar" *ngIf="!viewMode && page === 0">
+  <div class="side-bar" *ngIf="!viewMode && !bookMode && page === 0">
     <h2>What do you want to edit?</h2>
     <mat-radio-group aria-label="Select an option" [formControl]="radioControl">
       <mat-radio-button [value]="editModes.seat">Seats</mat-radio-button>
@@ -65,20 +68,52 @@
     <form>
       <mat-form-field appearance="fill" class="half-control">
         <mat-label>Name</mat-label>
-        <input matInput [formControl]="nameControl" required name="phone">
+        <input matInput [formControl]="nameControl" required name="name">
         <mat-error *ngIf="nameControl.invalid">Please fill in a name</mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="containsStandingPlaces()" appearance="fill" class="half-control">
+        <mat-label>Number of Standing Places</mat-label>
+        <input matInput [formControl]="standingControl" type="number" required name="standing">
+        <mat-error *ngIf="standingControl.invalid">Please fill in a positive number</mat-error>
       </mat-form-field>
     </form>
     <mat-error *ngIf="errorMsg">{{errorMsg}}</mat-error>
 
     <button type="button" mat-icon-button class="back-button" (click)="back()">Back</button>
     <button type="button" mat-raised-button color="primary" class="next-button" (click)="finish()"
-            [disabled]="!nameControl.valid">Finish
+            [disabled]="!nameControl.valid || !standingControl.valid ||
+            (containsStandingPlaces() && standingControl.value === 0)">
+      Finish
     </button>
   </div>
   <div class="side-bar" *ngIf="page === 3">
     <h2>Success</h2>
-    <span>You created the hall!</span>
+    <span *ngIf="!bookMode">You created the hall!</span>
+  </div>
+  <div class="side-bar" *ngIf="bookMode && page !== 3">
+    <h2>Basket:</h2>
+    <mat-form-field appearance="fill"  *ngIf="containsStandingPlaces()">
+      <mat-label>Standing Seats</mat-label>
+      <input matInput type="number" value="0" min="0" [max]="availableStandingPlaces()" [formControl]="standingControl">
+    </mat-form-field>
+    <div *ngIf="standingControl.value && standingControl.value > 0" class="seat-overview">
+      <div>{{getStandingBasket().amount}}x</div>
+      <div>{{getStandingBasket().name}}</div>
+      <div>{{getStandingBasket().formatPrice}}</div>
+    </div>
+    <div *ngFor="let sector of getBookedSeats()" class="seat-overview">
+      <div>{{sector.amount}}x</div>
+      <div>{{sector.name}}</div>
+      <div>{{sector.formatPrice}}</div>
+    </div>
+    <div class="seat-overview">
+      <div>Total</div>
+      <div>{{getTotalOfBookedSeats()}}</div>
+    </div>
+    <div *ngIf="getBookedSeats().length === 0">No Seats selected</div>
+    <button type="button" mat-raised-button color="primary" class="next-button" (click)="buy()">
+      Buy
+    </button>
   </div>
 </div>
 

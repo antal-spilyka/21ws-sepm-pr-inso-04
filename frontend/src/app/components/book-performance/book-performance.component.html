@@ -1,0 +1,9 @@
+<div>
+  <app-create-hallplan
+    *ngIf="performance?.hall?.id"
+                       [bookMode]="true"
+    [hallId]="performance.hall.id"
+    [performanceId]="performance.id"
+    [tickets]="performance.tickets"
+  ></app-create-hallplan>
+</div>

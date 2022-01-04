@@ -16,19 +16,21 @@ export interface AddSectionDialogData {
 
 export interface IHallplanElement {
   added: boolean;
+  booked: boolean;
   removeCandidate: boolean;
   sector: number;
   type: HallplanElementType;
   withType: (type: HallplanElementType) => IHallplanElement;
   withRemoveCandidate: (removeCandidate: boolean) => IHallplanElement;
   withAdded: (added: boolean) => IHallplanElement;
+  withBooked: (added: boolean) => IHallplanElement;
   withSector: (sector: number) => IHallplanElement;
 }
 
 export class Sector {
   selected = false;
 
-  constructor(public color: string, public name: string, private price: number) { }
+  constructor(public color: string, public name: string, public price: number) { }
 
   formatPrice() {
     return '€' + this.price.toFixed(2);
@@ -60,6 +62,7 @@ export class HallplanElement implements IHallplanElement {
   removeCandidate = false;
   type = HallplanElementType.seat;
   sector = 0;
+  booked = false;
 
   constructor(added?) {
     this.withRemoveCandidate = this.withRemoveCandidate.bind(this);
@@ -73,6 +76,11 @@ export class HallplanElement implements IHallplanElement {
 
   withRemoveCandidate(removeCandidate: boolean): HallplanElement {
     this.removeCandidate = removeCandidate;
+    return this;
+  }
+
+  withBooked(b: boolean) {
+    this.booked = b;
     return this;
   }
 

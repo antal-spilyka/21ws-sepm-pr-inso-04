@@ -29,7 +29,7 @@ export class ArtistPerformancesComponent implements OnInit {
   }
   loadPerformance(performance: Performance){
     if(performance.id){
-      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+      this.router.navigate([`/performances/${performance.id}`]);
     }
   }
   private handleError(error: any) {

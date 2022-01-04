@@ -28,7 +28,7 @@ public class Ticket {
     private ApplicationUser user;
 
     @Column(nullable = false, length = 100)
-    private Long price;
+    private double price;
 
     @Column(nullable = false, length = 100)
     private String typeOfTicket;
@@ -41,6 +41,9 @@ public class Ticket {
 
     @Column(nullable = false, length = 100)
     private boolean bought;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Sector sector;
 
     public Ticket() {}
 
@@ -112,12 +115,20 @@ public class Ticket {
         this.used = used;
     }
 
-    public Long getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setSector(Sector sector) {
+        this.sector = sector;
+    }
+
+    public Sector getSector() {
+        return sector;
     }
 
     @Override

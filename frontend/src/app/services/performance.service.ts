@@ -1,12 +1,10 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {EventDto} from '../dtos/eventDto';
 import {Globals} from '../global/globals';
-import {EventSearchDto} from '../dtos/eventSearchDto';
-import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
 import {PerformanceSearchDto} from '../dtos/performanceSearchDto';
 import {Performance} from '../dtos/performance';
+import {Basket} from '../dtos/basket';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +40,15 @@ export class PerformanceService {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
   }
 
+  getPerformanceById(id: number): Observable<Performance> {
+    return this.httpClient.get<Performance>(this.messageBaseUri + '/' + id);
+  }
+
   savePerformace(performance: Performance): Observable<Performance> {
-    console.log(performance);
     return this.httpClient.post<Performance>(this.messageBaseUri, performance);
+  }
+
+  buyPerformance(id: number, basket: Basket) {
+    return this.httpClient.post<void>(this.messageBaseUri + '/buy/' + id, basket);
   }
 }

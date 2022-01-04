@@ -65,6 +65,8 @@ import { AddHallDialogComponent } from './components/create-event-places/add-hal
 import {
   RemoveSectionDialogComponent
 } from './components/create-hallplan/components/remove-section-dialog/remove-section-dialog.component';
+import { BookPerformanceComponent } from './components/book-performance/book-performance.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -102,7 +104,8 @@ import {
     RemoveSectionDialogComponent,
     OldNewsComponent,
     CreateEventPlacesComponent,
-    AddHallDialogComponent
+    AddHallDialogComponent,
+    BookPerformanceComponent
   ],
   imports: [
     BrowserModule,
@@ -121,6 +124,7 @@ import {
     MatExpansionModule,
     MatDialogModule,
     MatTooltipModule,
+    MatSnackBarModule,
     MatAutocompleteModule,
     MatInputModule,
     ReactiveFormsModule,

@@ -51,6 +51,7 @@ public class HallMapper {
         HallDetailDto hallDto = new HallDetailDto();
         hallDto.setId(hall.getId());
         hallDto.setName(hall.getName());
+        hallDto.setStandingPlaces(hall.getStandingPlaces());
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(hall.getEventPlace()));
 
         List<HallplanElement> rows = hall.getRows();
@@ -59,13 +60,9 @@ public class HallMapper {
         int maxSeatIndex = rows.stream().mapToInt(HallplanElement::getSeatIndex).max().orElseThrow(NoSuchElementException::new);
 
         HallplanElementDto[][] hallplanElements = new HallplanElementDto[maxRowIndex + 1][maxSeatIndex + 1];
-        List<SectorDto> sectors = new ArrayList<>();
+        List<SectorDto> sectors = hall.getSectors().stream().map(sector -> sectorMapper.entityToDto(sector)).toList();
         for (HallplanElement hallplanElement : rows) {
             int indexOpt = IntStream.range(0, sectors.size()).filter(index -> Objects.equals(sectors.get(index).getId(), hallplanElement.getSector().getId())).findFirst().orElse(sectors.size());
-
-            if (indexOpt == sectors.size()) {
-                sectors.add(sectorMapper.entityToDto(hallplanElement.getSector()));
-            }
 
             HallplanElementDto dto = new HallplanElementDto();
             dto.setType(hallplanElement.getType());
@@ -88,12 +85,14 @@ public class HallMapper {
         return hall;
     }
 
-    public Hall dtoToEntity(HallAddDto hallAddDto, EventPlace eventPlace, List<HallplanElement> rows) {
+    public Hall dtoToEntity(HallAddDto hallAddDto, EventPlace eventPlace, List<HallplanElement> rows, List<Sector> sectors) {
         LOGGER.trace("Mapping {}", hallAddDto);
         Hall hall = new Hall();
         hall.setName(hallAddDto.getName());
+        hall.setStandingPlaces(hallAddDto.getStandingPlaces());
         hall.setRow(rows);
         hall.setEventPlace(eventPlace);
+        hall.setSectors(sectors);
         return hall;
     }
 }

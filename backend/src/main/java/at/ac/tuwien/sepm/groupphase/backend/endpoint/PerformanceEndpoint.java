@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
@@ -17,13 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.PermitAll;
+import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.security.Principal;
 import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/performances")
 public class PerformanceEndpoint {
-
     private final PerformanceService performanceService;
     private final PerformanceMapper performanceMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -56,5 +60,21 @@ public class PerformanceEndpoint {
     public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
         LOGGER.info("GET " + BASE_URL + "/id {}", id);
         return this.performanceService.findPerformanceForArtist(id);
+    }
+
+    @GetMapping(value = "/{id}")
+    @PermitAll
+    @Operation(summary = "Find specific performance.")
+    public PerformanceDetailDto findPerformance(@PathVariable("id") Long id) {
+        LOGGER.info("GET " + BASE_URL + "/id {}", id);
+        return this.performanceService.findPerformanceById(id);
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping(value = "/buy/{id}")
+    @Operation(summary = "Buy seats for a performance.")
+    public void buySeats(@RequestBody @Valid BasketDto basket, @PathVariable("id") Long id, Principal principal) {
+        LOGGER.info("GET " + BASE_URL + "/buy {}", basket);
+        this.performanceService.buySeats(basket, id, principal);
     }
 }
