@@ -4,7 +4,8 @@ export class HallAddRequest {
   constructor(
     public name: string,
     public rows: IHallplanElement[][],
-    public sectors: Sector[]
+    public sectors: Sector[],
+    public standingPlaces: number,
   ) {
   }
 }

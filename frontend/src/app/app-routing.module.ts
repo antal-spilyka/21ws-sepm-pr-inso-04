@@ -22,6 +22,7 @@ import {LocationPerformancesComponent} from './components/location-performances/
 import {PerformanceDetailedComponent} from './components/performance-detailed/performance-detailed.component';
 import {OldNewsComponent} from './components/old-news/old-news.component';
 import {CreateEventPlacesComponent} from './components/create-event-places/create-event-places.component';
+import {BookPerformanceComponent} from './components/book-performance/book-performance.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -42,7 +43,8 @@ const routes: Routes = [
   {path: 'artists/:id/performances', component: ArtistPerformancesComponent},
   {path: 'events/:id/performances', component: EventPerformancesComponent},
   {path: 'locations/:id/performances', component: LocationPerformancesComponent},
-  {path: 'performances/:id/:performance', component: PerformanceDetailedComponent},
+  {path: 'performances/book', canActivate: [AuthGuard], component: BookPerformanceComponent},
+  {path: 'performances/:id', component: PerformanceDetailedComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},
   {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent}

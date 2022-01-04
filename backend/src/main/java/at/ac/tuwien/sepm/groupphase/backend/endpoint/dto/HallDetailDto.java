@@ -5,6 +5,7 @@ import java.util.Objects;
 public class HallDetailDto {
     private Long id;
     private String name;
+    private int standingPlaces;
     private EventPlaceDto eventPlaceDto;
     private HallplanElementDto[][] rows;
     private SectorDto[] sectors;
@@ -47,6 +48,14 @@ public class HallDetailDto {
 
     public void setSectors(SectorDto[] sectors) {
         this.sectors = sectors;
+    }
+
+    public int getStandingPlaces() {
+        return standingPlaces;
+    }
+
+    public void setStandingPlaces(int standingPlaces) {
+        this.standingPlaces = standingPlaces;
     }
 
     @Override

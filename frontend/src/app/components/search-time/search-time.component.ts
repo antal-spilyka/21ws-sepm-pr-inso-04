@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {EventDto} from '../../dtos/eventDto';
-import {EventService} from '../../services/event.service';
 import {Hall} from '../../dtos/hall';
 import {HallService} from '../../services/hall.service';
-import {EventDateTimeSearchDto} from '../../dtos/eventDateTimeSearchDto';
 import {PerformanceSearchDto} from '../../dtos/performanceSearchDto';
 import {PerformanceService} from '../../services/performance.service';
 import {Performance} from '../../dtos/performance';
@@ -66,7 +63,7 @@ export class SearchTimeComponent implements OnInit {
   }
   loadPerformance(performance: Performance){
     if(performance.id){
-      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+      this.router.navigate([`/performances/${performance.id}`]);
     }
   }
   private handleError(error: any) {

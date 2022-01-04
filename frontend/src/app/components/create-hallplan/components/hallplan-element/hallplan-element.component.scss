@@ -46,6 +46,16 @@
         box-shadow: #00000021 0 4px 5px 1px;
         height: calc(100% + 0.5rem);
         margin-top: -0.5rem;
+
+        &.booked {
+          border-color: cornflowerblue;
+          border-width: 3px;
+        }
+
+        &.already-used {
+          border-color: grey;
+          opacity: 40%;
+        }
       }
 
       &.exit, &.stage, &.standing {
@@ -212,7 +222,7 @@
       }
     }
 
-    &.added:hover {
+    &.added:not(&.disabled):hover {
       color: $added-color;
 
       .exit-text, .standing-text {

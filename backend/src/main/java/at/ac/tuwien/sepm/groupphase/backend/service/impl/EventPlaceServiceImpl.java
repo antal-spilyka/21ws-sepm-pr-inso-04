@@ -133,7 +133,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
 
             List<HallplanElement> rows = hallplanElementMapper.dtoToEntity(hallAddDto.getRows(), sectors);
             hallplanElementRepository.saveAll(rows);
-            hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows));
+            hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows, sectors));
         } catch (EntityExistsException e) {
             throw new ContextException(e);
         } catch (PersistenceException e) {

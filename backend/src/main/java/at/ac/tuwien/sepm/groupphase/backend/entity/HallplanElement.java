@@ -75,4 +75,6 @@ public class HallplanElement {
     public void setSector(Sector sector) {
         this.sector = sector;
     }
+
+
 }

@@ -6,6 +6,9 @@ public class HallAddDto {
     @NotNull(message = "Name must not be null")
     private String name;
 
+    @NotNull(message = "Standing Places must not be null")
+    private int standingPlaces;
+
     @NotNull(message = "Rows must not be null")
     private HallplanElementDto[][] rows;
 
@@ -18,6 +21,14 @@ public class HallAddDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getStandingPlaces() {
+        return standingPlaces;
+    }
+
+    public void setStandingPlaces(int standingPlaces) {
+        this.standingPlaces = standingPlaces;
     }
 
     public HallplanElementDto[][] getRows() {

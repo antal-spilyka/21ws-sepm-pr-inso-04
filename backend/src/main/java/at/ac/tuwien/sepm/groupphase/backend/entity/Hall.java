@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,11 +21,14 @@ public class Hall {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private int standingPlaces;
+
     @ManyToOne()
     private EventPlace eventPlace;
 
-    @ManyToOne()
-    private Sector sector;
+    @OneToMany()
+    private List<Sector> sectors;
 
     @OneToMany(cascade = CascadeType.REMOVE,
         fetch = FetchType.LAZY)
@@ -39,6 +40,14 @@ public class Hall {
         this.id = id;
         this.name = name;
         this.eventPlace = eventPlace;
+    }
+
+    public int getStandingPlaces() {
+        return standingPlaces;
+    }
+
+    public void setStandingPlaces(int standingPlaces) {
+        this.standingPlaces = standingPlaces;
     }
 
     public Long getId() {
@@ -73,12 +82,12 @@ public class Hall {
         this.rows = rows;
     }
 
-    public Sector getSector() {
-        return sector;
+    public List<Sector> getSectors() {
+        return sectors;
     }
 
-    public void setSector(Sector sector) {
-        this.sector = sector;
+    public void setSectors(List<Sector> sectors) {
+        this.sectors = sectors;
     }
 
     @Override
