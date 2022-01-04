@@ -377,6 +377,27 @@ export class CreateHallplanComponent implements OnInit {
     });
   }
 
+  reserve() {
+    const basket = new Basket(
+      this.getBookedSeats().reduce((acc, sector) => acc.concat(sector.sectorSeats), []).map(seat => ({
+        seatIndex: seat.seatIndex - 1,
+        rowIndex: seat.rowIndex - 1,
+      })),
+      this.getStandingBasket().amount
+    );
+    this.performanceService.reservePerformance(this.performanceId, basket).subscribe({
+      next: () => {
+        this.page = 3;
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
+      },
+      complete: () => {
+
+      }
+    });
+  }
+
   defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;

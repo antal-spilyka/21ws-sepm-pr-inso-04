@@ -77,4 +77,12 @@ public class PerformanceEndpoint {
         LOGGER.info("GET " + BASE_URL + "/buy {}", basket);
         this.performanceService.buySeats(basket, id, principal);
     }
+
+    @Secured("ROLE_USER")
+    @PostMapping(value = "/reserve/{id}")
+    @Operation(summary = "Reserve seats for a performance.")
+    public void reserveSeats(@RequestBody @Valid BasketDto basket, @PathVariable("id") Long id, Principal principal) {
+        LOGGER.info("GET " + BASE_URL + "/reserve {}", basket);
+        this.performanceService.reserveSeats(basket, id, principal);
+    }
 }

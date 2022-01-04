@@ -256,4 +256,78 @@ public class PerformanceServiceImpl implements PerformanceService {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+    @Transactional
+    @Override
+    public void reserveSeats(BasketDto basket, Long performanceId, Principal principal) {
+        LOGGER.debug("Handling in service {}", basket);
+        try {
+            Performance performance = performanceRepository.getById(performanceId);
+            ApplicationUser applicationUser = userRepository.findUserByEmail(principal.getName());
+
+            if (applicationUser == null) {
+                throw new ServiceException("User not found");
+            }
+
+            Optional<Sector> optionalSector = performance.getHall().getSectors().stream().filter(
+                sector -> sector.getName().equals("Standing")
+            ).findAny();
+
+            if (optionalSector.isEmpty() && basket.getStandingPlaces() > 0) {
+                throw new ServiceException("No Standing Sector found");
+            }
+
+            // check if standing places are available
+            int bookedStandingTicketsAmount = performance.getTickets().stream().filter(ticket -> ticket.getTypeOfTicket().equals("Standing")).toList().size();
+            int availableStandingTicketsAmount = performance.getHall().getStandingPlaces();
+            if (bookedStandingTicketsAmount + basket.getStandingPlaces() > availableStandingTicketsAmount) {
+                throw new ServiceException("So many standing-places are not available anymore");
+            }
+
+            // reserve tickets
+            List<Ticket> tickets = new ArrayList<>();
+            for (BasketSeatDto basketSeatDto : basket.getSeats()) {
+                Optional<HallplanElement> optionalHallplanElement = performance.getHall().getRows().stream().filter(
+                    seat -> seat.getRowIndex() == basketSeatDto.getRowIndex()
+                        && seat.getSeatIndex() == basketSeatDto.getSeatIndex()
+                ).findAny();
+                if (optionalHallplanElement.isEmpty()) {
+                    throw new ServiceException("Hallplan element not found");
+                }
+                if (performance.getTickets().stream().anyMatch(
+                    ticket -> ticket.getTypeOfTicket().equals("Seat")
+                        && ticket.getPosition().getRowIndex() == basketSeatDto.getRowIndex()
+                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex())
+                ) {
+                    throw new ServiceException("A Hallplan element is already sold");
+                }
+                Ticket ticket = new Ticket();
+                ticket.setPerformance(performance);
+                ticket.setTypeOfTicket("Seat");
+                ticket.setPosition(optionalHallplanElement.get());
+                ticket.setPrice(optionalHallplanElement.get().getSector().getPrice());
+                ticket.setSector(optionalHallplanElement.get().getSector());
+                ticket.setBought(false);
+                ticket.setUsed(false);
+                ticket.setUser(applicationUser);
+                tickets.add(ticket);
+            }
+            ticketRepository.saveAll(tickets);
+
+            for (int i = 0; i < basket.getStandingPlaces(); i++) {
+                Ticket ticket = new Ticket();
+                ticket.setPerformance(performance);
+                ticket.setTypeOfTicket("Standing");
+                ticket.setPosition(null);
+                ticket.setSector(optionalSector.get());
+                ticket.setPrice(optionalSector.get().getPrice());
+                ticket.setBought(false);
+                ticket.setUsed(false);
+                ticket.setUser(applicationUser);
+                ticketRepository.save(ticket);
+            }
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 }

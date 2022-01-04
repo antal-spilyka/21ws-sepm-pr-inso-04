@@ -111,9 +111,14 @@
       <div>{{getTotalOfBookedSeats()}}</div>
     </div>
     <div *ngIf="getBookedSeats().length === 0">No Seats selected</div>
-    <button type="button" mat-raised-button color="primary" class="next-button" (click)="buy()">
-      Buy
-    </button>
+    <span class="next-button">
+      <button style="margin-right: 10px" type="button" mat-raised-button color="primary" (click)="buy()">
+        Buy
+      </button>
+      <button type="button" mat-raised-button color="primary" (click)="reserve()">
+        Reserve
+      </button>
+    </span>
   </div>
 </div>
 
