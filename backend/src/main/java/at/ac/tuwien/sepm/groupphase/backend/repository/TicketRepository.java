@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
@@ -17,4 +18,22 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return persisted ticket
      */
     Ticket save(Ticket ticket);
+
+    /**
+     * Get bought Ticket by user.
+     *
+     * @param user of the user
+     * @return List of tickets with corresponding user
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
+    List<Ticket> getTicketByUserAndBoughtTrue(ApplicationUser user);
+
+    /**
+     * Get reserved Ticket by user.
+     *
+     * @param user of the user
+     * @return List of tickets with corresponding user
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
+    List<Ticket> getTicketByUserAndBoughtFalse(ApplicationUser user);
 }
