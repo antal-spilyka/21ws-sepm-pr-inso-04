@@ -221,9 +221,9 @@ public class PerformanceServiceImpl implements PerformanceService {
                     throw new ServiceException("Hallplan element not found");
                 }
                 if (performance.getTickets().stream().anyMatch(
-                    ticket -> ticket.getTypeOfTicket().equals("Seat") &&
-                        ticket.getPosition().getRowIndex() == basketSeatDto.getRowIndex() &&
-                        ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex())
+                    ticket -> ticket.getTypeOfTicket().equals("Seat")
+                        && ticket.getPosition().getRowIndex() == basketSeatDto.getRowIndex()
+                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex())
                 ) {
                     throw new ServiceException("A Hallplan element is already sold");
                 }
