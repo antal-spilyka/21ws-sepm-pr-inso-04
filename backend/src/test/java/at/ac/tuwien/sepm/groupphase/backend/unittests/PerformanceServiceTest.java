@@ -184,4 +184,26 @@ public class PerformanceServiceTest {
         Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(-1L);
         assertTrue(performances.toList().isEmpty());
     }
+
+    @Test
+    public void getPerformance_byNotExistingId(){
+        PerformanceDetailDto performance = performanceService.findPerformanceById(-1L);
+        assertNull(performance);
+    }
+
+    @Test
+    public void getPerformance_byExistingId(){
+        /*Performance testPerformance = new Performance(this.performance.getId(), this.performance.getName(), this.performance.getStartTime(),
+            this.performance.getDuration(), this.performance.getEvent(), this.performance.getArtist(), this.performance.getHall());
+        PerformanceDto testPerformanceDto = performanceMapper.entityToDto(this.performance, eventMapper.entityToDto(this.performance.getEvent()));
+        testPerformanceDto.setEventDto(eventMapper.entityToDto(this.event));
+        this.event.getPerformances().add(testPerformanceDto);
+
+        Performance receivedPerformance = performanceService.save(testPerformanceDto);
+        assertEquals(testPerformance.getName(), receivedPerformance.getName());
+        assertEquals(testPerformance.getDuration(), receivedPerformance.getDuration());
+        assertEquals(testPerformance.getArtist(), receivedPerformance.getArtist());*/
+        PerformanceDetailDto receivedPerformance = performanceService.findPerformanceById(1L);
+        assertNotEquals(receivedPerformance, null);
+    }
 }
