@@ -51,7 +51,7 @@ export class SearchTimeComponent implements OnInit {
 
   onSubmit() {
     this.performanceList = [];
-    if (this.detailedSearch === false) {
+    if (this.detailedSearch === true) {
       console.log(this.performanceSearchDto);
       this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
         {

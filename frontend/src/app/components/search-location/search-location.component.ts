@@ -28,7 +28,7 @@ export class SearchLocationComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.detailedSearch === false) {
+    if (this.detailedSearch === true) {
       this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
         {
           next: eventLocations => {

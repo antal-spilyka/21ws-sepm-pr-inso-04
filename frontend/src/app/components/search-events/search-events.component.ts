@@ -30,7 +30,7 @@ export class SearchEventsComponent implements OnInit {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
     } else {
-      if (this.detailedSearch === false) {
+      if (this.detailedSearch === true) {
         this.eventService.findEvent(this.searchEvent).subscribe(
           {
             next: events => {
@@ -46,7 +46,6 @@ export class SearchEventsComponent implements OnInit {
           {
             next: events => {
               this.submitted = true;
-              console.log(this.eventList);
               this.eventList = events;
               console.log(this.eventList);
             }, error: error => this.handleError(error)
