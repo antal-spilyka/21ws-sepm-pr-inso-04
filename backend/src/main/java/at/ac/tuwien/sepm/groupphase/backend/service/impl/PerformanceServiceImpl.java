@@ -155,6 +155,19 @@ public class PerformanceServiceImpl implements PerformanceService {
     }
 
     @Override
+    public Stream<PerformanceDto> findGeneralPerformanceByDateTime(String searchQuery) {
+        LOGGER.debug("Handling in Service {}", searchQuery);
+        try {
+            List<Performance> performances;
+            performances = performanceRepository.findGeneralPerformanceByEventAndHall(searchQuery, PageRequest.of(0, 10));
+            LOGGER.info(performances.toString());
+            return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Stream<PerformanceDto> findPerformanceForArtist(Long id) {
         LOGGER.debug("Handling in service {}", id);
         try {

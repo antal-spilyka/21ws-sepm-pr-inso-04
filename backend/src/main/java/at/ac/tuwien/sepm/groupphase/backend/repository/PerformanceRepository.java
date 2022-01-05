@@ -30,6 +30,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
     List<Performance> findPerformanceByEventAndHall(@Param("eventName") String eventName, @Param("hall") String hall,
                                                     Pageable pageable);
 
+    @Query("SELECT distinct p FROM Performance p WHERE :searchQuery is null OR :searchQuery='' OR UPPER(p.hall.name) " +
+        "LIKE UPPER(CONCAT( '%', :searchQuery, '%')) OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :searchQuery, '%'))")
+    List<Performance> findGeneralPerformanceByEventAndHall(@Param("searchQuery") String searchQuery, Pageable pageable);
+
     @Query("SELECT p FROM Performance p WHERE p.artist.id=:id")
     List<Performance> findPerformanceForArtist(@Param("id") Long id, Pageable pageable);
 

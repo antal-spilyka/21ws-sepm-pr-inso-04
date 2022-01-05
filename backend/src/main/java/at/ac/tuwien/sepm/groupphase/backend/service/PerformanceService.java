@@ -18,6 +18,8 @@ public interface PerformanceService {
 
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
 
+    Stream<PerformanceDto> findGeneralPerformanceByDateTime(String searchQuery);
+
     Stream<PerformanceDto> findPerformanceForArtist(Long id);
 
     PerformanceDetailDto findPerformanceById(Long id);

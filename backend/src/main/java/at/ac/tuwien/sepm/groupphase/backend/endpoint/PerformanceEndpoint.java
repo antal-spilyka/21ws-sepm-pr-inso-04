@@ -47,19 +47,19 @@ public class PerformanceEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @GetMapping("/search")
-    @Operation(summary = "Find events by search parameters.")
-    public Stream<PerformanceDto> findEventsByDateTime(@Validated PerformanceSearchDto performanceSearchDto) {
-        LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto.toString());
-        return this.performanceService.findPerformanceByDateTime(performanceSearchDto);
-    }
-
-    @Secured("ROLE_USER")
     @GetMapping("/general-search")
     @Operation(summary = "Find events by search parameters.")
     public Stream<PerformanceDto> findGeneralEventsByDateTime(@Validated String searchQuery) {
         LOGGER.info("GET " + BASE_URL + "/search " + searchQuery);
         return this.performanceService.findGeneralPerformanceByDateTime(searchQuery);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/search")
+    @Operation(summary = "Find events by search parameters.")
+    public Stream<PerformanceDto> findEventsByDateTime(@Validated PerformanceSearchDto performanceSearchDto) {
+        LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto.toString());
+        return this.performanceService.findPerformanceByDateTime(performanceSearchDto);
     }
 
     @Secured("ROLE_USER")
