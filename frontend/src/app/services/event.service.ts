@@ -49,6 +49,14 @@ export class EventService {
     return this.httpClient.get<EventDto[]>(this.messageBaseUri, { params });
   }
 
+  findGeneralEvent(searchString: string): Observable<EventDto[]> {
+    let params = new HttpParams();
+    if(searchString !== null && searchString !== ''){
+      params = params.set('generalSearchEvent', searchString);
+    }
+    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/general-search', { params });
+  }
+
 
 
   /**

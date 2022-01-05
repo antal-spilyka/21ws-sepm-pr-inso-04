@@ -32,6 +32,8 @@ public interface EventService {
      */
     List<Event> findEvents(EventSearchDto eventSearchDto);
 
+    List<Event> findGeneralEvents(String generalSearchEvent);
+
     List<Event> findEvent(String name);
 
     Stream<PerformanceDto> getPerformances(Long id);

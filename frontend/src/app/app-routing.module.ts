@@ -32,7 +32,7 @@ const routes: Routes = [
   {path: 'users', canActivate: [AuthGuard], component: UserListComponent},
   {path: 'news/add', component: AddNewsComponent},
   {path: 'events/add', canActivate: [AuthGuard], component: CreateEventComponent},
-  {path: 'search', component: SearchComponent},
+  //{path: 'search', component: SearchComponent},
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},

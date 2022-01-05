@@ -101,6 +101,25 @@ public class EventPlaceServiceImpl implements EventPlaceService {
         }
     }
 
+    @Override
+    public List<EventPlace> findGeneralEventLocation(String searchLocation) {
+        LOGGER.debug("Handling in Service {}", searchLocation);
+        try {
+            List<Address> addresses = addressRepository.findGeneralEventLocation(searchLocation, PageRequest.of(0, 10));
+
+            List<EventPlace> eventPlaces = new ArrayList<>();
+            for (Address address : addresses) {
+                if (address != null) {
+                    List<EventPlace> found = eventPlaceRepository.findEventPlaceByAddress(address);
+                    eventPlaces.addAll(found);
+                }
+            }
+            return eventPlaces;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
     @Transactional
     @Override
     public EventPlace save(EventPlaceDto eventPlaceDto) {

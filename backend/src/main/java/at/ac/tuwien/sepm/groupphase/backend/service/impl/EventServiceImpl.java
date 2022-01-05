@@ -69,6 +69,20 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    @Override
+    public List<Event> findGeneralEvents(String generalSearchEvent) {
+        LOGGER.debug("Handling in Service {}", generalSearchEvent);
+        try {
+            List<Event> events = eventRepository.findGeneralEvents(generalSearchEvent, PageRequest.of(0, 10));
+            for (Event event : events) {
+                event.setPerformances(null);
+            }
+            return events;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
     @Transactional
     @Override
     public List<Event> findEvent(String name) {

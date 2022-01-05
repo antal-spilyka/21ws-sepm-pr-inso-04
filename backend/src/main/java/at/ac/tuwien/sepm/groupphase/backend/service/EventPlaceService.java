@@ -32,6 +32,15 @@ public interface EventPlaceService {
      */
     List<EventPlace> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
+    /**
+     * Finds eventLocations with matching properties.
+     *
+     * @param searchLocation string for storing the search information.
+     * @return a list with all the addresses that meet search criteria.
+     * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
+     */
+    List<EventPlace> findGeneralEventLocation(String searchLocation);
+
 
     /**
      * Persists category.

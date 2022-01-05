@@ -36,6 +36,14 @@ export class PerformanceService {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/search', {params});
   }
 
+  findGeneralPerformanceByDateTime(searchQuery: string): Observable<Performance[]> {
+    let params = new HttpParams();
+    if (searchQuery && searchQuery !== '') {
+      params = params.set('searchQuery', searchQuery.trim());
+    }
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/general-search', {params});
+  }
+
   findPerformancesByArtist(id: number): Observable<Performance[]> {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
   }

@@ -48,6 +48,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description, @Param("category") String category,
                            Pageable pageable);
 
+    @Query("SELECT e FROM Event e WHERE :generalQuery is null OR :generalQuery='' OR UPPER(e.description) LIKE " +
+        "UPPER(CONCAT( '%', :generalQuery, '%')) OR UPPER(e.category) LIKE UPPER(CONCAT( '%', :generalQuery, '%'))")
+    List<Event> findGeneralEvents(@Param("generalQuery") String generalQuery,
+                                  Pageable pageable);
+
 
     /**
      * Finds all the events which suit the criteria from parameters.

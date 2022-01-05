@@ -14,6 +14,8 @@ export class SearchLocationComponent implements OnInit {
     id: null, city: '', state: '', zip: '', country: '', street: '',
   };
   submitted = false;
+  detailedSearch = false;
+  searchLocation = '';
   eventLocations: EventPlace[] = [];
   error = false;
   errorMessage: string;
@@ -26,31 +28,57 @@ export class SearchLocationComponent implements OnInit {
   }
 
   onSubmit() {
-    this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
-      {
-        next: eventLocations => {
-          this.submitted = true;
-          this.eventLocations = eventLocations;
-          console.log(this.eventLocations);
-          for (const i of eventLocations) {
-            this.eventLocationService.getAddress(i.id).subscribe(
-              {
-                next: address => {
-                  console.log(address.city);
-                  this.locationAddresses[i.id] = address;
-                }, error: error => this.handleError(error)
-              }
-            );
-          }
-        }, error: error => this.handleError(error)
-      }
-    );
+    if (this.detailedSearch === false) {
+      this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
+        {
+          next: eventLocations => {
+            this.submitted = true;
+            this.eventLocations = eventLocations;
+            console.log(this.eventLocations);
+            for (const i of eventLocations) {
+              this.eventLocationService.getAddress(i.id).subscribe(
+                {
+                  next: address => {
+                    console.log(address.city);
+                    this.locationAddresses[i.id] = address;
+                  }, error: error => this.handleError(error)
+                }
+              );
+            }
+          }, error: error => this.handleError(error)
+        }
+      );
+    } else {
+      this.eventLocationService.findGeneralEventLocation(this.searchLocation).subscribe(
+        {
+          next: eventLocations => {
+            this.submitted = true;
+            this.eventLocations = eventLocations;
+            console.log(this.eventLocations);
+            for (const i of eventLocations) {
+              this.eventLocationService.getAddress(i.id).subscribe(
+                {
+                  next: address => {
+                    console.log(address.city);
+                    this.locationAddresses[i.id] = address;
+                  }, error: error => this.handleError(error)
+                }
+              );
+            }
+          }, error: error => this.handleError(error)
+        }
+      );
+    }
   }
 
   loadPerformances(eventLocation: Address) {
     if (eventLocation.id) {
       this.router.navigateByUrl(`/locations/${eventLocation.id}/performances`);
     }
+  }
+
+  changeDetailed(){
+    this.detailedSearch = !this.detailedSearch;
   }
 
   vanishError(): void {

@@ -39,6 +39,14 @@ export class EventLocationService {
     return this.httpClient.get<EventPlace[]>(this.eventLocationBaseUri, { params });
   }
 
+  findGeneralEventLocation(searchLocation: string): Observable<EventPlace[]> {
+    let params = new HttpParams();
+    if(searchLocation !== '' && searchLocation !== null){
+      params=params.set('searchLocation', searchLocation.trim());
+    }
+    return this.httpClient.get<EventPlace[]>(this.eventLocationBaseUri + '/general-search', { params });
+  }
+
   /**
    * Find the address of the eventPlace with the given id.
    *

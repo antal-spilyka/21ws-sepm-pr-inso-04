@@ -55,6 +55,19 @@ public class EventEndpoint {
     }
 
     @Secured("ROLE_USER")
+    @GetMapping("/general-search")
+    @Operation(summary = "Find events by search parameters.")
+    public ResponseEntity findGeneralEvents(@Validated String generalSearchEvent) {
+        LOGGER.info("GET " + BASE_URL + " " + generalSearchEvent);
+        try {
+            return new ResponseEntity(eventService.findGeneralEvents(generalSearchEvent).stream(), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/news")
     @Operation(summary = "find events.")
     public Stream<EventDto> findEventByName(@RequestParam String name) {

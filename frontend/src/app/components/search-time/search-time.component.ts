@@ -16,6 +16,8 @@ export class SearchTimeComponent implements OnInit {
     eventName: '', startTime: '', hallName: '',
   };
   performanceList: Performance[] = [];
+  detailedSearch = false;
+  generalSearchTime = '';
   roomsList: Hall[] = [];
   roomMap = new Map();
   submitted = false;
@@ -37,7 +39,7 @@ export class SearchTimeComponent implements OnInit {
           console.log(this.roomsList);
           this.roomsList = rooms;
           console.log(this.roomsList);
-          if(this.roomsList !== []){
+          if (this.roomsList !== []) {
             for (const room of this.roomsList) {
               this.roomMap.set(room.id, room.name);
             }
@@ -49,23 +51,42 @@ export class SearchTimeComponent implements OnInit {
 
   onSubmit() {
     this.performanceList = [];
-    console.log(this.performanceSearchDto);
-    this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
-      {
-        next: performances => {
-          this.submitted = true;
-          console.log(this.performanceList);
-          this.performanceList = performances;
-          console.log(this.performanceList);
-        }, error: error => this.handleError(error)
-      }
-    );
+    if (this.detailedSearch === false) {
+      console.log(this.performanceSearchDto);
+      this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
+        {
+          next: performances => {
+            this.submitted = true;
+            console.log(this.performanceList);
+            this.performanceList = performances;
+            console.log(this.performanceList);
+          }, error: error => this.handleError(error)
+        }
+      );
+    } else{
+      this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime).subscribe(
+        {
+          next: performances => {
+            this.submitted = true;
+            console.log(this.performanceList);
+            this.performanceList = performances;
+            console.log(this.performanceList);
+          }, error: error => this.handleError(error)
+        }
+      );
+    }
   }
-  loadPerformance(performance: Performance){
-    if(performance.id){
+
+  loadPerformance(performance: Performance) {
+    if (performance.id) {
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
+
+  changeDetailed() {
+    this.detailedSearch = !this.detailedSearch;
+  }
+
   private handleError(error: any) {
     console.log(error);
     this.error = true;

@@ -14,6 +14,8 @@ export class SearchEventsComponent implements OnInit {
     duration: null, description: '', category: '',
   };
   submitted = false;
+  detailedSearch = false;
+  generalSearchEvent = '';
   eventList: EventDto[] = [];
   error = false;
   errorMessage: string;
@@ -23,31 +25,52 @@ export class SearchEventsComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   onSubmit() {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
     } else {
-      this.eventService.findEvent(this.searchEvent).subscribe(
-        {
-          next: events => {
-            this.submitted = true;
-            console.log(this.eventList);
-            this.eventList = events;
-            console.log(this.eventList);
-          }, error: error => this.handleError(error)
-        }
-      );
+      if (this.detailedSearch === false) {
+        this.eventService.findEvent(this.searchEvent).subscribe(
+          {
+            next: events => {
+              this.submitted = true;
+              console.log(this.eventList);
+              this.eventList = events;
+              console.log(this.eventList);
+            }, error: error => this.handleError(error)
+          }
+        );
+      } else{
+        this.eventService.findGeneralEvent(this.generalSearchEvent).subscribe(
+          {
+            next: events => {
+              this.submitted = true;
+              console.log(this.eventList);
+              this.eventList = events;
+              console.log(this.eventList);
+            }, error: error => this.handleError(error)
+          }
+        );
+      }
     }
   }
-  loadPerformances(event: EventDto){
-    if(event.id){
+
+  loadPerformances(event: EventDto) {
+    if (event.id) {
       this.router.navigateByUrl(`/events/${event.id}/performances`);
     }
   }
+
+  changeDetailed(){
+    this.detailedSearch = !this.detailedSearch;
+  }
+
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;
   }
+
   private handleError(error: any) {
     console.log(error);
     this.error = true;

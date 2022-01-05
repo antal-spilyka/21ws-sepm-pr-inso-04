@@ -40,6 +40,14 @@ public class EventLocationEndpoint {
     }
 
     @Secured("ROLE_USER")
+    @GetMapping("/general-search")
+    @Operation(summary = "Find Event Location by search parameters.")
+    public ResponseEntity findGeneralEventLocation(String searchLocation) {
+        LOGGER.info("GET " + BASE_URL + " " + searchLocation);
+        return new ResponseEntity(eventPlaceService.findGeneralEventLocation(searchLocation).stream(), HttpStatus.OK);
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/{eventPlaceDtoId}")
     @Operation(summary = "Returns the address of the given location.")
     public ResponseEntity findAddress(@PathVariable Long eventPlaceDtoId) {
