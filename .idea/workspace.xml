@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6439f11d-1682-440e-ab4c-bc3523d34c1b" name="Changes" comment="" />
+    <list default="true" id="6439f11d-1682-440e-ab4c-bc3523d34c1b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/news-view/news-view.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/news-view/news-view.component.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +21,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -32,6 +37,7 @@
       <option name="presentableId" value="Default" />
       <updated>1637766962357</updated>
       <workItem from="1637766963847" duration="63000" />
+      <workItem from="1641383206123" duration="28000" />
     </task>
     <servers />
   </component>

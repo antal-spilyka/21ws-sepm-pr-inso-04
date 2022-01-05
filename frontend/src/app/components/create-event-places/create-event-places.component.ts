@@ -5,6 +5,7 @@ import { Address } from 'src/app/dtos/address';
 import { EventPlace } from 'src/app/dtos/eventPlace';
 import { EventPlaceService } from 'src/app/services/event-place.service';
 import { AddHallDialogComponent } from './add-hall-dialog/add-hall-dialog.component';
+import {countries} from '../../utils';
 
 @Component({
   selector: 'app-create-event-places',
@@ -16,6 +17,7 @@ export class CreateEventPlacesComponent implements OnInit {
   error = false;
   errorMessage = '';
   id;
+  countries = countries;
 
   form = this.formBuilder.group({
     name: [null, Validators.required],
@@ -33,7 +35,6 @@ export class CreateEventPlacesComponent implements OnInit {
 
   submit() {
     if(this.form.invalid) {
-      //do something
       return;
     }
 

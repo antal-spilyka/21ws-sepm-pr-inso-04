@@ -1,47 +1,51 @@
 <div>
   <form [formGroup]="form">
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <h2>General Information</h2>
-      </div>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput required formControlName="name">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Date and Time</mat-label>
-        <input matInput min="today" type="datetime-local" formControlName="startTime">
-      </mat-form-field>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Category</mat-label>
-        <input matInput required type="text" formControlName="category">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea class="textArea" cdkTestareaAutosize required matInput formControlName="description"
-          cdkAutosizeMinRows="4" cdkAutosizeMaxRows="5"></textarea>
-      </mat-form-field>
-    </div>
-    <br>
-    <br>
-    <div fxLayout="column" fxLayoutGap="32px">
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <h2>Event Place</h2>
       </div>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput formControlName="eventPlaceName" required [matAutocomplete]="auto">
+          <input matInput required formControlName="name">
         </mat-form-field>
-<!--        <span>-->
-<!--          <a mat-raised-button target="_blank" color="primary" [routerLink]="['/eventPlaces/add']"-->
-<!--            routerLinkActive="active">Add Event-->
-<!--            Place</a>-->
-<!--        </span>-->
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Date and Time</mat-label>
+          <input matInput min="today" type="datetime-local" formControlName="startTime">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Category</mat-label>
+          <input matInput required type="text" formControlName="category">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Description</mat-label>
+          <textarea class="textArea" cdkTestareaAutosize required matInput formControlName="description"
+            cdkAutosizeMinRows="4" cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+      </div>
+      <br>
+      <br>
+      <div fxLayout="column" fxLayoutGap="32px">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <h2>Event Place</h2>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="eventPlaceName" required [matAutocomplete]="auto">
+          </mat-form-field>
+          <!--        <span>-->
+          <!--          <a mat-raised-button target="_blank" color="primary" [routerLink]="['/eventPlaces/add']"-->
+          <!--            routerLinkActive="active">Add Event-->
+          <!--            Place</a>-->
+          <!--        </span>-->
+        </div>
       </div>
     </div>
   </form>

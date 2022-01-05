@@ -45,6 +45,9 @@ public class Performance {
     @OneToOne(fetch = FetchType.EAGER)
     private Hall hall;
 
+    @Column(nullable = false)
+    private Long priceMultiplicant;
+
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
                        Event event, Artist artist, Hall hall) {
         this.id = id;
@@ -125,6 +128,14 @@ public class Performance {
         this.tickets = tickets;
     }
 
+    public Long getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Long priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -135,6 +146,7 @@ public class Performance {
             ", artist=" + artist +
             ", hall=" + hall +
             ", tickets=" + tickets +
+            ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }
 
@@ -150,7 +162,8 @@ public class Performance {
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
             && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
             && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall) && Objects.equals(tickets, that.tickets);
+            && Objects.equals(hall, that.hall) && Objects.equals(tickets, that.tickets)
+            && Objects.equals(priceMultiplicant, that.priceMultiplicant);
     }
 
     @Override
@@ -167,6 +180,7 @@ public class Performance {
         private Artist artist;
         private Hall hall;
         private List<Ticket> tickets;
+        private Long priceMultiplicant;
 
         private PerformanceBuilder() {
         }
@@ -215,6 +229,11 @@ public class Performance {
             return this;
         }
 
+        public Performance.PerformanceBuilder withPriceMultiplicant(Long priceMultiplicant) {
+            this.priceMultiplicant = priceMultiplicant;
+            return this;
+        }
+
         public Performance build() {
             Performance performance = new Performance();
             performance.setId(id);
@@ -226,6 +245,7 @@ public class Performance {
             performance.setArtist(artist);
             performance.setHall(hall);
             performance.setTickets(tickets);
+            performance.setPriceMultiplicant(priceMultiplicant);
             return performance;
         }
     }
