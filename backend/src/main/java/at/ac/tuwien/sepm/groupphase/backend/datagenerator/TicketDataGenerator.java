@@ -2,11 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
@@ -18,10 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,6 +37,8 @@ public class TicketDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TicketRepository ticketRepository;
+
+    private final OrderRepository orderRepository;
 
     private final EventRepository eventRepository;
 
@@ -53,7 +60,8 @@ public class TicketDataGenerator {
                                ArtistRepository artistRepository, UserRepository userRepository,
                                HallplanElementRepository hallplanElementRepository,
                                PerformanceRepository performanceRepository,
-                               PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository) {
+                               PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository,
+                               OrderRepository orderRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
@@ -62,6 +70,7 @@ public class TicketDataGenerator {
         this.performanceRepository = performanceRepository;
         this.passwordEncoder = passwordEncoder;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.orderRepository = orderRepository;
     }
 
     // Durations
@@ -162,9 +171,6 @@ public class TicketDataGenerator {
                 int artistId = (i % 26) == 0 ? 1 : i % 26;
                 Artist artist = artistRepository.getById((long) artistId);
 
-                // TypeOfTicket
-                String type = getRandomString(this.ticketTypes);
-
                 // Price
                 int priceMin = 10;
                 int priceMax = 5000;
@@ -172,16 +178,32 @@ public class TicketDataGenerator {
 
                 final long id = i % 200 == 0 ? 1 : i % 200;
 
-                ticketRepository.save(Ticket.TicketBuilder.aTicket()
+                Order order = new Order();
+                LOGGER.info("HAAAALLLLLOOOOO");
+                order.setPerformance(performanceRepository.getById(id));
+                order.setPrize(price);
+                order.setDateOfOrder(LocalDateTime.now());
+                order.setBought(getRandomDecision(this.decision));
+                order.setUser(userRepository.getById(id));
+                LOGGER.info("HAAAAALLLOOOO222222");
+                orderRepository.save(order);
+
+                // TypeOfTicket
+                String type = getRandomString(this.ticketTypes);
+
+                Ticket ticket = Ticket.TicketBuilder.aTicket()
                     .withId((long) i)
                     .withPerformance(performanceRepository.getById(id))
                     .withTypeOfTicket(type)
                     .withPosition(hallplanElementRepository.getById(id))
                     .withPrice(price)
-                    .withUser(userRepository.getById((long) i))
                     .withUsed(getRandomDecision(this.decision))
-                    .withBought(getRandomDecision(this.decision))
-                    .build());
+                    .withOrder(order)
+                    .build();
+
+                List<Ticket> tickets = new ArrayList<>();
+                tickets.add(ticket);
+                ticketRepository.save(ticket);
             }
         }
     }

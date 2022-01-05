@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
+import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +16,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tickets")
-public class TicketEndpoint {
-    private final TicketService ticketService;
-    private final TicketMapper ticketMapper;
+public class OrderEndpoint {
+    private final OrderService orderService;
+    private final OrderMapper orderMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String BASE_URL = "/api/v1/tickets";
 
     @Autowired
-    public TicketEndpoint(TicketService ticketService, TicketMapper ticketMapper) {
-        this.ticketService = ticketService;
-        this.ticketMapper = ticketMapper;
+    public OrderEndpoint(OrderService orderService, OrderMapper orderMapper) {
+        this.orderService = orderService;
+        this.orderMapper = orderMapper;
     }
 
     @GetMapping("/{email}/reserved")
-    public List<TicketDetailDto> getReservedTickets(@PathVariable String email) {
+    public List<OrderDto> getReservedTickets(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/reserved", email);
-        return this.ticketMapper.ticketToTicketDetailDto(ticketService.getAllReserved(email));
+        return this.orderMapper.orderToOrderDto(orderService.getAllReserved(email));
     }
 
     @GetMapping("/{email}/bought")
-    public List<TicketDetailDto> getBoughtTickets(@PathVariable String email) {
+    public List<OrderDto> getBoughtTickets(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/bought", email);
-        return this.ticketMapper.ticketToTicketDetailDto(ticketService.getAllBought(email));
+        return this.orderMapper.orderToOrderDto(orderService.getAllBought(email));
     }
 }

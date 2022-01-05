@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.CascadeType;
@@ -57,10 +58,10 @@ public class ApplicationUser {
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE, // tickets of user deleted if user deleted
+    @OneToMany(cascade = CascadeType.REMOVE, // orders of user deleted if user deleted
         fetch = FetchType.LAZY,
         mappedBy = "user")
-    private List<Ticket> tickets = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean disabled;
@@ -214,12 +215,12 @@ public class ApplicationUser {
         this.paymentInformation.add(paymentInformation);
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override
@@ -240,7 +241,7 @@ public class ApplicationUser {
             + ", disabled=" + disabled + '\''
             + ", lockedCounter=" + lockedCounter + '\''
             + ", paymentInformation=" + paymentInformation + '\''
-            + ", tickets=" + tickets + + '\''
+            + ", tickets=" + orders + + '\''
             + '}';
     }
 
@@ -259,7 +260,7 @@ public class ApplicationUser {
         private String street;
         private Boolean disabled;
         private List<PaymentInformation> paymentInformation;
-        private List<Ticket> tickets;
+        private List<Order> orders;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -344,8 +345,8 @@ public class ApplicationUser {
             return this;
         }
 
-        public ApplicationUserBuilder withTickets(List<Ticket> tickets) {
-            this.paymentInformation = paymentInformation;
+        public ApplicationUserBuilder withOrders(List<Order> orders) {
+            this.orders = orders;
             return this;
         }
 
@@ -365,7 +366,7 @@ public class ApplicationUser {
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
             applicationUser.setPaymentInformation(paymentInformation);
-            applicationUser.setTickets(tickets);
+            applicationUser.setOrders(orders);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

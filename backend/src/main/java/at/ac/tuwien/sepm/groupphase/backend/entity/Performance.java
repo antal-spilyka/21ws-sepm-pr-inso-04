@@ -36,7 +36,10 @@ public class Performance {
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
 
-    @OneToMany(mappedBy = "performance", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -125,6 +128,14 @@ public class Performance {
         this.tickets = tickets;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -135,6 +146,7 @@ public class Performance {
             ", artist=" + artist +
             ", hall=" + hall +
             ", tickets=" + tickets +
+            ", orders=" + orders +
             '}';
     }
 
@@ -143,19 +155,19 @@ public class Performance {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Performance)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Performance that = (Performance) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-            && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
-            && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall) && Objects.equals(tickets, that.tickets);
+            && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration) && Objects.equals(event, that.event)
+            && Objects.equals(orders, that.orders) && Objects.equals(tickets, that.tickets) && Objects.equals(artist, that.artist)
+            && Objects.equals(hall, that.hall);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, event, artist, hall, tickets);
+        return Objects.hash(id, name, startTime, duration, event, orders, tickets, artist, hall);
     }
 
     public static final class PerformanceBuilder {
@@ -166,6 +178,7 @@ public class Performance {
         private Event event;
         private Artist artist;
         private Hall hall;
+        private List<Order> orders;
         private List<Ticket> tickets;
 
         private PerformanceBuilder() {
@@ -215,6 +228,11 @@ public class Performance {
             return this;
         }
 
+        public Performance.PerformanceBuilder withOrders(List<Order> orders) {
+            this.orders = orders;
+            return this;
+        }
+
         public Performance build() {
             Performance performance = new Performance();
             performance.setId(id);
@@ -226,6 +244,7 @@ public class Performance {
             performance.setArtist(artist);
             performance.setHall(hall);
             performance.setTickets(tickets);
+            performance.setOrders(orders);
             return performance;
         }
     }

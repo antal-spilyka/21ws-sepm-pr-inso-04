@@ -1,11 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,34 +16,34 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Service
-public class TicketServiceImpl implements TicketService {
-    TicketRepository ticketRepository;
+public class OrderServiceImpl implements OrderService {
+    OrderRepository orderRepository;
     UserRepository userRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public TicketServiceImpl(TicketRepository ticketRepository, UserRepository userRepository) {
-        this.ticketRepository = ticketRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository) {
+        this.orderRepository = orderRepository;
         this.userRepository = userRepository;
     }
 
     @Override
-    public List<Ticket> getAllReserved(String userEmail) {
+    public List<Order> getAllReserved(String userEmail) {
         LOGGER.debug("Get all reserved Tickets");
         ApplicationUser user = userRepository.findUserByEmail(userEmail);
         if (user == null) {
             throw new ServiceException("User not found");
         }
-        return ticketRepository.getTicketByUserAndBoughtFalse(user);
+        return orderRepository.getOrderByUserAndBoughtFalse(user);
     }
 
     @Override
-    public List<Ticket> getAllBought(String userEmail) {
+    public List<Order> getAllBought(String userEmail) {
         LOGGER.debug("Get all bought Tickets");
         ApplicationUser user = userRepository.findUserByEmail(userEmail);
         if (user == null) {
             throw new ServiceException("User not found");
         }
-        return ticketRepository.getTicketByUserAndBoughtTrue(user);
+        return orderRepository.getOrderByUserAndBoughtTrue(user);
     }
 }

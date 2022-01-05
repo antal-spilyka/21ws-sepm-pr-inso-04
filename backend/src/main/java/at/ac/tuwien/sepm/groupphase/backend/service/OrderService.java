@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 
 import java.util.List;
 
-public interface TicketService {
+public interface OrderService {
 
     /**
      * Method for returning all reserved tickets from the user.
@@ -13,7 +12,7 @@ public interface TicketService {
      * @param userEmail of the room
      * @return all the rooms stored in database
      */
-    List<Ticket> getAllReserved(String userEmail);
+    List<Order> getAllReserved(String userEmail);
 
     /**
      * Method for returning all bought tickets from the user.
@@ -21,5 +20,5 @@ public interface TicketService {
      * @param userEmail of the room
      * @return all the rooms stored in database
      */
-    List<Ticket> getAllBought(String userEmail);
+    List<Order> getAllBought(String userEmail);
 }

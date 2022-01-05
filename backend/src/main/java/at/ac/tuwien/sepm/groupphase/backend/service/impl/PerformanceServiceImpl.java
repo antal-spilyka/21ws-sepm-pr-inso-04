@@ -16,14 +16,16 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
@@ -55,13 +57,14 @@ public class PerformanceServiceImpl implements PerformanceService {
     EventRepository eventRepository;
     TicketRepository ticketRepository;
     UserRepository userRepository;
+    OrderRepository orderRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PerformanceServiceImpl(PerformanceRepository performanceRepository, ArtistRepository artistRepository,
                                   TicketRepository ticketRepository, HallRepository hallRepository, ArtistMapper artistMapper,
                                   HallMapper hallMapper, PerformanceMapper performanceMapper, EventMapper eventMapper,
-                                  EventRepository eventRepository, UserRepository userRepository) {
+                                  EventRepository eventRepository, UserRepository userRepository, OrderRepository orderRepository) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.hallRepository = hallRepository;
@@ -72,6 +75,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.eventRepository = eventRepository;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Transactional
@@ -212,6 +216,8 @@ public class PerformanceServiceImpl implements PerformanceService {
 
             // buy tickets
             List<Ticket> tickets = new ArrayList<>();
+            Order order = new Order();
+            double prize = 0;
             for (BasketSeatDto basketSeatDto : basket.getSeats()) {
                 Optional<HallplanElement> optionalHallplanElement = performance.getHall().getRows().stream().filter(
                     seat -> seat.getRowIndex() == basketSeatDto.getRowIndex()
@@ -233,12 +239,11 @@ public class PerformanceServiceImpl implements PerformanceService {
                 ticket.setPosition(optionalHallplanElement.get());
                 ticket.setPrice(optionalHallplanElement.get().getSector().getPrice());
                 ticket.setSector(optionalHallplanElement.get().getSector());
-                ticket.setBought(true);
                 ticket.setUsed(false);
-                ticket.setUser(applicationUser);
+                ticket.setOrder(order);
                 tickets.add(ticket);
+                prize = prize + ticket.getPrice();
             }
-            ticketRepository.saveAll(tickets);
 
             for (int i = 0; i < basket.getStandingPlaces(); i++) {
                 Ticket ticket = new Ticket();
@@ -247,11 +252,18 @@ public class PerformanceServiceImpl implements PerformanceService {
                 ticket.setPosition(null);
                 ticket.setSector(optionalSector.get());
                 ticket.setPrice(optionalSector.get().getPrice());
-                ticket.setBought(true);
                 ticket.setUsed(false);
-                ticket.setUser(applicationUser);
-                ticketRepository.save(ticket);
+                ticket.setOrder(order);
+                tickets.add(ticket);
+                prize = prize + ticket.getPrice();
             }
+            order.setDateOfOrder(LocalDateTime.now());
+            order.setPerformance(performance);
+            order.setUser(applicationUser);
+            order.setBought(true);
+            order.setPrize(prize);
+            orderRepository.save(order);
+            ticketRepository.saveAll(tickets);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -286,6 +298,8 @@ public class PerformanceServiceImpl implements PerformanceService {
 
             // reserve tickets
             List<Ticket> tickets = new ArrayList<>();
+            Order order = new Order();
+            double prize = 0;
             for (BasketSeatDto basketSeatDto : basket.getSeats()) {
                 Optional<HallplanElement> optionalHallplanElement = performance.getHall().getRows().stream().filter(
                     seat -> seat.getRowIndex() == basketSeatDto.getRowIndex()
@@ -307,12 +321,11 @@ public class PerformanceServiceImpl implements PerformanceService {
                 ticket.setPosition(optionalHallplanElement.get());
                 ticket.setPrice(optionalHallplanElement.get().getSector().getPrice());
                 ticket.setSector(optionalHallplanElement.get().getSector());
-                ticket.setBought(false);
                 ticket.setUsed(false);
-                ticket.setUser(applicationUser);
+                ticket.setOrder(order);
                 tickets.add(ticket);
+                prize = prize + ticket.getPrice();
             }
-            ticketRepository.saveAll(tickets);
 
             for (int i = 0; i < basket.getStandingPlaces(); i++) {
                 Ticket ticket = new Ticket();
@@ -321,11 +334,19 @@ public class PerformanceServiceImpl implements PerformanceService {
                 ticket.setPosition(null);
                 ticket.setSector(optionalSector.get());
                 ticket.setPrice(optionalSector.get().getPrice());
-                ticket.setBought(false);
                 ticket.setUsed(false);
-                ticket.setUser(applicationUser);
-                ticketRepository.save(ticket);
+                ticket.setOrder(order);
+                tickets.add(ticket);
+                prize = prize + ticket.getPrice();
             }
+            order.setDateOfOrder(LocalDateTime.now());
+            order.setPerformance(performance);
+            order.setUser(applicationUser);
+            order.setBought(false);
+            order.setPrize(prize);
+            order.setPerformance(performance);
+            orderRepository.save(order);
+            ticketRepository.saveAll(tickets);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
