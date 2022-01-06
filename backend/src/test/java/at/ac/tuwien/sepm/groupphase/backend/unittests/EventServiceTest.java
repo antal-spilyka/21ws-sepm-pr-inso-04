@@ -284,4 +284,16 @@ public class EventServiceTest {
         List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
         assertTrue(perfList.isEmpty());
     }
+
+    @Test
+    public void getGeneralSearch_for_invalid_String(){
+        List<Event> foundEvents = eventService.findGeneralEvents("" + Math.random());
+        assertTrue(foundEvents.isEmpty());
+    }
+
+    @Test
+    public void getGeneralSearch_for_valid_String(){
+        List<Event> foundEvents = eventService.findGeneralEvents("TestCategory");
+        assertFalse(foundEvents.isEmpty());
+    }
 }

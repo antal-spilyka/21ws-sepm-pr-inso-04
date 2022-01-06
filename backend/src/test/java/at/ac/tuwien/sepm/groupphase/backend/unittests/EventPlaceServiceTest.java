@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -25,9 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -102,5 +101,17 @@ public class EventPlaceServiceTest {
         eventLocationSearchDto.setCountry("SearchCountry");
         List<EventPlace> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
         assertFalse(events.isEmpty());
+    }
+
+    @Test
+    public void getGeneralSearch_for_invalid_String(){
+        List<EventPlace> foundEventPlaces = eventPlaceService.findGeneralEventLocation("" + Math.random());
+        assertTrue(foundEventPlaces.isEmpty());
+    }
+
+    @Test
+    public void getGeneralSearch_for_valid_String(){
+        List<EventPlace> foundEventPlaces = eventPlaceService.findGeneralEventLocation("TestCountry");
+        assertFalse(foundEventPlaces.isEmpty());
     }
 }

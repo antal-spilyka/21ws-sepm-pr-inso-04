@@ -206,4 +206,16 @@ public class PerformanceServiceTest {
         PerformanceDetailDto receivedPerformance = performanceService.findPerformanceById(1L);
         assertNotEquals(receivedPerformance, null);
     }
+
+    @Test
+    public void getGeneralSearch_for_invalid_String(){
+        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("" + Math.random());
+        assertTrue(foundPerformances.toList().isEmpty());
+    }
+
+    @Test
+    public void getGeneralSearch_for_valid_String(){
+        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("TestPerformanceByDateTimeHall");
+        assertFalse(foundPerformances.toList().isEmpty());
+    }
 }
