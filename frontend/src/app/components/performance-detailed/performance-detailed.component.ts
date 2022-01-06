@@ -29,7 +29,7 @@ export class PerformanceDetailedComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.performanceService.getPerformanceById(params['id']).subscribe(
-        (performance: PerformanceDetail) => {
+        performance => {
           this.performance = performance;
           this.performance.tickets = performance.tickets.map(ticket => ({
             ...ticket,

@@ -10,4 +10,5 @@ export class Performance {
   eventDto?: EventDto;
   artist: Artist;
   hall: Hall;
+  priceMultiplicant: number;
 }

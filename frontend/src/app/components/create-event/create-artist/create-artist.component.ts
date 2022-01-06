@@ -8,6 +8,8 @@ import {Hall} from '../../../dtos/hall';
 import {HallService} from '../../../services/hall.service';
 import {Performance} from '../../../dtos/performance';
 import { PerformanceService } from 'src/app/services/performance.service';
+import { AddArtistDialogComponent } from './add-artist-dialog/add-artist-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-artist',
@@ -33,24 +35,23 @@ export class CreateArtistComponent implements OnInit {
     name: [null, Validators.required],
     duration: [null, Validators.required],
     artistName: [null, Validators.required],
-    artistDescription: [null, Validators.required],
+    artistDescription: null,
     hallName: [null, Validators.required],
-    startTime: [this.now[0] + ':' + this.now[1], Validators.required]
+    startTime: [this.now[0] + ':' + this.now[1], Validators.required],
+    priceMultiplicant: [null, Validators.required]
   });
 
   constructor(
     private formBuilder: FormBuilder,
     private artistService: ArtistService,
     private hallService: HallService,
-    private performanceService: PerformanceService
+    private performanceService: PerformanceService,
+    private dialog: MatDialog
   ) {
     this.artists = this.form.get('artistName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => !this.isNewArtist ?
-        this.artistService.findArtist(name) :
-        new Observable<Artist[]>()
-      )
+      switchMap(name => this.artistService.findArtist(name))
     );
     this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),
@@ -58,18 +59,10 @@ export class CreateArtistComponent implements OnInit {
       switchMap(name => this.hallService.findHall(name)
       )
     );
+    this.form.controls.artistDescription.disable();
   }
 
   ngOnInit(): void {
-  }
-
-  handleNewArtist() {
-    this.isNewArtist = !this.isNewArtist;
-    if (this.isNewArtist) {
-      this.selectedArtist = null;
-      this.form.controls.artistName.setValue(null);
-      this.form.controls.artistDescription.setValue(null);
-    }
   }
 
   clearForm() {
@@ -79,9 +72,8 @@ export class CreateArtistComponent implements OnInit {
   }
 
   async addPerformance(formDirective: FormGroupDirective) {
-    console.log(formDirective);
     this.formDirective = formDirective;
-    if (!this.form.valid) {
+    if (this.form.invalid) {
       this.setErrorFlag('Please fill out the form.');
       return;
     }
@@ -112,6 +104,7 @@ export class CreateArtistComponent implements OnInit {
     this.selectedArtist = artist;
     this.form.controls.artistName.setValue(bandName);
     this.form.controls.artistDescription.setValue(description);
+    this.isNewArtist = false;
   }
 
   async submitArtistChanges() {
@@ -128,7 +121,6 @@ export class CreateArtistComponent implements OnInit {
     }
     this.artistService.createArtist(this.selectedArtist).subscribe({
       next: async next => {
-        console.log(next);
         this.selectedArtist = next;
       },
       error: error => {
@@ -152,6 +144,7 @@ export class CreateArtistComponent implements OnInit {
       artist: this.selectedArtist,
       hall: this.selectedHall,
       eventDto: this.event,
+      priceMultiplicant: this.form.value.priceMultiplicant
     } as Performance;
 
     this.performanceService.savePerformace(performance).subscribe({
@@ -170,6 +163,21 @@ export class CreateArtistComponent implements OnInit {
         this.clearForm();
       }
     });
+  }
+
+  openNewArtistDialog(event: any) {
+    event.preventDefault();
+    const dialogRef = this.dialog.open(AddArtistDialogComponent);
+    dialogRef.afterClosed().subscribe(
+      artist => {
+        if(artist.bandName && artist.description) {
+          this.form.controls.artistName.setValue(artist.bandName);
+          this.form.controls.artistDescription.setValue(artist.description);
+          this.selectedArtist = artist;
+          this.isNewArtist = true;
+        }
+      }
+    );
   }
 
   async addEvent() {
