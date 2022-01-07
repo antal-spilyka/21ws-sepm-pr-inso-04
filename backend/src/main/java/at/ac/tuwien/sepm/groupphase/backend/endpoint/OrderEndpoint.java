@@ -1,13 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SetOrderToBoughtDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,5 +54,14 @@ public class OrderEndpoint {
     public List<OrderDto> getAllOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}", email);
         return this.orderMapper.orderToOrderDto(orderService.getAll(email));
+    }
+
+    @PutMapping()
+    @PermitAll
+    public ResponseEntity<String> setToBought(@RequestBody SetOrderToBoughtDto setOrderToBoughtDto) {
+        LOGGER.info("PUT " + BASE_URL + "/{}", setOrderToBoughtDto);
+
+        orderService.setOrderToBought(setOrderToBoughtDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

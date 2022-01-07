@@ -4,12 +4,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrderDto {
+    private Long id;
     private PerformanceDto performanceDto;
     private UserDto userDto;
     private List<TicketSimpleDto> ticketSimpleDtos;
     private double price;
     private boolean bought;
     private LocalDateTime dateOfOrder;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public PerformanceDto getPerformanceDto() {
         return performanceDto;

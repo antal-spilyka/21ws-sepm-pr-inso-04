@@ -3,6 +3,7 @@ import {Performance} from './performance';
 import {TicketDetail} from './ticketDetail';
 
 export class Order {
+  id: number;
   performanceDto: Performance;
   userDto?: User;
   ticketDetailDtos: TicketDetail[];

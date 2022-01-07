@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 import {PaymentInformationPickComponent} from '../payment-information-pick/payment-information-pick.component';
 import {MatDialog} from '@angular/material/dialog';
 import {PaymentInformation} from '../../dtos/paymentInformation';
+import {SetOrderToBoughtDto} from "../../dtos/setOrderToBoughtDto";
 
 export interface DialogData {
   paymentInformations: PaymentInformation[];
@@ -71,6 +72,16 @@ export class OrdersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result != null) {
         console.log('HALLO' + result); // todo buchung persistieren
+        const setOrderToBought: SetOrderToBoughtDto = {orderId: order.id, paymentInformationId: result};
+        this.orderService.setOrderToBought(setOrderToBought).subscribe({
+          next: () => {
+            window.alert('Successfully bought the Ticket');
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            window.alert('Error during buying process: ' + error.error.message);
+          }
+        });
       }
     });
 }

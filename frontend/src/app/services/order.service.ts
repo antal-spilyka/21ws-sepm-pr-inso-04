@@ -3,6 +3,7 @@ import {Globals} from '../global/globals';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Order} from '../dtos/order';
+import {SetOrderToBoughtDto} from "../dtos/setOrderToBoughtDto";
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,15 @@ export class OrderService {
   getAllOrders(email: string): Observable<Order[]> {
     console.log('Load all orders');
     return this.httpClient.get<Order[]>(this.baseUri + '/' + email);
+  }
+
+  /**
+   * Method for setting an order to bought and update the paymentInformation for the order.
+   *
+   * @param setOrderToBoughtDto
+   */
+  setOrderToBought(setOrderToBoughtDto: SetOrderToBoughtDto): Observable<string> {
+    console.log('Set order to bought');
+    return this.httpClient.put(this.baseUri, setOrderToBoughtDto, {responseType: 'text'});
   }
 }

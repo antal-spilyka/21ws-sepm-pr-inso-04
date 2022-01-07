@@ -41,6 +41,7 @@ public class OrderMapper {
 
         OrderDto orderDto = new OrderDto();
         orderDto.setDateOfOrder(order.getDateOfOrder());
+        orderDto.setId(order.getId());
         orderDto.setPerformanceDto(performanceDto);
         orderDto.setPrice(order.getPrize());
         orderDto.setUserDto(userMapper.applicationUserToUserDto(order.getUser()));

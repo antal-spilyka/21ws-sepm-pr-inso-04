@@ -44,6 +44,10 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime dateOfOrder;
 
+    @ManyToOne
+    @JoinColumn(name = "paymentInformation_Id", referencedColumnName = "id")
+    private PaymentInformation paymentInformation;
+
     public Long getId() {
         return id;
     }
@@ -98,6 +102,14 @@ public class Order {
 
     public void setBought(boolean bought) {
         this.bought = bought;
+    }
+
+    public PaymentInformation getPaymentInformation() {
+        return paymentInformation;
+    }
+
+    public void setPaymentInformation(PaymentInformation paymentInformation) {
+        this.paymentInformation = paymentInformation;
     }
 
     @Override
