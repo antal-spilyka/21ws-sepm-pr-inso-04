@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketSimpleDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,36 +25,28 @@ public class TicketMapper {
         this.sectorMapper = sectorMapper;
     }
 
-    public List<TicketDetailDto> ticketToTicketDetailDto(List<Ticket> tickets) {
+    public List<TicketSimpleDto> ticketToTicketSimpleDto(List<Ticket> tickets) {
         LOGGER.trace("entityToDto(List<Ticket>)");
         if (tickets == null) {
             return null;
         }
-        List<TicketDetailDto> all = new ArrayList<>();
+        List<TicketSimpleDto> all = new ArrayList<>();
         for (int i = 0; i < tickets.size(); i++) {
-            all.add(this.ticketToTicketDetailDto(tickets.get(i)));
+            all.add(this.ticketToTicketSimpleDto(tickets.get(i)));
         }
         return all;
     }
 
-    public TicketDetailDto ticketToTicketDetailDto(Ticket ticket) {
+    public TicketSimpleDto ticketToTicketSimpleDto(Ticket ticket) {
         LOGGER.trace("entityToDto(Ticket)");
         if (ticket == null) {
             return null;
         }
-        PerformanceDto performanceDto = new PerformanceDto();
-        performanceDto.setId(ticket.getPerformance().getId());
-        performanceDto.setName(ticket.getPerformance().getName());
-        performanceDto.setStartTime(ticket.getPerformance().getStartTime());
-        performanceDto.setDuration(ticket.getPerformance().getDuration());
-        performanceDto.setArtist(artistMapper.entityToDto(ticket.getPerformance().getArtist()));
-        performanceDto.setHall(hallMapper.entityToDto(ticket.getPerformance().getHall()));
 
-        TicketDetailDto ticketDetailDto = new TicketDetailDto();
-        ticketDetailDto.setPerformanceDto(performanceDto);
-        ticketDetailDto.setTicketType(ticket.getTypeOfTicket());
-        ticketDetailDto.setPrice(ticket.getPrice());
-        return ticketDetailDto;
+        TicketSimpleDto ticketSimpleDto = new TicketSimpleDto();
+        ticketSimpleDto.setTicketType(ticket.getTypeOfTicket());
+        ticketSimpleDto.setPrice(ticket.getPrice());
+        return ticketSimpleDto;
     }
 
     public TicketDto ticketToTicketDto(Ticket ticket) {

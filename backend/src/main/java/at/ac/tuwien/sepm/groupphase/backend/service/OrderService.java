@@ -7,18 +7,26 @@ import java.util.List;
 public interface OrderService {
 
     /**
-     * Method for returning all reserved tickets from the user.
+     * Method for returning all reserved orders from the user.
      *
-     * @param userEmail of the room
-     * @return all the rooms stored in database
+     * @param userEmail of the order.
+     * @return all the orders stored in database
      */
     List<Order> getAllReserved(String userEmail);
 
     /**
-     * Method for returning all bought tickets from the user.
+     * Method for returning all bought orders from the user.
      *
-     * @param userEmail of the room
-     * @return all the rooms stored in database
+     * @param userEmail of the order.
+     * @return all the orders stored in database
      */
     List<Order> getAllBought(String userEmail);
+
+    /**
+     * Method for returning all orders from the user.
+     *
+     * @param userEmail of the order.
+     * @return all the orders stored in database
+     */
+    List<Order> getAll(String userEmail);
 }

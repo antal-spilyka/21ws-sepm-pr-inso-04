@@ -1,37 +1,49 @@
 import { Component, OnInit } from '@angular/core';
-import {TicketDetail} from '../../dtos/ticketDetail';
+import {Order} from '../../dtos/order';
 import {Router} from '@angular/router';
-import {TicketService} from '../../services/ticket.service';
+import {OrderService} from '../../services/order.service';
 import jwt_decode from 'jwt-decode';
+import {Performance} from '../../dtos/performance';
 
 @Component({
-  selector: 'app-tickets',
-  templateUrl: './tickets.component.html',
-  styleUrls: ['./tickets.component.scss']
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.scss']
 })
-export class TicketsComponent implements OnInit {
+export class OrdersComponent implements OnInit {
 
-  reservedTickets: TicketDetail[];
-  boughtTickets: TicketDetail[];
+  orders: Order[];
+  reserved: Order[];
+  bought: Order[];
+  displayedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
+
   error = false;
   errorMessage = '';
 
-  constructor(private router: Router, private ticketService: TicketService) { }
+  constructor(private router: Router, private orderService: OrderService) { }
 
   ngOnInit(): void {
-    this.loadTickets();
+    this.loadOrders();
   }
-
-  loadTickets(): void {
-    this.ticketService.getReservedTickets(this.getEmail()).subscribe(
-      (tickets: TicketDetail[]) => {
-        this.reservedTickets = tickets;
-        console.log(this.reservedTickets);
+  loadOrders(): void {
+    this.orderService.getAllOrders(this.getEmail()).subscribe(
+      (orders: Order[]) => {
+        this.orders = orders;
+        this.formatDate();
+        this.reserved = orders.filter(order => order.bought === false);
+        this.bought = orders.filter(order => order.bought === true);
       },
       error => {
         this.defaultServiceErrorHandling(error);
       }
     );
+  }
+
+  formatDate(): void {
+    console.log(this.orders);
+    for (const val of this.orders) {
+      val.dateOfOrder = new Date(val.dateOfOrder);
+    }
   }
 
   getEmail(): string {

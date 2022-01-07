@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public class OrderMapper {
         orderDto.setPrice(order.getPrize());
         orderDto.setUserDto(userMapper.applicationUserToUserDto(order.getUser()));
         orderDto.setBought(order.isBought());
-        orderDto.setTicketDetailDtos(ticketMapper.ticketToTicketDetailDto(order.getTickets()));
+        orderDto.setTicketDetailDtos(ticketMapper.ticketToTicketSimpleDto(order.getTickets()));
         return orderDto;
     }
 

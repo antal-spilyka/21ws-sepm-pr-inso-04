@@ -315,6 +315,7 @@ public class PerformanceServiceImpl implements PerformanceService {
                 ) {
                     throw new ServiceException("A Hallplan element is already sold");
                 }
+
                 Ticket ticket = new Ticket();
                 ticket.setPerformance(performance);
                 ticket.setTypeOfTicket("Seat");

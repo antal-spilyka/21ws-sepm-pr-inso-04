@@ -6,7 +6,7 @@ import java.util.List;
 public class OrderDto {
     private PerformanceDto performanceDto;
     private UserDto userDto;
-    private List<TicketDetailDto> ticketDetailDtos;
+    private List<TicketSimpleDto> ticketSimpleDtos;
     private double price;
     private boolean bought;
     private LocalDateTime dateOfOrder;
@@ -27,12 +27,12 @@ public class OrderDto {
         this.userDto = userDto;
     }
 
-    public List<TicketDetailDto> getTicketDetailDtos() {
-        return ticketDetailDtos;
+    public List<TicketSimpleDto> getTicketDetailDtos() {
+        return ticketSimpleDtos;
     }
 
-    public void setTicketDetailDtos(List<TicketDetailDto> ticketDetailDtos) {
-        this.ticketDetailDtos = ticketDetailDtos;
+    public void setTicketDetailDtos(List<TicketSimpleDto> ticketSimpleDtos) {
+        this.ticketSimpleDtos = ticketSimpleDtos;
     }
 
     public double getPrice() {

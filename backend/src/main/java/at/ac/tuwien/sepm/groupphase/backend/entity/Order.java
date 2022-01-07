@@ -22,7 +22,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "performance_Id", referencedColumnName = "id")
     private Performance performance;
 
@@ -31,7 +31,7 @@ public class Order {
     private ApplicationUser user;
 
     @OneToMany(cascade = CascadeType.REMOVE,
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         mappedBy = "order")
     private List<Ticket> tickets = new ArrayList<>();
 

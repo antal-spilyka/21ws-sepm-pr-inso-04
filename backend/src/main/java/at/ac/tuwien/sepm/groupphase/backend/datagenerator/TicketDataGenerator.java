@@ -146,7 +146,7 @@ public class TicketDataGenerator {
                 long maxDay = Timestamp.valueOf("2050-12-31 23:59:59").getTime();
                 long diff = maxDay - minDay + 1;
                 final LocalDateTime dateTime = new Timestamp(minDay + (long) (Math.random() * diff)).toLocalDateTime();
-                paymentInformation.setCreditCardExpirationDate(dateTime.toString());
+                paymentInformation.setCreditCardExpirationDate(dateTime.getMonth().toString() + dateTime.getYear());
                 paymentInformation.setCreditCardName("First " + i + " Last " + i);
                 paymentInformationRepository.save(paymentInformation);
             }
@@ -179,13 +179,11 @@ public class TicketDataGenerator {
                 final long id = i % 200 == 0 ? 1 : i % 200;
 
                 Order order = new Order();
-                LOGGER.info("HAAAALLLLLOOOOO");
                 order.setPerformance(performanceRepository.getById(id));
                 order.setPrize(price);
                 order.setDateOfOrder(LocalDateTime.now());
                 order.setBought(getRandomDecision(this.decision));
                 order.setUser(userRepository.getById(id));
-                LOGGER.info("HAAAAALLLOOOO222222");
                 orderRepository.save(order);
 
                 // TypeOfTicket

@@ -26,4 +26,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @throws javax.persistence.PersistenceException when unknown error occurs
      */
     List<Order> getOrderByUserAndBoughtFalse(ApplicationUser user);
+
+    /**
+     * Get all Order by user.
+     *
+     * @param user of the user
+     * @return List of orders with corresponding user
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
+    List<Order> getOrderByUser(ApplicationUser user);
 }

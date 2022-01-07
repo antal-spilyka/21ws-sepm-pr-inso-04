@@ -42,7 +42,7 @@ public class Ticket {
     @ManyToOne(fetch = FetchType.EAGER)
     private Sector sector;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "performance_id", referencedColumnName = "id")
     private Performance performance;
 

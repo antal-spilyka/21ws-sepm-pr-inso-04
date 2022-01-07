@@ -15,12 +15,12 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/tickets")
+@RequestMapping("/api/v1/orders")
 public class OrderEndpoint {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    public static final String BASE_URL = "/api/v1/tickets";
+    public static final String BASE_URL = "/api/v1/orders";
 
     @Autowired
     public OrderEndpoint(OrderService orderService, OrderMapper orderMapper) {
@@ -29,14 +29,20 @@ public class OrderEndpoint {
     }
 
     @GetMapping("/{email}/reserved")
-    public List<OrderDto> getReservedTickets(@PathVariable String email) {
+    public List<OrderDto> getReservedOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/reserved", email);
         return this.orderMapper.orderToOrderDto(orderService.getAllReserved(email));
     }
 
     @GetMapping("/{email}/bought")
-    public List<OrderDto> getBoughtTickets(@PathVariable String email) {
+    public List<OrderDto> getBoughtOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/bought", email);
         return this.orderMapper.orderToOrderDto(orderService.getAllBought(email));
+    }
+
+    @GetMapping("/{email}")
+    public List<OrderDto> getAllOrders(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/{}", email);
+        return this.orderMapper.orderToOrderDto(orderService.getAll(email));
     }
 }

@@ -67,7 +67,7 @@ import {
 } from './components/create-hallplan/components/remove-section-dialog/remove-section-dialog.component';
 import { BookPerformanceComponent } from './components/book-performance/book-performance.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { TicketsComponent } from './components/tickets/tickets.component';
+import { OrdersComponent } from './components/orders/orders.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +107,7 @@ import { TicketsComponent } from './components/tickets/tickets.component';
     CreateEventPlacesComponent,
     AddHallDialogComponent,
     BookPerformanceComponent,
-    TicketsComponent
+    OrdersComponent
   ],
   imports: [
     BrowserModule,

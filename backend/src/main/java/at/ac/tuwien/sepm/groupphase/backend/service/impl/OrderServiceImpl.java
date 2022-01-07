@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -28,8 +29,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public List<Order> getAllReserved(String userEmail) {
-        LOGGER.debug("Get all reserved Tickets");
+        LOGGER.debug("Get all reserved orders");
         ApplicationUser user = userRepository.findUserByEmail(userEmail);
         if (user == null) {
             throw new ServiceException("User not found");
@@ -38,12 +40,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public List<Order> getAllBought(String userEmail) {
-        LOGGER.debug("Get all bought Tickets");
+        LOGGER.debug("Get all bought orders");
         ApplicationUser user = userRepository.findUserByEmail(userEmail);
         if (user == null) {
             throw new ServiceException("User not found");
         }
         return orderRepository.getOrderByUserAndBoughtTrue(user);
+    }
+
+    @Override
+    @Transactional
+    public List<Order> getAll(String userEmail) {
+        LOGGER.debug("Get all orders");
+        ApplicationUser user = userRepository.findUserByEmail(userEmail);
+        if (user == null) {
+            throw new ServiceException("User not found");
+        }
+        return orderRepository.getOrderByUser(user);
     }
 }

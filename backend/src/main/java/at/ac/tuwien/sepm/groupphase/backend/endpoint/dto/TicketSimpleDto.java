@@ -2,18 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import java.util.Objects;
 
-public class TicketDetailDto {
-    PerformanceDto performanceDto;
+public class TicketSimpleDto {
     String ticketType;
     double price;
-
-    public PerformanceDto getPerformanceDto() {
-        return performanceDto;
-    }
-
-    public void setPerformanceDto(PerformanceDto performanceDto) {
-        this.performanceDto = performanceDto;
-    }
 
     public String getTicketType() {
         return ticketType;
