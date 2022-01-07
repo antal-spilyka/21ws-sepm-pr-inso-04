@@ -36,10 +36,10 @@ public class Performance {
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
 
-    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Ticket> tickets;
 
     @OneToOne(fetch = FetchType.EAGER)

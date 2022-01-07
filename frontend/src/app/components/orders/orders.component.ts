@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Order} from '../../dtos/order';
 import {Router} from '@angular/router';
 import {OrderService} from '../../services/order.service';
 import jwt_decode from 'jwt-decode';
-import {Performance} from '../../dtos/performance';
+import {PaymentInformationPickComponent} from '../payment-information-pick/payment-information-pick.component';
+import {MatDialog} from '@angular/material/dialog';
+import {PaymentInformation} from '../../dtos/paymentInformation';
+
+export interface DialogData {
+  paymentInformations: PaymentInformation[];
+}
 
 @Component({
   selector: 'app-orders',
@@ -15,16 +21,19 @@ export class OrdersComponent implements OnInit {
   orders: Order[];
   reserved: Order[];
   bought: Order[];
-  displayedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
+  reservedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'buyButton'];
+  boughtColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
 
   error = false;
   errorMessage = '';
 
-  constructor(private router: Router, private orderService: OrderService) { }
+  constructor(public dialog: MatDialog, private router: Router, private orderService: OrderService) {
+  }
 
   ngOnInit(): void {
     this.loadOrders();
   }
+
   loadOrders(): void {
     this.orderService.getAllOrders(this.getEmail()).subscribe(
       (orders: Order[]) => {
@@ -43,6 +52,7 @@ export class OrdersComponent implements OnInit {
     console.log(this.orders);
     for (const val of this.orders) {
       val.dateOfOrder = new Date(val.dateOfOrder);
+      val.price = Number(val.price.toFixed(2));
     }
   }
 
@@ -50,6 +60,20 @@ export class OrdersComponent implements OnInit {
     const decoded: any = jwt_decode(localStorage.getItem('authToken'));
     return decoded.sub;
   }
+
+  buyTicket(order: Order) {
+    console.log(order.userDto.paymentInformation);
+    const dialogRef = this.dialog.open(PaymentInformationPickComponent, {
+      width: '50%',
+      data: {paymentInformations: order.userDto.paymentInformation},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null) {
+        console.log('HALLO' + result); // todo buchung persistieren
+      }
+    });
+}
 
   /**
    * Error flag will be deactivated, which clears the error message

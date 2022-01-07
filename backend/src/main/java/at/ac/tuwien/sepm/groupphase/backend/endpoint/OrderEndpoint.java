@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -29,18 +30,21 @@ public class OrderEndpoint {
     }
 
     @GetMapping("/{email}/reserved")
+    @PermitAll
     public List<OrderDto> getReservedOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/reserved", email);
         return this.orderMapper.orderToOrderDto(orderService.getAllReserved(email));
     }
 
     @GetMapping("/{email}/bought")
+    @PermitAll
     public List<OrderDto> getBoughtOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}/bought", email);
         return this.orderMapper.orderToOrderDto(orderService.getAllBought(email));
     }
 
     @GetMapping("/{email}")
+    @PermitAll
     public List<OrderDto> getAllOrders(@PathVariable String email) {
         LOGGER.info("GET " + BASE_URL + "/{}", email);
         return this.orderMapper.orderToOrderDto(orderService.getAll(email));

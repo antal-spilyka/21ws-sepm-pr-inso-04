@@ -68,6 +68,7 @@ import {
 import { BookPerformanceComponent } from './components/book-performance/book-performance.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { OrdersComponent } from './components/orders/orders.component';
+import { PaymentInformationPickComponent } from './components/payment-information-pick/payment-information-pick.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { OrdersComponent } from './components/orders/orders.component';
     CreateEventPlacesComponent,
     AddHallDialogComponent,
     BookPerformanceComponent,
-    OrdersComponent
+    OrdersComponent,
+    PaymentInformationPickComponent
   ],
   imports: [
     BrowserModule,
