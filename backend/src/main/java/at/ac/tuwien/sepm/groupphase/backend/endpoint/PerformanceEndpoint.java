@@ -50,6 +50,7 @@ public class PerformanceEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/general-search")
     @Operation(summary = "Find events by search parameters.")
+    @Transactional
     public Stream<PerformanceDto> findGeneralEventsByDateTime(@Validated String searchQuery) {
         LOGGER.info("GET " + BASE_URL + "/search " + searchQuery);
         return this.performanceService.findGeneralPerformanceByDateTime(searchQuery);
@@ -58,6 +59,7 @@ public class PerformanceEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/search")
     @Operation(summary = "Find events by search parameters.")
+    @Transactional
     public Stream<PerformanceDto> findEventsByDateTime(@Validated PerformanceSearchDto performanceSearchDto) {
         LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto.toString());
         return this.performanceService.findPerformanceByDateTime(performanceSearchDto);
@@ -66,6 +68,7 @@ public class PerformanceEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/artist/{id}")
     @Operation(summary = "Find performances for specified artist.")
+    @Transactional
     public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
         LOGGER.info("GET " + BASE_URL + "/id {}", id);
         return this.performanceService.findPerformanceForArtist(id);
@@ -74,6 +77,7 @@ public class PerformanceEndpoint {
     @GetMapping(value = "/{id}")
     @PermitAll
     @Operation(summary = "Find specific performance.")
+    @Transactional
     public PerformanceDetailDto findPerformance(@PathVariable("id") Long id) {
         LOGGER.info("GET " + BASE_URL + "/id {}", id);
         return this.performanceService.findPerformanceById(id);

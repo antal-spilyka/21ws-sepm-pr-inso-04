@@ -18,11 +18,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
-    @Query("SELECT distinct p FROM Performance p  WHERE (p.startTime <= :dateTimeTill AND p.startTime >= :dateTimeFrom) " +
+    @Query("SELECT distinct p FROM Performance p, IN(p.hall.sectors) sec  WHERE (p.startTime <= :dateTimeTill AND p.startTime >= :dateTimeFrom) " +
         "AND (:hall is null OR :hall='' OR UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
         "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))" +
-        "AND (:price is null OR (:price+10>=(SELECT sec.price FROM Sector sec WHERE sec IN (SELECT sector FROM p.hall.sectors sector)) " +
-        "AND :price-10<=(SELECT sec.price FROM Sector sec WHERE sec IN (SELECT sector FROM p.hall.sectors sector))))")
+        "AND (:price is null OR (:price+10 >= sec.price AND :price-10 <= sec.price))")
     List<Performance> findPerformanceByDateTime(@Param("dateTimeFrom") LocalDateTime dateTimeFrom,
                                                 @Param("dateTimeTill") LocalDateTime dateTimeTill,
                                                 @Param("eventName") String eventName, @Param("hall") String hall,
@@ -30,11 +29,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
                                                 Pageable pageable);
 
 
-    @Query("SELECT distinct p FROM Performance p  WHERE (:hall is null OR :hall='' OR " +
+    @Query("SELECT distinct p FROM Performance p, IN(p.hall.sectors) sec  WHERE (:hall is null OR :hall='' OR " +
         "UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
         "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))" +
-        "AND (:price is null OR (:price+10 >= (SELECT sec.price FROM Sector sec)" +
-        "AND :price-10 <= (SELECT sec.price FROM Sector sec WHERE sec IN (SELECT sector FROM p.hall.sectors sector))))")
+        "AND (:price is null OR (:price+10 >= sec.price AND :price-10 <= sec.price))")
     List<Performance> findPerformanceByEventAndHall(@Param("eventName") String eventName, @Param("hall") String hall,
                                                     @Param("price") Integer price, Pageable pageable);
 

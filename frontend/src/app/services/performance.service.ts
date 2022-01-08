@@ -25,11 +25,12 @@ export class PerformanceService {
    */
   findPerformanceByDateTime(searchEvent: PerformanceSearchDto): Observable<Performance[]> {
     let params = new HttpParams();
-    if (searchEvent.startTime && searchEvent.startTime !== '') {
-      params = params.set('startTime', searchEvent.startTime);
-    }
     if (searchEvent.eventName && searchEvent.eventName !== '') {
       params = params.set('eventName', searchEvent.eventName.trim());
+    }
+    if (searchEvent.startTime && searchEvent.startTime !== '') {
+      params = params.set('startTime', searchEvent.startTime);
+      console.log('COMMEE: ' + searchEvent.startTime);
     }
     if (searchEvent.hallName && searchEvent.hallName !== '') {
       params = params.set('hallName', searchEvent.hallName.trim());

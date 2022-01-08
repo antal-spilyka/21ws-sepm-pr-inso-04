@@ -148,6 +148,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     }
 
     @Override
+    @Transactional
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
         LOGGER.info("Handling in Service {}", performanceSearchDto);
         try {
@@ -169,6 +170,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     }
 
     @Override
+    @Transactional
     public Stream<PerformanceDto> findGeneralPerformanceByDateTime(String searchQuery) {
         LOGGER.debug("Handling in Service {}", searchQuery);
         try {
@@ -182,6 +184,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     }
 
     @Override
+    @Transactional
     public Stream<PerformanceDto> findPerformanceForArtist(Long id) {
         LOGGER.debug("Handling in service {}", id);
         try {

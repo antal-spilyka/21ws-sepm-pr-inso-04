@@ -57,9 +57,9 @@ export class SearchTimeComponent implements OnInit {
         {
           next: performances => {
             this.submitted = true;
-            console.log(this.performanceList);
+            //console.log(this.performanceList);
             this.performanceList = performances;
-            console.log(this.performanceList);
+            //console.log(this.performanceList);
           }, error: error => this.handleError(error)
         }
       );
