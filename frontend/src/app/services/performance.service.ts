@@ -34,6 +34,9 @@ export class PerformanceService {
     if (searchEvent.hallName && searchEvent.hallName !== '') {
       params = params.set('hallName', searchEvent.hallName.trim());
     }
+    if (searchEvent.price !== null){
+      params = params.set('price', searchEvent.price);
+    }
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/search', {params});
   }
 

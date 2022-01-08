@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class SearchTimeComponent implements OnInit {
   performanceSearchDto: PerformanceSearchDto = {
-    eventName: '', startTime: '', hallName: '',
+    eventName: '', startTime: '', hallName: '', price: null,
   };
   performanceList: Performance[] = [];
   detailedSearch = false;

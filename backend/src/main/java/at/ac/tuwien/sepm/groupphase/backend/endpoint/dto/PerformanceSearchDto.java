@@ -6,6 +6,15 @@ public class PerformanceSearchDto {
     private String eventName;
     private LocalDateTime startTime;
     private String hallName;
+    private Integer price;
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public String getEventName() {
         return eventName;
@@ -37,6 +46,7 @@ public class PerformanceSearchDto {
             "eventName='" + eventName + '\'' +
             ", startTime=" + startTime +
             ", hallName='" + hallName + '\'' +
+            ", price=" + price +
             '}';
     }
 }

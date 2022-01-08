@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.*;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,14 +53,17 @@ public class PerformanceServiceTest {
     @Autowired
     private PerformanceService performanceService;
 
+    @Autowired
+    private HallMapper hallMapper;
+
     private HallDto hallDto;
-    private Hall hall;
+    private Hall hall, testHall;
     private AddressDto addressDto;
     private EventPlaceDto eventPlaceDto;
     private EventPlace eventPlace;
     private Artist artist;
-    private Event event;
-    private Performance performance;
+    private Event event, testEvent;
+    private Performance performance, testPerformance;
     private List<Performance> performances = new ArrayList<>();
 
     @BeforeAll
@@ -100,23 +105,47 @@ public class PerformanceServiceTest {
         performance.setDuration(50L);
         performance.setEvent(event);
         performance.setArtist(artist);
-        performance.setHall(hall);
+        performance.setHall(this.hall);
         performance.setEvent(this.event);
         this.performances.add(performance);
         event.setPerformances(this.performances);
-        eventService.saveEvent(eventMapper.entityToDto(event));
+        HallAddDto hallAddDto = new HallAddDto();
+
+        SectorDto sectorDto = new SectorDto();
+        sectorDto.setName("testSecName");
+        sectorDto.setColor("blue");
+        sectorDto.setPrice(100);
+
+        SectorDto[] sectors = new SectorDto[]{sectorDto};
+        List<Sector> sectorList = new ArrayList<>();
+        Sector sector = new Sector();
+        sector.setName("testSecName");
+        sector.setColor("blue");
+        sector.setPrice(100);
+        sectorList.add(sector);
+        hallAddDto.setName("hallAdd");
+        hallAddDto.setSectors(sectors);
+        //eventPlaceService.addHall(eventPlaceMapper.entityToDto(this.eventPlace).getId().toString(), hallAddDto);
+
+        this.hall.setSectors(sectorList);
+        testHall = hallService.save(hallMapper.entityToDto(hall));
+        performance.setHall(this.testHall);
+        testEvent = eventService.saveEvent(eventMapper.entityToDto(event));
+        testPerformance = performanceService.save(performanceMapper.entityToDto(performance, eventMapper.entityToDto(testEvent)), testEvent);
     }
 
     @Test
-    public void searchByDateTime_findPerformances(){
+    @Transactional
+    public void searchByDateTime_findPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
         searchParams.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
         searchParams.setEventName("PerformanceByDateTime");
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertFalse(performances.toList().isEmpty());
     }
+
     @Test
-    public void searchByDateTime_findNoPerformances(){
+    public void searchByDateTime_findNoPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
         searchParams.setEventName("" + Math.random());
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
@@ -124,7 +153,7 @@ public class PerformanceServiceTest {
     }
 
     @Test
-    public void getPerformances_forExistingArtist(){
+    public void getPerformances_forExistingArtist() {
         AddressDto testAddressDto = new AddressDto();
         testAddressDto.setZip("111");
         testAddressDto.setState("TestPerformanceByArtistState");
@@ -181,19 +210,19 @@ public class PerformanceServiceTest {
     }
 
     @Test
-    public void getPerformances_forNotExistingArtist(){
+    public void getPerformances_forNotExistingArtist() {
         Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(-1L);
         assertTrue(performances.toList().isEmpty());
     }
 
     @Test
-    public void getPerformance_byNotExistingId(){
+    public void getPerformance_byNotExistingId() {
         PerformanceDetailDto performance = performanceService.findPerformanceById(-1L);
         assertNull(performance);
     }
 
     @Test
-    public void getPerformance_byExistingId(){
+    public void getPerformance_byExistingId() {
         /*Performance testPerformance = new Performance(this.performance.getId(), this.performance.getName(), this.performance.getStartTime(),
             this.performance.getDuration(), this.performance.getEvent(), this.performance.getArtist(), this.performance.getHall());
         PerformanceDto testPerformanceDto = performanceMapper.entityToDto(this.performance, eventMapper.entityToDto(this.performance.getEvent()));
@@ -209,14 +238,40 @@ public class PerformanceServiceTest {
     }
 
     @Test
-    public void getGeneralSearch_for_invalid_String(){
+    public void getGeneralSearch_for_invalid_String() {
         Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("" + Math.random());
         assertTrue(foundPerformances.toList().isEmpty());
     }
 
     @Test
-    public void getGeneralSearch_for_valid_String(){
+    @Transactional
+    public void getGeneralSearch_for_valid_String() {
         Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("TestPerformanceByDateTimeHall");
         assertFalse(foundPerformances.toList().isEmpty());
     }
+
+    @Test
+    @Transactional
+    public void searchByPrice_findPerformances() {
+        System.out.println("INFOOOOOOOOOOOOOOOOOOOOOO" + this.performance.toString());
+        PerformanceSearchDto performanceSearchDto = new PerformanceSearchDto();
+        performanceSearchDto.setPrice(100);
+        Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(performanceSearchDto);
+        List<PerformanceDto> copyPerformances = performances.toList();
+        System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEESULTTTT:  " + copyPerformances.toString());
+        assertFalse(copyPerformances.isEmpty());
+    }
+
+    @Test
+    @Transactional
+    public void getSectors_forPrice() {
+        this.performance.setEvent(null);
+        //Performance copyPerformance = performanceService.save(performanceMapper.entityToDto(this.performance, eventMapper.entityToDto(testEvent)));
+
+        List<Sector> sectors = performanceService.testPrice(100);
+        System.out.println("TEEEEEEEEEEEESTPERFORMANCE: " + testPerformance.toString());
+        System.out.println("SEEEEEEEEEEECTORSSSSSS: " + sectors.toString());
+        assertFalse(sectors.isEmpty());
+    }
+
 }

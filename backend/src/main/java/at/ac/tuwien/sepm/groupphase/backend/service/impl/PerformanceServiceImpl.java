@@ -22,12 +22,14 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
@@ -59,6 +61,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     EventRepository eventRepository;
     TicketRepository ticketRepository;
     UserRepository userRepository;
+    SectorRepository sectorRepository;
     OrderRepository orderRepository;
     PaymentInformationRepository paymentInformationRepository;
 
@@ -67,7 +70,8 @@ public class PerformanceServiceImpl implements PerformanceService {
     public PerformanceServiceImpl(PerformanceRepository performanceRepository, ArtistRepository artistRepository,
                                   TicketRepository ticketRepository, HallRepository hallRepository, ArtistMapper artistMapper,
                                   HallMapper hallMapper, PerformanceMapper performanceMapper, EventMapper eventMapper,
-                                  EventRepository eventRepository, UserRepository userRepository, OrderRepository orderRepository,
+                                  EventRepository eventRepository, UserRepository userRepository, SectorRepository sectorRepository,
+                                  OrderRepository orderRepository,
                                   PaymentInformationRepository paymentInformationRepository) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
@@ -79,6 +83,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.eventRepository = eventRepository;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
+        this.sectorRepository = sectorRepository;
         this.orderRepository = orderRepository;
         this.paymentInformationRepository = paymentInformationRepository;
     }
@@ -144,17 +149,17 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     @Override
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
-        LOGGER.debug("Handling in Service {}", performanceSearchDto);
+        LOGGER.info("Handling in Service {}", performanceSearchDto);
         try {
             List<Performance> performances;
             if (performanceSearchDto.getStartTime() != null) {
                 LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);
                 LocalDateTime dateTimeTill = performanceSearchDto.getStartTime().plusMinutes(30);
                 performances = performanceRepository.findPerformanceByDateTime(dateTimeFrom,
-                    dateTimeTill, performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), PageRequest.of(0, 10));
+                    dateTimeTill, performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(0, 10));
             } else {
                 performances = performanceRepository.findPerformanceByEventAndHall(performanceSearchDto.getEventName(),
-                    performanceSearchDto.getHallName(), PageRequest.of(0, 10));
+                    performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(0, 10));
             }
             LOGGER.info(performances.toString());
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
@@ -374,5 +379,12 @@ public class PerformanceServiceImpl implements PerformanceService {
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    @Transactional
+    public List<Sector> testPrice(Integer price) {
+        List<Sector> sectors = sectorRepository.getSectorForPrice(price);
+        return sectors;
     }
 }

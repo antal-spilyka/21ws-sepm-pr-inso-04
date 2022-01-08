@@ -16,7 +16,7 @@ public class SectorDto {
 
     @NotNull(message = "Price must not be null")
     @DecimalMin("0.0")
-    private double price;
+    private Integer price;
 
     @Null
     private Long id;
@@ -37,11 +37,11 @@ public class SectorDto {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

@@ -6,8 +6,10 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface PerformanceService {
@@ -25,6 +27,8 @@ public interface PerformanceService {
     PerformanceDetailDto findPerformanceById(Long id);
 
     void buySeats(BasketDto basket, Long performanceId, Principal principal);
+
+    List<Sector> testPrice(Integer price);
 
     void reserveSeats(BasketDto basket, Long performanceId, Principal principal);
 }

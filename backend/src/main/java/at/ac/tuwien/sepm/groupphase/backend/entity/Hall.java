@@ -27,14 +27,15 @@ public class Hall {
     @ManyToOne()
     private EventPlace eventPlace;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Sector> sectors;
 
     @OneToMany(cascade = CascadeType.REMOVE,
         fetch = FetchType.LAZY)
     private List<HallplanElement> rows;
 
-    public Hall() {}
+    public Hall() {
+    }
 
     public Hall(Long id, String name, EventPlace eventPlace) {
         this.id = id;
@@ -113,6 +114,7 @@ public class Hall {
             "id=" + id +
             ", name='" + name + '\'' +
             ", eventPlace=" + eventPlace +
+            ", sectors" + sectors.toString() +
             '}';
     }
 
