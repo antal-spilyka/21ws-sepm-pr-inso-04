@@ -36,7 +36,10 @@ public class Performance {
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
 
-    @OneToMany(mappedBy = "performance", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Ticket> tickets;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -44,6 +47,9 @@ public class Performance {
 
     @OneToOne(fetch = FetchType.EAGER)
     private Hall hall;
+
+    @Column(nullable = false)
+    private Long priceMultiplicant;
 
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
                        Event event, Artist artist, Hall hall) {
@@ -125,6 +131,22 @@ public class Performance {
         this.tickets = tickets;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public Long getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Long priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -135,6 +157,8 @@ public class Performance {
             ", artist=" + artist +
             ", hall=" + hall +
             ", tickets=" + tickets +
+            ", orders=" + orders +
+            ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }
 
@@ -150,12 +174,14 @@ public class Performance {
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
             && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
             && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall) && Objects.equals(tickets, that.tickets);
+            && Objects.equals(hall, that.hall) && Objects.equals(orders, that.orders)
+            && Objects.equals(tickets, that.tickets)
+            && Objects.equals(priceMultiplicant, that.priceMultiplicant);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, event, artist, hall, tickets);
+        return Objects.hash(id, name, startTime, duration, event, orders, tickets, artist, hall);
     }
 
     public static final class PerformanceBuilder {
@@ -166,7 +192,9 @@ public class Performance {
         private Event event;
         private Artist artist;
         private Hall hall;
+        private List<Order> orders;
         private List<Ticket> tickets;
+        private Long priceMultiplicant;
 
         private PerformanceBuilder() {
         }
@@ -215,6 +243,16 @@ public class Performance {
             return this;
         }
 
+        public Performance.PerformanceBuilder withOrders(List<Order> orders) {
+            this.orders = orders;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withPriceMultiplicant(Long priceMultiplicant) {
+            this.priceMultiplicant = priceMultiplicant;
+            return this;
+        }
+
         public Performance build() {
             Performance performance = new Performance();
             performance.setId(id);
@@ -226,6 +264,8 @@ public class Performance {
             performance.setArtist(artist);
             performance.setHall(hall);
             performance.setTickets(tickets);
+            performance.setOrders(orders);
+            performance.setPriceMultiplicant(priceMultiplicant);
             return performance;
         }
     }

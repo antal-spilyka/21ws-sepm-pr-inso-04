@@ -5,6 +5,7 @@ import {Globals} from '../global/globals';
 import {PerformanceSearchDto} from '../dtos/performanceSearchDto';
 import {Performance} from '../dtos/performance';
 import {Basket} from '../dtos/basket';
+import { PerformanceDetail } from '../dtos/performance-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +49,8 @@ export class PerformanceService {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
   }
 
-  getPerformanceById(id: number): Observable<Performance> {
-    return this.httpClient.get<Performance>(this.messageBaseUri + '/' + id);
+  getPerformanceById(id: number): Observable<PerformanceDetail> {
+    return this.httpClient.get<PerformanceDetail>(this.messageBaseUri + '/' + id);
   }
 
   savePerformace(performance: Performance): Observable<Performance> {
@@ -58,5 +59,9 @@ export class PerformanceService {
 
   buyPerformance(id: number, basket: Basket) {
     return this.httpClient.post<void>(this.messageBaseUri + '/buy/' + id, basket);
+  }
+
+  reservePerformance(id: number, basket: Basket) {
+    return this.httpClient.post<void>(this.messageBaseUri + '/reserve/' + id, basket);
   }
 }

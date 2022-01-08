@@ -25,4 +25,6 @@ public interface PerformanceService {
     PerformanceDetailDto findPerformanceById(Long id);
 
     void buySeats(BasketDto basket, Long performanceId, Principal principal);
+
+    void reserveSeats(BasketDto basket, Long performanceId, Principal principal);
 }
