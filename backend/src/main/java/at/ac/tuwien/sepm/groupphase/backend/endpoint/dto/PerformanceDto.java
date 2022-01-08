@@ -11,6 +11,7 @@ public class PerformanceDto {
     private EventDto eventDto;
     private ArtistDto artist;
     private HallDto hall;
+    private Long priceMultiplicant;
 
     public Long getId() {
         return id;
@@ -68,6 +69,14 @@ public class PerformanceDto {
         this.hall = hall;
     }
 
+    public Long getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Long priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -79,12 +88,12 @@ public class PerformanceDto {
         PerformanceDto that = (PerformanceDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(startTime, that.startTime)
                && Objects.equals(duration, that.duration) && Objects.equals(eventDto, that.eventDto) && Objects.equals(artist, that.artist)
-               && Objects.equals(hall, that.hall);
+               && Objects.equals(hall, that.hall) && Objects.equals(priceMultiplicant, that.priceMultiplicant);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, eventDto, artist, hall);
+        return Objects.hash(id, name, startTime, duration, eventDto, artist, hall, priceMultiplicant);
     }
 
     @Override
@@ -97,6 +106,7 @@ public class PerformanceDto {
             ", event=" + null +
             ", artist=" + artist +
             ", hall=" + hall +
+            ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }
 }

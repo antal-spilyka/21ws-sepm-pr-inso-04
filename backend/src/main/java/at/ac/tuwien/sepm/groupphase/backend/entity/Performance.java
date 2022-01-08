@@ -48,6 +48,9 @@ public class Performance {
     @OneToOne(fetch = FetchType.EAGER)
     private Hall hall;
 
+    @Column(nullable = false)
+    private Long priceMultiplicant;
+
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
                        Event event, Artist artist, Hall hall) {
         this.id = id;
@@ -136,6 +139,14 @@ public class Performance {
         this.orders = orders;
     }
 
+    public Long getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Long priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -147,6 +158,7 @@ public class Performance {
             ", hall=" + hall +
             ", tickets=" + tickets +
             ", orders=" + orders +
+            ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }
 
@@ -155,14 +167,16 @@ public class Performance {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Performance)) {
             return false;
         }
         Performance that = (Performance) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-            && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration) && Objects.equals(event, that.event)
-            && Objects.equals(orders, that.orders) && Objects.equals(tickets, that.tickets) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall);
+            && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
+            && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
+            && Objects.equals(hall, that.hall) && Objects.equals(orders, that.orders)
+            && Objects.equals(tickets, that.tickets)
+            && Objects.equals(priceMultiplicant, that.priceMultiplicant);
     }
 
     @Override
@@ -180,6 +194,7 @@ public class Performance {
         private Hall hall;
         private List<Order> orders;
         private List<Ticket> tickets;
+        private Long priceMultiplicant;
 
         private PerformanceBuilder() {
         }
@@ -233,6 +248,11 @@ public class Performance {
             return this;
         }
 
+        public Performance.PerformanceBuilder withPriceMultiplicant(Long priceMultiplicant) {
+            this.priceMultiplicant = priceMultiplicant;
+            return this;
+        }
+
         public Performance build() {
             Performance performance = new Performance();
             performance.setId(id);
@@ -245,6 +265,7 @@ public class Performance {
             performance.setHall(hall);
             performance.setTickets(tickets);
             performance.setOrders(orders);
+            performance.setPriceMultiplicant(priceMultiplicant);
             return performance;
         }
     }

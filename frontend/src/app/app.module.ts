@@ -69,6 +69,7 @@ import { BookPerformanceComponent } from './components/book-performance/book-per
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { OrdersComponent } from './components/orders/orders.component';
 import { PaymentInformationPickComponent } from './components/payment-information-pick/payment-information-pick.component';
+import { AddArtistDialogComponent } from './components/create-event/create-artist/add-artist-dialog/add-artist-dialog.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,8 @@ import { PaymentInformationPickComponent } from './components/payment-informatio
     AddHallDialogComponent,
     BookPerformanceComponent,
     OrdersComponent,
-    PaymentInformationPickComponent
+    PaymentInformationPickComponent,
+    AddArtistDialogComponent
   ],
   imports: [
     BrowserModule,

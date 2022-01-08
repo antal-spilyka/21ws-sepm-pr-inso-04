@@ -40,6 +40,7 @@ public class PerformanceMapper {
         performance.setEvent(event);
         performance.setArtist(artistMapper.dtoToEntity(performanceDto.getArtist()));
         performance.setHall(hallMapper.dtoToEntity(performanceDto.getHall()));
+        performance.setPriceMultiplicant(performanceDto.getPriceMultiplicant() != null ? performanceDto.getPriceMultiplicant() : 1);
         return performance;
     }
 
@@ -53,6 +54,7 @@ public class PerformanceMapper {
         //performanceDto.setEvent(eventDto);
         performanceDto.setArtist(artistMapper.entityToDto(performance.getArtist()));
         performanceDto.setHall(hallMapper.entityToDto(performance.getHall()));
+        performanceDto.setPriceMultiplicant(performance.getPriceMultiplicant());
         return performanceDto;
     }
 
