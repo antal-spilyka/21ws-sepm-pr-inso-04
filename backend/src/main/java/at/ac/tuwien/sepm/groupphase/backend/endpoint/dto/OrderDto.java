@@ -11,6 +11,7 @@ public class OrderDto {
     private double price;
     private boolean bought;
     private LocalDateTime dateOfOrder;
+    private boolean refunded;
 
     public Long getId() {
         return id;
@@ -66,5 +67,13 @@ public class OrderDto {
 
     public void setDateOfOrder(LocalDateTime dateOfOrder) {
         this.dateOfOrder = dateOfOrder;
+    }
+
+    public boolean isRefunded() {
+        return refunded;
+    }
+
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
     }
 }

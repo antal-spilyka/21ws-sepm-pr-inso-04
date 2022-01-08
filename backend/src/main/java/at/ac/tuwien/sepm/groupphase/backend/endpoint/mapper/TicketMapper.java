@@ -63,6 +63,7 @@ public class TicketMapper {
             ticketDto.setRowIndex(ticket.getPosition().getRowIndex());
             ticketDto.setSeatIndex(ticket.getPosition().getSeatIndex());
         }
+        ticketDto.setRefunded(ticket.isRefunded());
         return ticketDto;
     }
 

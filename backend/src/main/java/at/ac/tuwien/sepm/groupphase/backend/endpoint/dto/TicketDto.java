@@ -7,6 +7,7 @@ public class TicketDto {
     double price;
     SectorDto sectorDto;
     Long id;
+    boolean refunded;
 
     public Integer getRowIndex() {
         return rowIndex;
@@ -54,5 +55,26 @@ public class TicketDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isRefunded() {
+        return refunded;
+    }
+
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
+    }
+
+    @Override
+    public String toString() {
+        return "TicketDto{" +
+            "rowIndex=" + rowIndex +
+            ", seatIndex=" + seatIndex +
+            ", ticketType='" + ticketType + '\'' +
+            ", price=" + price +
+            ", sectorDto=" + sectorDto +
+            ", id=" + id +
+            ", refunded=" + refunded +
+            '}';
     }
 }

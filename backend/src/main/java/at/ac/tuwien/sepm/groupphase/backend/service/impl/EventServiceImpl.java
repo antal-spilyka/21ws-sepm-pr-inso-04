@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
             List<Event> filteredList = this.eventRepository.findByNameContainsIgnoreCase(name, PageRequest.of(0, 2));
             for (Event event : filteredList) {
                 for (Performance performance : event.getPerformances()) {
-                    performance.setEvent(null);
+                    //performance.setEvent(null);
                 }
             }
             return filteredList;

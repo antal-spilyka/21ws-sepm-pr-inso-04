@@ -10,4 +10,5 @@ export class Order {
   price: number;
   bought: boolean;
   dateOfOrder: Date;
+  refunded: boolean;
 }

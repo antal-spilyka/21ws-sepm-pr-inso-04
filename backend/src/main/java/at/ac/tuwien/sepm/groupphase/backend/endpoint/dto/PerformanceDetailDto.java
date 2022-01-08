@@ -76,4 +76,18 @@ public class PerformanceDetailDto {
     public List<TicketDto> getTickets() {
         return tickets;
     }
+
+    @Override
+    public String toString() {
+        return "PerformanceDetailDto{" +
+            "tickets=" + tickets +
+            ", id=" + id +
+            ", name='" + name + '\'' +
+            ", startTime=" + startTime +
+            ", duration=" + duration +
+            ", eventDto=" + eventDto +
+            ", artist=" + artist +
+            ", hall=" + hall +
+            '}';
+    }
 }

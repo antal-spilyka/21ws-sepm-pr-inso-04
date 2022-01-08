@@ -53,4 +53,8 @@ export class OrderService {
     console.log('Set order to bought');
     return this.httpClient.put(this.baseUri, setOrderToBoughtDto, {responseType: 'text'});
   }
+
+  refundOrder(orderId: number): Observable<void> {
+    return this.httpClient.put<void>(this.baseUri + '/refund', {orderId});
+  }
 }

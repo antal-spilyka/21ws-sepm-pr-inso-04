@@ -24,8 +24,10 @@ export class OrdersComponent implements OnInit {
   orders: Order[];
   reserved: Order[];
   bought: Order[];
+  refunded: Order[];
   reservedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'buyButton'];
-  boughtColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
+  boughtColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'refundButton'];
+  refundedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
 
   error = false;
   errorMessage = '';
@@ -42,8 +44,10 @@ export class OrdersComponent implements OnInit {
       (orders: Order[]) => {
         this.orders = orders;
         this.formatDate();
-        this.reserved = orders.filter(order => order.bought === false);
-        this.bought = orders.filter(order => order.bought === true);
+        console.log(orders);
+        this.reserved = orders.filter(order => order.bought === false && order.refunded === false);
+        this.bought = orders.filter(order => order.bought === true && order.refunded === false);
+        this.refunded = orders.filter(order => order.refunded === true);
       },
       error => {
         this.defaultServiceErrorHandling(error);
@@ -87,6 +91,19 @@ export class OrdersComponent implements OnInit {
         });
       }
     });
+}
+
+refundOrder(order: Order) {
+  this.orderService.refundOrder(order.id).subscribe({
+    next: () => {
+      window.alert('Successfully refunded the Order');
+      this.loadOrders();
+      this.table.renderRows();
+    },
+    error: (error) => {
+      window.alert('Error during buying process: ' + error.error.message);
+    }
+  });
 }
 
   /**

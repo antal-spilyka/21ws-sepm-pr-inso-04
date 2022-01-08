@@ -183,6 +183,7 @@ public class PerformanceServiceImpl implements PerformanceService {
             if (performance.isEmpty()) {
                 return null;
             }
+
             return performanceMapper.entityToDetailDto(performance.get());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
@@ -231,7 +232,8 @@ public class PerformanceServiceImpl implements PerformanceService {
                 if (performance.getTickets().stream().anyMatch(
                     ticket -> ticket.getTypeOfTicket().equals("Seat")
                         && ticket.getPosition().getRowIndex() == basketSeatDto.getRowIndex()
-                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex())
+                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex()
+                        && !ticket.isRefunded())
                 ) {
                     throw new ServiceException("A Hallplan element is already sold");
                 }
@@ -321,7 +323,8 @@ public class PerformanceServiceImpl implements PerformanceService {
                 if (performance.getTickets().stream().anyMatch(
                     ticket -> ticket.getTypeOfTicket().equals("Seat")
                         && ticket.getPosition().getRowIndex() == basketSeatDto.getRowIndex()
-                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex())
+                        && ticket.getPosition().getSeatIndex() == basketSeatDto.getSeatIndex()
+                        && !ticket.isRefunded())
                 ) {
                     throw new ServiceException("A Hallplan element is already sold");
                 }
