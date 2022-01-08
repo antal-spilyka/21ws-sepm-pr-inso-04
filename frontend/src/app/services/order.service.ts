@@ -3,7 +3,7 @@ import {Globals} from '../global/globals';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Order} from '../dtos/order';
-import {SetOrderToBoughtDto} from "../dtos/setOrderToBoughtDto";
+import {SetOrderToBoughtDto} from '../dtos/setOrderToBoughtDto';
 
 @Injectable({
   providedIn: 'root'
