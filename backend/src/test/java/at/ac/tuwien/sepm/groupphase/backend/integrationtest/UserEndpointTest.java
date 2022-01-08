@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +45,9 @@ public class UserEndpointTest implements TestData {
     private UserRepository userRepository;
 
     @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -55,6 +59,7 @@ public class UserEndpointTest implements TestData {
     @BeforeEach
     public void beforeEach() {
         seenNewsRepository.deleteAll();
+        paymentInformationRepository.deleteAll();
         userRepository.deleteAll();
     }
 

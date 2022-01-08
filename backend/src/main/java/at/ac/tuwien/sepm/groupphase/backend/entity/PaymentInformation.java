@@ -2,15 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class PaymentInformation {
@@ -33,6 +34,9 @@ public class PaymentInformation {
 
     @Column(length = 100)
     private String creditCardCvv;
+
+    @OneToMany(mappedBy = "paymentInformation")
+    private List<Order> orders;
 
     public PaymentInformation() {
     }
@@ -91,6 +95,14 @@ public class PaymentInformation {
 
     public void setCreditCardCvv(String creditCardCvv) {
         this.creditCardCvv = creditCardCvv;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

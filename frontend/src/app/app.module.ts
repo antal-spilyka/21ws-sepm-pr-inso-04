@@ -67,6 +67,8 @@ import {
 } from './components/create-hallplan/components/remove-section-dialog/remove-section-dialog.component';
 import { BookPerformanceComponent } from './components/book-performance/book-performance.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { OrdersComponent } from './components/orders/orders.component';
+import { PaymentInformationPickComponent } from './components/payment-information-pick/payment-information-pick.component';
 import { AddArtistDialogComponent } from './components/create-event/create-artist/add-artist-dialog/add-artist-dialog.component';
 
 @NgModule({
@@ -107,6 +109,8 @@ import { AddArtistDialogComponent } from './components/create-event/create-artis
     CreateEventPlacesComponent,
     AddHallDialogComponent,
     BookPerformanceComponent,
+    OrdersComponent,
+    PaymentInformationPickComponent,
     AddArtistDialogComponent
   ],
   imports: [

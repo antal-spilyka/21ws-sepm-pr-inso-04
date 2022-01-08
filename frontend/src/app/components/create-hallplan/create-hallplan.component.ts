@@ -12,6 +12,11 @@ import {PerformanceService} from '../../services/performance.service';
 import {Basket} from '../../dtos/basket';
 import {Ticket} from '../../dtos/ticket';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {PaymentInformationPickComponent} from '../payment-information-pick/payment-information-pick.component';
+import jwt_decode from 'jwt-decode';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
+import {PaymentInformation} from '../../dtos/paymentInformation';
 
 @Component({
   selector: 'app-create-hallplan',
@@ -45,11 +50,14 @@ export class CreateHallplanComponent implements OnInit {
   errorMsg = '';
   standingPlaces = 0;
 
+  paymentInformations: PaymentInformation[];
+
   error = false;
   errorMessage = '';
 
   constructor(public dialog: MatDialog, private eventPlaceService: EventPlaceService, private hallService: HallService,
-              private route: ActivatedRoute, private performanceService: PerformanceService, private _snackBar: MatSnackBar) {
+              private route: ActivatedRoute, private performanceService: PerformanceService, private _snackBar: MatSnackBar,
+              private userService: UserService) {
     this.addSeat = this.addSeat.bind(this);
     this.removeSeat = this.removeSeat.bind(this);
     this.mouseOverHallplanElement = this.mouseOverHallplanElement.bind(this);
@@ -88,6 +96,7 @@ export class CreateHallplanComponent implements OnInit {
         }
       });
     }
+    this.getPaymentInformations();
   }
 
   createRow(added: boolean, length = this.rows[0].length): IHallplanElement[] {
@@ -364,7 +373,60 @@ export class CreateHallplanComponent implements OnInit {
       })),
       this.getStandingBasket().amount
     );
-    this.performanceService.buyPerformance(this.performanceId, basket).subscribe({
+
+    const dialogRef = this.dialog.open(PaymentInformationPickComponent, {
+      width: '50%',
+      data: {paymentInformations: this.paymentInformations},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != null) {
+        basket.paymentInformationId = result;
+        this.performanceService.buyPerformance(this.performanceId, basket).subscribe({
+          next: () => {
+            this.page = 3;
+          },
+          error: error => {
+            this.defaultServiceErrorHandling(error);
+          },
+          complete: () => {
+
+          }
+        });
+      }
+    });
+  }
+
+  getPaymentInformations() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      const email: string = decoded.sub;
+      this.userService.get(email).subscribe(
+        (user: User) => {
+          if (user.paymentInformation !== null) {
+            this.paymentInformations = user.paymentInformation;
+          }
+        },
+        error => {
+          this.defaultServiceErrorHandling(error);
+        }
+      );
+    }
+  }
+
+  getToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  reserve() {
+    const basket = new Basket(
+      this.getBookedSeats().reduce((acc, sector) => acc.concat(sector.sectorSeats), []).map(seat => ({
+        seatIndex: seat.seatIndex - 1,
+        rowIndex: seat.rowIndex - 1,
+      })),
+      this.getStandingBasket().amount
+    );
+    this.performanceService.reservePerformance(this.performanceId, basket).subscribe({
       next: () => {
         this.page = 3;
       },

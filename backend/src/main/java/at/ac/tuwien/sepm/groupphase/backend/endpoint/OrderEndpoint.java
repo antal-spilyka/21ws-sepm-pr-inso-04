@@ -1,0 +1,67 @@
+package at.ac.tuwien.sepm.groupphase.backend.endpoint;
+
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SetOrderToBoughtDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
+import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.security.PermitAll;
+import java.lang.invoke.MethodHandles;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/orders")
+public class OrderEndpoint {
+    private final OrderService orderService;
+    private final OrderMapper orderMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/orders";
+
+    @Autowired
+    public OrderEndpoint(OrderService orderService, OrderMapper orderMapper) {
+        this.orderService = orderService;
+        this.orderMapper = orderMapper;
+    }
+
+    @GetMapping("/{email}/reserved")
+    @PermitAll
+    public List<OrderDto> getReservedOrders(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/{}/reserved", email);
+        return this.orderMapper.orderToOrderDto(orderService.getAllReserved(email));
+    }
+
+    @GetMapping("/{email}/bought")
+    @PermitAll
+    public List<OrderDto> getBoughtOrders(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/{}/bought", email);
+        return this.orderMapper.orderToOrderDto(orderService.getAllBought(email));
+    }
+
+    @GetMapping("/{email}")
+    @PermitAll
+    public List<OrderDto> getAllOrders(@PathVariable String email) {
+        LOGGER.info("GET " + BASE_URL + "/{}", email);
+        return this.orderMapper.orderToOrderDto(orderService.getAll(email));
+    }
+
+    @PutMapping()
+    @PermitAll
+    public ResponseEntity<String> setToBought(@RequestBody SetOrderToBoughtDto setOrderToBoughtDto) {
+        LOGGER.info("PUT " + BASE_URL + "/{}", setOrderToBoughtDto);
+
+        orderService.setOrderToBought(setOrderToBoughtDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+}

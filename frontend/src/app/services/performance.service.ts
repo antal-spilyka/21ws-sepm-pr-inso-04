@@ -52,4 +52,8 @@ export class PerformanceService {
   buyPerformance(id: number, basket: Basket) {
     return this.httpClient.post<void>(this.messageBaseUri + '/buy/' + id, basket);
   }
+
+  reservePerformance(id: number, basket: Basket) {
+    return this.httpClient.post<void>(this.messageBaseUri + '/reserve/' + id, basket);
+  }
 }
