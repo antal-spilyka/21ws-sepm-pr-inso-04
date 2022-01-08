@@ -24,10 +24,13 @@
     </ng-container>
 
     <ng-container matColumnDef="buyButton">
-      <th mat-header-cell *matHeaderCellDef></th>
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
         <button style="margin-bottom: 10px" mat-icon-button (click)="buyTicket(element)">
           <mat-icon>shopping_cart</mat-icon>
+        </button>
+        <button style="margin-bottom: 10px" mat-icon-button (click)="refundOrder(element)">
+          <mat-icon>delete</mat-icon>
         </button>
       </td>
     </ng-container>
@@ -60,7 +63,44 @@
       <td mat-cell *matCellDef="let element"> {{element.ticketDetailDtos.length}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="refundButton">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button style="margin-bottom: 10px" mat-icon-button (click)="refundOrder(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="boughtColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: boughtColumns;"></tr>
+  </table>
+</mat-card>
+<br>
+<mat-card *ngIf="refunded.length !== 0">
+  <mat-card-title> Refunded Tickets</mat-card-title>
+  <table mat-table [dataSource]="refunded" class="mat-elevation-z8">
+    <ng-container matColumnDef="performance">
+      <th mat-header-cell *matHeaderCellDef> Performance </th>
+      <td mat-cell *matCellDef="let element"> {{element.performanceDto.artist.bandName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Price </th>
+      <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dateOfOrder">
+      <th mat-header-cell *matHeaderCellDef> Date of Order </th>
+      <td mat-cell *matCellDef="let element"> {{element.dateOfOrder.toDateString()}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfTickets">
+      <th mat-header-cell *matHeaderCellDef> Number of Tickets </th>
+      <td mat-cell *matCellDef="let element"> {{element.ticketDetailDtos.length}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="refundedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: refundedColumns;"></tr>
   </table>
 </mat-card>

@@ -47,6 +47,7 @@ public class OrderMapper {
         orderDto.setUserDto(userMapper.applicationUserToUserDto(order.getUser()));
         orderDto.setBought(order.isBought());
         orderDto.setTicketDetailDtos(ticketMapper.ticketToTicketSimpleDto(order.getTickets()));
+        orderDto.setRefunded(order.isRefunded());
         return orderDto;
     }
 

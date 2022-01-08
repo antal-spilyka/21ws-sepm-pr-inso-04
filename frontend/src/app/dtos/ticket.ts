@@ -3,4 +3,5 @@ export class Ticket {
   rowIndex?: number;
   ticketType: string;
   price: number;
+  refunded: boolean;
 }

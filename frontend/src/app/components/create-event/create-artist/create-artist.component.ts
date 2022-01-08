@@ -108,17 +108,12 @@ export class CreateArtistComponent implements OnInit {
   }
 
   async submitArtistChanges() {
-    if (this.isNewArtist) {
-      this.selectedArtist = {
-        bandName: this.form.value.artistName,
-        description: this.form.value.artistDescription
-      } as Artist;
-    } else {
-      if (!this.selectedArtist) {
+    console.log(this.selectedArtist);
+    if (!this.isNewArtist && !this.selectedArtist) {
         this.setErrorFlag('Choose an artist for your performance');
         return;
-      }
     }
+
     this.artistService.createArtist(this.selectedArtist).subscribe({
       next: async next => {
         this.selectedArtist = next;

@@ -44,6 +44,9 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime dateOfOrder;
 
+    @Column()
+    private boolean refunded = false;
+
     @ManyToOne
     @JoinColumn(name = "paymentInformation_Id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
@@ -112,6 +115,14 @@ public class Order {
         this.paymentInformation = paymentInformation;
     }
 
+    public boolean isRefunded() {
+        return refunded;
+    }
+
+    public void setRefunded(boolean refunded) {
+        this.refunded = refunded;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -122,6 +133,7 @@ public class Order {
             ", prize=" + prize +
             ", bought=" + bought +
             ", dateOfOrder=" + dateOfOrder +
+            ", refunded=" + refunded +
             '}';
     }
 }
