@@ -17,6 +17,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
@@ -25,6 +26,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -58,13 +60,15 @@ public class PerformanceServiceImpl implements PerformanceService {
     TicketRepository ticketRepository;
     UserRepository userRepository;
     OrderRepository orderRepository;
+    PaymentInformationRepository paymentInformationRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public PerformanceServiceImpl(PerformanceRepository performanceRepository, ArtistRepository artistRepository,
                                   TicketRepository ticketRepository, HallRepository hallRepository, ArtistMapper artistMapper,
                                   HallMapper hallMapper, PerformanceMapper performanceMapper, EventMapper eventMapper,
-                                  EventRepository eventRepository, UserRepository userRepository, OrderRepository orderRepository) {
+                                  EventRepository eventRepository, UserRepository userRepository, OrderRepository orderRepository,
+                                  PaymentInformationRepository paymentInformationRepository) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.hallRepository = hallRepository;
@@ -76,6 +80,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.paymentInformationRepository = paymentInformationRepository;
     }
 
     @Transactional
@@ -195,9 +200,6 @@ public class PerformanceServiceImpl implements PerformanceService {
             if (applicationUser == null) {
                 throw new ServiceException("User not found");
             }
-            if (applicationUser.getPaymentInformation().size() == 0) {
-                throw new ServiceException("No Payment added");
-            }
 
             Optional<Sector> optionalSector = performance.getHall().getSectors().stream().filter(
                 sector -> sector.getName().equals("Standing")
@@ -257,7 +259,14 @@ public class PerformanceServiceImpl implements PerformanceService {
                 tickets.add(ticket);
                 prize = prize + ticket.getPrice();
             }
+
+            Optional<PaymentInformation> optionalPaymentInformation = paymentInformationRepository.findById(basket.getPaymentInformationId());
+            if (optionalPaymentInformation.isEmpty()) {
+                throw new ServiceException("No matching Payment Information found");
+            }
+
             order.setDateOfOrder(LocalDateTime.now());
+            order.setPaymentInformation(optionalPaymentInformation.get());
             order.setPerformance(performance);
             order.setUser(applicationUser);
             order.setBought(true);
@@ -273,6 +282,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     public void reserveSeats(BasketDto basket, Long performanceId, Principal principal) {
         LOGGER.debug("Handling in service {}", basket);
+        LOGGER.info(basket.toString());
         try {
             Performance performance = performanceRepository.getById(performanceId);
             ApplicationUser applicationUser = userRepository.findUserByEmail(principal.getName());

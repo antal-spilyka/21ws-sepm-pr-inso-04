@@ -76,7 +76,7 @@ public class HallServiceImpl implements HallService {
     @Transactional
     @Override
     public Hall save(HallDto hallDto) {
-        LOGGER.debug("Handling in Service {}", hallDto);
+        LOGGER.info("Handling in Service {}", hallDto);
         try {
             EventPlace eventPlace = eventPlaceRepository.findByIdEquals(hallMapper.dtoToEntity(hallDto).getEventPlace().getId());
             if (eventPlace == null) {

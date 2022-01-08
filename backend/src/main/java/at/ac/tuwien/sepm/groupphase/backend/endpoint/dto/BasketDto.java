@@ -11,6 +11,8 @@ public class BasketDto {
     @NotNull(message = "Seats places must not be null")
     List<BasketSeatDto> seats;
 
+    Long paymentInformationId;
+
     public int getStandingPlaces() {
         return standingPlaces;
     }
@@ -25,6 +27,14 @@ public class BasketDto {
 
     public void setSeats(List<BasketSeatDto> seats) {
         this.seats = seats;
+    }
+
+    public Long getPaymentInformationId() {
+        return paymentInformationId;
+    }
+
+    public void setPaymentInformationId(Long paymentInformationId) {
+        this.paymentInformationId = paymentInformationId;
     }
 
     @Override

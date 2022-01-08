@@ -6,10 +6,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -47,16 +49,18 @@ public class CustomUserDetailService implements UserService {
     private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
     private final EmailServiceImpl emailService;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
-                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
         this.seenNewsRepository = seenNewsRepository;
         this.emailService = emailService;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -204,6 +208,16 @@ public class CustomUserDetailService implements UserService {
         } else {
             ApplicationUser userToDelete = userRepository.findUserByEmail(email);
             seenNewsRepository.deleteByUser(userToDelete);
+            List<PaymentInformation> paymentInformations = paymentInformationRepository.findByUser(userToDelete);
+            for (PaymentInformation paymentInformation : paymentInformations) {
+                paymentInformation.setUser(null);
+            }
+            List<Order> orders = orderRepository.getOrderByUser(userToDelete);
+            for (Order order : orders) {
+                order.setUser(null);
+            }
+            paymentInformationRepository.saveAll(paymentInformations);
+            orderRepository.saveAll(orders);
             userRepository.deleteById(userToDelete.getId());
         }
     }

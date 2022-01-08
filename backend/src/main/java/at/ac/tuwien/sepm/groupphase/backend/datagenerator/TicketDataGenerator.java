@@ -146,7 +146,7 @@ public class TicketDataGenerator {
                 long maxDay = Timestamp.valueOf("2050-12-31 23:59:59").getTime();
                 long diff = maxDay - minDay + 1;
                 final LocalDateTime dateTime = new Timestamp(minDay + (long) (Math.random() * diff)).toLocalDateTime();
-                paymentInformation.setCreditCardExpirationDate(dateTime.getMonth().toString() + dateTime.getYear());
+                paymentInformation.setCreditCardExpirationDate("" + dateTime.getMonth() + dateTime.getYear());
                 paymentInformation.setCreditCardName("First " + i + " Last " + i);
                 paymentInformationRepository.save(paymentInformation);
             }

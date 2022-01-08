@@ -53,13 +53,11 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToMany(cascade = CascadeType.REMOVE, // payment information of user deleted if user deleted
-        fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.EAGER,
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE, // orders of user deleted if user deleted
-        fetch = FetchType.LAZY,
+    @OneToMany(fetch = FetchType.LAZY,
         mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 

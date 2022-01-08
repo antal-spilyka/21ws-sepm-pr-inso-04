@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Order} from '../../dtos/order';
 import {Router} from '@angular/router';
 import {OrderService} from '../../services/order.service';
@@ -6,7 +6,8 @@ import jwt_decode from 'jwt-decode';
 import {PaymentInformationPickComponent} from '../payment-information-pick/payment-information-pick.component';
 import {MatDialog} from '@angular/material/dialog';
 import {PaymentInformation} from '../../dtos/paymentInformation';
-import {SetOrderToBoughtDto} from "../../dtos/setOrderToBoughtDto";
+import {SetOrderToBoughtDto} from '../../dtos/setOrderToBoughtDto';
+import {MatTable} from '@angular/material/table';
 
 export interface DialogData {
   paymentInformations: PaymentInformation[];
@@ -18,6 +19,7 @@ export interface DialogData {
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
+  @ViewChild(MatTable) table: MatTable<any>;
 
   orders: Order[];
   reserved: Order[];
@@ -76,7 +78,8 @@ export class OrdersComponent implements OnInit {
         this.orderService.setOrderToBought(setOrderToBought).subscribe({
           next: () => {
             window.alert('Successfully bought the Ticket');
-            this.router.navigate(['/']);
+            this.loadOrders();
+            this.table.renderRows();
           },
           error: (error) => {
             window.alert('Error during buying process: ' + error.error.message);

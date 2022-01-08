@@ -77,6 +77,12 @@ export class NewsViewComponent implements OnInit {
     return (dDisplay + hDisplay + mDisplay).substring(1);
   }
 
+  buyTicket() {
+    if(this.news.event.id){
+      this.router.navigateByUrl(`/events/${this.news.event.id}/performances`);
+    }
+  }
+
   vanishError() {
     this.error = false;
   }
