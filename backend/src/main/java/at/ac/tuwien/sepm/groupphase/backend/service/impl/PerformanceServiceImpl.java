@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
@@ -157,10 +158,10 @@ public class PerformanceServiceImpl implements PerformanceService {
                 LocalDateTime dateTimeFrom = performanceSearchDto.getStartTime().minusMinutes(30);
                 LocalDateTime dateTimeTill = performanceSearchDto.getStartTime().plusMinutes(30);
                 performances = performanceRepository.findPerformanceByDateTime(dateTimeFrom,
-                    dateTimeTill, performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(0, 10));
+                    dateTimeTill, performanceSearchDto.getEventName(), performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(performanceSearchDto.getPage(), 10));
             } else {
                 performances = performanceRepository.findPerformanceByEventAndHall(performanceSearchDto.getEventName(),
-                    performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(0, 10));
+                    performanceSearchDto.getHallName(), performanceSearchDto.getPrice(), PageRequest.of(performanceSearchDto.getPage(), 10));
             }
             LOGGER.info(performances.toString());
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
@@ -171,11 +172,12 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     @Override
     @Transactional
-    public Stream<PerformanceDto> findGeneralPerformanceByDateTime(String searchQuery) {
-        LOGGER.debug("Handling in Service {}", searchQuery);
+    public Stream<PerformanceDto> findGeneralPerformanceByDateTime(GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.debug("Handling in Service {}", generalSearchEventDto);
         try {
             List<Performance> performances;
-            performances = performanceRepository.findGeneralPerformanceByEventAndHall(searchQuery, PageRequest.of(0, 10));
+            performances = performanceRepository.findGeneralPerformanceByEventAndHall(generalSearchEventDto.getSearchQuery(),
+                PageRequest.of(generalSearchEventDto.getPage(), 10));
             LOGGER.info(performances.toString());
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
         } catch (PersistenceException e) {
@@ -189,6 +191,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         LOGGER.debug("Handling in service {}", id);
         try {
             List<Performance> performances = performanceRepository.findPerformanceForArtist(id, PageRequest.of(0, 15));
+            //TODO: Implement Pagination
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

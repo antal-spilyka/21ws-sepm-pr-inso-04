@@ -123,10 +123,10 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Stream<PerformanceDto> getPerformancesByLocation(Long id) {
+    public Stream<PerformanceDto> getPerformancesByLocation(Long id, Integer page) {
         LOGGER.debug("Handling in service {}", id);
         try {
-            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(0, 15));
+            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(page, 15));
             List<Performance> performancesCopy = new ArrayList<>();
             for (Event event : events) {
                 List<Performance> performances = event.getPerformances();

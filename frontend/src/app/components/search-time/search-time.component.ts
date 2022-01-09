@@ -21,6 +21,7 @@ export class SearchTimeComponent implements OnInit {
   roomsList: Hall[] = [];
   roomMap = new Map();
   submitted = false;
+  pageCounter = 0;
   private error = false;
   private errorMessage: string;
 
@@ -49,27 +50,34 @@ export class SearchTimeComponent implements OnInit {
     );
   }
 
-  onSubmit() {
-    this.performanceList = [];
+  onSubmit(newSearch = true) {
     if (this.detailedSearch === true) {
+      if(newSearch){
+        this.performanceList = [];
+        this.pageCounter = 0;
+      }
       console.log(this.performanceSearchDto);
-      this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
-        {
-          next: performances => {
-            this.submitted = true;
-            //console.log(this.performanceList);
-            this.performanceList = performances;
-            //console.log(this.performanceList);
-          }, error: error => this.handleError(error)
-        }
-      );
-    } else{
-      this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime).subscribe(
+      this.performanceService.findPerformanceByDateTime(this.performanceSearchDto, this.pageCounter).subscribe(
         {
           next: performances => {
             this.submitted = true;
             console.log(this.performanceList);
-            this.performanceList = performances;
+            this.performanceList = this.performanceList.concat(performances);
+            console.log(this.performanceList);
+          }, error: error => this.handleError(error)
+        }
+      );
+    } else{
+      if(newSearch){
+        this.performanceList = [];
+        this.pageCounter = 0;
+      }
+      this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime, this.pageCounter).subscribe(
+        {
+          next: performances => {
+            this.submitted = true;
+            //console.log(this.performanceList);
+            this.performanceList = this.performanceList.concat(performances);
             console.log(this.performanceList);
           }, error: error => this.handleError(error)
         }
@@ -82,7 +90,10 @@ export class SearchTimeComponent implements OnInit {
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
-
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
+  }
   changeDetailed() {
     this.detailedSearch = !this.detailedSearch;
   }

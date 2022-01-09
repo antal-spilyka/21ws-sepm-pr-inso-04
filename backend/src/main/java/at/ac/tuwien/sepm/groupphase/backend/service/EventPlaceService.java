@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
@@ -30,16 +32,16 @@ public interface EventPlaceService {
      * @return a list with all the addresses that meet search criteria.
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<EventPlace> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
+    List<EventPlaceDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto);
 
     /**
      * Finds eventLocations with matching properties.
      *
-     * @param searchLocation string for storing the search information.
+     * @param generalSearchEventDto dto for storing the search information.
      * @return a list with all the addresses that meet search criteria.
      * @throws org.hibernate.service.spi.ServiceException when unknown error occurs
      */
-    List<EventPlace> findGeneralEventLocation(String searchLocation);
+    List<EventPlaceDto> findGeneralEventLocation(GeneralSearchEventDto generalSearchEventDto);
 
 
     /**
@@ -68,5 +70,5 @@ public interface EventPlaceService {
      * @return the Address object
      * @throws org.hibernate.service.spi.ServiceException if the eventPlace or the address is not found
      */
-    Address findAddress(Long id);
+    AddressDto findAddress(Long id);
 }

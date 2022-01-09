@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
@@ -78,6 +75,7 @@ public class EventPlaceServiceTest {
     public void search_forNonExistingLocation() {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
         eventLocationSearchDto.setZip("" + Math.random());
+        eventLocationSearchDto.setPage(0);
         assertEquals(0, eventPlaceService.findEventLocation(eventLocationSearchDto).size());
     }
 
@@ -99,19 +97,26 @@ public class EventPlaceServiceTest {
         EventLocationSearchDto eventLocationSearchDto = new EventLocationSearchDto();
         eventLocationSearchDto.setCity("SearchCity");
         eventLocationSearchDto.setCountry("SearchCountry");
-        List<EventPlace> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
+        eventLocationSearchDto.setPage(0);
+        List<EventPlaceDto> events = eventPlaceService.findEventLocation(eventLocationSearchDto);
         assertFalse(events.isEmpty());
     }
 
     @Test
     public void getGeneralSearch_for_invalid_String(){
-        List<EventPlace> foundEventPlaces = eventPlaceService.findGeneralEventLocation("" + Math.random());
+        GeneralSearchEventDto generalSearchEventDto = new GeneralSearchEventDto();
+        generalSearchEventDto.setSearchQuery("" + Math.random());
+        generalSearchEventDto.setPage(0);
+        List<EventPlaceDto> foundEventPlaces = eventPlaceService.findGeneralEventLocation(generalSearchEventDto);
         assertTrue(foundEventPlaces.isEmpty());
     }
 
     @Test
     public void getGeneralSearch_for_valid_String(){
-        List<EventPlace> foundEventPlaces = eventPlaceService.findGeneralEventLocation("TestCountry");
+        GeneralSearchEventDto generalSearchEventDto = new GeneralSearchEventDto();
+        generalSearchEventDto.setSearchQuery("TestCountry");
+        generalSearchEventDto.setPage(0);
+        List<EventPlaceDto> foundEventPlaces = eventPlaceService.findGeneralEventLocation(generalSearchEventDto);
         assertFalse(foundEventPlaces.isEmpty());
     }
 }

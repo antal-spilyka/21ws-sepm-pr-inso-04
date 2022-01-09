@@ -23,14 +23,13 @@ export class PerformanceService {
    * @param searchEvent dto for storing the search information.
    * @returns an array of events which suit the search query.
    */
-  findPerformanceByDateTime(searchEvent: PerformanceSearchDto): Observable<Performance[]> {
+  findPerformanceByDateTime(searchEvent: PerformanceSearchDto, pageCounter: number): Observable<Performance[]> {
     let params = new HttpParams();
     if (searchEvent.eventName && searchEvent.eventName !== '') {
       params = params.set('eventName', searchEvent.eventName.trim());
     }
     if (searchEvent.startTime && searchEvent.startTime !== '') {
       params = params.set('startTime', searchEvent.startTime);
-      console.log('COMMEE: ' + searchEvent.startTime);
     }
     if (searchEvent.hallName && searchEvent.hallName !== '') {
       params = params.set('hallName', searchEvent.hallName.trim());
@@ -38,14 +37,16 @@ export class PerformanceService {
     if (searchEvent.price !== null){
       params = params.set('price', searchEvent.price);
     }
+    params = params.set('page', pageCounter);
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/search', {params});
   }
 
-  findGeneralPerformanceByDateTime(searchQuery: string): Observable<Performance[]> {
+  findGeneralPerformanceByDateTime(searchQuery: string, pageCounter: number): Observable<Performance[]> {
     let params = new HttpParams();
     if (searchQuery && searchQuery !== '') {
       params = params.set('searchQuery', searchQuery.trim());
     }
+    params = params.set('page', pageCounter);
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/general-search', {params});
   }
 

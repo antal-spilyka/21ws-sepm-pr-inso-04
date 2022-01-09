@@ -154,6 +154,7 @@ public class EventServiceTest {
         eventSearchDto.setDuration(1000);
         eventSearchDto.setDescription("not found");
         eventSearchDto.setCategory("no category");
+        eventSearchDto.setPage(0);
         List<Event> events = eventService.findEvents(eventSearchDto);
         assertTrue(events.isEmpty());
     }
@@ -165,6 +166,7 @@ public class EventServiceTest {
         event = eventService.saveEvent(eventMapper.entityToDto(event));
         EventSearchDto eventSearchDto = new EventSearchDto();
         eventSearchDto.setDuration(this.event.getDuration().intValue());
+        eventSearchDto.setPage(0);
         eventSearchDto.setDescription(this.event.getDescription());
         List<Event> events = eventService.findEvents(eventSearchDto);
         assertFalse(events.isEmpty());
@@ -173,6 +175,7 @@ public class EventServiceTest {
     @Test
     public void search_for_invalid_event() {
         EventSearchDto eventSearchDto = new EventSearchDto();
+        eventSearchDto.setPage(0);
         eventSearchDto.setDescription("desc");
         eventSearchDto.setDuration(9999999);
         List<Event> events = eventService.findEvents(eventSearchDto);
@@ -248,7 +251,7 @@ public class EventServiceTest {
         testEvent.setName("event10");
         Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
 
-        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId());
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(eventPlace.getAddress().getId(), 0);
         List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
         assertFalse(perfList.isEmpty());
     }
@@ -275,7 +278,7 @@ public class EventServiceTest {
         testEvent.setDescription("TestPerformancesDesc");
         testEvent.setCategory("TestPerformancesCategory");
         Event copyEvent = eventService.saveEvent(eventMapper.entityToDto(testEvent));
-        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(testEventPlace.getAddress().getId());
+        Stream<PerformanceDto> performances = eventService.getPerformancesByLocation(testEventPlace.getAddress().getId(), 0);
         List<Performance> perfList = performances.map(performanceDto -> performanceMapper.dtoToEntity(performanceDto, null)).toList();
         assertTrue(perfList.isEmpty());
     }

@@ -34,7 +34,7 @@ export class SearchArtistComponent implements OnInit {
       {
         next: artists => {
           this.submitted = true;
-          console.log(this.artistList);
+          //console.log(this.artistList);
           this.artistList = this.artistList.concat(artists);
           console.log(this.artistList);
         }, error: error => this.handleError(error)

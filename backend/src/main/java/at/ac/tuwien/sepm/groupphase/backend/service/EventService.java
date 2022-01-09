@@ -39,5 +39,5 @@ public interface EventService {
 
     Stream<PerformanceDto> getPerformances(Long id);
 
-    Stream<PerformanceDto> getPerformancesByLocation(Long id);
+    Stream<PerformanceDto> getPerformancesByLocation(Long id, Integer page);
 }

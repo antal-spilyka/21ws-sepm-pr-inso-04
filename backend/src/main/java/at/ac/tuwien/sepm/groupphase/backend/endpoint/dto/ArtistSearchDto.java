@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class ArtistSearchDto {
     String misc; // search by first- and lastname and bandName
-    Integer page;
+    Integer page = 0;
 
     public Integer getPage() {
         return page;

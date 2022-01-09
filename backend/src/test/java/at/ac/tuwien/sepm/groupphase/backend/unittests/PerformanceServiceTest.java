@@ -116,7 +116,7 @@ public class PerformanceServiceTest {
     @Transactional
     public void searchByDateTime_findPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
-        //searchParams.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
+        searchParams.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
         searchParams.setEventName("TestPerformanceByDate");
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertFalse(performances.toList().isEmpty());
@@ -132,6 +132,7 @@ public class PerformanceServiceTest {
     }
 
     @Test
+    @Transactional
     public void getPerformances_forExistingArtist() {
         AddressDto testAddressDto = new AddressDto();
         testAddressDto.setZip("111");
@@ -189,6 +190,7 @@ public class PerformanceServiceTest {
     }
 
     @Test
+    @Transactional
     public void getPerformances_forNotExistingArtist() {
         Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(-1L);
         assertTrue(performances.toList().isEmpty());
@@ -218,14 +220,20 @@ public class PerformanceServiceTest {
 
     @Test
     public void getGeneralSearch_for_invalid_String() {
-        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("" + Math.random());
+        GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
+        searchEventDto.setSearchQuery("" + Math.random());
+        searchEventDto.setPage(0);
+        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime(searchEventDto);
         assertTrue(foundPerformances.toList().isEmpty());
     }
 
     @Test
     @Transactional
     public void getGeneralSearch_for_valid_String() {
-        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime("TestPerformanceByDateTimeHall");
+        GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
+        searchEventDto.setSearchQuery("TestPerformanceByDateTimeHall");
+        searchEventDto.setPage(0);
+        Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime(searchEventDto);
         assertFalse(foundPerformances.toList().isEmpty());
     }
 
