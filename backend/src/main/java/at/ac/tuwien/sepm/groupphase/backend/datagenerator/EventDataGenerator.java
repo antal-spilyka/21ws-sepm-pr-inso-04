@@ -759,8 +759,7 @@ public class EventDataGenerator {
         10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500
     };
 
-    @PostConstruct
-    private void generateEvent() {
+    private void generateEventPlace() {
         if (eventPlaceRepository.findAll().size() > 0) {
             LOGGER.debug("event places already generated");
         } else {
@@ -780,6 +779,11 @@ public class EventDataGenerator {
                 eventPlaceRepository.save(eventPlace);
             }
         }
+    }
+
+    @PostConstruct
+    private void generateEvent() {
+        generateEventPlace();
         if (eventRepository.findAll().size() > 0) {
             LOGGER.debug("events already generated");
         } else {

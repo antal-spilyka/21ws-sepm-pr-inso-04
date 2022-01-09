@@ -90,7 +90,6 @@ public class TicketDataGenerator {
     // Contains a set of cities
     private final String[] salutations = {"mr", "ms"};
 
-    @PostConstruct
     private void generateUser() {
         if (userRepository.findAll().size() > 0) {
             LOGGER.debug("users already generated");
@@ -158,7 +157,7 @@ public class TicketDataGenerator {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("tickets already generated");
         } else {
-
+            generateUser();
             for (int i = 1; i <= 1000; i++) {
                 long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
                 long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
