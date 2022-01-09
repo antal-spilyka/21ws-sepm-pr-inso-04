@@ -45,7 +45,7 @@ public class Order {
     private LocalDateTime dateOfOrder;
 
     @Column()
-    private boolean refunded = false;
+    private Boolean refunded = false;
 
     @ManyToOne
     @JoinColumn(name = "paymentInformation_Id", referencedColumnName = "id")
@@ -115,11 +115,11 @@ public class Order {
         this.paymentInformation = paymentInformation;
     }
 
-    public boolean isRefunded() {
+    public Boolean isRefunded() {
         return refunded;
     }
 
-    public void setRefunded(boolean refunded) {
+    public void setRefunded(Boolean refunded) {
         this.refunded = refunded;
     }
 

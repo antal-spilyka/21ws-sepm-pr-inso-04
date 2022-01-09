@@ -760,7 +760,7 @@ public class EventDataGenerator {
     };
 
     @PostConstruct
-    private void generateEventPlace() {
+    private void generateEvent() {
         if (eventPlaceRepository.findAll().size() > 0) {
             LOGGER.debug("event places already generated");
         } else {
@@ -780,10 +780,6 @@ public class EventDataGenerator {
                 eventPlaceRepository.save(eventPlace);
             }
         }
-    }
-
-    @PostConstruct
-    private void generateEvent() {
         if (eventRepository.findAll().size() > 0) {
             LOGGER.debug("events already generated");
         } else {
@@ -855,6 +851,7 @@ public class EventDataGenerator {
                 performance.setDuration((long) getRandom(this.durations));
                 performance.setArtist(artist);
                 performance.setHall(hall);
+                performance.setPriceMultiplicant(1L);
                 performanceRepository.save(performance);
 
                 // Saving the event

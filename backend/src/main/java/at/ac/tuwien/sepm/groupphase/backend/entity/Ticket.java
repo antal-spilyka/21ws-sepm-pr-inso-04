@@ -39,7 +39,7 @@ public class Ticket {
     private Sector sector;
 
     @Column()
-    private boolean refunded = false;
+    private Boolean refunded = false;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "performance_id", referencedColumnName = "id")
@@ -120,11 +120,11 @@ public class Ticket {
         this.order = order;
     }
 
-    public boolean isRefunded() {
+    public Boolean isRefunded() {
         return refunded;
     }
 
-    public void setRefunded(boolean refunded) {
+    public void setRefunded(Boolean refunded) {
         this.refunded = refunded;
     }
 

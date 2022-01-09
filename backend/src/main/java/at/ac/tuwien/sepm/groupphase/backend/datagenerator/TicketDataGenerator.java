@@ -122,7 +122,7 @@ public class TicketDataGenerator {
                 String country = this.countries[randomIndex];
 
                 //Saving users
-                userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
+                ApplicationUser user = userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
                     .withPassword(passwordEncoder.encode("password" + i)).withAdmin(admin).withId((long) i).withCity(city)
                     .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
                     .withPhone("0664 123 45" + i % 9).withSalutation(salutation).withStreet("Street " + i).withZip("100" + (i % 9))
@@ -130,7 +130,7 @@ public class TicketDataGenerator {
 
                 // Payment information of users
                 PaymentInformation paymentInformation = new PaymentInformation();
-                paymentInformation.setUser(userRepository.getById((long) i));
+                paymentInformation.setUser(user);
                 min = 100;
                 max = 999;
                 randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
@@ -158,6 +158,7 @@ public class TicketDataGenerator {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("tickets already generated");
         } else {
+
             for (int i = 1; i <= 1000; i++) {
                 long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
                 long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
