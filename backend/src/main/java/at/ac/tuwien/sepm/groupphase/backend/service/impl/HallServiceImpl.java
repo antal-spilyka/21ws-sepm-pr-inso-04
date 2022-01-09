@@ -48,19 +48,6 @@ public class HallServiceImpl implements HallService {
         }
     }
 
-    @Transactional
-    @Override
-    public Hall getById(Long id) {
-        LOGGER.debug("Handling in Service {}", id);
-        try {
-            return hallRepository.getById(id);
-        } catch (EntityNotFoundException e) {
-            throw new NotFoundException(e);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public List<Hall> getAll() {
         LOGGER.debug("Handling in Service list of rooms");

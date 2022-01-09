@@ -85,7 +85,7 @@ public interface UserService extends UserDetailsService {
     void resetLockedCounter(String email);
 
     /**
-     * Send a email to reset the password.
+     * Sends an email to reset the password.
      *
      * @param email of the user
      */

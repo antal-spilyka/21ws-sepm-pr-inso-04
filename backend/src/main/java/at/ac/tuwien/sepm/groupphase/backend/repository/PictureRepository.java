@@ -22,7 +22,7 @@ public interface PictureRepository extends JpaRepository<Picture, Long> {
     Picture save(Picture picture);
 
     /**
-     * finds News for specific event.
+     * Finds News for specific event.
      *
      * @param news of which the pictures are
      * @return corresponding picture paths

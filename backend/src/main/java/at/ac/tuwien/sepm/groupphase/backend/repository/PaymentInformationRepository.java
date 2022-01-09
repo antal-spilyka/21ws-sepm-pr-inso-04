@@ -10,9 +10,10 @@ import java.util.List;
 @Repository
 public interface PaymentInformationRepository extends JpaRepository<PaymentInformation, Long> {
     /**
-     * Find the user by the mail.
+     * Finds all the saved payment information of the user.
      *
-     * @return a user
+     * @param user whose payment information should be found.
+     * @return list of all the payment information saved for the user.
      */
     List<PaymentInformation> findByUser(ApplicationUser user);
 }
