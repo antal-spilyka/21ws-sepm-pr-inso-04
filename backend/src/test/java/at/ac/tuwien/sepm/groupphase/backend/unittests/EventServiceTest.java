@@ -1,11 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
@@ -287,13 +282,19 @@ public class EventServiceTest {
 
     @Test
     public void getGeneralSearch_for_invalid_String(){
-        List<Event> foundEvents = eventService.findGeneralEvents("" + Math.random());
+        GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
+        searchEventDto.setSearchQuery("" + Math.random());
+        searchEventDto.setPage(0);
+        List<Event> foundEvents = eventService.findGeneralEvents(searchEventDto);
         assertTrue(foundEvents.isEmpty());
     }
 
     @Test
     public void getGeneralSearch_for_valid_String(){
-        List<Event> foundEvents = eventService.findGeneralEvents("TestCategory");
+        GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
+        searchEventDto.setSearchQuery("TestCategory");
+        searchEventDto.setPage(0);
+        List<Event> foundEvents = eventService.findGeneralEvents(searchEventDto);
         assertFalse(foundEvents.isEmpty());
     }
 }

@@ -16,6 +16,7 @@ export class SearchLocationComponent implements OnInit {
   submitted = false;
   detailedSearch = false;
   searchLocation = '';
+  pageCounter = 0;
   eventLocations: EventPlace[] = [];
   error = false;
   errorMessage: string;
@@ -27,15 +28,20 @@ export class SearchLocationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit() {
+  onSubmit(newSearch = true) {
     if (this.detailedSearch === true) {
-      this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
+      if(newSearch){
+        this.eventLocations = [];
+        this.locationAddresses.clear();
+        this.pageCounter = 0;
+      }
+      this.eventLocationService.findEventLocation(this.searchAddress, this.pageCounter).subscribe(
         {
           next: eventLocations => {
             this.submitted = true;
-            this.eventLocations = eventLocations;
+            this.eventLocations = this.eventLocations.concat(eventLocations);
             console.log(this.eventLocations);
-            for (const i of eventLocations) {
+            for (const i of this.eventLocations) {
               this.eventLocationService.getAddress(i.id).subscribe(
                 {
                   next: address => {
@@ -49,13 +55,18 @@ export class SearchLocationComponent implements OnInit {
         }
       );
     } else {
-      this.eventLocationService.findGeneralEventLocation(this.searchLocation).subscribe(
+      if(newSearch){
+        this.eventLocations = [];
+        this.locationAddresses.clear();
+        this.pageCounter = 0;
+      }
+      this.eventLocationService.findGeneralEventLocation(this.searchLocation, this.pageCounter).subscribe(
         {
           next: eventLocations => {
             this.submitted = true;
-            this.eventLocations = eventLocations;
+            this.eventLocations = this.eventLocations.concat(eventLocations);
             console.log(this.eventLocations);
-            for (const i of eventLocations) {
+            for (const i of this.eventLocations) {
               this.eventLocationService.getAddress(i.id).subscribe(
                 {
                   next: address => {
@@ -72,6 +83,7 @@ export class SearchLocationComponent implements OnInit {
   }
 
   loadPerformances(eventLocation: Address) {
+    console.log(eventLocation);
     if (eventLocation.id) {
       this.router.navigateByUrl(`/locations/${eventLocation.id}/performances`);
     }
@@ -80,7 +92,10 @@ export class SearchLocationComponent implements OnInit {
   changeDetailed(){
     this.detailedSearch = !this.detailedSearch;
   }
-
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
+  }
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;

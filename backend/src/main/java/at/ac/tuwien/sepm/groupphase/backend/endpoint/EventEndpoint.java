@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -57,10 +57,10 @@ public class EventEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/general-search")
     @Operation(summary = "Find events by search parameters.")
-    public ResponseEntity findGeneralEvents(@Validated String generalSearchEvent) {
-        LOGGER.info("GET " + BASE_URL + " " + generalSearchEvent);
+    public ResponseEntity findGeneralEvents(@Validated GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.info("GET " + BASE_URL + " " + generalSearchEventDto);
         try {
-            return new ResponseEntity(eventService.findGeneralEvents(generalSearchEvent).stream(), HttpStatus.OK);
+            return new ResponseEntity(eventService.findGeneralEvents(generalSearchEventDto).stream(), HttpStatus.OK);
         } catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);

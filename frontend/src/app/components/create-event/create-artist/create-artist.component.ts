@@ -24,6 +24,7 @@ export class CreateArtistComponent implements OnInit {
 
   artists: Observable<Artist[]>;
   selectedArtist: Artist;
+  pageCounter = 0;
   isNewArtist = false;
   halls: Observable<Hall[]>;
   selectedHall: Hall;
@@ -51,7 +52,7 @@ export class CreateArtistComponent implements OnInit {
     this.artists = this.form.get('artistName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => this.artistService.findArtist(name))
+      switchMap(name => this.artistService.findArtist(name, this.pageCounter))
     );
     this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),

@@ -19,7 +19,7 @@ export class EventLocationService {
    * @param searchAddress dto for storing the search information.
    * @returns Observable List of Addresses matching query
    */
-  findEventLocation(searchAddress: Address): Observable<EventPlace[]> {
+  findEventLocation(searchAddress: Address, pageCounter: number): Observable<EventPlace[]> {
     let params = new HttpParams();
     if(searchAddress.city !== '' && searchAddress.city !== null){
       params=params.set('city', searchAddress.city.trim());
@@ -36,13 +36,19 @@ export class EventLocationService {
     if(searchAddress.street !== '' && searchAddress.street !== null){
       params=params.set('street', searchAddress.street.trim());
     }
+    if(pageCounter !== null){
+      params = params.set('page', pageCounter);
+    }
     return this.httpClient.get<EventPlace[]>(this.eventLocationBaseUri, { params });
   }
 
-  findGeneralEventLocation(searchLocation: string): Observable<EventPlace[]> {
+  findGeneralEventLocation(searchLocation: string, pageCounter: number): Observable<EventPlace[]> {
     let params = new HttpParams();
     if(searchLocation !== '' && searchLocation !== null){
-      params=params.set('searchLocation', searchLocation.trim());
+      params=params.set('searchQuery', searchLocation.trim());
+    }
+    if(pageCounter !== null){
+      params = params.set('page', pageCounter);
     }
     return this.httpClient.get<EventPlace[]>(this.eventLocationBaseUri + '/general-search', { params });
   }

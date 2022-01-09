@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
@@ -59,7 +60,7 @@ public class EventServiceImpl implements EventService {
         LOGGER.debug("Handling in Service {}", eventSearchDto);
         try {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
-                PageRequest.of(0, 10));
+                PageRequest.of(eventSearchDto.getPage(), 10));
             for (Event event : events) {
                 event.setPerformances(null);
             }
@@ -70,10 +71,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findGeneralEvents(String generalSearchEvent) {
-        LOGGER.debug("Handling in Service {}", generalSearchEvent);
+    public List<Event> findGeneralEvents(GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.debug("Handling in Service {}", generalSearchEventDto);
         try {
-            List<Event> events = eventRepository.findGeneralEvents(generalSearchEvent, PageRequest.of(0, 10));
+            List<Event> events = eventRepository.findGeneralEvents(generalSearchEventDto.getSearchQuery(), PageRequest.of(generalSearchEventDto.getPage(), 10));
             for (Event event : events) {
                 event.setPerformances(null);
             }

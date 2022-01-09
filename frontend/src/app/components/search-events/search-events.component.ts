@@ -16,6 +16,7 @@ export class SearchEventsComponent implements OnInit {
   submitted = false;
   detailedSearch = false;
   generalSearchEvent = '';
+  pageCounter = 0;
   eventList: EventDto[] = [];
   error = false;
   errorMessage: string;
@@ -26,27 +27,35 @@ export class SearchEventsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit() {
+  onSubmit(newSearch = true) {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
     } else {
       if (this.detailedSearch === true) {
-        this.eventService.findEvent(this.searchEvent).subscribe(
+        if(newSearch){
+          this.eventList = [];
+          this.pageCounter = 0;
+        }
+        this.eventService.findEvent(this.searchEvent, this.pageCounter).subscribe(
           {
             next: events => {
               this.submitted = true;
               console.log(this.eventList);
-              this.eventList = events;
+              this.eventList = this.eventList.concat(events);
               console.log(this.eventList);
             }, error: error => this.handleError(error)
           }
         );
       } else{
-        this.eventService.findGeneralEvent(this.generalSearchEvent).subscribe(
+        if(newSearch){
+          this.eventList = [];
+          this.pageCounter = 0;
+        }
+        this.eventService.findGeneralEvent(this.generalSearchEvent, this.pageCounter).subscribe(
           {
             next: events => {
               this.submitted = true;
-              this.eventList = events;
+              this.eventList = this.eventList.concat(events);
               console.log(this.eventList);
             }, error: error => this.handleError(error)
           }
@@ -64,7 +73,10 @@ export class SearchEventsComponent implements OnInit {
   changeDetailed(){
     this.detailedSearch = !this.detailedSearch;
   }
-
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
+  }
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;
