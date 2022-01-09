@@ -91,20 +91,31 @@ export class OrdersComponent implements OnInit {
         });
       }
     });
-}
+  }
 
-refundOrder(order: Order) {
-  this.orderService.refundOrder(order.id).subscribe({
-    next: () => {
-      window.alert('Successfully refunded the Order');
-      this.loadOrders();
-      this.table.renderRows();
-    },
-    error: (error) => {
-      window.alert('Error during buying process: ' + error.error.message);
-    }
-  });
-}
+  refundOrder(order: Order) {
+    this.orderService.refundOrder(order.id).subscribe({
+      next: () => {
+        window.alert('Successfully refunded the Order');
+        this.loadOrders();
+        this.table.renderRows();
+      },
+      error: (error) => {
+        window.alert('Error during buying process: ' + error.error.message);
+      }
+    });
+  }
+
+  downloadOrder(order: Order) {
+    this.orderService.downloadQRcode(order.id).subscribe({
+      next: code => {
+        console.log(code);
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
 
   /**
    * Error flag will be deactivated, which clears the error message
