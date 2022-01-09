@@ -23,7 +23,7 @@ public class PaymentInformation {
     @Column(length = 100)
     private String creditCardNr;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     private ApplicationUser user;
 

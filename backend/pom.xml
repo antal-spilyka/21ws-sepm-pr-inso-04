@@ -186,6 +186,7 @@
                         <jvmFlags>
                             <jvmFlag>-Dspring.profiles.active=qa</jvmFlag>
                             <jvmFlag>-Xmx128m</jvmFlag>
+                            <jvmFlag>-Dspring.profiles.active=generateData</jvmFlag>
                         </jvmFlags>
                     </container>
                 </configuration>
