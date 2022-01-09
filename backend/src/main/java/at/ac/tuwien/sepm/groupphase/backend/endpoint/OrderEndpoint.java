@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderRefundDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SetOrderToBoughtDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
@@ -62,6 +63,15 @@ public class OrderEndpoint {
         LOGGER.info("PUT " + BASE_URL + "/{}", setOrderToBoughtDto);
 
         orderService.setOrderToBought(setOrderToBoughtDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/refund")
+    @PermitAll
+    public ResponseEntity<String> setTo(@RequestBody OrderRefundDto orderRefundDto) {
+        LOGGER.info("PUT " + BASE_URL + "refund: {}", orderRefundDto);
+
+        orderService.refund(orderRefundDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -1,13 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderRefundDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SetOrderToBoughtDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
+import org.hibernate.Transaction;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +26,19 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     UserRepository userRepository;
     PaymentInformationRepository paymentInformationRepository;
+    TicketRepository ticketRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, PaymentInformationRepository paymentInformationRepository) {
+    public OrderServiceImpl(
+        OrderRepository orderRepository,
+        UserRepository userRepository,
+        PaymentInformationRepository paymentInformationRepository,
+        TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @Override
@@ -77,8 +86,17 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order order = optionalOrder.get();
+        if (order.isRefunded()) {
+            throw new ServiceException("Cannot buy a refunded order!");
+        }
         order.setBought(true);
         order.setPaymentInformation(optionalPaymentInformation.get());
         orderRepository.save(order);
+    }
+
+    @Override
+    public void refund(OrderRefundDto orderRefundDto) {
+        ticketRepository.refund(orderRefundDto.getOrderId());
+        orderRepository.refund(orderRefundDto.getOrderId());
     }
 }

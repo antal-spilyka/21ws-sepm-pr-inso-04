@@ -51,6 +51,7 @@ export class ArtistService {
    * @returns Observable
    */
   createArtist(artist: Artist): Observable<Artist> {
+    console.log(artist);
     return this.httpClient.post<Artist>(this.messageBaseUri, artist);
   }
 }

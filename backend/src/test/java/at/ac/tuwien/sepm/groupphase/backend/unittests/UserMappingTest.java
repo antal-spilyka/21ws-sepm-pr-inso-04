@@ -5,9 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
 public class UserMappingTest implements TestData {
 
@@ -30,6 +34,14 @@ public class UserMappingTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
+
+    @BeforeAll
+    public void beforeAll() {
+        paymentInformationRepository.deleteAll();
+    }
 
     @BeforeEach
     public void beforeEach() {

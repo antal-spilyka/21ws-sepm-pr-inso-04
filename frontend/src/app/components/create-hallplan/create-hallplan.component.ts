@@ -68,6 +68,7 @@ export class CreateHallplanComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.eventPlaceId = params['id'];
     });
+    console.log(this.tickets);
     for (let rowIndex = 0; rowIndex < this.defaultRowsNumber; rowIndex++) {
       const row: IHallplanElement[] = [];
       for (let seatIndex = 0; seatIndex < this.defaultSeatsNumber; seatIndex++) {
@@ -345,7 +346,8 @@ export class CreateHallplanComponent implements OnInit {
     return this.tickets?.findIndex(
       ticket => ticket.rowIndex === rowIndex &&
         ticket.seatIndex === seatIndex &&
-        ticket.ticketType !== 'Standing'
+        ticket.ticketType !== 'Standing' &&
+        !ticket.refunded
     ) !== -1;
   }
 
