@@ -178,12 +178,21 @@ public class TicketDataGenerator {
 
                 final long id = i % 200 == 0 ? 1 : i % 200;
 
+                boolean bought = getRandomDecision(this.decision);
+                ApplicationUser user = userRepository.getById(id);
+
                 Order order = new Order();
                 order.setPerformance(performanceRepository.getById(id));
                 order.setPrize(price);
                 order.setDateOfOrder(LocalDateTime.now());
-                order.setBought(getRandomDecision(this.decision));
-                order.setUser(userRepository.getById(id));
+                order.setBought(bought);
+                order.setUser(user);
+                if (bought) {
+                    List<PaymentInformation> paymentInformations = paymentInformationRepository.findByUser(user);
+                    if (!paymentInformations.isEmpty()) {
+                        order.setPaymentInformation(paymentInformations.get(0));
+                    }
+                }
                 orderRepository.save(order);
 
                 // TypeOfTicket
