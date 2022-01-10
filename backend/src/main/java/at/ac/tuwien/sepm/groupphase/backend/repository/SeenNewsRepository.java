@@ -24,7 +24,7 @@ public interface SeenNewsRepository extends JpaRepository<SeenNews, SeenNewsKey>
      * Deletes the seen news of a user.
      *
      * @param user whose seen news should be deleted.
-     * @return id
+     * @return id of the seen news removed.
      */
     Long deleteByUser(ApplicationUser user);
 }
