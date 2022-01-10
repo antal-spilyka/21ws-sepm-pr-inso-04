@@ -87,7 +87,7 @@ public class OrderEndpoint {
     @PostMapping("/validation/{id}")
     @PermitAll
     public OrderValidationDto validateOrder(@PathVariable Long id, @RequestBody ValidOrderInquiryDto validOrderInquiryDto) {
-        LOGGER.info("GET " + BASE_URL + "/validation: {}, {}", id);
+        LOGGER.info("GET " + BASE_URL + "/validation: {}, {}", id, validOrderInquiryDto.getHash());
         OrderValidationInquiryDto orderValidationInquiryDto = new OrderValidationInquiryDto();
         orderValidationInquiryDto.setId(id);
         orderValidationInquiryDto.setHash(validOrderInquiryDto.getHash());
@@ -97,11 +97,12 @@ public class OrderEndpoint {
 
     @GetMapping("/validation/{id}")
     @PermitAll
-    public CodeReturnDto validateOrder(@PathVariable Long id) {
+    public CodeReturnDto getQrcode(@PathVariable Long id) {
         LOGGER.info("GET " + BASE_URL + "/validation code: {}", id);
         OrderValidationInquiryDto orderValidationInquiryDto = new OrderValidationInquiryDto();
         orderValidationInquiryDto.setId(id);
 
-        return orderValidationService.generateCode(id);
+        CodeReturnDto codeReturnDto = orderValidationService.generateCode(id);
+        return codeReturnDto;
     }
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CodeReturnDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderValidationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderValidationInquiryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
@@ -42,6 +43,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     private OrderRepository orderRepository;
     private TicketRepository ticketRepository;
     private TicketMapper ticketMapper;
+    private AddressMapper addressMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public OrderValidationServiceImpl(
@@ -49,14 +51,17 @@ public class OrderValidationServiceImpl implements OrderValidationService {
         OrderValidationRepository orderValidationRepository,
         OrderRepository orderRepository,
         TicketRepository ticketRepository,
-        TicketMapper ticketMapper) {
+        TicketMapper ticketMapper,
+        AddressMapper addressMapper) {
         this.passwordEncoder = passwordEncoder;
         this.orderValidationRepository = orderValidationRepository;
         this.orderRepository = orderRepository;
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.addressMapper = addressMapper;
     }
 
+    @Transactional
     @Override
     public OrderValidationDto validate(OrderValidationInquiryDto orderValidationInquiryDto) {
         try {
@@ -72,7 +77,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
             OrderValidation orderValidation = orderValidationRepository.findByOrder(order);
 
-            if (!passwordEncoder.matches(orderValidationInquiryDto.getHash(), orderValidation.getHash())
+            if (!passwordEncoder.matches(orderValidation.getHash(), orderValidationInquiryDto.getHash())
                 || order.isRefunded() || !order.isBought()) {
                 return OrderValidationDto.OrderValidationDtoBuilder
                     .anOrderValidationDto()
@@ -130,16 +135,21 @@ public class OrderValidationServiceImpl implements OrderValidationService {
             byte[] image = new byte[0];
 
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            String url = String.format("http://localhost:4200/#/validation/%s?hash=%s", order.getId(), passwordEncoder.encode(orderValidation.getHash()));
+            String hash = passwordEncoder.encode(orderValidation.getHash());
+            System.out.println(hash);
+            String url = String.format("http://localhost:4200/#/validation/%s?hash=%s", order.getId(), hash);
             BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, 100, 100);
 
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-            MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFFFFC041);
+            MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFFFFFF);
 
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream, con);
             byte[] pngData = pngOutputStream.toByteArray();
             CodeReturnDto codeReturnDto = new CodeReturnDto();
             codeReturnDto.setImage(Base64.getEncoder().encodeToString(pngData));
+            codeReturnDto.setAddress(addressMapper.entityToDto(order.getPerformance().getEvent().getEventPlace().getAddress()));
+            codeReturnDto.setUserName(order.getUser().getFirstName() + " " + order.getUser().getLastName());
+            codeReturnDto.setTickets(ticketMapper.ticketToTicketDto(order.getTickets()));
             return codeReturnDto;
 
         } catch (PersistenceException e) {
