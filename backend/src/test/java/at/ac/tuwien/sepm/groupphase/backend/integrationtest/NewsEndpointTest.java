@@ -181,7 +181,7 @@ public class NewsEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user1);
 
         // Register
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())

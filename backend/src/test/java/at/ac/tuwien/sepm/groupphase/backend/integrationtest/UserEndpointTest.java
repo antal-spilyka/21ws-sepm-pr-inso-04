@@ -68,7 +68,7 @@ public class UserEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user1);
 
         // Register
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -132,7 +132,7 @@ public class UserEndpointTest implements TestData {
                 }
             }
             String body = objectMapper.writeValueAsString(user.build());
-            MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andDo(print())
@@ -146,7 +146,7 @@ public class UserEndpointTest implements TestData {
     @Test
     public void createUserWithSameEmailTwice_shouldReturnHttpStatusConflict() throws Exception {
         String body = objectMapper.writeValueAsString(user1);
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -155,7 +155,7 @@ public class UserEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
-        MvcResult mvcResult2 = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult2 = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -272,7 +272,7 @@ public class UserEndpointTest implements TestData {
 
         // Register first user
         String body = objectMapper.writeValueAsString(user);
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -282,7 +282,7 @@ public class UserEndpointTest implements TestData {
 
         // Register second User
         body = objectMapper.writeValueAsString(toUpdateUser);
-        mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -308,7 +308,7 @@ public class UserEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user1);
 
         // Register
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -343,7 +343,7 @@ public class UserEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user2);
 
         // Register user to be changed
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -355,7 +355,7 @@ public class UserEndpointTest implements TestData {
         body = objectMapper.writeValueAsString(user1);
 
         // Register the second user
-        mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
@@ -391,7 +391,7 @@ public class UserEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user1);
 
         // Register user to be changed
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())
