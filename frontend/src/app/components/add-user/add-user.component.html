@@ -1,0 +1,184 @@
+<div *ngIf="isAdmin()">
+  <mat-card>
+    <mat-card-title>Personal Information</mat-card-title>
+    <form class="form">
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="small-control">
+              <mat-select [formControl]="salutationControl">
+                <mat-option value="mr">Mr.</mat-option>
+                <mat-option value="ms">Ms.</mat-option>
+              </mat-select>
+              <mat-error *ngIf="salutationControl.invalid">{{getErrorMessage(salutationControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>first name</mat-label>
+              <input matInput placeholder="Max" [formControl]="firstNameControl" required>
+              <mat-error *ngIf="firstNameControl.invalid">{{getErrorMessage(firstNameControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>last name</mat-label>
+              <input matInput placeholder="Mustermann" [formControl]="lastNameControl" required>
+              <mat-error *ngIf="lastNameControl.invalid">{{getErrorMessage(lastNameControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="half-control">
+              <mat-label>Email</mat-label>
+              <input matInput placeholder="max@mustermann.com" [formControl]="emailControl" required>
+              <mat-error *ngIf="emailControl.invalid">{{getErrorMessage(emailControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill" class="half-control">
+              <mat-label>Phone</mat-label>
+              <input matInput type="tel" placeholder="0664123456" [formControl]="phoneControl" required>
+              <mat-error *ngIf="phoneControl.invalid">{{getErrorMessage(phoneControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-checkbox style="margin-left: 25px" [formControl]="disabledControl">Disabled</mat-checkbox>
+          </td>
+
+          <td>
+            <mat-checkbox style="margin-left: 25px" [formControl]="adminControl">Admin</mat-checkbox>
+          </td>
+
+        </tr>
+      </table>
+
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-select placeholder="Country" [formControl]="countryControl" required>
+                <mat-option *ngFor="let country of countries" [value]="country.code">{{country.name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="countryControl.invalid">{{getErrorMessage(countryControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill" class="half-control">
+              <mat-label>ZIP</mat-label>
+              <input matInput type="tel" placeholder="" [formControl]="zipControl" required>
+              <mat-error *ngIf="zipControl.invalid">{{getErrorMessage(zipControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill" class="half-control">
+              <mat-label>City</mat-label>
+              <input matInput type="tel" placeholder="" [formControl]="cityControl" required>
+              <mat-error *ngIf="cityControl.invalid">{{getErrorMessage(cityControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field appearance="fill" class="half-control">
+              <mat-label>Street</mat-label>
+              <input matInput type="tel" placeholder="" [formControl]="streetControl" required>
+              <mat-error *ngIf="streetControl.invalid">{{getErrorMessage(streetControl)}}</mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <mat-form-field appearance="fill" class="half-control">
+            <mat-label>Password</mat-label>
+            <input [formControl]="passwordControl" matInput [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="passwordControl.invalid">{{getErrorMessage(passwordControl)}}</mat-error>
+          </mat-form-field>
+        </tr>
+      </table>
+    </form>
+  </mat-card>
+
+  <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <br>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>credit_card</mat-icon>
+      </mat-panel-title>
+      <mat-panel-description>
+        Add credit card information
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-card-title> Payment Information</mat-card-title>
+    <table *ngIf="paymentInformations" mat-table [dataSource]="paymentInformations" class="mat-elevation-z8">
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef> Number</th>
+        <td mat-cell *matCellDef="let element"> {{element.creditCardNr}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name</th>
+        <td mat-cell *matCellDef="let element"> {{element.creditCardName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expirationDate">
+        <th mat-header-cell *matHeaderCellDef> Expiration Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.creditCardExpirationDate.substring(0, 2)}}
+          / {{element.creditCardExpirationDate.substring(2)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cvv">
+        <th mat-header-cell *matHeaderCellDef> CVV</th>
+        <td mat-cell *matCellDef="let element"> {{element.creditCardCvv}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="editButton">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button style="margin-bottom: 10px" mat-icon-button (click)="editPaymentInformation(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deleteButton">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button style="margin-bottom: 10px" mat-icon-button (click)="deletePaymentInformation(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <button mat-fab color="primary" style="margin-top: 20px" (click)="addPaymentInformation()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-expansion-panel>
+
+  <button style="margin-top: 50px; align-content: center" (click)="saveUser()" mat-raised-button color="primary">Save
+  </button>
+</div>
+

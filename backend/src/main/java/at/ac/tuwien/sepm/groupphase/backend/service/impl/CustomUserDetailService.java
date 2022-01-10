@@ -127,6 +127,31 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     @Transactional
+    public void createUser(UserEditDto user) {
+        LOGGER.debug("Add application user");
+        if (user == null) {
+            throw new IllegalArgumentException("Please fill out all the mandatory fields");
+        }
+        ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
+        if (foundUser != null) {
+            throw new ContextException("E-mail already used");
+        } else {
+            ApplicationUser applicationUser = userMapper.userEditDtoToApplicationUser(user);
+            if (!user.getPaymentInformation().isEmpty()) {
+                List<PaymentInformation> paymentInformationList = new ArrayList<>();
+                for (PaymentInformationDto e : user.getPaymentInformation()) {
+                    PaymentInformation p = userMapper.paymentInformationDtoToPaymentInformation(e);
+                    p.setUser(applicationUser);
+                    paymentInformationList.add(p);
+                }
+                paymentInformationRepository.saveAll(paymentInformationList);
+            }
+            userRepository.save(applicationUser);
+        }
+    }
+
+    @Override
+    @Transactional
     public void setAdmin(String email, Principal principal) {
         if (principal == null || principal.getName() == null) {
             throw new ConflictException("No administrator found with the given e-mail");

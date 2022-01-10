@@ -187,12 +187,22 @@ public class UserEditDto {
 
     @Override
     public String toString() {
-        return "UserEditDto{"
-            + "email='" + email + '\''
-            + ", password='" + password + '\''
-            + ", street='" + street + '\''
-            + ", paymentInfo='" + paymentInformation + '\''
-            + '}';
+        return "UserEditDto{" +
+            "email='" + email + '\'' +
+            ", newEmail='" + newEmail + '\'' +
+            ", admin=" + admin +
+            ", password='" + password + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", salutation='" + salutation + '\'' +
+            ", phone='" + phone + '\'' +
+            ", country='" + country + '\'' +
+            ", city='" + city + '\'' +
+            ", zip='" + zip + '\'' +
+            ", street='" + street + '\'' +
+            ", disabled=" + disabled +
+            ", paymentInformation=" + paymentInformation +
+            '}';
     }
 
     public static final class UserEditDtoBuilder {
