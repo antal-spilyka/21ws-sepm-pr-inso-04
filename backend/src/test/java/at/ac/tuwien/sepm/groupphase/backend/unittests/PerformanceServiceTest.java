@@ -1,12 +1,37 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.*;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.*;
-import org.aspectj.lang.annotation.Before;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketSeatDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallplanElementDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,16 +40,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.trace.http.HttpTrace;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.web.server.csrf.ServerCsrfTokenRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.sql.rowset.serial.SerialException;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,9 +63,6 @@ public class PerformanceServiceTest {
 
     @Autowired
     private EventPlaceMapper eventPlaceMapper;
-
-    @Autowired
-    private SectorRepository sectorRepository;
 
     @Mock
     private Principal principal;
@@ -72,8 +88,11 @@ public class PerformanceServiceTest {
     @Autowired
     private PerformanceService performanceService;
 
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
+
     private String defaultName = "test@email.com";
-    private String defaultName2 = "test2@email.com";
+    private String defaultName2 = "test222@email.com";
 
     private HallDto hallDto;
     private Hall hall;
@@ -122,6 +141,25 @@ public class PerformanceServiceTest {
         event.setDescription("TestPerformanceByDateTimeDescription");
         event.setCategory("TestCategory");
 
+        SectorDto sector = new SectorDto();
+        sector.setName("Standing");
+        sector.setColor("1234567");
+        sector.setPrice(1.1);
+        SectorDto[] sectors = {sector};
+
+        HallplanElementDto hallplanElementDto = new HallplanElementDto();
+        hallplanElementDto.setAdded(false);
+        hallplanElementDto.setSector(0);
+        hallplanElementDto.setType("Standing");
+        HallplanElementDto[] hallplanElementDtos = {hallplanElementDto};
+        HallplanElementDto[] [] hallplanElementDtos2 = {hallplanElementDtos};
+
+        HallAddDto hall = new HallAddDto();
+        hall.setName("buyTestHall");
+        hall.setStandingPlaces(10);
+        hall.setSectors(sectors);
+        hall.setRows(hallplanElementDtos2);
+        eventPlaceService.addHall(String.valueOf(2L), hall);
 
         this.performance = new Performance();
         performance.setName("TestPerformanceByDateTimePerformance");
@@ -129,11 +167,50 @@ public class PerformanceServiceTest {
         performance.setDuration(50L);
         performance.setEvent(event);
         performance.setArtist(artist);
-        performance.setHall(hall);
+        performance.setHall(hallService.findHall("buyTestHall").get(0));
         performance.setEvent(this.event);
         this.performances.add(performance);
         event.setPerformances(this.performances);
         eventService.saveEvent(eventMapper.entityToDto(event));
+
+        UserRegisterDto user1 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
+            .withEmail(this.defaultName2)
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .withDisabled(true)
+            .build();
+        userService.createUser(user1);
+
+        PaymentInformationDto paymentInformation = new PaymentInformationDto();
+        paymentInformation.setCreditCardNr("1234123412341234");
+        paymentInformation.setCreditCardExpirationDate("202022");
+        paymentInformation.setCreditCardCvv("123");
+        paymentInformation.setCreditCardName("Test");
+
+        UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(this.defaultName2)
+            .withNewEmail(this.defaultName2)
+            .withAdmin(false)
+            .withPassword("testPassword")
+            .withFirstName("firstName")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Test City")
+            .withStreet("Test Street")
+            .withDisabled(true)
+            .withZip("12345")
+            .withPaymentInformation(paymentInformation)
+            .build();
+        userService.updateUser(toUpdate);
     }
 
     @Test
@@ -185,7 +262,6 @@ public class PerformanceServiceTest {
         testEvent.setDescription("TestPerformanceByArtistDescription");
         testEvent.setCategory("TestCategory");
 
-
         Performance testPerformance = new Performance();
         testPerformance.setName("TestPerformanceByArtistPerformance");
         testPerformance.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
@@ -226,7 +302,7 @@ public class PerformanceServiceTest {
     public void getPerformanceByExistingId_findCorrectPerformance() {
         PerformanceDetailDto performance = performanceService.findPerformanceById(1L);
         assertNotNull(performance);
-        assertEquals("TestPerformance", performance.getName());
+        assertEquals("TestPerformanceByDateTimePerformance", performance.getName());
         assertEquals(performance.getDuration(), 50L);
     }
 
@@ -292,29 +368,14 @@ public class PerformanceServiceTest {
     }
 
     @Test
-    public void buySeatWithCorrectData_should() {
-        // Create user
-        UserRegisterDto userRegisterDto = new UserRegisterDto();
-        userRegisterDto.setEmail(defaultName2);
-        userRegisterDto.setPassword("password");
-        userRegisterDto.setFirstName("TestFirst");
-        userRegisterDto.setLastName("TestLast");
-        userRegisterDto.setSalutation("mr");
-        userRegisterDto.setPhone("1234567");
-        userRegisterDto.setCountry("AT");
-        userRegisterDto.setCity("TestCity");
-        userRegisterDto.setZip("1234");
-        userRegisterDto.setStreet("TestStreet");
-        userRegisterDto.setDisabled(true);
-        userService.createUser(userRegisterDto);
-
+    public void buySeatWithCorrectData_successfullyBuysTicket() {
         // Check if the name is correct
         when(principal.getName()).thenReturn(defaultName2);
-        assertEquals(userService.findApplicationUserByEmail("test2@email.com").getEmail(), this.defaultName2);
+        assertEquals(userService.findApplicationUserByEmail("test222@email.com").getEmail(), this.defaultName2);
 
         BasketSeatDto basketSeatDto = new BasketSeatDto();
-        basketSeatDto.setSeatIndex(1);
-        basketSeatDto.setRowIndex(2);
+        basketSeatDto.setSeatIndex(0);
+        basketSeatDto.setRowIndex(0);
 
         List<BasketSeatDto> seats = new ArrayList<>();
         seats.add(basketSeatDto);
@@ -322,23 +383,17 @@ public class PerformanceServiceTest {
         BasketDto basketDto = new BasketDto();
         basketDto.setSeats(seats);
         basketDto.setStandingPlaces(10);
-        basketDto.setPaymentInformationId(null);
 
-        SectorDto sector = new SectorDto();
-        sector.setName("standing");
-        sector.setColor("1234567");
-        sector.setPrice(1.1);
-        List<SectorDto> sectors = new ArrayList<>();
-        sectors.add(sector);
+        PaymentInformation paymentInformation = new PaymentInformation();
+        paymentInformation.setCreditCardNr("1234123412341234");
+        paymentInformation.setCreditCardExpirationDate("202022");
+        paymentInformation.setCreditCardCvv("123");
+        paymentInformation.setCreditCardName("Test");
+        ApplicationUser cardHolder = userService.findApplicationUserByEmail("test222@email.com");
 
-        HallDto hall = performanceService.findPerformanceById(1L).getHall();
-        hall.setStandingPlaces(10);
-        hall.setSectors(sectors);
-
-        hallService.save(hall);
-
+        basketDto.setPaymentInformationId(paymentInformationRepository.findByUser(cardHolder).get(0).getId());
         try {
-            //performanceService.buySeats(basketDto, 1L, this.principal);
+            performanceService.buySeats(basketDto, 1L, this.principal);
         } catch (NullPointerException | ServiceException e) {
             fail("Should not be the case: " + e.getLocalizedMessage());
         }

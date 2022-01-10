@@ -70,4 +70,16 @@ public class PerformanceMapper {
         performanceDto.setTickets(ticketMapper.ticketToTicketDto(performance.getTickets()));
         return performanceDto;
     }
+
+    public PerformanceDto detailDtoToDto(PerformanceDetailDto performance) {
+        LOGGER.trace("Mapping {}", performance);
+        PerformanceDto performanceDto = new PerformanceDto();
+        performanceDto.setId(performance.getId());
+        performanceDto.setName(performance.getName());
+        performanceDto.setStartTime(performance.getStartTime());
+        performanceDto.setDuration(performance.getDuration());
+        performanceDto.setArtist(performance.getArtist());
+        performanceDto.setHall(performance.getHall());
+        return performanceDto;
+    }
 }

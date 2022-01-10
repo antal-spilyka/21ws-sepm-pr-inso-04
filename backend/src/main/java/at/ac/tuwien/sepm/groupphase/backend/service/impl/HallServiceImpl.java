@@ -40,7 +40,7 @@ public class HallServiceImpl implements HallService {
     @Transactional
     @Override
     public List<Hall> findHall(String name) {
-        LOGGER.debug("Handeling in Service {}", name);
+        LOGGER.debug("Handling in Service {}", name);
         try {
             return hallRepository.findHall(name, PageRequest.of(0, 2));
         } catch (PersistenceException e) {
