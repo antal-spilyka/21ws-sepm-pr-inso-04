@@ -27,31 +27,25 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.HallService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
-import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
-import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +74,9 @@ public class NewsEndpointTest implements TestData {
 
     @Autowired
     private HallService hallService;
+
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
 
     @Autowired
     private ArtistService artistService;
@@ -116,9 +113,6 @@ public class NewsEndpointTest implements TestData {
 
     @Autowired
     OrderRepository orderRepository;
-
-    @Autowired
-    PaymentInformationRepository paymentInformationRepository;
 
     @BeforeAll
     public void beforeAll() {
@@ -211,7 +205,7 @@ public class NewsEndpointTest implements TestData {
         String body = objectMapper.writeValueAsString(user1);
 
         // Register
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
             .andDo(print())

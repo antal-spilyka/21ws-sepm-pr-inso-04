@@ -215,7 +215,9 @@ export class EditUserComponent implements OnInit {
           this.paymentInformations = [];
         }
         this.paymentInformations.push(result);
-        this.table.renderRows();
+        if (this.table) {
+          this.table.renderRows();
+        }
       }
     });
   }

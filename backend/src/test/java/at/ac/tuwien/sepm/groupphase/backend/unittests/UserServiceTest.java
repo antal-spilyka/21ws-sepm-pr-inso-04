@@ -251,4 +251,112 @@ public class UserServiceTest implements TestData {
             // Should be the case
         }
     }
+
+    @Test
+    public void addUserWithDuplicatedEmail_shouldThrowServiceException() {
+        UserEditDto user = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+
+        try {
+            userService.createUser(newUser1);
+            userService.createUser(user);
+            fail("ContextException should occur!");
+        } catch (ContextException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void addUser_thenFindUser() {
+        UserEditDto user = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertNotNull(userRepository.findByEmailContains(user1.getEmail()))
+        );
+    }
+
+    @Test
+    public void addSeveralUsers_thenFindAllUser() {
+        UserEditDto user1 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        UserEditDto user2 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser2.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        UserEditDto user3 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser3.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user1);
+        userService.createUser(user2);
+        userService.createUser(user3);
+
+        assertAll(
+            () -> assertEquals(3, userService.findUsers(null).size()),
+            () -> assertEquals(3, userService.findUsers("user").size()),
+            () -> assertNotNull(userRepository.findByEmailContains(user1.getEmail())),
+            () -> assertNotNull(userRepository.findByEmailContains(user2.getEmail())),
+            () -> assertNotNull(userRepository.findByEmailContains(user3.getEmail()))
+
+        );
+    }
 }
