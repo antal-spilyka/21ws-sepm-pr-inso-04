@@ -92,10 +92,10 @@ public class PerformanceServiceTest {
     private PaymentInformationRepository paymentInformationRepository;
 
     private String defaultName = "test@email.com";
-    private String defaultName2 = "test222@email.com";
+    private String defaultName2 = "test2@email.com";
+    private String defaultName3 = "test3@email.com";
 
     private HallDto hallDto;
-    private Hall hall;
     private AddressDto addressDto;
     private EventPlaceDto eventPlaceDto;
     private EventPlace eventPlace;
@@ -131,7 +131,7 @@ public class PerformanceServiceTest {
         this.hallDto = new HallDto();
         hallDto.setName("TestPerformanceByDateTimeHall");
         hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
-        this.hall = hallService.save(hallDto);
+        hallService.save(hallDto);
 
         this.event = new Event();
         event.setName("TestPerformanceByDateTimeName");
@@ -151,12 +151,18 @@ public class PerformanceServiceTest {
         hallplanElementDto.setAdded(false);
         hallplanElementDto.setSector(0);
         hallplanElementDto.setType("Standing");
-        HallplanElementDto[] hallplanElementDtos = {hallplanElementDto};
+
+        HallplanElementDto hallplanElementDto2 = new HallplanElementDto();
+        hallplanElementDto2.setAdded(false);
+        hallplanElementDto2.setSector(0);
+        hallplanElementDto2.setType("Standing");
+
+        HallplanElementDto[] hallplanElementDtos = {hallplanElementDto, hallplanElementDto2};
         HallplanElementDto[] [] hallplanElementDtos2 = {hallplanElementDtos};
 
         HallAddDto hall = new HallAddDto();
         hall.setName("buyTestHall");
-        hall.setStandingPlaces(10);
+        hall.setStandingPlaces(100);
         hall.setSectors(sectors);
         hall.setRows(hallplanElementDtos2);
         eventPlaceService.addHall(String.valueOf(2L), hall);
@@ -317,7 +323,7 @@ public class PerformanceServiceTest {
 
         BasketDto basketDto = new BasketDto();
         basketDto.setSeats(seats);
-        basketDto.setStandingPlaces(10);
+        basketDto.setStandingPlaces(1);
         basketDto.setPaymentInformationId(null);
         try {
             performanceService.buySeats(basketDto, 1L, null);
@@ -326,6 +332,27 @@ public class PerformanceServiceTest {
             // Should be the case
         }
    }
+
+    @Test
+    public void reserveSeatWithoutPrincipal_shouldThrowNullPointerException() {
+        BasketSeatDto basketSeatDto = new BasketSeatDto();
+        basketSeatDto.setSeatIndex(1);
+        basketSeatDto.setRowIndex(2);
+
+        List<BasketSeatDto> seats = new ArrayList<>();
+        seats.add(basketSeatDto);
+
+        BasketDto basketDto = new BasketDto();
+        basketDto.setSeats(seats);
+        basketDto.setStandingPlaces(1);
+        basketDto.setPaymentInformationId(null);
+        try {
+            performanceService.reserveSeats(basketDto, 1L, null);
+            fail("Should not be the case");
+        } catch (NullPointerException e) {
+            // Should be the case
+        }
+    }
 
     @Test
     public void buySeatForNonExistingPerformance_shouldThrowNullPointerException() {
@@ -357,7 +384,7 @@ public class PerformanceServiceTest {
 
         BasketDto basketDto = new BasketDto();
         basketDto.setSeats(seats);
-        basketDto.setStandingPlaces(10);
+        basketDto.setStandingPlaces(1);
         basketDto.setPaymentInformationId(null);
         try {
             performanceService.buySeats(basketDto, 12345678L, principal);
@@ -368,10 +395,50 @@ public class PerformanceServiceTest {
     }
 
     @Test
+    public void reserveSeatForNonExistingPerformance_shouldThrowNullPointerException() {
+        // Create user
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+        userRegisterDto.setEmail(defaultName3);
+        userRegisterDto.setPassword("password");
+        userRegisterDto.setFirstName("TestFirst");
+        userRegisterDto.setLastName("TestLast");
+        userRegisterDto.setSalutation("mr");
+        userRegisterDto.setPhone("1234567");
+        userRegisterDto.setCountry("AT");
+        userRegisterDto.setCity("TestCity");
+        userRegisterDto.setZip("1234");
+        userRegisterDto.setStreet("TestStreet");
+        userRegisterDto.setDisabled(true);
+        userService.createUser(userRegisterDto);
+
+        // Check if the name is correct
+        when(principal.getName()).thenReturn(defaultName3);
+        assertEquals(userService.findApplicationUserByEmail("test3@email.com").getEmail(), this.defaultName3);
+
+        BasketSeatDto basketSeatDto = new BasketSeatDto();
+        basketSeatDto.setSeatIndex(1);
+        basketSeatDto.setRowIndex(2);
+
+        List<BasketSeatDto> seats = new ArrayList<>();
+        seats.add(basketSeatDto);
+
+        BasketDto basketDto = new BasketDto();
+        basketDto.setSeats(seats);
+        basketDto.setStandingPlaces(1);
+        basketDto.setPaymentInformationId(null);
+        try {
+            performanceService.reserveSeats(basketDto, 12345678L, principal);
+            fail("Should not be the case");
+        } catch (ServiceException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
     public void buySeatWithCorrectData_successfullyBuysTicket() {
         // Check if the name is correct
         when(principal.getName()).thenReturn(defaultName2);
-        assertEquals(userService.findApplicationUserByEmail("test222@email.com").getEmail(), this.defaultName2);
+        assertEquals(userService.findApplicationUserByEmail("test2@email.com").getEmail(), this.defaultName2);
 
         BasketSeatDto basketSeatDto = new BasketSeatDto();
         basketSeatDto.setSeatIndex(0);
@@ -382,18 +449,50 @@ public class PerformanceServiceTest {
 
         BasketDto basketDto = new BasketDto();
         basketDto.setSeats(seats);
-        basketDto.setStandingPlaces(10);
+        basketDto.setStandingPlaces(1);
 
         PaymentInformation paymentInformation = new PaymentInformation();
         paymentInformation.setCreditCardNr("1234123412341234");
         paymentInformation.setCreditCardExpirationDate("202022");
         paymentInformation.setCreditCardCvv("123");
         paymentInformation.setCreditCardName("Test");
-        ApplicationUser cardHolder = userService.findApplicationUserByEmail("test222@email.com");
+        ApplicationUser cardHolder = userService.findApplicationUserByEmail("test2@email.com");
 
         basketDto.setPaymentInformationId(paymentInformationRepository.findByUser(cardHolder).get(0).getId());
         try {
             performanceService.buySeats(basketDto, 1L, this.principal);
+        } catch (NullPointerException | ServiceException e) {
+            fail("Should not be the case: " + e.getLocalizedMessage());
+        }
+    }
+
+    @Test
+    public void reserveWithCorrectData_successfullyBuysTicket() {
+        // Check if the name is correct
+        when(principal.getName()).thenReturn(defaultName2);
+        assertEquals(userService.findApplicationUserByEmail("test2@email.com").getEmail(), this.defaultName2);
+
+        BasketSeatDto basketSeatDto = new BasketSeatDto();
+        basketSeatDto.setSeatIndex(1);
+        basketSeatDto.setRowIndex(0);
+
+        List<BasketSeatDto> seats = new ArrayList<>();
+        seats.add(basketSeatDto);
+
+        BasketDto basketDto = new BasketDto();
+        basketDto.setSeats(seats);
+        basketDto.setStandingPlaces(1);
+
+        PaymentInformation paymentInformation = new PaymentInformation();
+        paymentInformation.setCreditCardNr("1234123412341234");
+        paymentInformation.setCreditCardExpirationDate("202022");
+        paymentInformation.setCreditCardCvv("123");
+        paymentInformation.setCreditCardName("Test");
+        ApplicationUser cardHolder = userService.findApplicationUserByEmail("test2@email.com");
+
+        basketDto.setPaymentInformationId(paymentInformationRepository.findByUser(cardHolder).get(0).getId());
+        try {
+            performanceService.reserveSeats(basketDto, 1L, this.principal);
         } catch (NullPointerException | ServiceException e) {
             fail("Should not be the case: " + e.getLocalizedMessage());
         }
