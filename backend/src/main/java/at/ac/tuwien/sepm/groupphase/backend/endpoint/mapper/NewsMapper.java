@@ -27,7 +27,10 @@ public class NewsMapper {
     public News dtoToEntity(NewsDto newsDto) {
         LOGGER.trace("Mapping {}", newsDto);
         News news = new News();
-        news.setEvent(eventMapper.dtoToEntity(newsDto.getEvent()));
+        if (newsDto.getEvent() != null) {
+            news.setEvent(eventMapper.dtoToEntity(newsDto.getEvent()));
+
+        }
         if (newsDto.getRating() != null && (newsDto.getRating() < 0 || newsDto.getRating() > 5)) {
             throw new MappingException("Rating has to be between 0 and 5");
         }
@@ -46,7 +49,9 @@ public class NewsMapper {
         LOGGER.trace("Mapping {}", news);
         NewsDto newsDto = new NewsDto();
         newsDto.setId(news.getId());
-        newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
+        if (news.getEvent() != null) {
+            newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
+        }
         newsDto.setRating(news.getRating());
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
@@ -59,7 +64,9 @@ public class NewsMapper {
         LOGGER.trace("Mapping {}", news);
         NewsDto newsDto = new NewsDto();
         newsDto.setId(news.getId());
-        newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
+        if (news.getEvent() != null) {
+            newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
+        }
         newsDto.setRating(news.getRating());
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
@@ -85,8 +92,10 @@ public class NewsMapper {
         LOGGER.trace("Mapping {}", news);
         SimpleNewsDto simpleNewsDto = new SimpleNewsDto();
         simpleNewsDto.setId(news.getId());
-        simpleNewsDto.setEventDate(news.getEvent().getStartTime());
-        simpleNewsDto.setEventName(news.getEvent().getName());
+        if (news.getEvent() != null) {
+            simpleNewsDto.setEventDate(news.getEvent().getStartTime());
+            simpleNewsDto.setEventName(news.getEvent().getName());
+        }
         simpleNewsDto.setShortDescription(news.getShortDescription());
         simpleNewsDto.setLongDescription(news.getLongDescription());
         simpleNewsDto.setCreateDate(news.getCreateDate());

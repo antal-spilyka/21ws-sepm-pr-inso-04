@@ -72,6 +72,7 @@ import { PaymentInformationPickComponent } from './components/payment-informatio
 import { AddArtistDialogComponent } from './components/create-event/create-artist/add-artist-dialog/add-artist-dialog.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ValidateOrderComponent } from './components/validate-order/validate-order.component';
+import { TypeOfNewsDialogComponent } from './components/add-news/type-of-news-dialog/type-of-news-dialog.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { ValidateOrderComponent } from './components/validate-order/validate-ord
     PaymentInformationPickComponent,
     AddArtistDialogComponent,
     AddUserComponent,
-    ValidateOrderComponent
+    ValidateOrderComponent,
+    TypeOfNewsDialogComponent
   ],
   imports: [
     BrowserModule,
