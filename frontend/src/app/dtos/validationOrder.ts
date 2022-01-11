@@ -1,6 +1,6 @@
 import { Ticket } from './ticket';
 
-export class OrderValidation {
+export class ValidationOrder {
     valid: boolean;
     tickets: Ticket[];
     firstName: string;

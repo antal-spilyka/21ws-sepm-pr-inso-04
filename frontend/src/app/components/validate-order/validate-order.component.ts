@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrderValidation } from 'src/app/dtos/OrderValidation';
+import { ValidationOrder } from 'src/app/dtos/validationOrder';
 import { OrderService } from 'src/app/services/order.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { OrderService } from 'src/app/services/order.service';
   styleUrls: ['./validate-order.component.scss']
 })
 export class ValidateOrderComponent implements OnInit {
-  orderValidation: OrderValidation;
+  orderValidation: ValidationOrder;
 
   constructor(private route: ActivatedRoute, private orderService: OrderService) { }
 
@@ -31,7 +31,7 @@ export class ValidateOrderComponent implements OnInit {
         this.orderValidation = {
           valid: false,
           comment: 'There was an error when validating the Ticket!'
-        } as OrderValidation;
+        } as ValidationOrder;
       }
     });
   }

@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {Order} from '../dtos/order';
 import {SetOrderToBoughtDto} from '../dtos/setOrderToBoughtDto';
 import { CodeReturnDto } from '../dtos/codeReturnDto';
-import { OrderValidation } from '../dtos/OrderValidation';
+import { ValidationOrder } from '../dtos/validationOrder';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +64,7 @@ export class OrderService {
     return this.httpClient.get<CodeReturnDto>(this.baseUri + `/validation/${id}`);
   }
 
-  validateOrder(id: number, hash: string): Observable<OrderValidation> {
-    return this.httpClient.post<OrderValidation>(this.baseUri + `/validation/${id}`, { hash });
+  validateOrder(id: number, hash: string): Observable<ValidationOrder> {
+    return this.httpClient.post<ValidationOrder>(this.baseUri + `/validation/${id}`, { hash });
   }
 }
