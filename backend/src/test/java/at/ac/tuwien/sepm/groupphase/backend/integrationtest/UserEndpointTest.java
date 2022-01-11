@@ -10,20 +10,29 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import javax.transaction.Transactional;
+import java.lang.invoke.MethodHandles;
+import java.security.Principal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,12 +46,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class UserEndpointTest implements TestData {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private PaymentInformationRepository paymentInformationRepository;
@@ -420,4 +434,53 @@ public class UserEndpointTest implements TestData {
         MockHttpServletResponse response3 = mvcResult3.getResponse();
         assertEquals(HttpStatus.FORBIDDEN.value(), response3.getStatus());
     }
+
+    @Test
+    public void addUserWithoutLogin_shouldReturnHttpStatusForbidden() throws Exception {
+        // Register admin
+        String bodyRegister = objectMapper.writeValueAsString(user3);
+        MvcResult mvcResultRegister = this.mockMvc.perform(post(USER_BASE_URI + "/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bodyRegister))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseRegister = mvcResultRegister.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), responseRegister.getStatus());
+
+        // Login
+        String bodyLogin = objectMapper.writeValueAsString(UserLoginDto.UserLoginDtoBuilder.anUserLoginDto()
+            .withEmail(user3.getEmail()).withPassword(user3.getPassword()).build());
+
+        MvcResult mvcResultLogin = this.mockMvc.perform(post(AUTHENTICATION_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bodyLogin))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseLogin = mvcResultLogin.getResponse();
+        assertEquals(HttpStatus.OK.value(), responseLogin.getStatus());
+
+        UserEditDto user = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        String body = objectMapper.writeValueAsString(user);
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+    }
+
 }

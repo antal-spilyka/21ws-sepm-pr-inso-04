@@ -17,6 +17,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -76,6 +77,9 @@ public class NewsEndpointTest implements TestData {
     private HallService hallService;
 
     @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
+
+    @Autowired
     private ArtistService artistService;
 
     @Autowired
@@ -101,6 +105,7 @@ public class NewsEndpointTest implements TestData {
 
     @BeforeEach
     public void beforeEach() {
+        paymentInformationRepository.deleteAll();
         userRepository.deleteAll();
 
         AddressDto addressDto = new AddressDto();
