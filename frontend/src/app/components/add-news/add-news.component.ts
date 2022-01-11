@@ -7,6 +7,8 @@ import {News} from '../../dtos/news';
 import {NewsService} from '../../services/news.service';
 import { FileService } from 'src/app/services/file.service';
 import { Picture } from 'src/app/dtos/picture';
+import {MatDialog} from '@angular/material/dialog';
+import {TypeOfNewsDialogComponent} from "./type-of-news-dialog/type-of-news-dialog.component";
 
 @Component({
   selector: 'app-add-news',
@@ -17,7 +19,7 @@ export class AddNewsComponent implements OnInit {
   error = false;
   errorMessage = '';
   events: Observable<EventDto[]>;
-  currentEvent: EventDto;
+  currentEvent?: EventDto;
   images: Array<object> = [
     {
       image: '../../../assets/noImage.jpg',
@@ -27,6 +29,8 @@ export class AddNewsComponent implements OnInit {
   filesToUpload = [];
   imageUrl;
   filesUploaded: Picture[] = [];
+
+  eventNews: boolean; // true if the new news should be with an event
 
   form = this.formBuilder.group({
     id: ['',],
@@ -38,6 +42,7 @@ export class AddNewsComponent implements OnInit {
   });
 
   constructor(
+    public dialog: MatDialog,
     private eventService: EventService,
     private formBuilder: FormBuilder,
     private newsService: NewsService,
@@ -51,6 +56,24 @@ export class AddNewsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.openDialog();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(TypeOfNewsDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.form.get('chosenEvent').clearValidators();
+        this.form.get('rating').clearValidators();
+        this.form.get('fsk').clearValidators();
+        this.form.get('chosenEvent').updateValueAndValidity();
+        this.form.get('rating').updateValueAndValidity();
+        this.form.get('fsk').updateValueAndValidity();
+        this.form.get('fsk').setValue(null);
+      }
+      this.eventNews = result;
+    });
   }
 
   setChosenEvent(event: EventDto) {
@@ -80,6 +103,7 @@ export class AddNewsComponent implements OnInit {
       this.setErrorFlag('Please fill out the form');
       return;
     }
+
     const newsRequest = {
       event: this.currentEvent,
       rating: this.form.controls.rating.value,

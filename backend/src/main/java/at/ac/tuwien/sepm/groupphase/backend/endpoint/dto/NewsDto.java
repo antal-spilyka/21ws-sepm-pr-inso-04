@@ -8,13 +8,10 @@ public class NewsDto {
 
     private Long id;
 
-    @NotNull(message = "Event must not be null")
     private EventDto event;
 
-    @NotNull(message = "Rating must not be null")
     private Long rating;
 
-    @NotNull(message = "FSK must not be null")
     private Long fsk;
 
     @NotNull(message = "createDate must not be null")

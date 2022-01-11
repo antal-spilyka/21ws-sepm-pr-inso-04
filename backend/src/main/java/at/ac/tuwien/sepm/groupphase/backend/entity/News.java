@@ -21,10 +21,8 @@ public class News {
     @OneToOne()
     private Event event;
 
-    @Column(nullable = false)
     private Long rating;
 
-    @Column(nullable = false)
     private Long fsk;
 
     @Column(nullable = false)

@@ -33,7 +33,7 @@
         <mat-error *ngIf="form.controls.shortDescription.invalid">{{getErrorMessage(form.controls.shortDescription)}}
         </mat-error>
       </mat-form-field>
-      <div class="div-additional-info">
+      <div *ngIf="eventNews" class="div-additional-info">
         <div>
           <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>Choose Event</mat-label>
