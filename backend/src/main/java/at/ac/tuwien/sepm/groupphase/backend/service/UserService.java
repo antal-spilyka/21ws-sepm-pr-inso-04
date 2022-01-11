@@ -46,7 +46,7 @@ public interface UserService extends UserDetailsService {
      *
      * @param user that should be registered
      */
-    void createUser(UserRegisterDto user);
+    ApplicationUser createUser(UserRegisterDto user);
 
     /**
      * Adds an application user with more information than void createUser(UserRegisterDto user);.

@@ -9,7 +9,11 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -52,8 +56,24 @@ public class UserServiceTest implements TestData {
     @Autowired
     private SeenNewsRepository seenNewsRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private HallplanElementRepository hallplanElementRepository;
+
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
     @BeforeAll
     public void beforeAll() {
+        performanceRepository.deleteAll();
+        hallRepository.deleteAll();
+        hallplanElementRepository.deleteAll();
+        orderRepository.deleteAll();
         paymentInformationRepository.deleteAll();
     }
 
