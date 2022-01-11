@@ -4,8 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Order} from '../dtos/order';
 import {SetOrderToBoughtDto} from '../dtos/setOrderToBoughtDto';
-import { OrderValidation } from '../dtos/OrderValidation';
 import { CodeReturnDto } from '../dtos/codeReturnDto';
+import { OrderValidation } from '../dtos/OrderValidation';
 
 @Injectable({
   providedIn: 'root'
