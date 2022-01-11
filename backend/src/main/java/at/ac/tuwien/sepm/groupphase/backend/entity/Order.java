@@ -48,7 +48,7 @@ public class Order {
     @Column()
     private Boolean refunded = false;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "paymentInformation_Id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 

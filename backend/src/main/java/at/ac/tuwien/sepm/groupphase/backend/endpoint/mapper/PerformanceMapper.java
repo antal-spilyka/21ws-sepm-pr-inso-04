@@ -51,7 +51,7 @@ public class PerformanceMapper {
         performanceDto.setName(performance.getName());
         performanceDto.setStartTime(performance.getStartTime());
         performanceDto.setDuration(performance.getDuration());
-        //performanceDto.setEvent(eventDto);
+        //performanceDto.setEventDto(eventDto);
         performanceDto.setArtist(artistMapper.entityToDto(performance.getArtist()));
         performanceDto.setHall(hallMapper.entityToDto(performance.getHall()));
         performanceDto.setPriceMultiplicant(performance.getPriceMultiplicant());

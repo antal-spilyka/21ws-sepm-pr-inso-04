@@ -35,4 +35,15 @@ export class ValidateOrderComponent implements OnInit {
       }
     });
   }
+
+  renderDate(dt: Date) {
+    const date = new Date(dt);
+    console.log(dt);
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const y = date.getFullYear();
+    const h = date.getHours();
+    const min = date.getMinutes();
+    return d + '.' + m + '.' + y + ' ' + h + ':' + min;
+  }
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,8 @@ public class OrderValidationDto {
     private List<TicketDto> tickets;
     private String firstName;
     private String lastName;
+    private LocalDateTime date;
+    private String performanceName;
     private String comment;
 
     public boolean isValid() {
@@ -50,6 +53,22 @@ public class OrderValidationDto {
         this.comment = comment;
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public String getPerformanceName() {
+        return performanceName;
+    }
+
+    public void setPerformanceName(String performanceName) {
+        this.performanceName = performanceName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -82,6 +101,8 @@ public class OrderValidationDto {
         private List<TicketDto> tickets;
         private String firstName;
         private String lastName;
+        private LocalDateTime date;
+        private String performanceName;
         private String comment;
 
         public static OrderValidationDto.OrderValidationDtoBuilder anOrderValidationDto() {
@@ -113,6 +134,16 @@ public class OrderValidationDto {
             return this;
         }
 
+        public OrderValidationDtoBuilder withDate(LocalDateTime date) {
+            this.date = date;
+            return this;
+        }
+
+        public OrderValidationDtoBuilder withPerformanceName(String performanceName) {
+            this.performanceName = performanceName;
+            return this;
+        }
+
         public OrderValidationDto build() {
             OrderValidationDto orderValidationDto = new OrderValidationDto();
             orderValidationDto.setValid(this.valid);
@@ -120,6 +151,8 @@ public class OrderValidationDto {
             orderValidationDto.setFirstName(this.firstName);
             orderValidationDto.setLastName(this.lastName);
             orderValidationDto.setComment(this.comment);
+            orderValidationDto.setDate(this.date);
+            orderValidationDto.setPerformanceName(this.performanceName);
             return orderValidationDto;
         }
     }

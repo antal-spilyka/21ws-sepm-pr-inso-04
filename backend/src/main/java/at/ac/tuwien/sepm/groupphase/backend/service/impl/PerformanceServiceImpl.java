@@ -199,6 +199,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         LOGGER.debug("Handling in service {}", basket);
         try {
             Performance performance = performanceRepository.getById(performanceId);
+            System.out.println("gotten here");
             ApplicationUser applicationUser = userRepository.findUserByEmail(principal.getName());
 
             if (applicationUser == null) {
@@ -364,6 +365,11 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPrize(prize);
             order.setPerformance(performance);
             orderRepository.save(order);
+            System.out.println("gotten here");
+            tickets.stream().map(ticket -> {
+                System.out.println(ticket);
+                return ticket;
+            });
             ticketRepository.saveAll(tickets);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

@@ -11,9 +11,14 @@
             <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
                 <p>Ticket for: <b>{{orderValidation.firstName + ' ' + orderValidation.lastName}}</b></p>
             </div>
-
             <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
                 <p>Number of Tickets: <b>{{orderValidation.tickets.length}}</b></p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Valid on: <b>{{renderDate(orderValidation.date)}}</b></p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Performance: <b>{{orderValidation.performanceName}}</b></p>
             </div>
         </div>
     </div>

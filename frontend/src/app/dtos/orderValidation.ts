@@ -5,5 +5,7 @@ export class OrderValidation {
     tickets: Ticket[];
     firstName: string;
     lastName: string;
+    date: Date;
+    performanceName: string;
     comment: string;
 }

@@ -89,13 +89,14 @@ public class OrderValidationServiceImpl implements OrderValidationService {
             ApplicationUser applicationUser = order.getUser();
             List<TicketDto> tickets = ticketMapper.ticketToTicketDto(ticketRepository.findTicketsByOrder(order));
 
-
             return OrderValidationDto.OrderValidationDtoBuilder
                 .anOrderValidationDto()
                 .withFirstName(applicationUser.getFirstName())
                 .withLastName(applicationUser.getLastName())
                 .withTickets(tickets)
                 .withValid(true)
+                .withDate(order.getPerformance().getStartTime())
+                .withPerformanceName(order.getPerformance().getName())
                 .withComment("This Order has been validated.")
                 .build();
         } catch (PersistenceException e) {

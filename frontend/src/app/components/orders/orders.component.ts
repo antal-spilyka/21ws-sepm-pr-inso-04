@@ -131,6 +131,10 @@ export class OrdersComponent implements OnInit {
   downloadPdf(order: Order, codeReturnDto: CodeReturnDto) {
     const { performanceDto } = order;
     const { image, userName, address, tickets } = codeReturnDto;
+    let addressString = address.street + ', ' + address.city + ', ' + address.zip + ', ' + address.country;
+    if(addressString.length > 35) {
+      addressString = addressString.substring(0,35) + '...';
+    }
     const documentDefinition = { content: [
         {
           fontSize: 20,
@@ -152,7 +156,7 @@ export class OrdersComponent implements OnInit {
               text: `
               ${userName}
               ${performanceDto.startTime ? this.renderDate(performanceDto.startTime) : 'unknown'}
-              ${address.street + ', ' + address.city + ', ' + address.zip + ', ' + address.country}
+              ${addressString}
               ${performanceDto.hall.name}
               ${order.price}€
               ${order.ticketDetailDtos.length}
