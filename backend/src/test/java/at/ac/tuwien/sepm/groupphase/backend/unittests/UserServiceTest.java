@@ -6,12 +6,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,6 +20,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -52,9 +52,59 @@ public class UserServiceTest implements TestData {
     @Autowired
     private SeenNewsRepository seenNewsRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
+    @Autowired
+    private HallplanElementRepository hallplanElementRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private EventPlaceRepository eventPlaceRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private NewsRepository newsRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
+
     @BeforeAll
     public void beforeAll() {
+        seenNewsRepository.deleteAll();
+        pictureRepository.deleteAll();
+        ticketRepository.deleteAll();
+        orderRepository.deleteAll();
+        performanceRepository.deleteAll();
+        artistRepository.deleteAll();
+        hallRepository.deleteAll();
+        hallplanElementRepository.deleteAll();
+        sectorRepository.deleteAll();
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        eventPlaceRepository.deleteAll();
         paymentInformationRepository.deleteAll();
+        addressRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @BeforeEach
