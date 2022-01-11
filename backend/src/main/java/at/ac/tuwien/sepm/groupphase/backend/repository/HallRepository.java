@@ -63,4 +63,6 @@ public interface HallRepository extends JpaRepository<Hall, Long> {
      * @return all halls.
      */
     List<Hall> getAllBy(Pageable pageable);
+
+
 }

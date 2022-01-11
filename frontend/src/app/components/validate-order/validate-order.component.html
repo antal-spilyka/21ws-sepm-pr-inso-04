@@ -1,0 +1,25 @@
+<mat-card>
+    <div *ngIf="orderValidation">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <mat-icon *ngIf="orderValidation.valid" class="circle">check_circle</mat-icon>
+            <mat-icon *ngIf="!orderValidation.valid" class="circle">error</mat-icon>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <p><b>{{orderValidation.comment}}</b></p>
+        </div>
+        <div *ngIf="orderValidation.valid">
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Ticket for: <b>{{orderValidation.firstName + ' ' + orderValidation.lastName}}</b></p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Number of Tickets: <b>{{orderValidation.tickets.length}}</b></p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Valid on: <b>{{renderDate(orderValidation.date)}}</b></p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <p>Performance: <b>{{orderValidation.performanceName}}</b></p>
+            </div>
+        </div>
+    </div>
+</mat-card>

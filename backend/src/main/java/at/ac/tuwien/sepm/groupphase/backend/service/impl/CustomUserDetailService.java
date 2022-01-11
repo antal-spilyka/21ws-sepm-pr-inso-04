@@ -110,7 +110,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void createUser(UserRegisterDto user) {
+    public ApplicationUser createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         if (user == null) {
             throw new IllegalArgumentException("Please fill out all the mandatory fields");
@@ -119,7 +119,7 @@ public class CustomUserDetailService implements UserService {
         if (foundUser != null) {
             throw new ContextException("E-mail already used");
         } else {
-            userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
+            return userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
                 user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), 0));
         }

@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationReposit
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
+import at.ac.tuwien.sepm.groupphase.backend.service.OrderValidationService;
 import org.hibernate.Transaction;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     UserRepository userRepository;
     PaymentInformationRepository paymentInformationRepository;
     TicketRepository ticketRepository;
+    OrderValidationService orderValidationService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -34,11 +36,13 @@ public class OrderServiceImpl implements OrderService {
         OrderRepository orderRepository,
         UserRepository userRepository,
         PaymentInformationRepository paymentInformationRepository,
-        TicketRepository ticketRepository) {
+        TicketRepository ticketRepository,
+        OrderValidationService orderValidationService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.paymentInformationRepository = paymentInformationRepository;
         this.ticketRepository = ticketRepository;
+        this.orderValidationService = orderValidationService;
     }
 
     @Override
@@ -91,7 +95,8 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setBought(true);
         order.setPaymentInformation(optionalPaymentInformation.get());
-        orderRepository.save(order);
+        order = orderRepository.save(order);
+        orderValidationService.createValidation(order);
     }
 
     @Override

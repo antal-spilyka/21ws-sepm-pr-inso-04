@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Order} from '../dtos/order';
 import {SetOrderToBoughtDto} from '../dtos/setOrderToBoughtDto';
+import { CodeReturnDto } from '../dtos/codeReturnDto';
+import { ValidationOrder } from '../dtos/validationOrder';
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +58,13 @@ export class OrderService {
 
   refundOrder(orderId: number): Observable<void> {
     return this.httpClient.put<void>(this.baseUri + '/refund', {orderId});
+  }
+
+  downloadQRcode(id: number): Observable<CodeReturnDto>{
+    return this.httpClient.get<CodeReturnDto>(this.baseUri + `/validation/${id}`);
+  }
+
+  validateOrder(id: number, hash: string): Observable<ValidationOrder> {
+    return this.httpClient.post<ValidationOrder>(this.baseUri + `/validation/${id}`, { hash });
   }
 }
