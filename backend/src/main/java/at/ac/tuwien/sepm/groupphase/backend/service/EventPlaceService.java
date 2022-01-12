@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public interface EventPlaceService {
      * @param eventPlaceId the event place to which the hall is added
      * @param hallAddDto to be persisted
      */
-    void addHall(String eventPlaceId, HallAddDto hallAddDto);
+    Hall addHall(String eventPlaceId, HallAddDto hallAddDto);
 
     /**
      * Finds the address of the eventPlace with the given id.

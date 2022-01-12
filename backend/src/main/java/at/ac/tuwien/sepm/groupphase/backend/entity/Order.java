@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "order_table")
@@ -45,9 +46,9 @@ public class Order {
     private LocalDateTime dateOfOrder;
 
     @Column()
-    private boolean refunded = false;
+    private Boolean refunded = false;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "paymentInformation_Id", referencedColumnName = "id")
     private PaymentInformation paymentInformation;
 
@@ -115,11 +116,11 @@ public class Order {
         this.paymentInformation = paymentInformation;
     }
 
-    public boolean isRefunded() {
+    public Boolean isRefunded() {
         return refunded;
     }
 
-    public void setRefunded(boolean refunded) {
+    public void setRefunded(Boolean refunded) {
         this.refunded = refunded;
     }
 
@@ -135,5 +136,22 @@ public class Order {
             ", dateOfOrder=" + dateOfOrder +
             ", refunded=" + refunded +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Order order = (Order) o;
+        return Double.compare(order.prize, prize) == 0 && bought == order.bought && refunded == order.refunded && id.equals(order.id) && dateOfOrder.equals(order.dateOfOrder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, prize, bought, dateOfOrder, refunded);
     }
 }

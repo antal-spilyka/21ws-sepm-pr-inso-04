@@ -3,14 +3,17 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.OrderValidation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderValidationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -40,6 +43,8 @@ public class TicketDataGenerator {
 
     private final OrderRepository orderRepository;
 
+    private final OrderValidationRepository orderValidationRepository;
+
     private final EventRepository eventRepository;
 
     private final ArtistRepository artistRepository;
@@ -54,6 +59,8 @@ public class TicketDataGenerator {
 
     private PaymentInformationRepository paymentInformationRepository;
 
+    private SectorRepository sectorRepository;
+
     private final String[] ticketTypes = {"Seated", "Standing", "Disabled"};
 
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
@@ -61,7 +68,8 @@ public class TicketDataGenerator {
                                HallplanElementRepository hallplanElementRepository,
                                PerformanceRepository performanceRepository,
                                PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository,
-                               OrderRepository orderRepository) {
+                               OrderRepository orderRepository, OrderValidationRepository orderValidationRepository,
+                               SectorRepository sectorRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
@@ -71,6 +79,8 @@ public class TicketDataGenerator {
         this.passwordEncoder = passwordEncoder;
         this.paymentInformationRepository = paymentInformationRepository;
         this.orderRepository = orderRepository;
+        this.orderValidationRepository = orderValidationRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     // Durations
@@ -90,7 +100,6 @@ public class TicketDataGenerator {
     // Contains a set of cities
     private final String[] salutations = {"mr", "ms"};
 
-    @PostConstruct
     private void generateUser() {
         if (userRepository.findAll().size() > 0) {
             LOGGER.debug("users already generated");
@@ -122,7 +131,7 @@ public class TicketDataGenerator {
                 String country = this.countries[randomIndex];
 
                 //Saving users
-                userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
+                ApplicationUser user = userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail(baseName + i + "@email.com")
                     .withPassword(passwordEncoder.encode("password" + i)).withAdmin(admin).withId((long) i).withCity(city)
                     .withCountry(country).withDisabled(disabled).withFirstName("First" + i).withLastName("Last" + i)
                     .withPhone("0664 123 45" + i % 9).withSalutation(salutation).withStreet("Street " + i).withZip("100" + (i % 9))
@@ -130,7 +139,7 @@ public class TicketDataGenerator {
 
                 // Payment information of users
                 PaymentInformation paymentInformation = new PaymentInformation();
-                paymentInformation.setUser(userRepository.getById((long) i));
+                paymentInformation.setUser(user);
                 min = 100;
                 max = 999;
                 randomIndex = (int) Math.floor(Math.random() * (max - min + 1) + min);
@@ -158,6 +167,7 @@ public class TicketDataGenerator {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("tickets already generated");
         } else {
+            generateUser();
             for (int i = 1; i <= 1000; i++) {
                 long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
                 long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
@@ -178,13 +188,28 @@ public class TicketDataGenerator {
 
                 final long id = i % 200 == 0 ? 1 : i % 200;
 
+                boolean bought = getRandomDecision(this.decision);
+                ApplicationUser user = userRepository.getById(id);
+
                 Order order = new Order();
                 order.setPerformance(performanceRepository.getById(id));
                 order.setPrize(price);
                 order.setDateOfOrder(LocalDateTime.now());
-                order.setBought(getRandomDecision(this.decision));
-                order.setUser(userRepository.getById(id));
+                order.setBought(bought);
+                order.setUser(user);
+                if (bought) {
+                    List<PaymentInformation> paymentInformations = paymentInformationRepository.findByUser(user);
+                    if (!paymentInformations.isEmpty()) {
+                        order.setPaymentInformation(paymentInformations.get(0));
+                    }
+                }
                 orderRepository.save(order);
+
+                Random random = new Random();
+                OrderValidation orderValidation = new OrderValidation();
+                orderValidation.setOrder(order);
+                orderValidation.setHash(random.nextInt() + "$2a$10$r5LarLhaASjKH7xQ%2FCZI4OIMoxJoyGGHYbSx9uYTR1YHI0e0Ni0au" + random.nextInt());
+                orderValidationRepository.save(orderValidation);
 
                 // TypeOfTicket
                 String type = getRandomString(this.ticketTypes);
@@ -197,6 +222,7 @@ public class TicketDataGenerator {
                     .withPrice(price)
                     .withUsed(getRandomDecision(this.decision))
                     .withOrder(order)
+                    .withSector(sectorRepository.getById((long) (i % 200) + 1L))
                     .build();
 
                 List<Ticket> tickets = new ArrayList<>();

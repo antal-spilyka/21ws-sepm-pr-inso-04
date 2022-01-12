@@ -39,7 +39,7 @@ public class Ticket {
     private Sector sector;
 
     @Column()
-    private boolean refunded = false;
+    private Boolean refunded = false;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "performance_id", referencedColumnName = "id")
@@ -120,11 +120,11 @@ public class Ticket {
         this.order = order;
     }
 
-    public boolean isRefunded() {
+    public Boolean isRefunded() {
         return refunded;
     }
 
-    public void setRefunded(boolean refunded) {
+    public void setRefunded(Boolean refunded) {
         this.refunded = refunded;
     }
 
@@ -169,6 +169,7 @@ public class Ticket {
         private boolean used;
         private Performance performance;
         private Order order;
+        private Sector sector;
 
         private TicketBuilder() {
         }
@@ -212,6 +213,11 @@ public class Ticket {
             return this;
         }
 
+        public Ticket.TicketBuilder withSector(Sector sector) {
+            this.sector = sector;
+            return this;
+        }
+
 
         public Ticket build() {
             Ticket ticket = new Ticket();
@@ -222,6 +228,7 @@ public class Ticket {
             ticket.setUsed(used);
             ticket.setPerformance(performance);
             ticket.setOrder(order);
+            ticket.setSector(sector);
             return ticket;
         }
     }
