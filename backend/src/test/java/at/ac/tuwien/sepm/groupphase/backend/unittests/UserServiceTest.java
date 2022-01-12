@@ -101,6 +101,7 @@ public class UserServiceTest implements TestData {
         seenNewsRepository.deleteAll();
         pictureRepository.deleteAll();
         ticketRepository.deleteAll();
+        //test
         orderValidationRepository.deleteAll();
         orderRepository.deleteAll();
         performanceRepository.deleteAll();
