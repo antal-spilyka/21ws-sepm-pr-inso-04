@@ -10,9 +10,10 @@ import {SetOrderToBoughtDto} from '../../dtos/setOrderToBoughtDto';
 import {MatTable} from '@angular/material/table';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import { DomSanitizer } from '@angular/platform-browser';
-import { CodeReturnDto } from 'src/app/dtos/codeReturnDto';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CodeReturnDto} from 'src/app/dtos/codeReturnDto';
 
 export interface DialogData {
   paymentInformations: PaymentInformation[];
@@ -32,7 +33,7 @@ export class OrdersComponent implements OnInit {
   refunded: Order[];
   reservedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'buyButton'];
   boughtColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'refundButton'];
-  refundedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
+  refundedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'printButton'];
 
   error = false;
   errorMessage = '';
@@ -85,7 +86,7 @@ export class OrdersComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result != null) {
+      if (result != null) {
         console.log('HALLO' + result); // todo buchung persistieren
         const setOrderToBought: SetOrderToBoughtDto = {orderId: order.id, paymentInformationId: result};
         this.orderService.setOrderToBought(setOrderToBought).subscribe({
@@ -129,13 +130,14 @@ export class OrdersComponent implements OnInit {
   }
 
   downloadPdf(order: Order, codeReturnDto: CodeReturnDto) {
-    const { performanceDto } = order;
-    const { image, userName, address, tickets } = codeReturnDto;
+    const {performanceDto} = order;
+    const {image, userName, address, tickets} = codeReturnDto;
     let addressString = address.street + ', ' + address.city + ', ' + address.zip + ', ' + address.country;
-    if(addressString.length > 35) {
-      addressString = addressString.substring(0,35) + '...';
+    if (addressString.length > 35) {
+      addressString = addressString.substring(0, 35) + '...';
     }
-    const documentDefinition = { content: [
+    const documentDefinition = {
+      content: [
         {
           fontSize: 20,
           text: `Ticket for ${performanceDto.name}`
@@ -147,7 +149,7 @@ export class OrdersComponent implements OnInit {
               text: `
               Name:
               Date:
-              Location: 
+              Location:
               Hall:
               Price:
               Number of Tickets:`
@@ -172,28 +174,109 @@ export class OrdersComponent implements OnInit {
           fontSize: 15,
           text: 'Seats'
         }
-			  ],
-    images: {
-      qrCode: 'data:image/png;base64,' + image
-    }
-  };
+      ],
+      images: {
+        qrCode: 'data:image/png;base64,' + image
+      }
+    };
 
-  tickets.forEach(ticket => {
-    const seat = ticket.ticketType === 'Seat' ? `Row ${ticket.rowIndex} Seat ${ticket.seatIndex}` : '-';
-    documentDefinition.content.push({
-      alignment: 'justify',
-      columns: [
-        {
-          text: `
+    tickets.forEach(ticket => {
+      const seat = ticket.ticketType === 'Seat' ? `Row ${ticket.rowIndex} Seat ${ticket.seatIndex}` : '-';
+      documentDefinition.content.push({
+        alignment: 'justify',
+        columns: [
+          {
+            text: `
           Type: ${ticket.ticketType}
           Seat: ${seat}
           `
+          }
+        ]
+      });
+    });
+
+    pdfMake.createPdf(documentDefinition).print();
+  }
+
+  downloadCancellationPdf(order: Order) {
+    const {performanceDto} = order;
+    let addressString = order.userDto.street + ', ' + order.userDto.city + ', ' + order.userDto.zip + ', ' + order.userDto.country;
+    if (addressString.length > 35) {
+      addressString = addressString.substring(0, 35) + '...';
+    }
+    const documentDefinition = {
+      content: [
+        {
+          fontSize: 15,
+          alignment: 'justify',
+          columns: [
+            {text: ''},
+            {text: ''},
+            {text: ''},
+            {
+              text: `
+            ${order.userDto.firstName} ${order.userDto.lastName}
+            ${order.userDto.street}
+            ${order.userDto.zip} ${order.userDto.city}
+            ${order.userDto.country}
+            `
+            }
+          ]
+        },
+        {
+          fontSize: 20,
+          text: `Cancellation receipt for ${performanceDto.name}`
+        },
+        {
+          alignment: 'justify',
+          columns: [
+            {
+              text: `
+            Date:
+            Location:
+            Hall:
+            Price:
+            Number of Tickets:`
+            },
+            {
+              text: `
+            ${performanceDto.startTime ? this.renderDate(performanceDto.startTime) : 'unknown'}
+            ${addressString}
+            ${performanceDto.hall.name}
+            ${order.price}€
+            ${order.ticketDetailDtos.length}
+
+
+            `
+            },
+          ]
+        },
+        {
+          fontSize: 15,
+          text: 'Tickets'
         }
       ]
-    });
-  });
+    };
 
-  pdfMake.createPdf(documentDefinition).print();
+    order.ticketDetailDtos.forEach(ticket => {
+      documentDefinition.content.push({
+        alignment: 'justify',
+        columns: [
+          {
+            text: `
+            Type: ${ticket.ticketType}
+            `
+          },
+          {
+            text: `
+              Price: ${ticket.price}
+            `
+          }
+        ]
+      });
+    });
+
+    pdfMake.createPdf(documentDefinition).print();
   }
 
   renderDate(dt: Date) {
