@@ -187,11 +187,10 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     @Override
     @Transactional
-    public Stream<PerformanceDto> findPerformanceForArtist(Long id) {
+    public Stream<PerformanceDto> findPerformanceForArtist(Long id, Integer page) {
         LOGGER.debug("Handling in service {}", id);
         try {
-            List<Performance> performances = performanceRepository.findPerformanceForArtist(id, PageRequest.of(0, 15));
-            //TODO: Implement Pagination
+            List<Performance> performances = performanceRepository.findPerformanceForArtist(id, PageRequest.of(page, 10));
             return performances.stream().map(performance -> performanceMapper.entityToDto(performance, null));
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

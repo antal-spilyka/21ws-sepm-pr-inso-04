@@ -118,6 +118,7 @@ public class PerformanceServiceTest {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
         searchParams.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
         searchParams.setEventName("TestPerformanceByDate");
+        searchParams.setPage(0);
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertFalse(performances.toList().isEmpty());
     }
@@ -127,6 +128,7 @@ public class PerformanceServiceTest {
     public void searchByDateTime_findNoPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
         searchParams.setEventName("" + Math.random());
+        searchParams.setPage(0);
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertTrue(performances.toList().isEmpty());
     }
@@ -178,8 +180,8 @@ public class PerformanceServiceTest {
         testEvent.setPerformances(testPerformances);
         eventService.saveEvent(eventMapper.entityToDto(testEvent));
 
-        testPerformance.setId(performanceService.findPerformanceForArtist(testArtist.getId()).toList().get(0).getId());
-        Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(testArtist.getId());
+        testPerformance.setId(performanceService.findPerformanceForArtist(testArtist.getId(), 0).toList().get(0).getId());
+        Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(testArtist.getId(), 0);
         List<PerformanceDto> listPerformances = performances.toList();
 
         PerformanceDto performanceDto = performanceMapper.entityToDto(testPerformance, null);
@@ -192,7 +194,7 @@ public class PerformanceServiceTest {
     @Test
     @Transactional
     public void getPerformances_forNotExistingArtist() {
-        Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(-1L);
+        Stream<PerformanceDto> performances = performanceService.findPerformanceForArtist(-1L, 0);
         assertTrue(performances.toList().isEmpty());
     }
 

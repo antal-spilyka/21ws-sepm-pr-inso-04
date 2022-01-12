@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
@@ -51,9 +53,9 @@ public class PerformanceEndpoint {
     @GetMapping("/general-search")
     @Operation(summary = "Find events by search parameters.")
     @Transactional
-    public Stream<PerformanceDto> findGeneralEventsByDateTime(@Validated String searchQuery) {
-        LOGGER.info("GET " + BASE_URL + "/search " + searchQuery);
-        return this.performanceService.findGeneralPerformanceByDateTime(searchQuery);
+    public Stream<PerformanceDto> findGeneralEventsByDateTime(@Validated GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.info("GET " + BASE_URL + "/search " + generalSearchEventDto);
+        return this.performanceService.findGeneralPerformanceByDateTime(generalSearchEventDto);
     }
 
     @Secured("ROLE_USER")
@@ -69,9 +71,9 @@ public class PerformanceEndpoint {
     @GetMapping(value = "/artist/{id}")
     @Operation(summary = "Find performances for specified artist.")
     @Transactional
-    public Stream<PerformanceDto> findEventsByDateTime(@PathVariable("id") Long id) {
+    public Stream<PerformanceDto> findPerformanceForArtist(@PathVariable("id") Long id, @RequestParam Integer page) {
         LOGGER.info("GET " + BASE_URL + "/id {}", id);
-        return this.performanceService.findPerformanceForArtist(id);
+        return this.performanceService.findPerformanceForArtist(id, page);
     }
 
     @GetMapping(value = "/{id}")

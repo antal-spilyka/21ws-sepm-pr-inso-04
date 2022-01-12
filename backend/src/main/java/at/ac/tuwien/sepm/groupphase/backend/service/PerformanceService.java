@@ -1,10 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 
@@ -20,9 +21,9 @@ public interface PerformanceService {
 
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
 
-    Stream<PerformanceDto> findGeneralPerformanceByDateTime(String searchQuery);
+    Stream<PerformanceDto> findGeneralPerformanceByDateTime(GeneralSearchEventDto generalSearchEventDto);
 
-    Stream<PerformanceDto> findPerformanceForArtist(Long id);
+    Stream<PerformanceDto> findPerformanceForArtist(Long id, Integer page);
 
     PerformanceDetailDto findPerformanceById(Long id);
 

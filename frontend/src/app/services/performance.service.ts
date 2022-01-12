@@ -50,8 +50,10 @@ export class PerformanceService {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/general-search', {params});
   }
 
-  findPerformancesByArtist(id: number): Observable<Performance[]> {
-    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
+  findPerformancesByArtist(id: number, pageCounter: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', pageCounter);
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id, {params});
   }
 
   getPerformanceById(id: number): Observable<PerformanceDetail> {
