@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -158,7 +159,9 @@ public class TicketDataGenerator {
             LOGGER.debug("tickets already generated");
         } else {
             generateUser();
-            for (int i = 1; i <= 1000; i++) {
+            List<Ticket> tickets = new ArrayList<>();
+            List<Order> orders = new ArrayList<>();
+            for (int i = 1, counter = 0; i <= 1000; i++) {
                 long minDay = LocalDate.of(2022, 1, 1).toEpochDay();
                 long maxDay = LocalDate.of(2050, 12, 31).toEpochDay();
                 long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
@@ -189,19 +192,21 @@ public class TicketDataGenerator {
                 // TypeOfTicket
                 String type = getRandomString(this.ticketTypes);
 
-                Ticket ticket = Ticket.TicketBuilder.aTicket()
-                    .withId((long) i)
-                    .withPerformance(performanceRepository.getById(id))
-                    .withTypeOfTicket(type)
-                    .withPosition(hallplanElementRepository.getById(id))
-                    .withPrice(price)
-                    .withUsed(getRandomDecision(this.decision))
-                    .withOrder(order)
-                    .build();
+                List<Performance> performances = performanceRepository.findByOrderByIdAsc();
+                for (int j = 0; j < 50 * Math.random() + 100; j++) {
+                    Ticket ticket = Ticket.TicketBuilder.aTicket()
+                        .withId((long) counter++)
+                        .withPerformance(performanceRepository.getById(id))
+                        .withTypeOfTicket(type)
+                        .withPosition(hallplanElementRepository.getById(id))
+                        .withPrice(price)
+                        .withUsed(getRandomDecision(this.decision))
+                        .withOrder(order)
+                        .build();
 
-                List<Ticket> tickets = new ArrayList<>();
-                tickets.add(ticket);
-                ticketRepository.save(ticket);
+                    tickets.add(ticket);
+                    ticketRepository.save(ticket);
+                }
             }
         }
     }

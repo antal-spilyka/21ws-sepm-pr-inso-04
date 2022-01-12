@@ -68,11 +68,16 @@ public class EventDataGenerator {
         this.hallplanElementRepository = hallplanElementRepository;
     }
 
+
+    // region categories data
+
     private String[] categories = {
-        "Pop", "Hip Hop", "Rock", "Blues", "Reggae", "Country", "Funk", "Dubstep", "Jazz",
-        "Disco", "Electronic", "Punk", "Alternative Rock", "Deep House", "Jumpstyle", "House",
-        "Techno", "Trap", "Drum & Bass", "Gangsta Rap", "Heavy Metal", "R&B", "Rap", "Vocal", "Minimal"
+        "Pop", "Hip Hop", "Rock", "Reggae", "Drum'n'Bass", "R&B", "Rap", "Heavy Metal", "Vocals", "Hard Style"
     };
+
+    // endregion
+
+    // region roomNames
 
     private String[] roomNames = {
         "Ideas Hall",
@@ -277,6 +282,10 @@ public class EventDataGenerator {
         "Better Meetings"
     };
 
+    // endregion
+
+    // region eventNames
+
     private String[] eventNames = {
         "Fearless Festival",
         "Come One Come Festivall",
@@ -480,6 +489,10 @@ public class EventDataGenerator {
         "Before October Festival",  // 200
     };
 
+    // endregion
+
+    // region names
+
     private String[] names = {
         // #1
         "LDS Conference Centre",
@@ -533,6 +546,10 @@ public class EventDataGenerator {
         "Barclaycard Arena",
     };
 
+    // endregion
+
+    // region cities
+
     private String[] cities = {
         "Salt Lake City",
         "Los Angeles",
@@ -560,6 +577,10 @@ public class EventDataGenerator {
         "Rotterdam",
         "Hamburg"
     };
+
+    // endregion
+
+    // region states
 
     private String[] states = {
         "Utah",
@@ -589,6 +610,10 @@ public class EventDataGenerator {
         "Hamburg"
     };
 
+    // endregion
+
+    // region countries
+
     private String[] countries = {
         "USA",
         "USA",
@@ -616,6 +641,10 @@ public class EventDataGenerator {
         "Netherlands",
         "Germany"
     };
+
+    // endregion
+
+    // region zips
 
     private String[] zips = {
         "84150",
@@ -645,6 +674,10 @@ public class EventDataGenerator {
         "22525"
     };
 
+    // endregion
+
+    // region streets
+
     private String[] streets = {
         "60 N Temple",
         "777 Chick Hearn Ct",
@@ -672,6 +705,10 @@ public class EventDataGenerator {
         "Ahoyweg 10",
         "Sylvesterallee 10"
     };
+
+    // endregion
+
+    // region descriptions
 
     private String[] descriptions = {
         "The LDS conference center has a seating capacity of 21,000 people, and" +
@@ -736,6 +773,10 @@ public class EventDataGenerator {
             "and can hold up to 16,000 people for sporting events)."
     };
 
+    // endregion
+
+    // region other values
+
     // Durations
     private final Integer[] durations = new Integer[150];
 
@@ -758,6 +799,8 @@ public class EventDataGenerator {
     private final Integer[] prices = {
         10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500
     };
+
+    // endregion
 
     private void generateEventPlace() {
         if (eventPlaceRepository.findAll().size() > 0) {
@@ -783,6 +826,7 @@ public class EventDataGenerator {
 
     @PostConstruct
     private void generateEvent() {
+        Long uniqueIdentifier = 0L;
         generateEventPlace();
         if (eventRepository.findAll().size() > 0) {
             LOGGER.debug("events already generated");
@@ -790,7 +834,10 @@ public class EventDataGenerator {
             this.setArray(this.durations, 0, 150);
             this.setArray(this.ids, 0, 25);
             this.setArray(this.days, 0, 28);
+            List<Performance> performances = new ArrayList<>();
+            List<Event> events = new ArrayList<>();
 
+            // creating all events and performances.
             for (int i = 1; i <= 200; i++) {
 
                 // Event name
@@ -856,7 +903,7 @@ public class EventDataGenerator {
                 performance.setArtist(artist);
                 performance.setHall(hall);
                 performance.setPriceMultiplicant(1L);
-                performanceRepository.save(performance);
+                //performanceRepository.save(performance);
 
                 // Saving the event
                 final EventPlace eventPlace = eventPlaceRepository.findByIdEquals((long) id);
@@ -864,9 +911,8 @@ public class EventDataGenerator {
                 event.setId((long) i);
                 event.setName(eventName);
                 event.setStartTime(dateTime);
-                List<Performance> performances = new ArrayList<>();
                 performances.add(performance);
-                event.setPerformances(performances);
+                //event.setPerformances(performances);
                 // Event duration
                 int duration = 0;
                 for (Performance perf : performances) {
@@ -877,11 +923,35 @@ public class EventDataGenerator {
                     eventPlace.getName() + ".");
                 event.setEventPlace(eventPlace);
                 event.setCategory(getRandomName(this.categories));
-                eventRepository.save(event);
+                //eventRepository.save(event);
+                events.add(event);
 
                 // Saving the event of the performance
-                performance.setEvent(event);
-                performanceRepository.save(performance);
+                //performance.setEvent(event);
+                //performanceRepository.save(performance);
+            }
+
+            // adding additional performances to events
+            for (Event event : events) {
+                List<Performance> currentPerformances = new ArrayList<>();
+                for (int i = 0; i <= Math.random() * 20 + 50; i++) {
+                    // create new Instance
+                    Performance tempPerformance = performances.get(i);
+
+                    Performance performance = new Performance();
+                    performance.setName(tempPerformance.getName());
+                    performance.setStartTime(tempPerformance.getStartTime());
+                    performance.setDuration(tempPerformance.getDuration());
+                    performance.setArtist(tempPerformance.getArtist());
+                    performance.setHall(tempPerformance.getHall());
+                    performance.setPriceMultiplicant(tempPerformance.getPriceMultiplicant());
+                    performance.setEvent(event);
+                    performance.setId(uniqueIdentifier++);
+                    performanceRepository.save(performance);
+                    currentPerformances.add(tempPerformance);
+                }
+                event.setPerformances(currentPerformances);
+                eventRepository.save(event);
             }
         }
     }

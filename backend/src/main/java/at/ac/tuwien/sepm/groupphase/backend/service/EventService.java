@@ -3,8 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -37,4 +40,8 @@ public interface EventService {
     Stream<PerformanceDto> getPerformances(Long id);
 
     Stream<PerformanceDto> getPerformancesByLocation(Long id);
+
+    List<String> findDistinctByOrderByCategoryAsc();
+
+    List<TopTenEventsDto> findByCategoryEquals(String category);
 }

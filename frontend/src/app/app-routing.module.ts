@@ -24,6 +24,7 @@ import {OldNewsComponent} from './components/old-news/old-news.component';
 import {CreateEventPlacesComponent} from './components/create-event-places/create-event-places.component';
 import {BookPerformanceComponent} from './components/book-performance/book-performance.component';
 import {OrdersComponent} from './components/orders/orders.component';
+import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -49,7 +50,8 @@ const routes: Routes = [
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},
   {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent},
-  {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent}
+  {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent},
+  {path: 'topTenEvents', canActivate: [AuthGuard], component: TopTenEventsComponent},
 ];
 
 @NgModule({

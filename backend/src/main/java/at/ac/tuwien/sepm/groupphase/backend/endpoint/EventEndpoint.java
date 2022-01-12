@@ -1,9 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -84,5 +84,21 @@ public class EventEndpoint {
     public Stream<PerformanceDto> findPerformancesByLocation(@PathVariable("id") Long id) {
         LOGGER.info("GET " + BASE_URL + "/location/{}/performances", id);
         return this.eventService.getPerformancesByLocation(id);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/categories")
+    @Operation(summary = "get all categories.")
+    public Stream<String> findDistinctByOrderByCategoryAsc() {
+        LOGGER.info("GET " + BASE_URL + "/categories");
+        return this.eventService.findDistinctByOrderByCategoryAsc().stream();
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/topTenEvents")
+    @Operation(summary = "get top ten events by category.")
+    public Stream<TopTenEventsDto> findByCategoryEquals(@RequestParam String category) {
+        LOGGER.info("GET " + BASE_URL + "/topTenEvents/{}", category);
+        return this.eventService.findByCategoryEquals(category).stream();
     }
 }
