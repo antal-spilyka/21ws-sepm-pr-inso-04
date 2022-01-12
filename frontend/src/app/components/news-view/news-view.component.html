@@ -1,106 +1,116 @@
 <div>
-    <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>An unknown error occurred.</strong>
-        <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+  <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>An unknown error occurred.</strong>
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="!news && !error">
+    <div fxFill fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="32px">
+      <mat-spinner [diameter]="40" color="primary"></mat-spinner>
+    </div>
+  </div>
+  <div *ngIf="news && !error">
+    <mat-card>
+      <div fxFill fxLayout="row">
+        <div fxFlex="20"></div>
+        <button (click)="redirect()">
+          < Overview
         </button>
-    </div>
-    <div *ngIf="!news && !error">
+      </div>
+      <div class="subContainer" fxLayout="column" fxLayoutAlign="space-around center">
         <div fxFill fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="32px">
-            <mat-spinner [diameter]="40" color="primary"></mat-spinner>
-        </div>
-    </div>
-    <div *ngIf="news && !error">
-        <mat-card>
-            <div fxFill fxLayout="row">
-                <div fxFlex="20"></div>
-                <button (click)="redirect()">
-                    < Overview </button>
+          <div fxFill fxFlex="18"></div>
+          <div fxFill fxFlex="30">
+            <div fxFill #container>
+              <ng-image-slider class="slider" [images]="images" [manageImageRatio]=true
+                               [imageSize]="{width: container.style.width, space: 0}"
+                               [infinite]="news.pictures.length === 0 ? false : true"
+                               [autoSlide]="news.pictures.length === 0 ? false : 5" [slideImage]="1" #nav>
+              </ng-image-slider>
             </div>
-            <div class="subContainer" fxLayout="column" fxLayoutAlign="space-around center">
-                <div fxFill fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="32px">
-                    <div fxFill fxFlex="18"></div>
-                    <div fxFill fxFlex="30">
-                        <div fxFill #container>
-                            <ng-image-slider class="slider" [images]="images" [manageImageRatio]=true
-                                [imageSize]="{width: container.style.width, space: 0}"
-                                [infinite]="news.pictures.length === 0 ? false : true"
-                                [autoSlide]="news.pictures.length === 0 ? false : 5" [slideImage]="1" #nav>
-                            </ng-image-slider>
-                        </div>
-                    </div>
+          </div>
 
-                    <div class="keyInformation" fxFlex="50">
-                        <div fxFill fxLayout="row" fxLayoutAlign="space-around">
-                            <div fxFlex="100">
-                                <h1>
-                                    <b>{{news.event.name}}</b>
-                                </h1>
-                            </div>
-                        </div>
-                        <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
-                            <div fxFlex="30">
-                                Duration
-                            </div>
-                            <div fxFlex="70">
-                                <b>{{this.durationDHM}}</b>
-                            </div>
-                        </div>
-                        <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
-                            <div fxFlex="30">
-                                Artist
-                            </div>
-                            <div fxFlex="70">
-                                <div *ngFor="let performance of this.news.event.performances">
-                                    {{performance.artist.bandName}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
-                            <div fxFlex="30">
-                                Location
-                            </div>
-                            <div fxFlex="70">
-                                <b>{{this.news.event.eventPlace.name}}</b>
-                            </div>
-                        </div>
-                        <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
-                            <div fxFlex="30">
-                                FSK: {{this.news.fsk}}
-                            </div>
-                            <div fxFlex="70">
-                                <img *ngFor="let x of [0,1,2,3,4]" class="star"
-                                    [src]="x < this.news.rating ? this.activeStar : this.inActiveStar" />
-                            </div>
-                        </div>
-                        <div *ngIf="this.news.shortDescription" class="subContainer" fxFill fxLayout="row"
-                            fxLayoutAlign="space-around">
-                            <div fxFlex="50">
-                                {{this.news.shortDescription}}
-                            </div>
-                            <div fxFlex="50"></div>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="this.news.longDescription" fxFill fxLayout="row" fxLayoutAlign="space-around center">
-                    <div fxFlex="60">
-                        <hr>
-                        {{this.news.longDescription}}
-                    </div>
-                </div>
-                <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around center">
-                    <div fxFlex="60">
-                        <div fxFill fxLayout="row" fxLayoutAlign="space-between">
-                            <button mat-raised-button color="primary">
-                                Add to Wishlist
-                            </button>
-                            <button (click)="buyTicket()" mat-raised-button color="primary">
-                                Book Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          <div class="keyInformation" fxFlex="50">
+            <div *ngIf="news.headline" fxFill fxLayout="row" fxLayoutAlign="space-around">
+              <div fxFlex="100">
+                <h1>
+                  <b>{{news.headline}}</b>
+                </h1>
+              </div>
             </div>
-        </mat-card>
-    </div>
+            <div *ngIf="news.event">
+              <div fxFill fxLayout="row" fxLayoutAlign="space-around">
+                <div fxFlex="100">
+                  <h1>
+                    <b>{{news.event.name}}</b>
+                  </h1>
+                </div>
+              </div>
+              <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
+                <div fxFlex="30">
+                  Duration
+                </div>
+                <div fxFlex="70">
+                  <b>{{this.durationDHM}}</b>
+                </div>
+              </div>
+              <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
+                <div fxFlex="30">
+                  Artist
+                </div>
+                <div fxFlex="70">
+                  <div *ngFor="let performance of this.news.event.performances">
+                    {{performance.artist.bandName}}
+                  </div>
+                </div>
+              </div>
+              <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
+                <div fxFlex="30">
+                  Location
+                </div>
+                <div fxFlex="70">
+                  <b>{{this.news.event.eventPlace.name}}</b>
+                </div>
+              </div>
+              <div class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around">
+                <div fxFlex="30">
+                  FSK: {{this.news.fsk}}
+                </div>
+                <div fxFlex="70">
+                  <img *ngFor="let x of [0,1,2,3,4]" class="star"
+                       [src]="x < this.news.rating ? this.activeStar : this.inActiveStar"/>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="this.news.shortDescription" class="subContainer" fxFill fxLayout="row"
+                 fxLayoutAlign="space-around">
+              <div fxFlex="50">
+                {{this.news.shortDescription}}
+              </div>
+              <div fxFlex="50"></div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="this.news.longDescription" fxFill fxLayout="row" fxLayoutAlign="space-around center">
+          <div fxFlex="60">
+            <hr>
+            {{this.news.longDescription}}
+          </div>
+        </div>
+        <div *ngIf="news.event" class="subContainer" fxFill fxLayout="row" fxLayoutAlign="space-around center">
+          <div fxFlex="60">
+            <div fxFill fxLayout="row" fxLayoutAlign="space-between">
+              <button mat-raised-button color="primary">
+                Add to Wishlist
+              </button>
+              <button (click)="buyTicket()" mat-raised-button color="primary">
+                Book Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </div>
