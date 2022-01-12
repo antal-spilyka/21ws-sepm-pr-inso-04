@@ -33,9 +33,10 @@ export class EventService {
    * Finds an event based on the duration, content, category and description.
    *
    * @param searchEvent dto for storing the search information.
+   * @param pageCounter for the page to be loaded
    * @returns an array of events which suit the search query.
    */
-  findEvent(searchEvent: EventSearchDto): Observable<EventDto[]> {
+  findEvent(searchEvent: EventSearchDto, pageCounter: number): Observable<EventDto[]> {
     let params = new HttpParams();
     if(searchEvent.duration !== null){
       params=params.set('duration', searchEvent.duration);
@@ -46,7 +47,21 @@ export class EventService {
     if(searchEvent.description !== '' && searchEvent.description !== null){
       params=params.set('description', searchEvent.description.trim());
     }
+    if(pageCounter !== null){
+      params = params.set('page', pageCounter);
+    }
     return this.httpClient.get<EventDto[]>(this.messageBaseUri, { params });
+  }
+
+  findGeneralEvent(searchString: string, pageCounter: number): Observable<EventDto[]> {
+    let params = new HttpParams();
+    if(searchString !== null && searchString !== ''){
+      params = params.set('searchQuery', searchString);
+    }
+    if(pageCounter !== null){
+      params = params.set('page', pageCounter);
+    }
+    return this.httpClient.get<EventDto[]>(this.messageBaseUri + '/general-search', { params });
   }
 
 
@@ -64,7 +79,9 @@ export class EventService {
   findPerformancesByEvent(id: number): Observable<Performance[]> {
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/' + id + '/performances');
   }
-  findPerformancesByLocation(id: number): Observable<Performance[]> {
-    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/location/' + id + '/performances');
+  findPerformancesByLocation(id: number, pageCounter: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', pageCounter);
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/location/' + id + '/performances', { params });
   }
 }

@@ -1,38 +1,42 @@
 <div class="modal-body">
 
   <div>
-
-    <div class="form-group">
-      <label for="date/time">Date and Time</label>
-      <input type="datetime-local" name="date/time" class="form-control" id="date/time"
-             aria-describedby="titleHelp" placeholder="Enter Date and Time" [(ngModel)]="performanceSearchDto.startTime">
+    <div *ngIf="detailedSearch === false">
+      <div class="form-group">
+        <label for="generalSearch">General Search</label>
+        <input type="text" name="General Search" class="form-control" id="generalSearch" aria-describedby="titleHelp"
+               placeholder="Enter Event Information" [(ngModel)]="generalSearchTime">
+      </div>
     </div>
+    <div *ngIf="detailedSearch === true">
+      <div class="form-group">
+        <label for="date/time">Date and Time</label>
+        <input type="datetime-local" name="date/time" class="form-control" id="date/time"
+               aria-describedby="titleHelp" placeholder="Enter Date and Time"
+               [(ngModel)]="performanceSearchDto.startTime">
+      </div>
 
-    <!--div class="form-group">
-      <label for="price">Price (+/- 10 euro)</label>
-      <input type="number" name="price" class="form-control" id="price"
-             aria-describedby="titleHelp" placeholder="Enter Price" [(ngModel)]="searchEvent.price">
-    </div-->
+      <div class="form-group">
+        <label for="price">Price (+/- 10 euro)</label>
+        <input type="number" name="price" class="form-control" id="price"
+               aria-describedby="titleHelp" placeholder="Enter Price" [(ngModel)]="performanceSearchDto.price">
+      </div>
 
-    <div class="form-group">
-      <label for="event">Event</label>
-      <input type="text" name="event" class="form-control" id="event"
-             aria-describedby="titleHelp" placeholder="Enter Event" [(ngModel)]="performanceSearchDto.eventName">
+      <div class="form-group">
+        <label for="event">Event</label>
+        <input type="text" name="event" class="form-control" id="event"
+               aria-describedby="titleHelp" placeholder="Enter Event" [(ngModel)]="performanceSearchDto.eventName">
+      </div>
+
+      <div class="form-group">
+        <label for="room">Hall</label>
+        <input type="text" name="room" class="form-control" id="room"
+               aria-describedby="titleHelp" placeholder="Enter Hall" [(ngModel)]="performanceSearchDto.hallName">
+      </div>
     </div>
-
-    <!--div class="form-group">
-      <label for="room">Hall</label>
-      <select name="room" id="room" [(ngModel)]="searchEvent.roomId">
-        <option selected value="">No room</option>
-        <option disabled>...........</option>
-        <option *ngFor="let room of this.roomsList" value="{{room.id}}">{{room.name}}</option>
-      </select>
-    </div-->
-
     <div class="form-group">
-      <label for="room">Hall</label>
-      <input type="text" name="room" class="form-control" id="room"
-             aria-describedby="titleHelp" placeholder="Enter Hall" [(ngModel)]="performanceSearchDto.hallName">
+      <input type="checkbox" id="detailedSearch" name="detailedSearch" (change)="changeDetailed()">
+      <label for="detailedSearch"> Detailed Search</label>
     </div>
     <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
     <div *ngIf="performanceList.length === 0 && submitted">
@@ -60,5 +64,7 @@
         </tbody>
       </table>
     </div>
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="moreItems()" *ngIf="performanceList.length%10===0 && submitted">Load more
+    </button>
   </div>
 </div>

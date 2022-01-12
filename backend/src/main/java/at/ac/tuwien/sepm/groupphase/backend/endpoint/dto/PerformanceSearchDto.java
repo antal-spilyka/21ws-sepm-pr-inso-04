@@ -1,11 +1,32 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 public class PerformanceSearchDto {
     private String eventName;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startTime;
     private String hallName;
+    private Integer price;
+    private Integer page;
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public PerformanceSearchDto() {}
 
@@ -45,6 +66,7 @@ public class PerformanceSearchDto {
             "eventName='" + eventName + '\'' +
             ", startTime=" + startTime +
             ", hallName='" + hallName + '\'' +
+            ", price=" + price +
             '}';
     }
 }

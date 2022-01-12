@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
@@ -59,7 +60,21 @@ public class EventServiceImpl implements EventService {
         LOGGER.debug("Handling in Service {}", eventSearchDto);
         try {
             List<Event> events = eventRepository.findEvents(eventSearchDto.getDuration(), eventSearchDto.getDescription(), eventSearchDto.getCategory(),
-                PageRequest.of(0, 10));
+                PageRequest.of(eventSearchDto.getPage(), 10));
+            for (Event event : events) {
+                event.setPerformances(null);
+            }
+            return events;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Event> findGeneralEvents(GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.debug("Handling in Service {}", generalSearchEventDto);
+        try {
+            List<Event> events = eventRepository.findGeneralEvents(generalSearchEventDto.getSearchQuery(), PageRequest.of(generalSearchEventDto.getPage(), 10));
             for (Event event : events) {
                 event.setPerformances(null);
             }
@@ -108,10 +123,10 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public Stream<PerformanceDto> getPerformancesByLocation(Long id) {
+    public Stream<PerformanceDto> getPerformancesByLocation(Long id, Integer page) {
         LOGGER.debug("Handling in service {}", id);
         try {
-            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(0, 15));
+            List<Event> events = eventRepository.findEventsByLocation(id, PageRequest.of(page, 15));
             List<Performance> performancesCopy = new ArrayList<>();
             for (Event event : events) {
                 List<Performance> performances = event.getPerformances();

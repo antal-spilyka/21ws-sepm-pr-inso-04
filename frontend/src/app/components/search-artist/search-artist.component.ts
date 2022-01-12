@@ -3,6 +3,7 @@ import {ArtistService} from '../../services/artist.service';
 import {Artist} from '../../dtos/artist';
 import {Router} from '@angular/router';
 
+
 @Component({
   selector: 'app-search-artist',
   templateUrl: './search-artist.component.html',
@@ -12,6 +13,7 @@ export class SearchArtistComponent implements OnInit {
   artistName: string;
   submitted  = false;
   artistList: Artist[] = [];
+  pageCounter = 0;
   error = false;
   errorMessage: string;
   constructor(private artistService: ArtistService, private router: Router) { }
@@ -23,17 +25,25 @@ export class SearchArtistComponent implements OnInit {
       this.router.navigateByUrl(`/artists/${artist.id}/performances`);
     }
   }
-   onSubmit() {
-    this.artistService.searchArtist(this.artistName).subscribe(
+   onSubmit(newSearch = true) {
+    if(newSearch){
+      this.artistList = [];
+      this.pageCounter = 0;
+    }
+    this.artistService.searchArtist(this.artistName, this.pageCounter).subscribe(
       {
         next: artists => {
           this.submitted = true;
-          console.log(this.artistList);
-          this.artistList = artists;
+          //console.log(this.artistList);
+          this.artistList = this.artistList.concat(artists);
           console.log(this.artistList);
         }, error: error => this.handleError(error)
       }
     );
+  }
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
   }
   vanishError(): void {
     this.errorMessage = null;
