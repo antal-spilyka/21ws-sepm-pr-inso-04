@@ -69,22 +69,10 @@ public class UserServiceTest implements TestData {
     private PerformanceRepository performanceRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
     private TicketRepository ticketRepository;
 
     @Autowired
-    private PerformanceRepository performanceRepository;
-
-    @Autowired
-    private HallplanElementRepository hallplanElementRepository;
-
-    @Autowired
     private SectorRepository sectorRepository;
-
-    @Autowired
-    private HallRepository hallRepository;
 
     @Autowired
     private ArtistRepository artistRepository;
