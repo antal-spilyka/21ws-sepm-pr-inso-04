@@ -33,6 +33,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.OrderValidationService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
@@ -65,6 +66,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     SectorRepository sectorRepository;
     OrderRepository orderRepository;
     PaymentInformationRepository paymentInformationRepository;
+    OrderValidationService orderValidationService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -73,7 +75,7 @@ public class PerformanceServiceImpl implements PerformanceService {
                                   HallMapper hallMapper, PerformanceMapper performanceMapper, EventMapper eventMapper,
                                   EventRepository eventRepository, UserRepository userRepository, SectorRepository sectorRepository,
                                   OrderRepository orderRepository,
-                                  PaymentInformationRepository paymentInformationRepository) {
+                                  PaymentInformationRepository paymentInformationRepository, OrderValidationService orderValidationService) {
         this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.hallRepository = hallRepository;
@@ -87,6 +89,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         this.sectorRepository = sectorRepository;
         this.orderRepository = orderRepository;
         this.paymentInformationRepository = paymentInformationRepository;
+        this.orderValidationService = orderValidationService;
     }
 
     @Transactional
@@ -219,6 +222,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         LOGGER.debug("Handling in service {}", basket);
         try {
             Performance performance = performanceRepository.getById(performanceId);
+            System.out.println("gotten here");
             ApplicationUser applicationUser = userRepository.findUserByEmail(principal.getName());
 
             if (applicationUser == null) {
@@ -296,7 +300,8 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setUser(applicationUser);
             order.setBought(true);
             order.setPrize(prize);
-            orderRepository.save(order);
+            order = orderRepository.save(order);
+            orderValidationService.createValidation(order);
             ticketRepository.saveAll(tickets);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
@@ -383,6 +388,11 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPrize(prize);
             order.setPerformance(performance);
             orderRepository.save(order);
+            System.out.println("gotten here");
+            tickets.stream().map(ticket -> {
+                System.out.println(ticket);
+                return ticket;
+            });
             ticketRepository.saveAll(tickets);
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

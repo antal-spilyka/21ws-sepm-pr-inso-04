@@ -13,6 +13,20 @@ public class PerformanceDto {
     private HallDto hall;
     private Long priceMultiplicant;
 
+    public PerformanceDto() {}
+
+    public PerformanceDto(Long id, String name, LocalDateTime startTime, Long duration,
+                          EventDto eventDto, ArtistDto artist, HallDto hall, Long priceMultiplicant) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.eventDto = eventDto;
+        this.artist = artist;
+        this.hall = hall;
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     public Long getId() {
         return id;
     }

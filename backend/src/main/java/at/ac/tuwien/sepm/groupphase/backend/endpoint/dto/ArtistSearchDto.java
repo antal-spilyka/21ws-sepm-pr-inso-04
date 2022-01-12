@@ -14,6 +14,12 @@ public class ArtistSearchDto {
         this.page = page;
     }
 
+    public ArtistSearchDto() {}
+
+    public ArtistSearchDto(String misc) {
+        this.misc = misc;
+    }
+
     public String getMisc() {
         return misc;
     }

@@ -31,9 +31,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
-    /*@Query("SELECT e FROM Event e WHERE :id=e.id")
-    Event findById(@Param("id") Long id);*/
-
     /**
      * Finds all the events which suit the criteria from parameters.
      *

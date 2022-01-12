@@ -13,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallplanElementMappe
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
@@ -140,7 +141,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     }
 
     @Override
-    public void addHall(String eventPlaceId, HallAddDto hallAddDto) {
+    public Hall addHall(String eventPlaceId, HallAddDto hallAddDto) {
         LOGGER.debug("Handling in Service {}", hallAddDto);
         try {
             EventPlace eventPlace = eventPlaceRepository.findByIdEquals(Long.parseLong(eventPlaceId));
@@ -153,7 +154,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
 
             List<HallplanElement> rows = hallplanElementMapper.dtoToEntity(hallAddDto.getRows(), sectors);
             hallplanElementRepository.saveAll(rows);
-            hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows, sectors));
+            return hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows, sectors));
         } catch (EntityExistsException e) {
             throw new ContextException(e);
         } catch (PersistenceException e) {

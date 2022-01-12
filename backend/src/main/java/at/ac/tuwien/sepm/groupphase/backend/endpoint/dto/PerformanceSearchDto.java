@@ -28,6 +28,14 @@ public class PerformanceSearchDto {
         this.price = price;
     }
 
+    public PerformanceSearchDto() {}
+
+    public PerformanceSearchDto(String eventName, LocalDateTime startTime, String hallName) {
+        this.eventName = eventName;
+        this.startTime = startTime;
+        this.hallName = hallName;
+    }
+
     public String getEventName() {
         return eventName;
     }

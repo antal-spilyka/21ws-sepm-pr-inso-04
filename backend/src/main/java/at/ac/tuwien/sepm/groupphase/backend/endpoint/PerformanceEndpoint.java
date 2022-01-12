@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -82,7 +84,11 @@ public class PerformanceEndpoint {
     @Transactional
     public PerformanceDetailDto findPerformance(@PathVariable("id") Long id) {
         LOGGER.info("GET " + BASE_URL + "/id {}", id);
-        return this.performanceService.findPerformanceById(id);
+        if (performanceService.findPerformanceById(id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No performance found with id " + id);
+        } else {
+            return this.performanceService.findPerformanceById(id);
+        }
     }
 
     @Secured("ROLE_USER")

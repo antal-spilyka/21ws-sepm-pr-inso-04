@@ -51,7 +51,7 @@ public class PerformanceMapper {
         performanceDto.setName(performance.getName());
         performanceDto.setStartTime(performance.getStartTime());
         performanceDto.setDuration(performance.getDuration());
-        //performanceDto.setEvent(eventDto);
+        //performanceDto.setEventDto(eventDto);
         performanceDto.setArtist(artistMapper.entityToDto(performance.getArtist()));
         performanceDto.setHall(hallMapper.entityToDto(performance.getHall()));
         performanceDto.setPriceMultiplicant(performance.getPriceMultiplicant());
@@ -68,6 +68,18 @@ public class PerformanceMapper {
         performanceDto.setArtist(artistMapper.entityToDto(performance.getArtist()));
         performanceDto.setHall(hallMapper.entityToDto(performance.getHall()));
         performanceDto.setTickets(ticketMapper.ticketToTicketDto(performance.getTickets()));
+        return performanceDto;
+    }
+
+    public PerformanceDto detailDtoToDto(PerformanceDetailDto performance) {
+        LOGGER.trace("Mapping {}", performance);
+        PerformanceDto performanceDto = new PerformanceDto();
+        performanceDto.setId(performance.getId());
+        performanceDto.setName(performance.getName());
+        performanceDto.setStartTime(performance.getStartTime());
+        performanceDto.setDuration(performance.getDuration());
+        performanceDto.setArtist(performance.getArtist());
+        performanceDto.setHall(performance.getHall());
         return performanceDto;
     }
 }

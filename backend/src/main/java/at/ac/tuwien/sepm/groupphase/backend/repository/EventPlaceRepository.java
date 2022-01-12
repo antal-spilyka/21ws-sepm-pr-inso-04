@@ -37,5 +37,11 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
      */
     EventPlace save(EventPlace eventPlace);
 
+    /**
+     * Finds event place by id.
+     *
+     * @param id of the event place.
+     * @return EventPlace found in the database with the given id.
+     */
     EventPlace findByIdEquals(Long id);
 }

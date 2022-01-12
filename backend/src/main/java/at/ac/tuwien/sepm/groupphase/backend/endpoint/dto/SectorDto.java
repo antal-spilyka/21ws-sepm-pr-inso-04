@@ -6,6 +6,9 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 public class SectorDto {
+    @Null
+    private Long id;
+
     @NotNull(message = "Color must not be null")
     @Size(min = 7, max = 9, message = "Color must have between 7 and 9 chars")
     private String color;
@@ -17,9 +20,6 @@ public class SectorDto {
     @NotNull(message = "Price must not be null")
     @DecimalMin("0.0")
     private Integer price;
-
-    @Null
-    private Long id;
 
     public String getColor() {
         return color;
