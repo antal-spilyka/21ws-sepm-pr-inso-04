@@ -94,7 +94,6 @@ public class UserServiceTest implements TestData {
 
     @BeforeAll
     public void beforeAll() {
-        performanceRepository.deleteAll();
         hallRepository.deleteAll();
         hallplanElementRepository.deleteAll();
         orderRepository.deleteAll();
