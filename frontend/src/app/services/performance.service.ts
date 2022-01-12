@@ -23,22 +23,37 @@ export class PerformanceService {
    * @param searchEvent dto for storing the search information.
    * @returns an array of events which suit the search query.
    */
-  findPerformanceByDateTime(searchEvent: PerformanceSearchDto): Observable<Performance[]> {
+  findPerformanceByDateTime(searchEvent: PerformanceSearchDto, pageCounter: number): Observable<Performance[]> {
     let params = new HttpParams();
-    if (searchEvent.startTime && searchEvent.startTime !== '') {
-      params = params.set('startTime', searchEvent.startTime);
-    }
     if (searchEvent.eventName && searchEvent.eventName !== '') {
       params = params.set('eventName', searchEvent.eventName.trim());
+    }
+    if (searchEvent.startTime && searchEvent.startTime !== '') {
+      params = params.set('startTime', searchEvent.startTime);
     }
     if (searchEvent.hallName && searchEvent.hallName !== '') {
       params = params.set('hallName', searchEvent.hallName.trim());
     }
+    if (searchEvent.price !== null){
+      params = params.set('price', searchEvent.price);
+    }
+    params = params.set('page', pageCounter);
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/search', {params});
   }
 
-  findPerformancesByArtist(id: number): Observable<Performance[]> {
-    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id);
+  findGeneralPerformanceByDateTime(searchQuery: string, pageCounter: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    if (searchQuery && searchQuery !== '') {
+      params = params.set('searchQuery', searchQuery.trim());
+    }
+    params = params.set('page', pageCounter);
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/general-search', {params});
+  }
+
+  findPerformancesByArtist(id: number, pageCounter: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', pageCounter);
+    return this.httpClient.get<Performance[]>(this.messageBaseUri + '/artist/' + id, {params});
   }
 
   getPerformanceById(id: number): Observable<PerformanceDetail> {

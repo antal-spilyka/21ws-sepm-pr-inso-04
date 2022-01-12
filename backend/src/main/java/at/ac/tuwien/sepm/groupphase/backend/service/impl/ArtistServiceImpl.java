@@ -39,9 +39,9 @@ public class ArtistServiceImpl implements ArtistService {
         LOGGER.debug("Handling in Service {}", artistSearchDto);
         try {
             if (number == 2) {
-                return artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
+                return artistRepository.findArtist(artistSearchDto.getMisc(), PageRequest.of(artistSearchDto.getPage(), number));
             } else {
-                return artistRepository.searchArtist(artistSearchDto.getMisc(), PageRequest.of(0, number));
+                return artistRepository.searchArtist(artistSearchDto.getMisc(), PageRequest.of(artistSearchDto.getPage(), number));
             }
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);

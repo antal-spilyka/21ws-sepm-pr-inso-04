@@ -31,7 +31,7 @@ public class Hall {
     @ManyToOne()
     private EventPlace eventPlace;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "sector_id")
     private List<Sector> sectors;
@@ -42,7 +42,8 @@ public class Hall {
     @JoinColumn(name = "row_id")
     private List<HallplanElement> rows;
 
-    public Hall() {}
+    public Hall() {
+    }
 
     public Hall(Long id, String name, EventPlace eventPlace) {
         this.id = id;
@@ -121,6 +122,7 @@ public class Hall {
             "id=" + id +
             ", name='" + name + '\'' +
             ", eventPlace=" + eventPlace +
+            ", sectors" + sectors.toString() +
             '}';
     }
 

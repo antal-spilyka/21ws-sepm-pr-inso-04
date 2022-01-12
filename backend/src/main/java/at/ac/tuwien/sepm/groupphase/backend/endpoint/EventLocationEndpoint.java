@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
@@ -37,6 +38,14 @@ public class EventLocationEndpoint {
     public ResponseEntity findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         LOGGER.info("GET " + BASE_URL + " " + eventLocationSearchDto.toString());
         return new ResponseEntity(eventPlaceService.findEventLocation(eventLocationSearchDto).stream(), HttpStatus.OK);
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/general-search")
+    @Operation(summary = "Find Event Location by search parameters.")
+    public ResponseEntity findGeneralEventLocation(GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.info("GET " + BASE_URL + " " + generalSearchEventDto);
+        return new ResponseEntity(eventPlaceService.findGeneralEventLocation(generalSearchEventDto).stream(), HttpStatus.OK);
     }
 
     @Secured("ROLE_USER")

@@ -1,13 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDateTimeSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -55,6 +56,19 @@ public class EventEndpoint {
     }
 
     @Secured("ROLE_USER")
+    @GetMapping("/general-search")
+    @Operation(summary = "Find events by search parameters.")
+    public ResponseEntity findGeneralEvents(@Validated GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.info("GET " + BASE_URL + " " + generalSearchEventDto);
+        try {
+            return new ResponseEntity(eventService.findGeneralEvents(generalSearchEventDto).stream(), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/news")
     @Operation(summary = "find events.")
     public Stream<EventDto> findEventByName(@RequestParam String name) {
@@ -81,8 +95,8 @@ public class EventEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/location/{id}/performances")
     @Operation(summary = "Find performances for specified location.")
-    public Stream<PerformanceDto> findPerformancesByLocation(@PathVariable("id") Long id) {
-        LOGGER.info("GET " + BASE_URL + "/location/{}/performances", id);
-        return this.eventService.getPerformancesByLocation(id);
+    public Stream<PerformanceDto> findPerformancesByLocation(@PathVariable("id") Long id, @RequestParam Integer page) {
+        LOGGER.info("GET " + BASE_URL + "/location/{}/performances for the {} page", id, page);
+        return this.eventService.getPerformancesByLocation(id, page);
     }
 }

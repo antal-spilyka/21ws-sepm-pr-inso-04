@@ -13,12 +13,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class SearchTimeComponent implements OnInit {
   performanceSearchDto: PerformanceSearchDto = {
-    eventName: '', startTime: '', hallName: '',
+    eventName: '', startTime: '', hallName: '', price: null,
   };
   performanceList: Performance[] = [];
+  detailedSearch = false;
+  generalSearchTime = '';
   roomsList: Hall[] = [];
   roomMap = new Map();
   submitted = false;
+  pageCounter = 0;
   private error = false;
   private errorMessage: string;
 
@@ -37,7 +40,7 @@ export class SearchTimeComponent implements OnInit {
           console.log(this.roomsList);
           this.roomsList = rooms;
           console.log(this.roomsList);
-          if(this.roomsList !== []){
+          if (this.roomsList !== []) {
             for (const room of this.roomsList) {
               this.roomMap.set(room.id, room.name);
             }
@@ -47,25 +50,54 @@ export class SearchTimeComponent implements OnInit {
     );
   }
 
-  onSubmit() {
-    this.performanceList = [];
-    console.log(this.performanceSearchDto);
-    this.performanceService.findPerformanceByDateTime(this.performanceSearchDto).subscribe(
-      {
-        next: performances => {
-          this.submitted = true;
-          console.log(this.performanceList);
-          this.performanceList = performances;
-          console.log(this.performanceList);
-        }, error: error => this.handleError(error)
+  onSubmit(newSearch = true) {
+    if (this.detailedSearch === true) {
+      if(newSearch){
+        this.performanceList = [];
+        this.pageCounter = 0;
       }
-    );
+      console.log(this.performanceSearchDto);
+      this.performanceService.findPerformanceByDateTime(this.performanceSearchDto, this.pageCounter).subscribe(
+        {
+          next: performances => {
+            this.submitted = true;
+            console.log(this.performanceList);
+            this.performanceList = this.performanceList.concat(performances);
+            console.log(this.performanceList);
+          }, error: error => this.handleError(error)
+        }
+      );
+    } else{
+      if(newSearch){
+        this.performanceList = [];
+        this.pageCounter = 0;
+      }
+      this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime, this.pageCounter).subscribe(
+        {
+          next: performances => {
+            this.submitted = true;
+            //console.log(this.performanceList);
+            this.performanceList = this.performanceList.concat(performances);
+            console.log(this.performanceList);
+          }, error: error => this.handleError(error)
+        }
+      );
+    }
   }
-  loadPerformance(performance: Performance){
-    if(performance.id){
+
+  loadPerformance(performance: Performance) {
+    if (performance.id) {
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
+  }
+  changeDetailed() {
+    this.detailedSearch = !this.detailedSearch;
+  }
+
   private handleError(error: any) {
     console.log(error);
     this.error = true;

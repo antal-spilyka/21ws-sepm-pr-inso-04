@@ -14,6 +14,9 @@ export class SearchLocationComponent implements OnInit {
     id: null, city: '', state: '', zip: '', country: '', street: '',
   };
   submitted = false;
+  detailedSearch = false;
+  searchLocation = '';
+  pageCounter = 0;
   eventLocations: EventPlace[] = [];
   error = false;
   errorMessage: string;
@@ -25,34 +28,74 @@ export class SearchLocationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit() {
-    this.eventLocationService.findEventLocation(this.searchAddress).subscribe(
-      {
-        next: eventLocations => {
-          this.submitted = true;
-          this.eventLocations = eventLocations;
-          console.log(this.eventLocations);
-          for (const i of eventLocations) {
-            this.eventLocationService.getAddress(i.id).subscribe(
-              {
-                next: address => {
-                  console.log(address.city);
-                  this.locationAddresses[i.id] = address;
-                }, error: error => this.handleError(error)
-              }
-            );
-          }
-        }, error: error => this.handleError(error)
+  onSubmit(newSearch = true) {
+    if (this.detailedSearch === true) {
+      if(newSearch){
+        this.eventLocations = [];
+        this.locationAddresses.clear();
+        this.pageCounter = 0;
       }
-    );
+      this.eventLocationService.findEventLocation(this.searchAddress, this.pageCounter).subscribe(
+        {
+          next: eventLocations => {
+            this.submitted = true;
+            this.eventLocations = this.eventLocations.concat(eventLocations);
+            console.log(this.eventLocations);
+            for (const i of this.eventLocations) {
+              this.eventLocationService.getAddress(i.id).subscribe(
+                {
+                  next: address => {
+                    console.log(address.city);
+                    this.locationAddresses[i.id] = address;
+                  }, error: error => this.handleError(error)
+                }
+              );
+            }
+          }, error: error => this.handleError(error)
+        }
+      );
+    } else {
+      if(newSearch){
+        this.eventLocations = [];
+        this.locationAddresses.clear();
+        this.pageCounter = 0;
+      }
+      this.eventLocationService.findGeneralEventLocation(this.searchLocation, this.pageCounter).subscribe(
+        {
+          next: eventLocations => {
+            this.submitted = true;
+            this.eventLocations = this.eventLocations.concat(eventLocations);
+            console.log(this.eventLocations);
+            for (const i of this.eventLocations) {
+              this.eventLocationService.getAddress(i.id).subscribe(
+                {
+                  next: address => {
+                    console.log(address.city);
+                    this.locationAddresses[i.id] = address;
+                  }, error: error => this.handleError(error)
+                }
+              );
+            }
+          }, error: error => this.handleError(error)
+        }
+      );
+    }
   }
 
   loadPerformances(eventLocation: Address) {
+    console.log(eventLocation);
     if (eventLocation.id) {
       this.router.navigateByUrl(`/locations/${eventLocation.id}/performances`);
     }
   }
 
+  changeDetailed(){
+    this.detailedSearch = !this.detailedSearch;
+  }
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
+  }
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;

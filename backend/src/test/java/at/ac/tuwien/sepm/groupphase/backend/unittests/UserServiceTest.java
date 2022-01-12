@@ -18,6 +18,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.hibernate.annotations.Cascade;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,15 +93,16 @@ public class UserServiceTest implements TestData {
     @Autowired
     private PictureRepository pictureRepository;
 
+    @Autowired
+    private OrderValidationRepository orderValidationRepository;
+
     @BeforeAll
     public void beforeAll() {
-        performanceRepository.deleteAll();
-        hallRepository.deleteAll();
-        hallplanElementRepository.deleteAll();
-        orderRepository.deleteAll();
         seenNewsRepository.deleteAll();
         pictureRepository.deleteAll();
         ticketRepository.deleteAll();
+        //test
+        orderValidationRepository.deleteAll();
         orderRepository.deleteAll();
         performanceRepository.deleteAll();
         artistRepository.deleteAll();
