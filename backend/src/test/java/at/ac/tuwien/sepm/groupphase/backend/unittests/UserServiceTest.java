@@ -93,11 +93,15 @@ public class UserServiceTest implements TestData {
     @Autowired
     private PictureRepository pictureRepository;
 
+    @Autowired
+    private OrderValidationRepository orderValidationRepository;
+
     @BeforeAll
     public void beforeAll() {
         seenNewsRepository.deleteAll();
         pictureRepository.deleteAll();
         ticketRepository.deleteAll();
+        orderValidationRepository.deleteAll();
         orderRepository.deleteAll();
         performanceRepository.deleteAll();
         artistRepository.deleteAll();
