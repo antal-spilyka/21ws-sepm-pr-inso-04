@@ -6,10 +6,11 @@ import java.util.List;
 
 public class SimpleNewsDto {
     private Long id;
-    @NotNull(message = "Event must not be null")
+
+    private String headline;
+
     private String eventName;
 
-    @NotNull(message = "Event must not be null")
     private LocalDateTime eventDate;
 
     @NotNull(message = "createDate must not be null")
@@ -75,4 +76,11 @@ public class SimpleNewsDto {
         return createDate;
     }
 
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
 }

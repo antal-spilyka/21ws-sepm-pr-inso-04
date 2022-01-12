@@ -27,13 +27,19 @@
       </div>
     </div>
     <div class="div-info">
+      <mat-form-field *ngIf="!eventNews" class="example-full-width mat-form-field-desc" appearance="fill">
+        <mat-label>Headline</mat-label>
+        <textarea class="headline" matInput rows="6" formControlName="headline"></textarea>
+        <mat-error *ngIf="form.controls.headline.invalid">{{getErrorMessage(form.controls.headline)}}
+        </mat-error>
+      </mat-form-field>
       <mat-form-field class="example-full-width mat-form-field-desc" appearance="fill">
         <mat-label>Short Description</mat-label>
         <textarea class="shortDescription" matInput rows="6" formControlName="shortDescription"></textarea>
         <mat-error *ngIf="form.controls.shortDescription.invalid">{{getErrorMessage(form.controls.shortDescription)}}
         </mat-error>
       </mat-form-field>
-      <div class="div-additional-info">
+      <div *ngIf="eventNews" class="div-additional-info">
         <div>
           <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>Choose Event</mat-label>

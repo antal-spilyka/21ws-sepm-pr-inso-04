@@ -33,7 +33,9 @@ export class NewsViewComponent implements OnInit {
       next: (news) => {
         this.news = news;
         console.log(this.news);
-        this.durationDHM = this.minutesToDhms(news.event.duration);
+        if (news.event != null) {
+          this.durationDHM = this.minutesToDhms(news.event.duration);
+        }
         if(this.news.pictures) {
           if(this.news.pictures.length === 0) {
             this.images.push(
