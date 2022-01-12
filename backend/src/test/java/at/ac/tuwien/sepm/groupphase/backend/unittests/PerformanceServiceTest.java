@@ -26,6 +26,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -91,6 +92,9 @@ public class PerformanceServiceTest {
     @Autowired
     private PaymentInformationRepository paymentInformationRepository;
 
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
     private String defaultName = "test@email.com";
     private String defaultName2 = "test2@email.com";
     private String defaultName3 = "test3@email.com";
@@ -107,6 +111,11 @@ public class PerformanceServiceTest {
     @BeforeAll
     public void init(){
         MockitoAnnotations.initMocks(this);
+    }
+
+    @BeforeAll
+    public void beforeAll() {
+        performanceRepository.deleteAll();
     }
 
     @BeforeAll

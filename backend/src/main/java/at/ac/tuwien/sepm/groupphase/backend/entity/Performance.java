@@ -51,6 +51,8 @@ public class Performance {
     @Column(nullable = false)
     private Long priceMultiplicant;
 
+    public Performance() {}
+
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
                        Event event, Artist artist, Hall hall) {
         this.id = id;
@@ -62,8 +64,16 @@ public class Performance {
         this.hall = hall;
     }
 
-    public Performance() {
-
+    public Performance(Long id, String name, LocalDateTime startTime, Long duration,
+                       Event event, Artist artist, Hall hall, Long priceMultiplicant) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.event = event;
+        this.artist = artist;
+        this.hall = hall;
+        this.priceMultiplicant = priceMultiplicant;
     }
 
     public Long getId() {

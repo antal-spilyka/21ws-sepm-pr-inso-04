@@ -1,12 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,8 @@ public interface TestData {
     String USER_BASE_URI = BASE_URI + "/users";
     String AUTHENTICATION_URI = BASE_URI + "/authentication";
     String FILE_URI = BASE_URI + "/files";
+    String PERFORMANCE_URI = BASE_URI + "/performances";
+
 
     String ADMIN_USER = "admin@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
@@ -167,4 +166,48 @@ public interface TestData {
         .withZip("12345")
         .withDisabled(true)
         .build();
+
+    Performance performanceToSave = new Performance(
+        111L,
+        "testPerformance",
+        LocalDateTime.of(2000, 01, 01, 11, 11, 11),
+        50L,
+        null,
+        new Artist(),
+        new Hall(),
+        10L
+    );
+
+    PerformanceSearchDto performanceToFind = new PerformanceSearchDto(
+        null,
+        LocalDateTime.of(2000, 01, 01, 11, 11, 11),
+        null
+    );
+
+    Address address = new Address(
+        null,
+        "city",
+        "state",
+        "zip",
+        "country",
+        "street"
+    );
+
+    EventPlace eventPlace = new EventPlace(
+        null,
+        "testPlace",
+        address
+    );
+
+    List<Performance> performances = List.of(new Performance[]{performanceToSave});
+    Event eventToSave = new Event(
+        111L,
+        "testEvent",
+        50L,
+        performances,
+        LocalDateTime.now(),
+        "testCategory",
+        eventPlace,
+        "testDescription"
+    );
 }
