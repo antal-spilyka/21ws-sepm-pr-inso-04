@@ -9,7 +9,39 @@
     </mat-autocomplete>
   </mat-form-field>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <div class="topTen">
+    <h2>Tickets sold <i class="fa fa-ticket" style="font-size:22px;color:red"></i></h2>
+    <ngx-charts-bar-vertical *ngIf="eventsVisualized.length > 0"
+      [results]="eventsVisualized"
+      [view]="view"
+      [scheme]="colorScheme"
+      [schemeType]="schemeType"
+      [gradient]="gradient"
+      [xAxis]="xAxis"
+      [yAxis]="yAxis"
+      [animations]="animations"
+      [showGridLines]="showGridLines"
+      [xAxisTickFormatting]="formatString"
+      [yAxisTickFormatting]="formatNumber"
+      [barPadding]="barPadding"
+      [roundEdges]="roundEdges"
+      (select)="setChosenEvent($event)">
+    </ngx-charts-bar-vertical>
+  </div>
+
+  <cdk-accordion class="example-accordion" *ngIf="chosenEvent">
+    <cdk-accordion-item
+      class="example-accordion-item noShift"
+      [attr.id]="'accordion-header-'"
+      [attr.aria-controls]="'accordion-body-'">
+      <p>Event Name: {{chosenEvent.name}}</p>
+      <p>Artists: {{printEntity(chosenEvent.performances, 'artist')}}</p>
+      <p>Date: {{chosenEvent.startTime}} (Duration: {{(chosenEvent.duration / 60).toFixed(1)}}h)</p>
+    </cdk-accordion-item>
+  </cdk-accordion>
 
   <cdk-accordion class="example-accordion" *ngIf="chosenEvent">
     <cdk-accordion-item
@@ -21,7 +53,7 @@
       [attr.aria-expanded]="accordionItem.expanded"
       [attr.aria-controls]="'accordion-body-'">
       <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-        name
+        Details
         <span class="example-accordion-item-description">
         Click to {{ accordionItem.expanded ? 'close' : 'open' }}
       </span>
@@ -32,9 +64,23 @@
         [style.display]="accordionItem.expanded ? '' : 'none'"
         [attr.id]="'accordion-body-'"
         [attr.aria-labelledby]="'accordion-header-'">
-        {{ chosenEvent.description }}
+        <p>Description: {{chosenEvent.description === null ? 'No further description' : chosenEvent.description}}</p>
+        <p>Performances: {{printEntity(chosenEvent.performances, 'performance')}}</p>
+        &nbsp;&nbsp;Location Details:
+          <div class="location-details">
+            <p>Denotation: {{chosenEvent.eventPlace.name}}</p>
+            <p>State: {{chosenEvent.eventPlace.addressDto.state}}</p>
+            <p>Country: {{chosenEvent.eventPlace.addressDto.country}}</p>
+            <p>City: {{chosenEvent.eventPlace.addressDto.city}}</p>
+            <p>ZIP: {{chosenEvent.eventPlace.addressDto.zip}}</p>
+            <p>Street: {{chosenEvent.eventPlace.addressDto.street}}</p>
+          </div>
       </div>
     </cdk-accordion-item>
   </cdk-accordion>
 
+  <div class="buttons-div">
+    <button *ngIf="chosenEvent" routerLinkActive="active" mat-raised-button color="accent" routerLink="/halls/{{chosenEvent.performances[0].hall.id}}">Add to Wish List (not implemented)</button>
+    <button *ngIf="chosenEvent" routerLinkActive="active" mat-raised-button color="primary" routerLink="/halls/{{chosenEvent.performances[0].hall.id}}">Buy Tickets</button>
+  </div>
 </form>

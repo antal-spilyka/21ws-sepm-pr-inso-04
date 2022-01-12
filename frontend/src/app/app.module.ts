@@ -71,8 +71,9 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { PaymentInformationPickComponent } from './components/payment-information-pick/payment-information-pick.component';
 import { AddArtistDialogComponent } from './components/create-event/create-artist/add-artist-dialog/add-artist-dialog.component';
 import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
-import {MatListModule} from "@angular/material/list";
-import {CdkAccordionModule} from "@angular/cdk/accordion";
+import { MatListModule } from '@angular/material/list';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -150,7 +151,8 @@ import {CdkAccordionModule} from "@angular/cdk/accordion";
         MatTableModule,
         ColorPickerModule,
         MatListModule,
-        CdkAccordionModule
+        CdkAccordionModule,
+        NgxChartsModule,
     ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
