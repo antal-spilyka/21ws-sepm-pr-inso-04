@@ -11,7 +11,7 @@
       <mat-card class="news-card">
         <mat-card-header>
           <mat-card-title>{{news.eventName}}</mat-card-title>
-          <mat-card-subtitle>{{news.eventDate.toDateString()}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="news.eventDate">{{news.eventDate.toDateString()}}</mat-card-subtitle>
         </mat-card-header>
         <img class="center" *ngIf="news.picture" mat-card-md-image src="{{news.picture.url}}">
         <mat-card-content>

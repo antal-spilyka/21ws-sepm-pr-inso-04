@@ -6,10 +6,9 @@ import java.util.List;
 
 public class SimpleNewsDto {
     private Long id;
-    @NotNull(message = "Event must not be null")
+
     private String eventName;
 
-    @NotNull(message = "Event must not be null")
     private LocalDateTime eventDate;
 
     @NotNull(message = "createDate must not be null")

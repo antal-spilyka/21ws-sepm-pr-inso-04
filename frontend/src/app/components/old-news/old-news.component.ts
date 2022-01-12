@@ -42,7 +42,9 @@ export class OldNewsComponent implements OnInit {
   formatDate(): void {
     for (const val of this.news) {
       val.createDate = new Date(val.createDate);
-      val.eventDate = new Date(val.eventDate);
+      if (val.eventDate != null) {
+        val.eventDate = new Date(val.eventDate);
+      }
     }
   }
 
