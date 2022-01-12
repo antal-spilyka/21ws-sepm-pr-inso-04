@@ -3,7 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import java.util.Objects;
 
 public class ArtistSearchDto {
-    String misc; // search by first- and lastname and bandName
+    private String misc; // search by first- and lastname and bandName
+
+    public ArtistSearchDto() {}
+
+    public ArtistSearchDto(String misc) {
+        this.misc = misc;
+    }
 
     public String getMisc() {
         return misc;

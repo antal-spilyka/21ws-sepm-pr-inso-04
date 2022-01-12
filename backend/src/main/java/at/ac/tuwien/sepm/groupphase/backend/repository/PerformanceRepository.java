@@ -35,5 +35,4 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
 
     @Query("SELECT CASE WHEN count(p)> 0 THEN true ELSE false END FROM Performance p WHERE p.name = :name AND p.event = :event")
     Boolean existsByNameAndEvent(@Param("name") String name, @Param("event") Event event);
-
 }
