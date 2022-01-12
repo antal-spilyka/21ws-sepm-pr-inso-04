@@ -209,28 +209,6 @@ public class NewsServiceTest implements TestData {
     }
 
     @Test
-    public void insert_news_nullValue_event() {
-        NewsDto newsDto = new NewsDto();
-        newsDto.setRating(5L);
-        newsDto.setFsk(18L);
-        newsDto.setShortDescription("This is a short Description");
-        newsDto.setLongDescription("This is a bit longer Description");
-        newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(NullPointerException.class, () -> newsRepository.save(newsMapper.dtoToEntity(newsDto)));
-    }
-
-    @Test
-    public void insert_news_nullValue_rating() {
-        NewsDto newsDto = new NewsDto();
-        newsDto.setEvent(eventMapper.entityToDto(this.event));
-        newsDto.setFsk(18L);
-        newsDto.setShortDescription("This is a short Description");
-        newsDto.setLongDescription("This is a bit longer Description");
-        newsDto.setCreateDate(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> newsService.save(newsDto));
-    }
-
-    @Test
     public void insert_news_invalid_compare() {
         this.addressDto = new AddressDto();
         addressDto.setZip("1234");
