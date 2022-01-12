@@ -1,20 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BasketSeatDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallplanElementDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaymentInformationDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDetailDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserEditDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
@@ -126,7 +112,7 @@ public class PerformanceServiceTest {
 
     @BeforeAll
     public void insertNeededContext() {
-        this.addressDto = new AddressDto();
+        /*this.addressDto = new AddressDto();
         addressDto.setZip("111");
         addressDto.setState("TestPerformanceByDateTimeState");
         addressDto.setCountry("TestPerformanceByDateTimeCountry");
@@ -232,10 +218,117 @@ public class PerformanceServiceTest {
             .withZip("12345")
             .withPaymentInformation(paymentInformation)
             .build();
+        userService.updateUser(toUpdate);*/
+        this.addressDto = new AddressDto();
+        addressDto.setZip("111");
+        addressDto.setState("TestPerformanceByDateTimeState");
+        addressDto.setCountry("TestPerformanceByDateTimeCountry");
+        addressDto.setCity("TestPerformanceByDateTimeCity");
+        addressDto.setStreet("TestPerformanceByDateTimeStreet");
+
+        this.eventPlaceDto = new EventPlaceDto();
+        eventPlaceDto.setName("TestPerformanceByDateTimePlace");
+        eventPlaceDto.setAddressDto(addressDto);
+        eventPlace = eventPlaceService.save(eventPlaceDto);
+
+        ArtistDto artistDto = new ArtistDto();
+        artistDto.setBandName("TestPerformanceByDateTimeArtist");
+        artistDto.setDescription("PerformanceByDateTimeArtist");
+        this.artist = artistService.save(artistDto);
+
+        this.hallDto = new HallDto();
+        hallDto.setName("TestPerformanceByDateTimeHall");
+        hallDto.setEventPlaceDto(eventPlaceMapper.entityToDto(eventPlace));
+        hallService.save(hallDto);
+
+        this.event = new Event();
+        event.setName("TestPerformanceByDateTimeName");
+        event.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
+        event.setDuration(710L);
+        event.setEventPlace(eventPlace);
+        event.setDescription("TestPerformanceByDateTimeDescription");
+        event.setCategory("TestCategory");
+
+        SectorDto sector = new SectorDto();
+        sector.setName("Standing");
+        sector.setColor("1234567");
+        sector.setPrice(1);
+        SectorDto[] sectors = {sector};
+
+        HallplanElementDto hallplanElementDto = new HallplanElementDto();
+        hallplanElementDto.setAdded(false);
+        hallplanElementDto.setSector(0);
+        hallplanElementDto.setType("Standing");
+
+        HallplanElementDto hallplanElementDto2 = new HallplanElementDto();
+        hallplanElementDto2.setAdded(false);
+        hallplanElementDto2.setSector(0);
+        hallplanElementDto2.setType("Standing");
+
+        HallplanElementDto[] hallplanElementDtos = {hallplanElementDto, hallplanElementDto2};
+        HallplanElementDto[] [] hallplanElementDtos2 = {hallplanElementDtos};
+
+        HallAddDto hall = new HallAddDto();
+        hall.setName("buyTestHall");
+        hall.setStandingPlaces(100);
+        hall.setSectors(sectors);
+        hall.setRows(hallplanElementDtos2);
+        eventPlaceService.addHall(String.valueOf(2L), hall);
+
+        this.performance = new Performance();
+        performance.setName("TestPerformanceByDateTimePerformance");
+        performance.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 11, 11));
+        performance.setDuration(50L);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hallService.findHall("buyTestHall").get(0));
+        performance.setEvent(this.event);
+        this.performances.add(performance);
+        event.setPerformances(this.performances);
+        eventService.saveEvent(eventMapper.entityToDto(event));
+
+        UserRegisterDto user1 = UserRegisterDto.UserRegisterDtoBuilder.aUserRegisterDto()
+            .withEmail(this.defaultName2)
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .withDisabled(true)
+            .build();
+        userService.createUser(user1);
+
+        PaymentInformationDto paymentInformation = new PaymentInformationDto();
+        paymentInformation.setCreditCardNr("1234123412341234");
+        paymentInformation.setCreditCardExpirationDate("202022");
+        paymentInformation.setCreditCardCvv("123");
+        paymentInformation.setCreditCardName("Test");
+
+        UserEditDto toUpdate = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(this.defaultName2)
+            .withNewEmail(this.defaultName2)
+            .withAdmin(false)
+            .withPassword("testPassword")
+            .withFirstName("firstName")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withCountry("Austria")
+            .withCity("Test City")
+            .withStreet("Test Street")
+            .withDisabled(true)
+            .withZip("12345")
+            .withPaymentInformation(paymentInformation)
+            .build();
         userService.updateUser(toUpdate);
+
     }
 
-    @Test
+    /*@Test
     @Transactional
     public void searchByDateTime_findPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
@@ -244,7 +337,7 @@ public class PerformanceServiceTest {
         searchParams.setPage(0);
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertFalse(performances.toList().isEmpty());
-    }
+    }*/
 
     @Test
     @Transactional

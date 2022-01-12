@@ -57,7 +57,7 @@ public class PerformanceEndpointTest {
 
     @Test
     public void findPerformanceByNonExistingId_shouldReturnHttpStatusNotFound() throws Exception{
-        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/123456789")
+        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/123456789?page=0")
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andReturn();
@@ -70,7 +70,7 @@ public class PerformanceEndpointTest {
     public void findPerformanceByNonExistingDateTime_shouldReturnHttpStatusNotFound() throws Exception{
         String body = objectMapper.writeValueAsString(TestData.performanceToFind);
 
-        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/search")
+        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/search?page=0")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
             .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
@@ -87,7 +87,7 @@ public class PerformanceEndpointTest {
     public void findPerformanceByNonExistingArtist_shouldReturnHttpStatusNotFound() throws Exception{
         String body = objectMapper.writeValueAsString(TestData.performanceToFind);
 
-        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/artist/12345")
+        MvcResult mvcResult = this.mockMvc.perform(get(PERFORMANCE_URI + "/artist/12345?page=0")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
