@@ -7,6 +7,14 @@ public class PerformanceSearchDto {
     private LocalDateTime startTime;
     private String hallName;
 
+    public PerformanceSearchDto() {}
+
+    public PerformanceSearchDto(String eventName, LocalDateTime startTime, String hallName) {
+        this.eventName = eventName;
+        this.startTime = startTime;
+        this.hallName = hallName;
+    }
+
     public String getEventName() {
         return eventName;
     }

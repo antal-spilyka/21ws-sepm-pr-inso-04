@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
@@ -17,7 +18,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
-import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,13 +68,51 @@ public class UserServiceTest implements TestData {
     @Autowired
     private PerformanceRepository performanceRepository;
 
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private EventPlaceRepository eventPlaceRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private NewsRepository newsRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
+
     @BeforeAll
     public void beforeAll() {
         performanceRepository.deleteAll();
         hallRepository.deleteAll();
         hallplanElementRepository.deleteAll();
         orderRepository.deleteAll();
+        seenNewsRepository.deleteAll();
+        pictureRepository.deleteAll();
+        ticketRepository.deleteAll();
+        orderRepository.deleteAll();
+        performanceRepository.deleteAll();
+        artistRepository.deleteAll();
+        hallRepository.deleteAll();
+        hallplanElementRepository.deleteAll();
+        sectorRepository.deleteAll();
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        eventPlaceRepository.deleteAll();
         paymentInformationRepository.deleteAll();
+        addressRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @BeforeEach
