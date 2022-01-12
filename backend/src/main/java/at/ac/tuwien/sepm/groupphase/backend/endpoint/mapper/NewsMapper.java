@@ -38,6 +38,7 @@ public class NewsMapper {
         if (newsDto.getRating() != null && newsDto.getFsk() < 0) {
             throw new MappingException("Age cannot be under 0!");
         }
+        news.setHeadline(newsDto.getHeadline());
         news.setFsk(newsDto.getFsk());
         news.setShortDescription(newsDto.getShortDescription());
         news.setLongDescription(newsDto.getLongDescription());
@@ -52,6 +53,7 @@ public class NewsMapper {
         if (news.getEvent() != null) {
             newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
         }
+        newsDto.setHeadline(news.getHeadline());
         newsDto.setRating(news.getRating());
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
@@ -67,6 +69,7 @@ public class NewsMapper {
         if (news.getEvent() != null) {
             newsDto.setEvent(eventMapper.entityToDto(news.getEvent()));
         }
+        newsDto.setHeadline(news.getHeadline());
         newsDto.setRating(news.getRating());
         newsDto.setFsk(news.getFsk());
         newsDto.setShortDescription(news.getShortDescription());
@@ -96,6 +99,7 @@ public class NewsMapper {
             simpleNewsDto.setEventDate(news.getEvent().getStartTime());
             simpleNewsDto.setEventName(news.getEvent().getName());
         }
+        simpleNewsDto.setHeadline(news.getHeadline());
         simpleNewsDto.setShortDescription(news.getShortDescription());
         simpleNewsDto.setLongDescription(news.getLongDescription());
         simpleNewsDto.setCreateDate(news.getCreateDate());

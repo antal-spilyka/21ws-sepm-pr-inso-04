@@ -8,7 +8,7 @@ import {NewsService} from '../../services/news.service';
 import { FileService } from 'src/app/services/file.service';
 import { Picture } from 'src/app/dtos/picture';
 import {MatDialog} from '@angular/material/dialog';
-import {TypeOfNewsDialogComponent} from "./type-of-news-dialog/type-of-news-dialog.component";
+import {TypeOfNewsDialogComponent} from './type-of-news-dialog/type-of-news-dialog.component';
 
 @Component({
   selector: 'app-add-news',
@@ -38,7 +38,8 @@ export class AddNewsComponent implements OnInit {
     rating: [null, Validators.required],
     fsk: [18, Validators.required],
     shortDescription: ['', [Validators.required, Validators.maxLength(255)]],
-    longDescription: ['', [Validators.required, Validators.maxLength(1000)]]
+    longDescription: ['', [Validators.required, Validators.maxLength(1000)]],
+    headline: ['', [Validators.required, Validators.maxLength(100)]]
   });
 
   constructor(
@@ -71,6 +72,9 @@ export class AddNewsComponent implements OnInit {
         this.form.get('rating').updateValueAndValidity();
         this.form.get('fsk').updateValueAndValidity();
         this.form.get('fsk').setValue(null);
+      } else {
+        this.form.get('headline').clearValidators();
+        this.form.get('headline').updateValueAndValidity();
       }
       this.eventNews = result;
     });
@@ -111,6 +115,7 @@ export class AddNewsComponent implements OnInit {
       shortDescription: this.form.controls.shortDescription.value,
       longDescription: this.form.controls.longDescription.value,
       createDate: new Date(),
+      headline: this.form.controls.headline.value,
       pictures: this.filesUploaded.length === 0 ? null : this.filesUploaded
     } as News;
     console.log(newsRequest);

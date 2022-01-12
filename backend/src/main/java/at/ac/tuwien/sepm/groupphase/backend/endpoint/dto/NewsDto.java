@@ -8,6 +8,8 @@ public class NewsDto {
 
     private Long id;
 
+    private String headline;
+
     private EventDto event;
 
     private Long rating;
@@ -85,6 +87,14 @@ public class NewsDto {
         this.pictures = pictures;
     }
 
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
     public static final class NewsDtoBuilder {
         private EventDto event;
         private Long rating;
@@ -92,6 +102,7 @@ public class NewsDto {
         private LocalDateTime createDate;
         private String shortDescription;
         private String longDescription;
+        private String headline;
 
         private NewsDtoBuilder() {
         }
@@ -130,6 +141,11 @@ public class NewsDto {
             return this;
         }
 
+        public NewsDto.NewsDtoBuilder withHeadline(String headline) {
+            this.headline = headline;
+            return this;
+        }
+
         public NewsDto build() {
             NewsDto newsDto = new NewsDto();
             newsDto.setCreateDate(createDate);
@@ -138,6 +154,7 @@ public class NewsDto {
             newsDto.setRating(rating);
             newsDto.setLongDescription(longDescription);
             newsDto.setShortDescription(shortDescription);
+            newsDto.setHeadline(headline);
             return newsDto;
         }
     }

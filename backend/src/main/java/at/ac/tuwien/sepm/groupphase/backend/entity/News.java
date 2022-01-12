@@ -18,6 +18,9 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String headline;
+
     @OneToOne()
     private Event event;
 
@@ -90,6 +93,14 @@ public class News {
         return createDate;
     }
 
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -99,7 +110,7 @@ public class News {
             return false;
         }
         News news = (News) o;
-        return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
+        return id.equals(news.id) && headline.equals(news.headline) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
             && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
     }
 
@@ -112,6 +123,7 @@ public class News {
     public String toString() {
         return "News{"
             + "id=" + id
+            + ", headline=" + headline
             + ", event=" + event
             + ", rating=" + rating
             + ", fsk=" + fsk

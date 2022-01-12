@@ -32,6 +32,13 @@
           </div>
 
           <div class="keyInformation" fxFlex="50">
+            <div *ngIf="news.headline" fxFill fxLayout="row" fxLayoutAlign="space-around">
+              <div fxFlex="100">
+                <h1>
+                  <b>{{news.headline}}</b>
+                </h1>
+              </div>
+            </div>
             <div *ngIf="news.event">
               <div fxFill fxLayout="row" fxLayoutAlign="space-around">
                 <div fxFlex="100">
