@@ -110,13 +110,17 @@ public class News {
             return false;
         }
         News news = (News) o;
-        return id.equals(news.id) && headline.equals(news.headline) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
-            && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        if (headline == null && rating != null && event != null && fsk != null) {  // for News with event
+            return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
+                && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        } else { // for general news
+            return id.equals(news.id) && headline.equals(news.headline) && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, event, rating, fsk, shortDescription, longDescription, createDate);
+        return Objects.hash(id, headline, event, rating, fsk, shortDescription, longDescription, createDate);
     }
 
     @Override

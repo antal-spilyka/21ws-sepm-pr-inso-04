@@ -140,7 +140,7 @@ public class NewsServiceTest implements TestData {
     }
 
     @Test
-    public void insert_news_valid() {
+    public void insert_EventNews_valid() {
         this.addressDto = new AddressDto();
         addressDto.setZip("1234");
         addressDto.setState("TestState");
@@ -201,6 +201,27 @@ public class NewsServiceTest implements TestData {
         secondNews.setEvent(firstNews.getEvent());
         secondNews.setRating(firstNews.getRating());
         secondNews.setFsk(firstNews.getFsk());
+        secondNews.setShortDescription(firstNews.getShortDescription());
+        secondNews.setCreateDate(date);
+        secondNews.setLongDescription(firstNews.getLongDescription());
+
+        assertEquals(firstNews, secondNews);
+    }
+
+    @Test
+    public void insert_GeneralNews_valid() {
+        LocalDateTime date = LocalDateTime.now();
+
+        NewsDto newsDto = new NewsDto();
+        newsDto.setHeadline("Headline");
+        newsDto.setShortDescription("This is a short Description");
+        newsDto.setLongDescription("This is a bit longer Description");
+        newsDto.setCreateDate(date);
+        News firstNews = newsService.save(newsDto);
+
+        News secondNews = new News();
+        secondNews.setId(firstNews.getId());
+        secondNews.setHeadline(firstNews.getHeadline());
         secondNews.setShortDescription(firstNews.getShortDescription());
         secondNews.setCreateDate(date);
         secondNews.setLongDescription(firstNews.getLongDescription());
