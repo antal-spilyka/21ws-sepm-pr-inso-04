@@ -328,7 +328,7 @@ public class PerformanceServiceTest {
 
     }
 
-    /*@Test
+    @Test
     @Transactional
     public void searchByDateTime_findPerformances() {
         PerformanceSearchDto searchParams = new PerformanceSearchDto();
@@ -337,7 +337,7 @@ public class PerformanceServiceTest {
         searchParams.setPage(0);
         Stream<PerformanceDto> performances = performanceService.findPerformanceByDateTime(searchParams);
         assertFalse(performances.toList().isEmpty());
-    }*/
+    }
 
     @Test
     @Transactional
@@ -648,7 +648,7 @@ public class PerformanceServiceTest {
     @Transactional
     public void getGeneralSearch_for_valid_String() {
         GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
-        searchEventDto.setSearchQuery("TestPerformanceByDateTimeHall");
+        //searchEventDto.setSearchQuery("TestPerformanceByDateTimeHall");
         searchEventDto.setPage(0);
         Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime(searchEventDto);
         assertFalse(foundPerformances.toList().isEmpty());
