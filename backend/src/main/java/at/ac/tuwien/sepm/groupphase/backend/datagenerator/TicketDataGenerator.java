@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.OrderValidation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
@@ -10,8 +11,10 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderValidationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -21,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -41,6 +43,8 @@ public class TicketDataGenerator {
 
     private final OrderRepository orderRepository;
 
+    private final OrderValidationRepository orderValidationRepository;
+
     private final EventRepository eventRepository;
 
     private final ArtistRepository artistRepository;
@@ -55,6 +59,8 @@ public class TicketDataGenerator {
 
     private PaymentInformationRepository paymentInformationRepository;
 
+    private SectorRepository sectorRepository;
+
     private final String[] ticketTypes = {"Seated", "Standing", "Disabled"};
 
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
@@ -62,7 +68,8 @@ public class TicketDataGenerator {
                                HallplanElementRepository hallplanElementRepository,
                                PerformanceRepository performanceRepository,
                                PasswordEncoder passwordEncoder, PaymentInformationRepository paymentInformationRepository,
-                               OrderRepository orderRepository) {
+                               OrderRepository orderRepository, OrderValidationRepository orderValidationRepository,
+                               SectorRepository sectorRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.artistRepository = artistRepository;
@@ -72,6 +79,8 @@ public class TicketDataGenerator {
         this.passwordEncoder = passwordEncoder;
         this.paymentInformationRepository = paymentInformationRepository;
         this.orderRepository = orderRepository;
+        this.orderValidationRepository = orderValidationRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     // Durations
@@ -181,13 +190,28 @@ public class TicketDataGenerator {
 
                 final long id = i % 200 == 0 ? 1 : i % 200;
 
+                boolean bought = getRandomDecision(this.decision);
+                ApplicationUser user = userRepository.getById(id);
+
                 Order order = new Order();
                 order.setPerformance(performanceRepository.getById(id));
                 order.setPrize(price);
                 order.setDateOfOrder(LocalDateTime.now());
-                order.setBought(getRandomDecision(this.decision));
-                order.setUser(userRepository.getById(id));
+                order.setBought(bought);
+                order.setUser(user);
+                if (bought) {
+                    List<PaymentInformation> paymentInformations = paymentInformationRepository.findByUser(user);
+                    if (!paymentInformations.isEmpty()) {
+                        order.setPaymentInformation(paymentInformations.get(0));
+                    }
+                }
                 orderRepository.save(order);
+
+                Random random = new Random();
+                OrderValidation orderValidation = new OrderValidation();
+                orderValidation.setOrder(order);
+                orderValidation.setHash(random.nextInt() + "$2a$10$r5LarLhaASjKH7xQ%2FCZI4OIMoxJoyGGHYbSx9uYTR1YHI0e0Ni0au" + random.nextInt());
+                orderValidationRepository.save(orderValidation);
 
                 // TypeOfTicket
                 String type = getRandomString(this.ticketTypes);
@@ -202,6 +226,7 @@ public class TicketDataGenerator {
                         .withPrice(price)
                         .withUsed(getRandomDecision(this.decision))
                         .withOrder(order)
+                        .withSector(sectorRepository.getById((long) (i % 200) + 1L))
                         .build();
 
                     tickets.add(ticket);

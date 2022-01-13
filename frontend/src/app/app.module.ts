@@ -70,6 +70,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { OrdersComponent } from './components/orders/orders.component';
 import { PaymentInformationPickComponent } from './components/payment-information-pick/payment-information-pick.component';
 import { AddArtistDialogComponent } from './components/create-event/create-artist/add-artist-dialog/add-artist-dialog.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
+import { ValidateOrderComponent } from './components/validate-order/validate-order.component';
+import { TypeOfNewsDialogComponent } from './components/add-news/type-of-news-dialog/type-of-news-dialog.component';
 import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
 import { MatListModule } from '@angular/material/list';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
@@ -116,7 +119,11 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     OrdersComponent,
     PaymentInformationPickComponent,
     AddArtistDialogComponent,
-    TopTenEventsComponent
+    TopTenEventsComponent,
+    AddArtistDialogComponent,
+    AddUserComponent,
+    ValidateOrderComponent,
+    TypeOfNewsDialogComponent
   ],
     imports: [
         BrowserModule,

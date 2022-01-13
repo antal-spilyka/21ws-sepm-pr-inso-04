@@ -859,7 +859,7 @@ public class EventDataGenerator {
                 sector.setId((long) i);
                 sector.setName("Sector " + i);
                 sector.setColor(getRandomName(this.colors));
-                sector.setPrice((double) getRandom(this.prices));
+                sector.setPrice((int) getRandom(this.prices));
                 sectorRepository.save(sector);
 
                 // HallPlanElement

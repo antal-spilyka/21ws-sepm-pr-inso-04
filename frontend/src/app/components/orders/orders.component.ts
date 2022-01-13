@@ -8,6 +8,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {PaymentInformation} from '../../dtos/paymentInformation';
 import {SetOrderToBoughtDto} from '../../dtos/setOrderToBoughtDto';
 import {MatTable} from '@angular/material/table';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import {DomSanitizer} from '@angular/platform-browser';
+import {CodeReturnDto} from 'src/app/dtos/codeReturnDto';
 
 export interface DialogData {
   paymentInformations: PaymentInformation[];
@@ -27,12 +33,16 @@ export class OrdersComponent implements OnInit {
   refunded: Order[];
   reservedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'buyButton'];
   boughtColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'refundButton'];
-  refundedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets'];
+  refundedColumns: string[] = ['performance', 'price', 'dateOfOrder', 'numberOfTickets', 'printButton'];
 
   error = false;
   errorMessage = '';
 
-  constructor(public dialog: MatDialog, private router: Router, private orderService: OrderService) {
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    private orderService: OrderService,
+    private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -76,7 +86,7 @@ export class OrdersComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result != null) {
+      if (result != null) {
         console.log('HALLO' + result); // todo buchung persistieren
         const setOrderToBought: SetOrderToBoughtDto = {orderId: order.id, paymentInformationId: result};
         this.orderService.setOrderToBought(setOrderToBought).subscribe({
@@ -91,20 +101,201 @@ export class OrdersComponent implements OnInit {
         });
       }
     });
-}
+  }
 
-refundOrder(order: Order) {
-  this.orderService.refundOrder(order.id).subscribe({
-    next: () => {
-      window.alert('Successfully refunded the Order');
-      this.loadOrders();
-      this.table.renderRows();
-    },
-    error: (error) => {
-      window.alert('Error during buying process: ' + error.error.message);
+  refundOrder(order: Order) {
+    this.orderService.refundOrder(order.id).subscribe({
+      next: () => {
+        window.alert('Successfully refunded the Order');
+        this.loadOrders();
+        this.table.renderRows();
+      },
+      error: (error) => {
+        window.alert('Error during buying process: ' + error.error.message);
+      }
+    });
+  }
+
+  downloadOrder(order: Order) {
+    this.orderService.downloadQRcode(order.id).subscribe({
+      next: code => {
+        this.downloadPdf(order, code);
+      },
+      error: error => {
+        console.log(error);
+        alert('Could not download PDF!');
+        return;
+      }
+    });
+  }
+
+  downloadPdf(order: Order, codeReturnDto: CodeReturnDto) {
+    const {performanceDto} = order;
+    const {image, userName, address, tickets} = codeReturnDto;
+    let addressString = address.street + ', ' + address.city + ', ' + address.zip + ', ' + address.country;
+    if (addressString.length > 35) {
+      addressString = addressString.substring(0, 35) + '...';
     }
-  });
-}
+    const documentDefinition = {
+      content: [
+        {
+          fontSize: 20,
+          text: `Ticket for ${performanceDto.name}`
+        },
+        {
+          alignment: 'justify',
+          columns: [
+            {
+              text: `
+              Name:
+              Date:
+              Location:
+              Hall:
+              Price:
+              Number of Tickets:`
+            },
+            {
+              text: `
+              ${userName}
+              ${performanceDto.startTime ? new Date(performanceDto.startTime).toDateString() : 'unknown'}
+              ${addressString}
+              ${performanceDto.hall.name}
+              ${order.price}€
+              ${order.ticketDetailDtos.length}
+              `
+            },
+            {
+              image: 'qrCode',
+              width: 100
+            }
+          ]
+        },
+        {
+          fontSize: 15,
+          text: 'Seats'
+        }
+      ],
+      images: {
+        qrCode: 'data:image/png;base64,' + image
+      }
+    };
+
+    tickets.forEach(ticket => {
+      const seat = ticket.ticketType === 'Seat' ? `Row ${ticket.rowIndex} Seat ${ticket.seatIndex}` : '-';
+      documentDefinition.content.push({
+        alignment: 'justify',
+        columns: [
+          {
+            text: `
+          Type: ${ticket.ticketType}
+          Seat: ${seat}
+          `
+          }
+        ]
+      });
+    });
+
+    pdfMake.createPdf(documentDefinition).print();
+  }
+
+  downloadCancellationPdf(order: Order) {
+    const {performanceDto} = order;
+    const documentDefinition = {
+      content: [
+        {
+          fontSize: 10,
+          alignment: 'justify',
+          columns: [
+            {
+              text: `
+            ${order.userDto.firstName} ${order.userDto.lastName}
+            ${order.userDto.street}
+            ${order.userDto.zip} ${order.userDto.city}
+            ${order.userDto.country}
+            `
+            },
+            {text: ''},
+            {text: ''},
+            {text: `
+              Ticketline AG
+              Stephansplatz 1
+              1010 Wien
+
+              Date:
+              ${new Date().toDateString()}
+            `}
+          ]
+        },
+        {
+          fontSize: 20,
+          text: `Cancellation receipt for ${performanceDto.name}`
+        },
+        {
+          alignment: 'justify',
+          columns: [
+            {
+              text: `
+            Date:
+            Location:
+
+
+            Hall:
+            Price:
+            Number of Tickets:`
+            },
+            {
+              text: `
+            ${performanceDto.startTime ? new Date(performanceDto.startTime).toDateString() : 'unknown'}
+            ${performanceDto.hall.eventPlaceDto.addressDto.street}
+            ${performanceDto.hall.eventPlaceDto.addressDto.city}, ${performanceDto.hall.eventPlaceDto.addressDto.zip}
+            ${performanceDto.hall.eventPlaceDto.addressDto.country}
+            ${performanceDto.hall.name}
+            ${order.price}€
+            ${order.ticketDetailDtos.length}
+
+
+            `
+            },
+          ]
+        },
+        {
+          fontSize: 15,
+          text: 'Tickets'
+        }
+      ]
+    };
+
+    order.ticketDetailDtos.forEach(ticket => {
+      documentDefinition.content.push({
+        alignment: 'justify',
+        columns: [
+          {
+            text: `
+            Type: ${ticket.ticketType}
+            `
+          },
+          {
+            text: `
+              Price: ${ticket.price}
+            `
+          }
+        ]
+      });
+    });
+
+    pdfMake.createPdf(documentDefinition).print();
+  }
+
+  renderDate(dt: Date) {
+    const date = new Date(dt);
+    console.log(dt);
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const y = date.getFullYear();
+    const h = date.getHours();
+    const min = date.getMinutes();
+    return d + '.' + m + '.' + y + ' ' + h + ':' + min;
+  }
 
   /**
    * Error flag will be deactivated, which clears the error message

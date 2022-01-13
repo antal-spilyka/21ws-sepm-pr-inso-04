@@ -3,6 +3,7 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../dtos/user';
 import {AuthService} from '../../services/auth.service';
 import jwt_decode from 'jwt-decode';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -18,7 +19,7 @@ export class UserListComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private userService: UserService, private authService: AuthService) {
+  constructor(private router: Router, private userService: UserService, private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -150,6 +151,10 @@ export class UserListComponent implements OnInit {
   userEquals(user: User) {
     return !(user === null || this.currentUser === null
       || user.email !== this.currentUser.email);
+  }
+
+  addButton() {
+    this.router.navigateByUrl(`/users/add`);
   }
 
   /**

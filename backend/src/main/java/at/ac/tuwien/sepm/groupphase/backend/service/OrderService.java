@@ -42,7 +42,7 @@ public interface OrderService {
     /**
      * Refunds a bought or reserved order.
      *
-     * @param orderRefundDto containg orderId
+     * @param orderRefundDto containing orderId
      */
     void refund(OrderRefundDto orderRefundDto);
 }

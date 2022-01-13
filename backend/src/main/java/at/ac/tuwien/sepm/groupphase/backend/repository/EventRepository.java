@@ -33,9 +33,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
-    /*@Query("SELECT e FROM Event e WHERE :id=e.id")
-    Event findById(@Param("id") Long id);*/
-
     /**
      * Finds all the events which suit the criteria from parameters.
      *
@@ -49,6 +46,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         "AND(:category is null OR :category='' OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :category, '%')))")
     List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description, @Param("category") String category,
                            Pageable pageable);
+
+    @Query("SELECT e FROM Event e WHERE :generalQuery is null OR :generalQuery='' OR UPPER(e.description) LIKE " +
+        "UPPER(CONCAT( '%', :generalQuery, '%')) OR UPPER(e.category) LIKE UPPER(CONCAT( '%', :generalQuery, '%'))")
+    List<Event> findGeneralEvents(@Param("generalQuery") String generalQuery,
+                                  Pageable pageable);
 
 
     /**

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventLocationSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.HallAddDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.AddressMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventPlaceMapper;
@@ -12,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallplanElementMappe
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.EventPlace;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Hall;
 import at.ac.tuwien.sepm.groupphase.backend.entity.HallplanElement;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
@@ -81,12 +83,12 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     }
 
     @Override
-    public List<EventPlace> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
+    public List<EventPlaceDto> findEventLocation(EventLocationSearchDto eventLocationSearchDto) {
         LOGGER.debug("Handling in Service {}", eventLocationSearchDto);
         try {
             List<Address> addresses = addressRepository.findEventLocation(eventLocationSearchDto.getCity(),
                 eventLocationSearchDto.getState(), eventLocationSearchDto.getCountry(),
-                eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(0, 10));
+                eventLocationSearchDto.getStreet(), eventLocationSearchDto.getZip(), PageRequest.of(eventLocationSearchDto.getPage(), 10));
 
             List<EventPlace> eventPlaces = new ArrayList<>();
             for (Address address : addresses) {
@@ -95,7 +97,26 @@ public class EventPlaceServiceImpl implements EventPlaceService {
                     eventPlaces.addAll(found);
                 }
             }
-            return eventPlaces;
+            return eventPlaces.stream().map(eventPlace -> eventPlaceMapper.entityToDto(eventPlace)).collect(Collectors.toList());
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<EventPlaceDto> findGeneralEventLocation(GeneralSearchEventDto generalSearchEventDto) {
+        LOGGER.debug("Handling in Service {}", generalSearchEventDto);
+        try {
+            List<Address> addresses = addressRepository.findGeneralEventLocation(generalSearchEventDto.getSearchQuery(),
+                PageRequest.of(generalSearchEventDto.getPage(), 10));
+            List<EventPlace> eventPlaces = new ArrayList<>();
+            for (Address address : addresses) {
+                if (address != null) {
+                    List<EventPlace> found = eventPlaceRepository.findEventPlaceByAddress(address);
+                    eventPlaces.addAll(found);
+                }
+            }
+            return eventPlaces.stream().map(eventPlace -> eventPlaceMapper.entityToDto(eventPlace)).collect(Collectors.toList());
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -120,7 +141,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     }
 
     @Override
-    public void addHall(String eventPlaceId, HallAddDto hallAddDto) {
+    public Hall addHall(String eventPlaceId, HallAddDto hallAddDto) {
         LOGGER.debug("Handling in Service {}", hallAddDto);
         try {
             EventPlace eventPlace = eventPlaceRepository.findByIdEquals(Long.parseLong(eventPlaceId));
@@ -133,7 +154,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
 
             List<HallplanElement> rows = hallplanElementMapper.dtoToEntity(hallAddDto.getRows(), sectors);
             hallplanElementRepository.saveAll(rows);
-            hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows, sectors));
+            return hallRepository.save(hallMapper.dtoToEntity(hallAddDto, eventPlace, rows, sectors));
         } catch (EntityExistsException e) {
             throw new ContextException(e);
         } catch (PersistenceException e) {
@@ -142,7 +163,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
     }
 
     @Override
-    public Address findAddress(Long id) {
+    public AddressDto findAddress(Long id) {
         EventPlace eventPlace = eventPlaceRepository.findByIdEquals(id);
         if (eventPlace == null) {
             throw new ServiceException("Event place not found");
@@ -153,6 +174,6 @@ public class EventPlaceServiceImpl implements EventPlaceService {
             throw new ServiceException("Address not found");
         }
 
-        return address;
+        return addressMapper.entityToDto(address);
     }
 }

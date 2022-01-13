@@ -57,7 +57,7 @@ public class UserEndpoint {
      * The registration route for the user.
      */
     @PermitAll
-    @PostMapping("")
+    @PostMapping("/register")
     public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult, HttpServletRequest request) {
         LOGGER.info("POST " + BASE_URL + " " + user.toString());
         if (bindingResult.hasErrors()) {
@@ -141,6 +141,21 @@ public class UserEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
         }
+    }
+
+    /**
+     * Feature for Admin to add a user.
+     */
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/add")
+    public ResponseEntity<String> add(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
+        LOGGER.info("POST /api/v1/users/add " + user.toString());
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        userService.createUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 }
 

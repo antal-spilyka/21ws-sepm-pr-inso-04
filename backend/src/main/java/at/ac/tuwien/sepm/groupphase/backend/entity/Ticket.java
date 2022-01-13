@@ -169,6 +169,7 @@ public class Ticket {
         private boolean used;
         private Performance performance;
         private Order order;
+        private Sector sector;
 
         private TicketBuilder() {
         }
@@ -212,6 +213,11 @@ public class Ticket {
             return this;
         }
 
+        public Ticket.TicketBuilder withSector(Sector sector) {
+            this.sector = sector;
+            return this;
+        }
+
 
         public Ticket build() {
             Ticket ticket = new Ticket();
@@ -222,6 +228,7 @@ public class Ticket {
             ticket.setUsed(used);
             ticket.setPerformance(performance);
             ticket.setOrder(order);
+            ticket.setSector(sector);
             return ticket;
         }
     }

@@ -38,4 +38,6 @@
       </tbody>
     </table>
   </div>
+  <button type="submit" class="button" mat-raised-button color="primary" (click)="moreItems()" *ngIf="artistList.length%10===0 && submitted">Load more
+  </button>
 </div>

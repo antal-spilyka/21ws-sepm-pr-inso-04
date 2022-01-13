@@ -14,16 +14,24 @@ import java.util.Objects;
 public class EventPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @OneToOne(
         orphanRemoval = true,
         cascade = CascadeType.ALL,
         fetch = FetchType.EAGER)
-    Address address;
+    private Address address;
+
+    public EventPlace() {}
+
+    public EventPlace(Long id, String name, Address address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 
     public Long getId() {
         return id;

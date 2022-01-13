@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 public class HallAddDto {
     @NotNull(message = "Name must not be null")
@@ -45,5 +46,15 @@ public class HallAddDto {
 
     public void setSectors(SectorDto[] sectors) {
         this.sectors = sectors;
+    }
+
+    @Override
+    public String toString() {
+        return "HallAddDto{" +
+            "name='" + name + '\'' +
+            ", standingPlaces=" + standingPlaces +
+            ", rows=" + Arrays.toString(rows) +
+            ", sectors=" + Arrays.toString(sectors) +
+            '}';
     }
 }
