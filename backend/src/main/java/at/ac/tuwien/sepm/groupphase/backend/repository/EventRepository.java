@@ -81,6 +81,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<String> findDistinctByOrderByCategoryAsc();
 
     @Query("SELECT e, COUNT(t) FROM Event e JOIN Performance p ON p.event = e JOIN Ticket t ON t.performance = p WHERE " +
-        "p.event IS NOT NULL AND e.category = :category GROUP BY p.event ORDER BY COUNT(t) DESC")
+        "p.event IS NOT NULL AND e.category = :category AND t.refunded = FALSE GROUP BY p.event ORDER BY COUNT(t) DESC")
     List<Object[]> findByCategoryEquals(@NonNull @Param("category") String category);
 }
