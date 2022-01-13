@@ -5,8 +5,9 @@
     <mat-grid-tile>
       <mat-card class="news-card">
         <mat-card-header>
-          <mat-card-title>{{news.eventName}}</mat-card-title>
-          <mat-card-subtitle>{{news.eventDate.toDateString()}}</mat-card-subtitle>
+          <mat-card-title *ngIf="news.eventName">{{news.eventName}}</mat-card-title>
+          <mat-card-title *ngIf="news.headline">{{news.headline}}</mat-card-title>
+          <mat-card-subtitle *ngIf="news.eventDate">{{news.eventDate.toDateString()}}</mat-card-subtitle>
         </mat-card-header>
         <img class="picture" *ngIf="news.picture" mat-card-md-image src="{{news.picture.url}}">
         <mat-card-content>

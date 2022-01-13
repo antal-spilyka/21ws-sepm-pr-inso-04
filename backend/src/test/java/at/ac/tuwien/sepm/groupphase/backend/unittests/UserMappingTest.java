@@ -5,20 +5,31 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ActiveProfiles("test")
 public class UserMappingTest implements TestData {
 
@@ -27,6 +38,30 @@ public class UserMappingTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PaymentInformationRepository paymentInformationRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private HallplanElementRepository hallplanElementRepository;
+
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
+    @BeforeAll
+    public void beforeAll() {
+        performanceRepository.deleteAll();
+        hallRepository.deleteAll();
+        hallplanElementRepository.deleteAll();
+        orderRepository.deleteAll();
+        paymentInformationRepository.deleteAll();
+    }
 
     @BeforeEach
     public void beforeEach() {
@@ -40,6 +75,8 @@ public class UserMappingTest implements TestData {
         paymentInformation.setCreditCardExpirationDate("202022");
         paymentInformation.setCreditCardCvv("123");
         paymentInformation.setCreditCardName("Test");
+        List<PaymentInformation> paymentInformationList = new ArrayList<>();
+        paymentInformationList.add(paymentInformation);
 
         ApplicationUser user = ApplicationUser.ApplicationUserBuilder.aApplicationUser()
             .withEmail("test@email.com")
@@ -53,7 +90,7 @@ public class UserMappingTest implements TestData {
             .withCity("Vienna")
             .withStreet("Test Street")
             .withZip("12345")
-            .withPaymentInformation(paymentInformation)
+            .withPaymentInformation(paymentInformationList)
             .withDisabled(true)
             .build();
 

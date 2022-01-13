@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>New Artist</h1>
+<div mat-dialog-content>
+    <p>Add a new artist.</p>
+</div>
+<div mat-dialog-actions>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+        <form [formGroup]="form">
+            <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+                <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                    <mat-form-field>
+                        <mat-label>Name</mat-label>
+                        <input matInput required formControlName="artistName">
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                    <mat-form-field>
+                        <mat-label>Description</mat-label>
+                        <textarea cdkTestareaAutosize required matInput formControlName="artistDescription"
+                            cdkAutosizeMinRows="3"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+                <button mat-raised-button color="primary" (click)="add()">
+                    Add
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

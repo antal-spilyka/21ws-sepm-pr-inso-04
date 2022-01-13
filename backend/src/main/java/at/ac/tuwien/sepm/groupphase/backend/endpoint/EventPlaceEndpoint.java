@@ -31,6 +31,7 @@ public class EventPlaceEndpoint {
     private final EventPlaceService eventPlaceService;
     private final EventPlaceMapper eventPlaceMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/eventlocations";
 
     public EventPlaceEndpoint(EventPlaceService eventPlaceService, EventPlaceMapper eventPlaceMapper) {
         this.eventPlaceService = eventPlaceService;
@@ -41,6 +42,7 @@ public class EventPlaceEndpoint {
     @GetMapping
     @Operation(summary = "Find EventPlace by search parameters.")
     public ResponseEntity findEventPlace(EventPlaceSearchDto eventPlaceSearchDto) {
+        LOGGER.info("GET " + BASE_URL + " " + eventPlaceSearchDto.toString());
         return new ResponseEntity(eventPlaceService.findEventPlace(eventPlaceSearchDto).stream(), HttpStatus.OK);
     }
 
@@ -48,19 +50,15 @@ public class EventPlaceEndpoint {
     @PostMapping
     @Operation(summary = "persist new eventPlace.")
     public EventPlaceDto saveEventPlace(@RequestBody @Validated EventPlaceDto eventPlaceDto) {
-        //try {
+        LOGGER.info("POST " + BASE_URL + " " + eventPlaceDto.toString());
         return eventPlaceMapper.entityToDto(eventPlaceService.save(eventPlaceDto));
-        /*} catch (ContextException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EventPlace already exists:  " + e.getLocalizedMessage(), e);
-        }*/
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/{eventPlaceId:^[0-9]+$}/halls/add")
     @Operation(summary = "add a hall.")
     public ResponseEntity<String> addHall(@RequestBody @Valid HallAddDto hallAddDto, @PathVariable String eventPlaceId) {
-        LOGGER.info("PUT /api/v1/eventplaces/" + eventPlaceId + "/halls/add" + hallAddDto.toString());
+        LOGGER.info("POST " + BASE_URL + "/{}/halls/add" + " " + hallAddDto.toString(), eventPlaceId);
         try {
             eventPlaceService.addHall(eventPlaceId, hallAddDto);
         } catch (ContextException e) {

@@ -22,6 +22,11 @@ import {LocationPerformancesComponent} from './components/location-performances/
 import {PerformanceDetailedComponent} from './components/performance-detailed/performance-detailed.component';
 import {OldNewsComponent} from './components/old-news/old-news.component';
 import {CreateEventPlacesComponent} from './components/create-event-places/create-event-places.component';
+import {BookPerformanceComponent} from './components/book-performance/book-performance.component';
+import {OrdersComponent} from './components/orders/orders.component';
+import {AddUserComponent} from './components/add-user/add-user.component';
+import { ValidateOrderComponent } from './components/validate-order/validate-order.component';
+import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -31,7 +36,7 @@ const routes: Routes = [
   {path: 'users', canActivate: [AuthGuard], component: UserListComponent},
   {path: 'news/add', component: AddNewsComponent},
   {path: 'events/add', canActivate: [AuthGuard], component: CreateEventComponent},
-  {path: 'search', component: SearchComponent},
+  //{path: 'search', component: SearchComponent},
   {path: 'search-artist', component: SearchArtistComponent},
   {path: 'search-location', component: SearchLocationComponent},
   {path: 'search-event', component: SearchEventsComponent},
@@ -41,11 +46,17 @@ const routes: Routes = [
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'artists/:id/performances', component: ArtistPerformancesComponent},
   {path: 'events/:id/performances', component: EventPerformancesComponent},
-  {path: 'eventPlaces/:id/performances', component: LocationPerformancesComponent},
-  {path: 'performances/:id/:performance', component: PerformanceDetailedComponent},
+  {path: 'locations/:id/performances', component: LocationPerformancesComponent},
+  {path: 'performances/book', canActivate: [AuthGuard], component: BookPerformanceComponent},
+  {path: 'performances/:id', component: PerformanceDetailedComponent},
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},
-  {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent}
+  {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent},
+  {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent},
+  {path: 'topTenEvents', canActivate: [AuthGuard], component: TopTenEventsComponent},
+  {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent},
+  {path: 'users/add', canActivate: [AuthGuard], component: AddUserComponent},
+  {path: 'validation/:id', canActivate: [AuthGuard], component: ValidateOrderComponent}
 ];
 
 @NgModule({

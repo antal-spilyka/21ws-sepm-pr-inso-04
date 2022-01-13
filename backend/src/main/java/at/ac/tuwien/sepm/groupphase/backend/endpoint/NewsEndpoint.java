@@ -30,13 +30,12 @@ import java.util.List;
 @RequestMapping("/api/v1/news")
 public class NewsEndpoint {
     private final NewsService newsService;
-    private final NewsMapper newsMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    public static final String BASE_URL = "/api/v1/news";
 
     @Autowired
-    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper) {
+    public NewsEndpoint(NewsService newsService) {
         this.newsService = newsService;
-        this.newsMapper = newsMapper;
     }
 
     @Secured("ROLE_ADMIN")
@@ -44,7 +43,7 @@ public class NewsEndpoint {
     @PostMapping
     @Operation(summary = "Publish new news")
     public void save(@Validated @RequestBody NewsDto newsDto) {
-        LOGGER.info("POST /api/v1/news body: {}", newsDto);
+        LOGGER.info("POST " + BASE_URL + " " + newsDto.toString());
         newsService.save(newsDto);
     }
 
@@ -57,31 +56,23 @@ public class NewsEndpoint {
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     public List<SimpleNewsDto> getNewNews(@PathVariable String email) {
-        LOGGER.info("GET /api/v1/news : newNews");
-        //try {
+        LOGGER.info("GET " + BASE_URL + "/{}/new", email);
         return newsService.getNewNews(email);
-        /*} catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading new news", e);
-        }*/
     }
 
     @GetMapping("/{email}/old")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     public List<SimpleNewsDto> getOldNews(@PathVariable String email) {
-        LOGGER.info("GET /api/v1/news : oldNews");
-        //try {
+        LOGGER.info("GET " + BASE_URL + "/{}/old", email);
         return newsService.getOldNews(email);
-        /*} catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error during reading old news", e);
-        }*/
     }
 
     @PostMapping("/read")
     @PermitAll
     @ResponseStatus(HttpStatus.CREATED)
     public NewsDto readNews(@RequestBody SimpleSeenNewsDto simpleSeenNewsDto) {
-        LOGGER.info("POST /api/v1/news/read : readNews");
+        LOGGER.info("POST " + BASE_URL + "/read" + " " + simpleSeenNewsDto.toString());
         return newsService.readNews(simpleSeenNewsDto);
     }
 }

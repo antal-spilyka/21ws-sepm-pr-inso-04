@@ -9,6 +9,8 @@ import {Performance} from '../../dtos/performance';
 })
 export class ArtistPerformancesComponent implements OnInit {
   performancesList: Performance[] = [];
+  pageCounter = 0;
+  id: number;
   error = false;
   errorMessage: string;
   constructor(private route: ActivatedRoute, private router: Router, private performanceService: PerformanceService) { }
@@ -17,11 +19,12 @@ export class ArtistPerformancesComponent implements OnInit {
       let id: number;
     this.route.paramMap.subscribe( paramMap => {
       id = Number(paramMap.get('id'));
+      this.id = id;
     });
-    this.performanceService.findPerformancesByArtist(id).subscribe(
+    this.performanceService.findPerformancesByArtist(id, this.pageCounter).subscribe(
       {
         next: performances => {
-          this.performancesList = performances;
+          this.performancesList = this.performancesList.concat(performances);
           console.log(this.performancesList);
         }, error: error => this.handleError(error)
       }
@@ -29,8 +32,22 @@ export class ArtistPerformancesComponent implements OnInit {
   }
   loadPerformance(performance: Performance){
     if(performance.id){
-      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+      this.router.navigate([`/performances/${performance.id}`]);
     }
+  }
+  loadMore(){
+    this.performanceService.findPerformancesByArtist(this.id, this.pageCounter).subscribe(
+      {
+        next: performances => {
+          this.performancesList = this.performancesList.concat(performances);
+          console.log(this.performancesList);
+        }, error: error => this.handleError(error)
+      }
+    );
+  }
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.loadMore();
   }
   private handleError(error: any) {
     console.log(error);

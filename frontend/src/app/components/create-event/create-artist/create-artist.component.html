@@ -13,85 +13,95 @@
     </div>
   </div>
   <form [formGroup]="form" #formDirective="ngForm" (ngSubmit)="addPerformance(formDirective)">
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <h2>Performance</h2>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <h3>General Information</h3>
+        <h2>Performance</h2>
       </div>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput required formControlName="name">
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Duration (minutes)</mat-label>
-        <input matInput required type="number" formControlName="duration">
-      </mat-form-field>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <input matInput min="today" required type="datetime-local" formControlName="startTime">
-      </mat-form-field>
-    </div>
-    <br>
-    <br>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <h3>Artist</h3>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <h3>General Information</h3>
+        </div>
       </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput required formControlName="name">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Duration (minutes)</mat-label>
+          <input matInput required type="number" formControlName="duration">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <input matInput min="today" required type="datetime-local" formControlName="startTime">
+        </mat-form-field>
+      </div>
+      <br>
+      <br>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <h3>Artist</h3>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput required formControlName="artistName" [matAutocomplete]="auto">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="openNewArtistDialog($event)">
+          Add Artist
+        </button>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Description</mat-label>
+          <textarea cdkTestareaAutosize matInput formControlName="artistDescription" cdkAutosizeMinRows="3"
+            cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+      </div>
+      <br>
+      <br>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <h3>Hall</h3>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput required formControlName="hallName" [matAutocomplete]="autoRoom">
+        </mat-form-field>
+        <span>
+          <a mat-raised-button target="_blank" color="primary"
+            [routerLink]="['/eventPlaces', event.eventPlace.id,'halls', 'add']" routerLinkActive="active">Add Hall</a>
+        </span>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <mat-form-field>
+          <mat-label>multiply seat prices by</mat-label>
+          <input matInput required type="number" formControlName="priceMultiplicant">
+        </mat-form-field>
+      </div>
+      <br>
+      <br>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <hr class="line">
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+        <button mat-raised-button color="primary" type="submit">Add</button>
+        <button mat-raised-button color="primary" [disabled]="!canSaveEvent" (click)="addEvent()">Finish</button>
+      </div>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
+        <mat-option *ngFor="let artist of artists | async" [value]="artist">
+          {{artist.bandName}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-autocomplete #autoRoom="matAutocomplete" (optionSelected)="onSelectHall($event.option.value)">
+        <mat-option *ngFor="let hall of halls | async" [value]="hall">
+          {{hall.name}}
+        </mat-option>
+      </mat-autocomplete>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput required formControlName="artistName" [matAutocomplete]="auto">
-      </mat-form-field>
-      <mat-checkbox [checked]="isNewArtist" (change)="handleNewArtist()">
-        Create new Artist
-      </mat-checkbox>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea cdkTestareaAutosize matInput formControlName="artistDescription" cdkAutosizeMinRows="3"
-          cdkAutosizeMaxRows="5"></textarea>
-      </mat-form-field>
-    </div>
-    <br>
-    <br>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <h3>Hall</h3>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput required formControlName="hallName" [matAutocomplete]="autoRoom">
-      </mat-form-field>
-      <span>
-        <a mat-raised-button target="_blank" color="primary"
-          [routerLink]="['/eventPlaces', event.eventPlace.id,'halls', 'add']" routerLinkActive="active">Add Hall</a>
-      </span>
-    </div>
-    <br>
-    <br>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <hr class="line">
-    </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
-      <button mat-raised-button color="primary" type="submit">Add</button>
-      <button mat-raised-button color="primary" [disabled]="!canSaveEvent" (click)="addEvent()">Finish</button>
-    </div>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectArtist($event.option.value)">
-      <mat-option *ngFor="let artist of artists | async" [value]="artist">
-        {{artist.bandName}}
-      </mat-option>
-    </mat-autocomplete>
-    <mat-autocomplete #autoRoom="matAutocomplete" (optionSelected)="onSelectHall($event.option.value)">
-      <mat-option *ngFor="let hall of halls | async" [value]="hall">
-        {{hall.name}}
-      </mat-option>
-    </mat-autocomplete>
   </form>
 </div>

@@ -1,15 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
 import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +53,13 @@ public class ApplicationUser {
     @Column(nullable = false, length = 100)
     private String zip;
 
-    @OneToMany(cascade = CascadeType.REMOVE,
-        fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.EAGER,
         mappedBy = "user")
     private List<PaymentInformation> paymentInformation = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY,
+        mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean disabled;
@@ -209,6 +213,14 @@ public class ApplicationUser {
         this.paymentInformation.add(paymentInformation);
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "ApplicationUser{"
@@ -224,9 +236,10 @@ public class ApplicationUser {
             + ", city='" + city + '\''
             + ", street='" + street + '\''
             + ", zip='" + zip + '\''
-            + ", disabled=" + disabled
-            + ", lockedCounter=" + lockedCounter
-            + ", paymentInformation=" + paymentInformation
+            + ", disabled=" + disabled + '\''
+            + ", lockedCounter=" + lockedCounter + '\''
+            + ", paymentInformation=" + paymentInformation + '\''
+            + ", tickets=" + orders + + '\''
             + '}';
     }
 
@@ -244,7 +257,8 @@ public class ApplicationUser {
         private String city;
         private String street;
         private Boolean disabled;
-        private PaymentInformation paymentInformation;
+        private List<PaymentInformation> paymentInformation;
+        private List<Order> orders;
         private int lockedCounter;
 
         private ApplicationUserBuilder() {
@@ -324,8 +338,13 @@ public class ApplicationUser {
             return this;
         }
 
-        public ApplicationUserBuilder withPaymentInformation(PaymentInformation paymentInformation) {
+        public ApplicationUserBuilder withPaymentInformation(List<PaymentInformation> paymentInformation) {
             this.paymentInformation = paymentInformation;
+            return this;
+        }
+
+        public ApplicationUserBuilder withOrders(List<Order> orders) {
+            this.orders = orders;
             return this;
         }
 
@@ -344,9 +363,8 @@ public class ApplicationUser {
             applicationUser.setStreet(street);
             applicationUser.setDisabled(disabled);
             applicationUser.setZip(zip);
-            if (paymentInformation != null) {
-                applicationUser.addPaymentInformation(paymentInformation);
-            }
+            applicationUser.setPaymentInformation(paymentInformation);
+            applicationUser.setOrders(orders);
             applicationUser.setLockedCounter(lockedCounter);
             return applicationUser;
         }

@@ -3,26 +3,35 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 public class EventPlace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @OneToOne(
         orphanRemoval = true,
-        cascade = CascadeType.ALL)
-    Address address;
+        cascade = CascadeType.ALL,
+        fetch = FetchType.EAGER)
+    private Address address;
+
+    public EventPlace() {}
+
+    public EventPlace(Long id, String name, Address address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 
     public Long getId() {
         return id;

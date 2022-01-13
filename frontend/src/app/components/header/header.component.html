@@ -42,6 +42,14 @@
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
     </ul>
 
+    <ul class="navbar-nav mr-5">
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/orders" routerLinkActive="active">Orders</a>
+    </ul>
+
+    <ul class="navbar-nav mr-5">
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/topTenEvents" routerLinkActive="active">Top 10 Events</a>
+    </ul>
+
     <ul class="navbar-nav mr-5" *ngIf="!authService.isLoggedIn()">
       <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
     </ul>

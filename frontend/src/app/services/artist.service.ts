@@ -20,21 +20,26 @@ export class ArtistService {
    * @param searchName to search for
    * @returns Observable List of Artists matching query
    */
-  findArtist(searchName: string): Observable<Artist[]> {
+  findArtist(searchName: string, page: number): Observable<Artist[]> {
     let params = new HttpParams();
     params = params.set('misc', searchName);
+    params = params.set('page', page);
     return this.httpClient.get<Artist[]>(this.messageBaseUri, {params});
   }
   /**
    * Searches for artist by name.
    *
    * @param searchName to search for
+   * @param pageCounter for the page to be loaded
    * @returns Observable List of Artists matching query
    */
-  searchArtist(searchName: string): Observable<Artist[]> {
+  searchArtist(searchName: string, pageCounter: number): Observable<Artist[]> {
     let params = new HttpParams();
     if (searchName && searchName !== '') {
       params = params.set('misc', searchName.trim());
+    }
+    if(pageCounter !== null){
+      params = params.set('page', pageCounter);
     }
     return this.httpClient.get<Artist[]>(this.messageBaseUri + '/search', {params});
   }
@@ -46,6 +51,7 @@ export class ArtistService {
    * @returns Observable
    */
   createArtist(artist: Artist): Observable<Artist> {
+    console.log(artist);
     return this.httpClient.post<Artist>(this.messageBaseUri, artist);
   }
 }

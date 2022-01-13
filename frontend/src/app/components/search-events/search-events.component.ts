@@ -14,6 +14,9 @@ export class SearchEventsComponent implements OnInit {
     duration: null, description: '', category: '',
   };
   submitted = false;
+  detailedSearch = false;
+  generalSearchEvent = '';
+  pageCounter = 0;
   eventList: EventDto[] = [];
   error = false;
   errorMessage: string;
@@ -23,31 +26,62 @@ export class SearchEventsComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  onSubmit() {
+
+  onSubmit(newSearch = true) {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
     } else {
-      this.eventService.findEvent(this.searchEvent).subscribe(
-        {
-          next: events => {
-            this.submitted = true;
-            console.log(this.eventList);
-            this.eventList = events;
-            console.log(this.eventList);
-          }, error: error => this.handleError(error)
+      if (this.detailedSearch === true) {
+        if(newSearch){
+          this.eventList = [];
+          this.pageCounter = 0;
         }
-      );
+        this.eventService.findEvent(this.searchEvent, this.pageCounter).subscribe(
+          {
+            next: events => {
+              this.submitted = true;
+              console.log(this.eventList);
+              this.eventList = this.eventList.concat(events);
+              console.log(this.eventList);
+            }, error: error => this.handleError(error)
+          }
+        );
+      } else{
+        if(newSearch){
+          this.eventList = [];
+          this.pageCounter = 0;
+        }
+        this.eventService.findGeneralEvent(this.generalSearchEvent, this.pageCounter).subscribe(
+          {
+            next: events => {
+              this.submitted = true;
+              this.eventList = this.eventList.concat(events);
+              console.log(this.eventList);
+            }, error: error => this.handleError(error)
+          }
+        );
+      }
     }
   }
-  loadPerformances(event: EventDto){
-    if(event.id){
+
+  loadPerformances(event: EventDto) {
+    if (event.id) {
       this.router.navigateByUrl(`/events/${event.id}/performances`);
     }
+  }
+
+  changeDetailed(){
+    this.detailedSearch = !this.detailedSearch;
+  }
+  moreItems(){
+    this.pageCounter = this.pageCounter+1;
+    this.onSubmit(false);
   }
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;
   }
+
   private handleError(error: any) {
     console.log(error);
     this.error = true;

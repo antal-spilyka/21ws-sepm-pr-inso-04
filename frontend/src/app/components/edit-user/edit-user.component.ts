@@ -177,6 +177,7 @@ export class EditUserComponent implements OnInit {
     }
   }
 
+
   changePassword() {
     const dialogRef = this.dialog.open(EditPasswordDialogComponent, {
       data: {email: this.user.email},
@@ -214,7 +215,9 @@ export class EditUserComponent implements OnInit {
           this.paymentInformations = [];
         }
         this.paymentInformations.push(result);
-        this.table.renderRows();
+        if (this.table) {
+          this.table.renderRows();
+        }
       }
     });
   }

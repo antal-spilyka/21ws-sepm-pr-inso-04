@@ -47,4 +47,13 @@ public class HallDto {
     public int hashCode() {
         return Objects.hash(name, eventPlaceDto);
     }
+
+    @Override
+    public String toString() {
+        return "HallDto{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", eventPlaceDto=" + eventPlaceDto +
+            '}';
+    }
 }

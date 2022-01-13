@@ -62,6 +62,7 @@ public class ArtistEndpointTest {
 
         ArtistSearchDto artistSearchDto = new ArtistSearchDto();
         artistSearchDto.setMisc(artistDto.getBandName());
+        artistSearchDto.setPage(0);
         MvcResult mvcResult2 = this.mockMvc.perform(get(TestData.ARTIST_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.ADMIN_ROLES)))
@@ -80,6 +81,7 @@ public class ArtistEndpointTest {
     public void SearchForNothing() throws Exception {
         ArtistSearchDto artistSearchDto = new ArtistSearchDto();
         artistSearchDto.setMisc("not existing");
+        artistSearchDto.setPage(0);
         MvcResult mvcResult = this.mockMvc.perform(get(TestData.ARTIST_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(TestData.ADMIN_USER, TestData.USER_ROLES)))

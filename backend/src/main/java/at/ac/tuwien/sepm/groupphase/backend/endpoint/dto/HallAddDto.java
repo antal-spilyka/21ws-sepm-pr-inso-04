@@ -1,10 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 public class HallAddDto {
     @NotNull(message = "Name must not be null")
     private String name;
+
+    @NotNull(message = "Standing Places must not be null")
+    private int standingPlaces;
 
     @NotNull(message = "Rows must not be null")
     private HallplanElementDto[][] rows;
@@ -18,6 +22,14 @@ public class HallAddDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getStandingPlaces() {
+        return standingPlaces;
+    }
+
+    public void setStandingPlaces(int standingPlaces) {
+        this.standingPlaces = standingPlaces;
     }
 
     public HallplanElementDto[][] getRows() {
@@ -34,5 +46,15 @@ public class HallAddDto {
 
     public void setSectors(SectorDto[] sectors) {
         this.sectors = sectors;
+    }
+
+    @Override
+    public String toString() {
+        return "HallAddDto{" +
+            "name='" + name + '\'' +
+            ", standingPlaces=" + standingPlaces +
+            ", rows=" + Arrays.toString(rows) +
+            ", sectors=" + Arrays.toString(sectors) +
+            '}';
     }
 }

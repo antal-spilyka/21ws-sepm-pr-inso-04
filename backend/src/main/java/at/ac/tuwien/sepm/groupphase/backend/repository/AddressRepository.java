@@ -34,12 +34,12 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     /**
      * Finds all the events which suit the criteria from parameters.
      *
-     * @param city        of the address
-     * @param state       of the address
-     * @param country     of the address
-     * @param street      of the address
-     * @param zip         of the address
-     * @param pageable    of the address
+     * @param city     of the address
+     * @param state    of the address
+     * @param country  of the address
+     * @param street   of the address
+     * @param zip      of the address
+     * @param pageable of the address
      * @return all matching addresses.
      */
     @Query("SELECT a FROM Address a WHERE (:zip is null OR :zip='' OR UPPER(a.zip) LIKE UPPER(CONCAT( '%', :zip, '%'))) AND (:city is null OR :city='' OR UPPER(a.city) " +
@@ -48,4 +48,16 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
         "(:street is null OR :street='' OR UPPER(a.street) LIKE UPPER(CONCAT( '%', :street, '%')))")
     List<Address> findEventLocation(@Param("city") String city, @Param("state") String state, @Param("country") String country,
                                     @Param("street") String street, @Param("zip") String zip, Pageable pageable);
+
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param location can suit each address element
+     * @param pageable of the address
+     * @return all matching addresses.
+     */
+    @Query("SELECT a FROM Address a WHERE :location is null OR :location='' OR UPPER(a.zip) LIKE UPPER(CONCAT( '%', :location, '%'))" +
+        "OR UPPER(a.city) LIKE UPPER(CONCAT( '%', :location, '%')) OR UPPER(a.state) LIKE UPPER(CONCAT( '%', :location, '%')) " +
+        "OR UPPER(a.country) LIKE UPPER(CONCAT( '%', :location, '%')) OR UPPER(a.street) LIKE UPPER(CONCAT( '%', :location, '%'))")
+    List<Address> findGeneralEventLocation(@Param("location") String location, Pageable pageable);
 }

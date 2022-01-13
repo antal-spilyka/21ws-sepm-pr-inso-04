@@ -6,10 +6,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -47,16 +49,18 @@ public class CustomUserDetailService implements UserService {
     private final SeenNewsRepository seenNewsRepository;
     private final PaymentInformationRepository paymentInformationRepository;
     private final EmailServiceImpl emailService;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public CustomUserDetailService(EmailServiceImpl emailService, UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper,
-                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository) {
+                                   PaymentInformationRepository paymentInformationRepository, SeenNewsRepository seenNewsRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.paymentInformationRepository = paymentInformationRepository;
         this.seenNewsRepository = seenNewsRepository;
         this.emailService = emailService;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void createUser(UserRegisterDto user) {
+    public ApplicationUser createUser(UserRegisterDto user) {
         LOGGER.debug("Create application user");
         if (user == null) {
             throw new IllegalArgumentException("Please fill out all the mandatory fields");
@@ -115,9 +119,35 @@ public class CustomUserDetailService implements UserService {
         if (foundUser != null) {
             throw new ContextException("E-mail already used");
         } else {
-            userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
+            return userRepository.save(new ApplicationUser(user.getEmail(), passwordEncoder.encode(user.getPassword()),
                 false, user.getFirstName(), user.getLastName(), user.getSalutation(), user.getPhone(),
                 user.getCountry(), user.getCity(), user.getStreet(), user.getDisabled(), user.getZip(), 0));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void createUser(UserEditDto user) {
+        LOGGER.debug("Add application user");
+        if (user == null) {
+            throw new IllegalArgumentException("Please fill out all the mandatory fields");
+        }
+        ApplicationUser foundUser = userRepository.findUserByEmail(user.getEmail());
+        if (foundUser != null) {
+            throw new ContextException("E-mail already used");
+        } else {
+            ApplicationUser applicationUser = userMapper.userEditDtoToApplicationUser(user);
+            applicationUser.setPassword(passwordEncoder.encode(applicationUser.getPassword()));
+            if (!user.getPaymentInformation().isEmpty()) {
+                List<PaymentInformation> paymentInformationList = new ArrayList<>();
+                for (PaymentInformationDto e : user.getPaymentInformation()) {
+                    PaymentInformation p = userMapper.paymentInformationDtoToPaymentInformation(e);
+                    p.setUser(applicationUser);
+                    paymentInformationList.add(p);
+                }
+                paymentInformationRepository.saveAll(paymentInformationList);
+            }
+            userRepository.save(applicationUser);
         }
     }
 
@@ -182,7 +212,7 @@ public class CustomUserDetailService implements UserService {
         }
     }
 
-    // removes all existing paymentInformations of updatedUser to owerwrite the new data
+    // removes all existing paymentInformations of updatedUser to overwrite the new data
     @Transactional
     public void deletePaymentInformations(UserEditDto updatedUser) {
         ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
@@ -204,6 +234,16 @@ public class CustomUserDetailService implements UserService {
         } else {
             ApplicationUser userToDelete = userRepository.findUserByEmail(email);
             seenNewsRepository.deleteByUser(userToDelete);
+            List<PaymentInformation> paymentInformations = paymentInformationRepository.findByUser(userToDelete);
+            for (PaymentInformation paymentInformation : paymentInformations) {
+                paymentInformation.setUser(null);
+            }
+            List<Order> orders = orderRepository.getOrderByUser(userToDelete);
+            for (Order order : orders) {
+                order.setUser(null);
+            }
+            paymentInformationRepository.saveAll(paymentInformations);
+            orderRepository.saveAll(orders);
             userRepository.deleteById(userToDelete.getId());
         }
     }

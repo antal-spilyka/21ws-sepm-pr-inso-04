@@ -18,13 +18,14 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "VARCHAR(100)")
+    private String headline;
+
     @OneToOne()
     private Event event;
 
-    @Column(nullable = false)
     private Long rating;
 
-    @Column(nullable = false)
     private Long fsk;
 
     @Column(nullable = false)
@@ -92,6 +93,14 @@ public class News {
         return createDate;
     }
 
+    public String getHeadline() {
+        return headline;
+    }
+
+    public void setHeadline(String headline) {
+        this.headline = headline;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -101,19 +110,24 @@ public class News {
             return false;
         }
         News news = (News) o;
-        return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
-            && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        if (headline == null && rating != null && event != null && fsk != null) {  // for News with event
+            return id.equals(news.id) && event.equals(news.event) && rating.equals(news.rating) && fsk.equals(news.fsk)
+                && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        } else { // for general news
+            return id.equals(news.id) && headline.equals(news.headline) && Objects.equals(shortDescription, news.shortDescription) && Objects.equals(longDescription, news.longDescription) && Objects.equals(createDate, news.createDate);
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, event, rating, fsk, shortDescription, longDescription, createDate);
+        return Objects.hash(id, headline, event, rating, fsk, shortDescription, longDescription, createDate);
     }
 
     @Override
     public String toString() {
         return "News{"
             + "id=" + id
+            + ", headline=" + headline
             + ", event=" + event
             + ", rating=" + rating
             + ", fsk=" + fsk

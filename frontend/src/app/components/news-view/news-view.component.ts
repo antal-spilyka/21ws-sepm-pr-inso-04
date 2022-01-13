@@ -33,7 +33,9 @@ export class NewsViewComponent implements OnInit {
       next: (news) => {
         this.news = news;
         console.log(this.news);
-        this.durationDHM = this.minutesToDhms(news.event.duration);
+        if (news.event != null) {
+          this.durationDHM = this.minutesToDhms(news.event.duration);
+        }
         if(this.news.pictures) {
           if(this.news.pictures.length === 0) {
             this.images.push(
@@ -66,7 +68,7 @@ export class NewsViewComponent implements OnInit {
   }
 
   minutesToDhms(minutes: number) {
-    console.log(minutes);
+    console.log(minutes % 60);
     const d = Math.floor(minutes / (60*24));
     const h = Math.floor(minutes % (60*24) / 60);
     const m = Math.floor(minutes % 60);
@@ -74,7 +76,13 @@ export class NewsViewComponent implements OnInit {
     const dDisplay = d > 0 ? d + (d === 1 ? ' day ' : ' days ') : '';
     const hDisplay = h > 0 ? h + (h === 1 ? ' hour ' : ' hours ') : '';
     const mDisplay = m > 0 ? m + (m === 1 ? ' minute ' : ' minutes ') : '';
-    return (dDisplay + hDisplay + mDisplay).substring(1);
+    return (dDisplay + hDisplay + mDisplay);
+  }
+
+  buyTicket() {
+    if(this.news.event.id){
+      this.router.navigateByUrl(`/events/${this.news.event.id}/performances`);
+    }
   }
 
   vanishError() {

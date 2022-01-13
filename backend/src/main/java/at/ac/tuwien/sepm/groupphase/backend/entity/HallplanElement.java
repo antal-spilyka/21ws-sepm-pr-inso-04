@@ -32,6 +32,10 @@ public class HallplanElement {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public int getRowIndex() {
         return rowIndex;
     }
@@ -71,4 +75,6 @@ public class HallplanElement {
     public void setSector(Sector sector) {
         this.sector = sector;
     }
+
+
 }

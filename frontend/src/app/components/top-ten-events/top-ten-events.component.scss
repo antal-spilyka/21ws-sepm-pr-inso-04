@@ -1,0 +1,88 @@
+table {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.example-accordion {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.example-accordion-item {
+  display: block;
+  border: solid 1px #ccc;
+}
+
+.example-accordion-item + .example-accordion-item {
+  border-top: none;
+}
+
+.example-accordion-item-header {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+}
+
+.noShift {
+  align-content: center;
+  padding: 16px;
+}
+
+.example-accordion-item-description {
+  font-size: 0.85em;
+  color: #999;
+}
+
+.example-accordion-item-header,
+.example-accordion-item-body {
+  padding: 16px;
+}
+
+.example-accordion-item-header:hover {
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.example-accordion-item:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.example-accordion-item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.location-details {
+  border: lightgray solid thin;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.topTen {
+  margin-top: 1em;
+  border: solid grey;
+  border-radius: 20px;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.51);
+  margin-bottom: 2em;
+
+  ngx-charts-bar-vertical {
+    max-width: 90%;
+    border: dashed thin white;
+  }
+}
+
+.topTen h2 {
+  margin: 1rem 1rem 0 1rem;
+}
+
+.buttons-div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.form {
+  margin-bottom: 1.5em;
+}

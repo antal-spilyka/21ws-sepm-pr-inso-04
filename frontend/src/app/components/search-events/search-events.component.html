@@ -11,27 +11,37 @@
 <div class="modal-body">
 
   <div>
-
-    <div class="form-group">
-      <label for="descriptionEvent">Description</label>
-      <input type="text" name="descriptionEvent" class="form-control" id="descriptionEvent"
-             aria-describedby="titleHelp" placeholder="Enter Description for Event"
-             [(ngModel)]="searchEvent.description">
+    <div *ngIf="detailedSearch === false">
+      <div class="form-group">
+        <label for="generalSearch">General Search</label>
+        <input type="text" name="General Search" class="form-control" id="generalSearch" aria-describedby="titleHelp"
+               placeholder="Enter Event Information" [(ngModel)]="generalSearchEvent">
+      </div>
     </div>
+    <div *ngIf="detailedSearch === true">
+      <div class="form-group">
+        <label for="descriptionEvent">Description</label>
+        <input type="text" name="descriptionEvent" class="form-control" id="descriptionEvent"
+               aria-describedby="titleHelp" placeholder="Enter Description for Event"
+               [(ngModel)]="searchEvent.description">
+      </div>
 
-    <div class="form-group">
-      <label for="category">Category</label>
-      <input type="text" name="category" class="form-control" id="category"
-             aria-describedby="titleHelp" placeholder="Enter Category" [(ngModel)]="searchEvent.category">
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" name="category" class="form-control" id="category"
+               aria-describedby="titleHelp" placeholder="Enter Category" [(ngModel)]="searchEvent.category">
+      </div>
+
+      <div class="form-group">
+        <label for="duration">Duration (+/- 30 Minutes)</label>
+        <input type="number" name="duration" class="form-control" id="duration"
+               aria-describedby="titleHelp" placeholder="Enter Duration" [(ngModel)]="searchEvent.duration" min="0">
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="duration">Duration (+/- 30 Minutes)</label>
-      <input type="number" name="duration" class="form-control" id="duration"
-             aria-describedby="titleHelp" placeholder="Enter Duration" [(ngModel)]="searchEvent.duration" min="0">
+      <input type="checkbox" id="detailedSearch" name="detailedSearch" (change)="changeDetailed()">
+      <label for="detailedSearch"> Detailed Search</label>
     </div>
-
-
     <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
     <div *ngIf="eventList.length === 0 && submitted">
       No Events were found for this search criteria!
@@ -59,5 +69,7 @@
         </tbody>
       </table>
     </div>
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="moreItems()" *ngIf="eventList.length%10===0 && submitted">Load more
+    </button>
   </div>
 </div>

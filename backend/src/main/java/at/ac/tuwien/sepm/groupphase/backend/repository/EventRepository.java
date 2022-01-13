@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,9 +33,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Event getById(Long id);
 
-    /*@Query("SELECT e FROM Event e WHERE :id=e.id")
-    Event findById(@Param("id") Long id);*/
-
     /**
      * Finds all the events which suit the criteria from parameters.
      *
@@ -47,6 +46,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         "AND(:category is null OR :category='' OR UPPER(a.category) LIKE UPPER(CONCAT( '%', :category, '%')))")
     List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description, @Param("category") String category,
                            Pageable pageable);
+
+    @Query("SELECT e FROM Event e WHERE :generalQuery is null OR :generalQuery='' OR UPPER(e.description) LIKE " +
+        "UPPER(CONCAT( '%', :generalQuery, '%')) OR UPPER(e.category) LIKE UPPER(CONCAT( '%', :generalQuery, '%'))")
+    List<Event> findGeneralEvents(@Param("generalQuery") String generalQuery,
+                                  Pageable pageable);
 
 
     /**
@@ -72,4 +76,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return boolean if event with name exists
      */
     Boolean existsByName(String name);
+
+    @Query("SELECT DISTINCT category FROM Event")
+    List<String> findDistinctByOrderByCategoryAsc();
+
+    @Query("SELECT e, COUNT(t) FROM Event e JOIN Performance p ON p.event = e JOIN Ticket t ON t.performance = p WHERE " +
+        "p.event IS NOT NULL AND e.category = :category GROUP BY p.event ORDER BY COUNT(t) DESC")
+    List<Object[]> findByCategoryEquals(@NonNull @Param("category") String category);
 }

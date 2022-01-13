@@ -14,6 +14,20 @@ public class EventDto {
     private String description;
     private String category;
 
+    public EventDto() {}
+
+    public EventDto(Long id, String name, LocalDateTime startTime, Long duration, List<PerformanceDto> performances,
+                    EventPlaceDto eventPlace, String description, String category) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.performances = performances;
+        this.eventPlace = eventPlace;
+        this.description = description;
+        this.category = category;
+    }
+
     public String getCategory() {
         return category;
     }

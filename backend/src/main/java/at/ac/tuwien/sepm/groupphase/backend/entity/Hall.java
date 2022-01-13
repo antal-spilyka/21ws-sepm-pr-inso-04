@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -23,10 +25,25 @@ public class Hall {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private int standingPlaces;
+
     @ManyToOne()
     private EventPlace eventPlace;
 
-    public Hall() {}
+    @OneToMany(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "sector_id")
+    private List<Sector> sectors;
+
+    @OneToMany(cascade = CascadeType.REMOVE,
+        fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "row_id")
+    private List<HallplanElement> rows;
+
+    public Hall() {
+    }
 
     public Hall(Long id, String name, EventPlace eventPlace) {
         this.id = id;
@@ -34,12 +51,13 @@ public class Hall {
         this.eventPlace = eventPlace;
     }
 
-    @ManyToOne()
-    Sector sector;
+    public int getStandingPlaces() {
+        return standingPlaces;
+    }
 
-    @OneToMany(cascade = CascadeType.REMOVE,
-        fetch = FetchType.EAGER)
-    List<HallplanElement> rows;
+    public void setStandingPlaces(int standingPlaces) {
+        this.standingPlaces = standingPlaces;
+    }
 
     public Long getId() {
         return id;
@@ -69,8 +87,16 @@ public class Hall {
         return rows;
     }
 
-    public Sector getSector() {
-        return sector;
+    public void setRows(List<HallplanElement> rows) {
+        this.rows = rows;
+    }
+
+    public List<Sector> getSectors() {
+        return sectors;
+    }
+
+    public void setSectors(List<Sector> sectors) {
+        this.sectors = sectors;
     }
 
     @Override
@@ -96,6 +122,7 @@ public class Hall {
             "id=" + id +
             ", name='" + name + '\'' +
             ", eventPlace=" + eventPlace +
+            ", sectors" + sectors.toString() +
             '}';
     }
 

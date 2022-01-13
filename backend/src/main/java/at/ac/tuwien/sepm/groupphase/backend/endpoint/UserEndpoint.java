@@ -57,7 +57,7 @@ public class UserEndpoint {
      * The registration route for the user.
      */
     @PermitAll
-    @PostMapping("")
+    @PostMapping("/register")
     public ResponseEntity<String> create(@RequestBody @Validated UserRegisterDto user, BindingResult bindingResult, HttpServletRequest request) {
         LOGGER.info("POST " + BASE_URL + " " + user.toString());
         if (bindingResult.hasErrors()) {
@@ -65,13 +65,7 @@ public class UserEndpoint {
             LOGGER.error(e.getDefaultMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + e.getDefaultMessage());
         }
-
-        //try {
         userService.createUser(user);
-        /*} catch (ContextException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }*/
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -86,12 +80,7 @@ public class UserEndpoint {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
-        //try {
         userService.updateUser(user);
-        /*} catch (ContextException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Error email already used: " + e.getLocalizedMessage(), e);
-        }*/
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
@@ -107,36 +96,18 @@ public class UserEndpoint {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    /**
-     * Updates the admin rights of an existing user.
-     */
-    @PermitAll
-    @PutMapping("/test/{email}")
-    public ResponseEntity<String> setTestAdmin(@PathVariable String email) {
-        LOGGER.info("PUT /api/v1/users/{}", email);
-        userService.setAdmin(email, () -> "test");
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
     @Secured("ROLE_ADMIN")
     @GetMapping
     public List<UserDto> findUsers(String email) {
         LOGGER.info("GET " + BASE_URL + "?email=" + email);
-        //try {
         List<ApplicationUser> result = userService.findUsers(email);
-        // Mapping the users
         List<UserDto> returnValue = new ArrayList<>();
         for (ApplicationUser user : result) {
             if (user != null) {
                 returnValue.add(userMapper.applicationUserToUserDto(user));
             }
         }
-
         return returnValue;
-        /*} catch (ServiceException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not find users: " + e.getLocalizedMessage(), e);
-        }*/
     }
 
     @PermitAll
@@ -170,6 +141,21 @@ public class UserEndpoint {
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with the given e-mail address: " + e.getLocalizedMessage(), e);
         }
+    }
+
+    /**
+     * Feature for Admin to add a user.
+     */
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/add")
+    public ResponseEntity<String> add(@RequestBody @Validated UserEditDto user, BindingResult bindingResult) {
+        LOGGER.info("POST /api/v1/users/add " + user.toString());
+        if (bindingResult.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        userService.createUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 }
 

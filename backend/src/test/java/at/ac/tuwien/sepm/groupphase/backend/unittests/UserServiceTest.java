@@ -9,11 +9,17 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ContextException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
-import org.hibernate.service.spi.ServiceException;
+import org.hibernate.annotations.Cascade;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -50,6 +56,66 @@ public class UserServiceTest implements TestData {
 
     @Autowired
     private SeenNewsRepository seenNewsRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private HallplanElementRepository hallplanElementRepository;
+
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private EventPlaceRepository eventPlaceRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private NewsRepository newsRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
+
+    @Autowired
+    private OrderValidationRepository orderValidationRepository;
+
+    @BeforeAll
+    public void beforeAll() {
+        seenNewsRepository.deleteAll();
+        pictureRepository.deleteAll();
+        ticketRepository.deleteAll();
+        //test
+        orderValidationRepository.deleteAll();
+        orderRepository.deleteAll();
+        performanceRepository.deleteAll();
+        artistRepository.deleteAll();
+        hallRepository.deleteAll();
+        hallplanElementRepository.deleteAll();
+        sectorRepository.deleteAll();
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        eventPlaceRepository.deleteAll();
+        paymentInformationRepository.deleteAll();
+        addressRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @BeforeEach
     public void beforeEach() {
@@ -224,5 +290,113 @@ public class UserServiceTest implements TestData {
         } catch (NotFoundException e) {
             // Should be the case
         }
+    }
+
+    @Test
+    public void addUserWithDuplicatedEmail_shouldThrowServiceException() {
+        UserEditDto user = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+
+        try {
+            userService.createUser(newUser1);
+            userService.createUser(user);
+            fail("ContextException should occur!");
+        } catch (ContextException e) {
+            // Should be the case
+        }
+    }
+
+    @Test
+    public void addUser_thenFindUser() {
+        UserEditDto user = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user);
+
+        assertAll(
+            () -> assertEquals(1, userService.findUsers(null).size()),
+            () -> assertNotNull(userRepository.findByEmailContains(user1.getEmail()))
+        );
+    }
+
+    @Test
+    public void addSeveralUsers_thenFindAllUser() {
+        UserEditDto user1 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        UserEditDto user2 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser2.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        UserEditDto user3 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser3.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user1);
+        userService.createUser(user2);
+        userService.createUser(user3);
+
+        assertAll(
+            () -> assertEquals(3, userService.findUsers(null).size()),
+            () -> assertEquals(3, userService.findUsers("user").size()),
+            () -> assertNotNull(userRepository.findByEmailContains(user1.getEmail())),
+            () -> assertNotNull(userRepository.findByEmailContains(user2.getEmail())),
+            () -> assertNotNull(userRepository.findByEmailContains(user3.getEmail()))
+
+        );
     }
 }

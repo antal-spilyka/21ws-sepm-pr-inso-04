@@ -27,16 +27,17 @@
   <tr>
     <td>
       <div class="row-cols-1">
-        Artist Name: {{performance.artist.bandName}}
+        Artist Name: {{performance.artist?.bandName}}
       </div>
     </td>
   </tr>
   <tr>
     <td>
       <div class="row-cols-1">
-        Hall: {{performance.hall.name}}
+        Hall: {{performance.hall?.name}}
       </div>
     </td>
   </tr>
   </tbody>
+  <button type="button" mat-raised-button color="primary" class="back-button" (click)="buy()">Buy</button>
 </table>

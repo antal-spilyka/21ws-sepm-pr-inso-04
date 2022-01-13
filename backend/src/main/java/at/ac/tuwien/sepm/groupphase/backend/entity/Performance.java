@@ -9,8 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,15 +32,26 @@ public class Performance {
     @Column(nullable = false)
     private Long duration;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     private Event event;
 
-    @OneToOne
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "performance", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Ticket> tickets;
+
+    @OneToOne(fetch = FetchType.EAGER)
     private Artist artist;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Hall hall;
+
+    @Column(nullable = false)
+    private Long priceMultiplicant;
+
+    public Performance() {}
 
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
                        Event event, Artist artist, Hall hall) {
@@ -50,8 +64,16 @@ public class Performance {
         this.hall = hall;
     }
 
-    public Performance() {
-
+    public Performance(Long id, String name, LocalDateTime startTime, Long duration,
+                       Event event, Artist artist, Hall hall, Long priceMultiplicant) {
+        this.id = id;
+        this.name = name;
+        this.startTime = startTime;
+        this.duration = duration;
+        this.event = event;
+        this.artist = artist;
+        this.hall = hall;
+        this.priceMultiplicant = priceMultiplicant;
     }
 
     public Long getId() {
@@ -98,6 +120,7 @@ public class Performance {
         return artist;
     }
 
+    @Transactional
     public void setArtist(Artist artist) {
         this.artist = artist;
     }
@@ -110,6 +133,30 @@ public class Performance {
         this.hall = hall;
     }
 
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public Long getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Long priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
+    }
+
     @Override
     public String toString() {
         return "Performance{" +
@@ -119,6 +166,9 @@ public class Performance {
             ", duration=" + duration +
             ", artist=" + artist +
             ", hall=" + hall +
+            ", tickets=" + tickets +
+            ", orders=" + orders +
+            ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }
 
@@ -134,11 +184,99 @@ public class Performance {
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
             && Objects.equals(startTime, that.startTime) && Objects.equals(duration, that.duration)
             && Objects.equals(event, that.event) && Objects.equals(artist, that.artist)
-            && Objects.equals(hall, that.hall);
+            && Objects.equals(hall, that.hall) && Objects.equals(orders, that.orders)
+            && Objects.equals(tickets, that.tickets)
+            && Objects.equals(priceMultiplicant, that.priceMultiplicant);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, startTime, duration, event, artist, hall);
+        return Objects.hash(id, name, startTime, duration, event, orders, tickets, artist, hall);
+    }
+
+    public static final class PerformanceBuilder {
+        private Long id;
+        private String name;
+        private LocalDateTime startTime;
+        private Long duration;
+        private Event event;
+        private Artist artist;
+        private Hall hall;
+        private List<Order> orders;
+        private List<Ticket> tickets;
+        private Long priceMultiplicant;
+
+        private PerformanceBuilder() {
+        }
+
+        public static Performance.PerformanceBuilder aPerformance() {
+            return new Performance.PerformanceBuilder();
+        }
+
+        public Performance.PerformanceBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withDuration(Long duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withEvent(Event event) {
+            this.event = event;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withArtist(Artist artist) {
+            this.artist = artist;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withHall(Hall hall) {
+            this.hall = hall;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withTickets(List<Ticket> tickets) {
+            this.tickets = tickets;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withOrders(List<Order> orders) {
+            this.orders = orders;
+            return this;
+        }
+
+        public Performance.PerformanceBuilder withPriceMultiplicant(Long priceMultiplicant) {
+            this.priceMultiplicant = priceMultiplicant;
+            return this;
+        }
+
+        public Performance build() {
+            Performance performance = new Performance();
+            performance.setId(id);
+            performance.setName(name);
+            performance.setStartTime(startTime);
+            performance.setDuration(duration);
+            performance.setEvent(event);
+            performance.setDuration(duration);
+            performance.setArtist(artist);
+            performance.setHall(hall);
+            performance.setTickets(tickets);
+            performance.setOrders(orders);
+            performance.setPriceMultiplicant(priceMultiplicant);
+            return performance;
+        }
     }
 }

@@ -23,7 +23,16 @@ export class UserService {
    */
   createUser(authRequest: AuthRequest): Observable<string> {
     console.log(authRequest);
-    return this.httpClient.post(this.registerBaseUri, authRequest, {responseType: 'text'});
+    return this.httpClient.post(this.registerBaseUri + '/register', authRequest, {responseType: 'text'});
+  }
+
+  /**
+   * Adds a user with more information than createUser(authRequest: AuthRequest).
+   *
+   * @param updateUserRequest User data
+   */
+  addUser(updateUserRequest: UpdateUserRequest): Observable<string> {
+    return this.httpClient.post(this.registerBaseUri + '/add', updateUserRequest, {responseType: 'text'});
   }
 
   /**

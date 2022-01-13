@@ -82,7 +82,6 @@ public class HallServiceTest {
         hallExp.setName(hallDto.getName());
         assertEquals(hallPers, hallExp);
 
-        HallSearchDto hallSearchDto = new HallSearchDto();
         List<Hall> list = hallService.findHall(hallPers.getName());
         assertEquals(list.get(0).getName(), hallExp.getName());
     }

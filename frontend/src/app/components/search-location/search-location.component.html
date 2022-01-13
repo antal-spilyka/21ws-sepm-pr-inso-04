@@ -11,38 +11,48 @@
 <div class="modal-body">
 
   <div>
-
-
-    <div class="form-group">
-      <label for="street">Street</label>
-      <input type="text" name="street" class="form-control" id="street" aria-describedby="titleHelp"
-        placeholder="Enter Street" [(ngModel)]="searchAddress.street">
+    <div *ngIf="detailedSearch === false">
+      <div class="form-group">
+        <label for="generalSearch">General Search</label>
+        <input type="text" name="General Search" class="form-control" id="generalSearch" aria-describedby="titleHelp"
+               placeholder="Enter Location" [(ngModel)]="searchLocation">
+      </div>
     </div>
+    <div *ngIf="detailedSearch === true">
+      <div class="form-group">
+        <label for="street">Street</label>
+        <input type="text" name="street" class="form-control" id="street" aria-describedby="titleHelp"
+               placeholder="Enter Street" [(ngModel)]="searchAddress.street">
+      </div>
 
-    <div class="form-group">
-      <label for="city">City</label>
-      <input type="text" name="city" class="form-control" id="city" aria-describedby="titleHelp"
-        placeholder="Enter City" [(ngModel)]="searchAddress.city">
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" name="city" class="form-control" id="city" aria-describedby="titleHelp"
+               placeholder="Enter City" [(ngModel)]="searchAddress.city">
+      </div>
+
+      <div class="form-group">
+        <label for="zip">ZIP-Code</label>
+        <input type="text" name="zip" class="form-control" id="zip" aria-describedby="titleHelp"
+               placeholder="Enter ZIP-Code" [(ngModel)]="searchAddress.zip">
+      </div>
+
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" name="state" class="form-control" id="state" aria-describedby="titleHelp"
+               placeholder="Enter State" [(ngModel)]="searchAddress.state">
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" name="country" class="form-control" id="country" aria-describedby="titleHelp"
+               placeholder="Enter Country" [(ngModel)]="searchAddress.country">
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="zip">ZIP-Code</label>
-      <input type="text" name="zip" class="form-control" id="zip" aria-describedby="titleHelp"
-        placeholder="Enter ZIP-Code" [(ngModel)]="searchAddress.zip">
+      <input type="checkbox" id="detailedSearch" name="detailedSearch" (change)="changeDetailed()">
+      <label for="detailedSearch"> Detailed Search</label>
     </div>
-
-    <div class="form-group">
-      <label for="state">State</label>
-      <input type="text" name="state" class="form-control" id="state" aria-describedby="titleHelp"
-        placeholder="Enter State" [(ngModel)]="searchAddress.state">
-    </div>
-
-    <div class="form-group">
-      <label for="country">Country</label>
-      <input type="text" name="country" class="form-control" id="country" aria-describedby="titleHelp"
-        placeholder="Enter Country" [(ngModel)]="searchAddress.country">
-    </div>
-
     <button type="submit" class="button" mat-raised-button color="primary" (click)="onSubmit()">Search</button>
     <div *ngIf="eventLocations.length === 0 && submitted">
       No Locations were found for this search criteria!
@@ -50,27 +60,34 @@
     <div *ngIf="eventLocations !== []">
       <table class="table table-hover">
         <thead>
-          <th>Locations</th>
+        <th>Locations</th>
         </thead>
         <tbody>
-          <tr *ngFor="let eventLocation of eventLocations">
-            <td>
-              <div class="flex">
-                <span>Street: {{eventLocation.street}}</span>
-                <span>City: {{eventLocation.city}}</span>
-                <span>ZIP-Code: {{eventLocation.zip}}</span>
-                <span>State: {{eventLocation.state}}</span>
-                <span>Country: {{eventLocation.country}}</span>
-                <div>
-                  <button type="submit" class="button" mat-raised-button color="primary"
-                    (click)="loadPerformances(eventLocation)">Performances
-                  </button>
-                </div>
+        <tr>
+        </tr>
+        <tr *ngFor="let eventLocation of eventLocations">
+          <td>
+            <div class="flex" *ngIf="locationAddresses[eventLocation.id]">
+
+              <span *ngIf="eventLocation.name"><b>Location Name - </b>{{eventLocation.name}}</span>
+              <span *ngIf="this.locationAddresses[eventLocation.id].city"><b>City - </b>{{this.locationAddresses[eventLocation.id].city}}</span>
+              <span *ngIf="locationAddresses[eventLocation.id].state"><b>State - </b>{{this.locationAddresses[eventLocation.id].state}}</span>
+              <span *ngIf="locationAddresses[eventLocation.id].zip"><b>Zip - </b>{{this.locationAddresses[eventLocation.id].zip}}</span>
+              <span *ngIf="locationAddresses[eventLocation.id].country"><b>Country - </b>{{this.locationAddresses[eventLocation.id].country}}</span>
+              <span *ngIf="locationAddresses[eventLocation.id].street"><b>Street - </b>{{this.locationAddresses[eventLocation.id].street}}</span>
+
+              <div>
+                <button type="submit" class="button" mat-raised-button color="primary"
+                        (click)="loadPerformances(eventLocation.addressDto)">Performances
+                </button>
               </div>
-            </td>
-          </tr>
+            </div>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
+    <button type="submit" class="button" mat-raised-button color="primary" (click)="moreItems()" *ngIf="eventLocations.length%10===0 && submitted">Load more
+    </button>
   </div>
 </div>

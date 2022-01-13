@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Performance} from '../../dtos/performance';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PerformanceService} from '../../services/performance.service';
 import {EventService} from '../../services/event.service';
 
 @Component({
@@ -33,7 +32,7 @@ export class EventPerformancesComponent implements OnInit {
   }
   loadPerformance(performance: Performance){
     if(performance.id){
-      this.router.navigate([`/performances/${performance.id}`, JSON.stringify(performance)]);
+      this.router.navigate([`/performances/${performance.id}`]);
     }
   }
   private handleError(error: any) {
