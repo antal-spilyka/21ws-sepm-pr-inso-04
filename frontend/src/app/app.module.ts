@@ -73,6 +73,10 @@ import { AddArtistDialogComponent } from './components/create-event/create-artis
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { ValidateOrderComponent } from './components/validate-order/validate-order.component';
 import { TypeOfNewsDialogComponent } from './components/add-news/type-of-news-dialog/type-of-news-dialog.component';
+import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
+import { MatListModule } from '@angular/material/list';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -115,43 +119,48 @@ import { TypeOfNewsDialogComponent } from './components/add-news/type-of-news-di
     OrdersComponent,
     PaymentInformationPickComponent,
     AddArtistDialogComponent,
+    TopTenEventsComponent,
+    AddArtistDialogComponent,
     AddUserComponent,
     ValidateOrderComponent,
     TypeOfNewsDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgbModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    FlexLayoutModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSlideToggleModule,
-    MatGridListModule,
-    MatRadioModule,
-    MatGridListModule,
-    NgImageSliderModule,
-    MatProgressSpinnerModule,
-    MatTableModule,
-    ColorPickerModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        NgbModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatSnackBarModule,
+        MatAutocompleteModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        FlexLayoutModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSlideToggleModule,
+        MatGridListModule,
+        MatRadioModule,
+        MatGridListModule,
+        NgImageSliderModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        ColorPickerModule,
+        MatListModule,
+        CdkAccordionModule,
+        NgxChartsModule,
+    ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })

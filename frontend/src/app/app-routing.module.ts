@@ -26,6 +26,7 @@ import {BookPerformanceComponent} from './components/book-performance/book-perfo
 import {OrdersComponent} from './components/orders/orders.component';
 import {AddUserComponent} from './components/add-user/add-user.component';
 import { ValidateOrderComponent } from './components/validate-order/validate-order.component';
+import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
 
 const routes: Routes = [
   {path: '', component: NewsMainPageComponent},
@@ -51,6 +52,8 @@ const routes: Routes = [
   {path: 'news/:id', canActivate: [AuthGuard], component: NewsViewComponent},
   {path: 'oldNews', canActivate: [AuthGuard], component: OldNewsComponent},
   {path: 'eventPlaces/add', canActivate: [AuthGuard], component: CreateEventPlacesComponent},
+  {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent},
+  {path: 'topTenEvents', canActivate: [AuthGuard], component: TopTenEventsComponent},
   {path: 'orders', canActivate: [AuthGuard], component: OrdersComponent},
   {path: 'users/add', canActivate: [AuthGuard], component: AddUserComponent},
   {path: 'validation/:id', canActivate: [AuthGuard], component: ValidateOrderComponent}

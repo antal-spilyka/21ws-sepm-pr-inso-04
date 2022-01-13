@@ -4,9 +4,8 @@ import {Observable} from 'rxjs';
 import {EventDto} from '../dtos/eventDto';
 import {Globals} from '../global/globals';
 import {EventSearchDto} from '../dtos/eventSearchDto';
-import {EventDateTimeSearchDto} from '../dtos/eventDateTimeSearchDto';
-import {PerformanceSearchDto} from '../dtos/performanceSearchDto';
 import {Performance} from '../dtos/performance';
+import {TopTenEvents} from '../dtos/topTenEvents';
 
 @Injectable({
   providedIn: 'root'
@@ -83,5 +82,17 @@ export class EventService {
     let params = new HttpParams();
     params = params.set('page', pageCounter);
     return this.httpClient.get<Performance[]>(this.messageBaseUri + '/location/' + id + '/performances', { params });
+  }
+
+  getAllCategories(): Observable<string[]> {
+    console.log(`getting all categories`);
+    return this.httpClient.get<string[]>(this.messageBaseUri + '/categories');
+  }
+
+  getTopTenEvents(category: string): Observable<TopTenEvents[]> {
+    let params = new HttpParams();
+    params = params.set('category', category);
+    console.log(`getting all top ten events by category ${category}`);
+    return this.httpClient.get<TopTenEvents[]>(this.messageBaseUri + '/topTenEvents', { params });
   }
 }

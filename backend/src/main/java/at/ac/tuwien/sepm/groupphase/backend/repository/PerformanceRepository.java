@@ -18,6 +18,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
+    List<Performance> findByOrderByIdAsc();
+
     @Query("SELECT distinct p FROM Performance p, IN(p.hall.sectors) sec  WHERE (p.startTime <= :dateTimeTill AND p.startTime >= :dateTimeFrom) " +
         "AND (:hall is null OR :hall='' OR UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
         "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))" +

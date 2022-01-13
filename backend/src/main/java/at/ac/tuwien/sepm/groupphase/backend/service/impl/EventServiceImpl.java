@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -25,9 +26,8 @@ import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -121,6 +121,11 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    @Override
+    public Stream<PerformanceDto> getPerformancesByLocation(Long id) {
+        return null;
+    }
+
     @Transactional
     @Override
     public Stream<PerformanceDto> getPerformancesByLocation(Long id, Integer page) {
@@ -141,6 +146,28 @@ public class EventServiceImpl implements EventService {
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    @Transactional
+    @Override
+    public List<String> findDistinctByOrderByCategoryAsc() {
+        LOGGER.debug("get all categories");
+        return eventRepository.findDistinctByOrderByCategoryAsc();
+    }
+
+    @Transactional
+    @Override
+    public List<TopTenEventsDto> findByCategoryEquals(String category) {
+        //LOGGER.info("get top ten events by category {}", category);
+        List<TopTenEventsDto> topTenEvents = new ArrayList<>();
+        for (Object[] obj : this.eventRepository.findByCategoryEquals(category)) {
+            TopTenEventsDto currentTopTenEvent = new TopTenEventsDto();
+            currentTopTenEvent.setEvent(this.eventMapper.entityToDto((Event) obj[0]));
+            currentTopTenEvent.setTicketsSold((long) obj[1]);
+            topTenEvents.add(currentTopTenEvent);
+            LOGGER.info("here " + currentTopTenEvent);
+        }
+        return topTenEvents;
     }
 
     @Transactional

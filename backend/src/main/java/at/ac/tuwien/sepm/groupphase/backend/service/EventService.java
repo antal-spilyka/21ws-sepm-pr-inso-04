@@ -4,8 +4,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -49,6 +52,8 @@ public interface EventService {
      */
     Stream<PerformanceDto> getPerformances(Long id);
 
+    Stream<PerformanceDto> getPerformancesByLocation(Long id);
+
     /**
      * Finds the performances of a specific location.
      *
@@ -56,4 +61,19 @@ public interface EventService {
      * @return all the performances that meet the criteria.
      */
     Stream<PerformanceDto> getPerformancesByLocation(Long id, Integer page);
+
+    /**
+     * Gets all categories from the data store.
+     *
+     * @return all categories
+     */
+    List<String> findDistinctByOrderByCategoryAsc();
+
+    /**
+     * finds all events with the most tickets sales by category.
+     *
+     * @param category is the filtering criteria
+     * @return a list of events filtered by the criteria
+     */
+    List<TopTenEventsDto> findByCategoryEquals(String category);
 }
