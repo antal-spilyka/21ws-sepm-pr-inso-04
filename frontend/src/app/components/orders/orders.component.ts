@@ -157,7 +157,7 @@ export class OrdersComponent implements OnInit {
             {
               text: `
               ${userName}
-              ${performanceDto.startTime ? this.renderDate(performanceDto.startTime) : 'unknown'}
+              ${performanceDto.startTime ? new Date(performanceDto.startTime).toDateString() : 'unknown'}
               ${addressString}
               ${performanceDto.hall.name}
               ${order.price}€
@@ -200,19 +200,12 @@ export class OrdersComponent implements OnInit {
 
   downloadCancellationPdf(order: Order) {
     const {performanceDto} = order;
-    let addressString = order.userDto.street + ', ' + order.userDto.city + ', ' + order.userDto.zip + ', ' + order.userDto.country;
-    if (addressString.length > 35) {
-      addressString = addressString.substring(0, 35) + '...';
-    }
     const documentDefinition = {
       content: [
         {
-          fontSize: 15,
+          fontSize: 10,
           alignment: 'justify',
           columns: [
-            {text: ''},
-            {text: ''},
-            {text: ''},
             {
               text: `
             ${order.userDto.firstName} ${order.userDto.lastName}
@@ -220,7 +213,17 @@ export class OrdersComponent implements OnInit {
             ${order.userDto.zip} ${order.userDto.city}
             ${order.userDto.country}
             `
-            }
+            },
+            {text: ''},
+            {text: ''},
+            {text: `
+              Ticketline AG
+              Stephansplatz 1
+              1010 Wien
+
+              Date:
+              ${new Date().toDateString()}
+            `}
           ]
         },
         {
@@ -234,14 +237,18 @@ export class OrdersComponent implements OnInit {
               text: `
             Date:
             Location:
+
+
             Hall:
             Price:
             Number of Tickets:`
             },
             {
               text: `
-            ${performanceDto.startTime ? this.renderDate(performanceDto.startTime) : 'unknown'}
-            ${addressString}
+            ${performanceDto.startTime ? new Date(performanceDto.startTime).toDateString() : 'unknown'}
+            ${performanceDto.hall.eventPlaceDto.addressDto.street}
+            ${performanceDto.hall.eventPlaceDto.addressDto.city}, ${performanceDto.hall.eventPlaceDto.addressDto.zip}
+            ${performanceDto.hall.eventPlaceDto.addressDto.country}
             ${performanceDto.hall.name}
             ${order.price}€
             ${order.ticketDetailDtos.length}
