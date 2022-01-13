@@ -17,9 +17,9 @@ export class TopTenEventsComponent implements OnInit {
   events: Observable<EventDto[]>;
   topTenEvents: TopTenEvents[];
   chosenEvent: EventDto;
-  columns: string[] = ['Event name', 'Date', 'Duration', 'Place'];
   categories: string[];
   chosenCategory = new FormControl('', [Validators.required]);
+  columns: string[] = ['performance', 'bandName', 'hallName', 'startTime', 'duration', 'goToPerformance'];
 
   eventsVisualized = [];
   view: any[] = [1290, 600];
@@ -75,10 +75,6 @@ export class TopTenEventsComponent implements OnInit {
     this.chosenEvent = foundEvent.event;
   }
 
-  onSelect(event: any) {
-    console.log(event);
-  }
-
   printEntity(performances: Performance[], entity: string): string {
     let outputString = '';
     if (entity === 'artist') {
@@ -103,10 +99,6 @@ export class TopTenEventsComponent implements OnInit {
 
   onActivate(data: any): void {
     console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data: any): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
   formatString(input: string): string {
