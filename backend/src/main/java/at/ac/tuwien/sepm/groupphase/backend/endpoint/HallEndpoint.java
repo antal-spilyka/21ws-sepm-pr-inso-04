@@ -46,6 +46,14 @@ public class HallEndpoint {
         return hallService.findHall(name).stream().map(hallMapper::entityToDto);
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/eventplaces")
+    @Operation(summary = "Find hall by search parameters.")
+    public Stream<HallDto> findHall(String name, Long eventPlaceId) {
+        LOGGER.info("GET " + BASE_URL + " " + name);
+        return hallService.findHallWithLocation(name, eventPlaceId).stream().map(hallMapper::entityToDto);
+    }
+
     @PermitAll
     @GetMapping("/{hallId:^[0-9]+$}")
     @Operation(summary = "Get hall by id.")

@@ -42,4 +42,13 @@ public interface HallService {
      * @return corresponding hall
      */
     HallDetailDto getHall(String hallId);
+
+    /**
+     * Finds hall with matching properties.
+     *
+     * @param name containing properties to be searched for
+     * @param eventPlaceId of the eventPlace
+     * @return List of halls matching properties
+     */
+    List<Hall> findHallWithLocation(String name, Long eventPlaceId);
 }

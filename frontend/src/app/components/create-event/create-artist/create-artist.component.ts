@@ -39,7 +39,7 @@ export class CreateArtistComponent implements OnInit {
     artistDescription: null,
     hallName: [null, Validators.required],
     startTime: [this.now[0] + ':' + this.now[1], Validators.required],
-    priceMultiplicant: [null, Validators.required]
+    priceMultiplicant: [1, Validators.required]
   });
 
   constructor(
@@ -57,7 +57,7 @@ export class CreateArtistComponent implements OnInit {
     this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => this.hallService.findHall(name)
+      switchMap(name => this.hallService.findHallWithPlace(name, this.event.eventPlace.id)
       )
     );
     this.form.controls.artistDescription.disable();

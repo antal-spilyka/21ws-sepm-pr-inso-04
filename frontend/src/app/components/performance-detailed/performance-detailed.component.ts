@@ -17,7 +17,8 @@ export class PerformanceDetailedComponent implements OnInit {
     id: 0,
     name: '',
     startTime: undefined,
-    tickets: undefined
+    tickets: undefined,
+    priceMultiplicant: 1
   };
   error = false;
   errorMessage = '';

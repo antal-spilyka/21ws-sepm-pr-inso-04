@@ -201,7 +201,7 @@ public class OrderValidationServiceTest {
         performanceDto.setEventDto(eventMapper.entityToDto(event));
         performanceDto.setArtist(artistMapper.entityToDto(artist));
         performanceDto.setHall(hallMapper.entityToDto(hall));
-        performanceDto.setPriceMultiplicant(1L);
+        performanceDto.setPriceMultiplicant(1D);
         Performance performance = performanceService.save(performanceDto);
 
         Order order = new Order();

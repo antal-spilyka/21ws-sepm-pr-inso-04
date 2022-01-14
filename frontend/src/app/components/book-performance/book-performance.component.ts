@@ -17,6 +17,7 @@ export class BookPerformanceComponent implements OnInit {
     name: '',
     startTime: undefined,
     tickets: undefined,
+    priceMultiplicant: 1
   };
 
   constructor(private router: Router) {

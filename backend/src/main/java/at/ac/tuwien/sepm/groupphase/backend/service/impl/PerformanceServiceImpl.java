@@ -299,7 +299,7 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPerformance(performance);
             order.setUser(applicationUser);
             order.setBought(true);
-            order.setPrize(prize);
+            order.setPrize(Math.round(prize * performance.getPriceMultiplicant() * 100) / 100);
             order = orderRepository.save(order);
             orderValidationService.createValidation(order);
             ticketRepository.saveAll(tickets);
@@ -385,10 +385,9 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPerformance(performance);
             order.setUser(applicationUser);
             order.setBought(false);
-            order.setPrize(prize);
+            order.setPrize(Math.round(prize * performance.getPriceMultiplicant() * 100) / 100);
             order.setPerformance(performance);
             orderRepository.save(order);
-            System.out.println("gotten here");
             tickets.stream().map(ticket -> {
                 System.out.println(ticket);
                 return ticket;

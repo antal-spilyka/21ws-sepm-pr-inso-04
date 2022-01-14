@@ -90,4 +90,17 @@ public class HallServiceImpl implements HallService {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Hall> findHallWithLocation(String name, Long eventPlaceId) {
+        LOGGER.debug("Handling in Service {}", name);
+        if (eventPlaceId == null) {
+            throw new ServiceException("EventPlaceId not given");
+        }
+        try {
+            return hallRepository.findHallWithLocation(name, eventPlaceId, PageRequest.of(0, 2));
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
 }

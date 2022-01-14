@@ -12,4 +12,5 @@ export class PerformanceDetail {
   artist: Artist;
   hall: Hall;
   tickets: Ticket[];
+  priceMultiplicant: number;
 }
