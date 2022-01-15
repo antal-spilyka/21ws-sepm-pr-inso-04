@@ -118,15 +118,11 @@ public class PerformanceServiceImpl implements PerformanceService {
             performance.setStartTime(LocalDateTime.now());
             Performance performancePers = performanceRepository.save(performance);
             Event event = eventRepository.getById(performancePers.getEvent().getId());
-            System.out.println(event.getDuration());
-            System.out.println(event.getDescription());
             performancePers.setStartTime(event.getStartTime().plusMinutes(event.getDuration() == 0 ? 0 : event.getDuration()));
             event.setDuration(event.getDuration() + performancePers.getDuration() + 5);
             List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<>() : event.getPerformances();
             eventPerformances.add(performancePers);
             event.setPerformances(eventPerformances);
-            System.out.println(event.getDuration());
-            System.out.println(event.getDescription());
             return performancePers;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
