@@ -6,11 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventPlaceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderValidationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.OrderValidationInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SetOrderToBoughtDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.HallMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -22,12 +19,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.OrderValidation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PaymentInformation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.HallplanElementRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderValidationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PaymentInformationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -36,7 +33,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventPlaceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.OrderService;
 import at.ac.tuwien.sepm.groupphase.backend.service.OrderValidationService;
-import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -68,8 +64,6 @@ public class OrderValidationServiceTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PerformanceService performanceService;
-    @Autowired
     private ArtistService artistService;
     @Autowired
     private EventPlaceService eventPlaceService;
@@ -78,9 +72,7 @@ public class OrderValidationServiceTest {
     @Autowired
     private EventMapper eventMapper;
     @Autowired
-    private HallMapper hallMapper;
-    @Autowired
-    private ArtistMapper artistMapper;
+    PerformanceRepository performanceRepository;
     @Autowired
     private HallRepository hallRepository;
     @Autowired
@@ -194,15 +186,15 @@ public class OrderValidationServiceTest {
         EventDto eventDto = eventMapper.entityToDto(event);
         event = eventService.saveEvent(eventDto);
 
-        PerformanceDto performanceDto = new PerformanceDto();
-        performanceDto.setName("TestPerformance");
-        performanceDto.setStartTime(LocalDateTime.now());
-        performanceDto.setDuration(50L);
-        performanceDto.setEventDto(eventMapper.entityToDto(event));
-        performanceDto.setArtist(artistMapper.entityToDto(artist));
-        performanceDto.setHall(hallMapper.entityToDto(hall));
-        performanceDto.setPriceMultiplicant(1D);
-        Performance performance = performanceService.save(performanceDto);
+        Performance performance = new Performance();
+        performance.setName("TestPerformance");
+        performance.setStartTime(LocalDateTime.now());
+        performance.setDuration(50L);
+        performance.setEvent(event);
+        performance.setArtist(artist);
+        performance.setHall(hall);
+        performance.setPriceMultiplicant(1D);
+        performance = performanceRepository.save(performance);
 
         Order order = new Order();
         order.setRefunded(false);
@@ -214,19 +206,6 @@ public class OrderValidationServiceTest {
         order.setId(123L);
         order.setPaymentInformation(paymentInformation);
         order = orderRepository.save(order);
-
-        Ticket ticket = Ticket.TicketBuilder.aTicket()
-            .withId((long) 123L)
-            .withPerformance(performance)
-            .withTypeOfTicket("Seat")
-            .withPosition(hallplanElement)
-            .withPrice(123L)
-            .withUsed(false)
-            .withOrder(order)
-            .withSector(sector)
-            .build();
-
-        ticketRepository.save(ticket);
 
         SetOrderToBoughtDto setOrderToBoughtDto = new SetOrderToBoughtDto();
         setOrderToBoughtDto.setOrderId(order.getId());
