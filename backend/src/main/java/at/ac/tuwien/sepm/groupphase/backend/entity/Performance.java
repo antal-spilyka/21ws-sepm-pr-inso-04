@@ -49,7 +49,7 @@ public class Performance {
     private Hall hall;
 
     @Column(nullable = false)
-    private Long priceMultiplicant;
+    private Double priceMultiplicant;
 
     public Performance() {}
 
@@ -65,7 +65,7 @@ public class Performance {
     }
 
     public Performance(Long id, String name, LocalDateTime startTime, Long duration,
-                       Event event, Artist artist, Hall hall, Long priceMultiplicant) {
+                       Event event, Artist artist, Hall hall, Double priceMultiplicant) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
@@ -149,11 +149,11 @@ public class Performance {
         this.orders = orders;
     }
 
-    public Long getPriceMultiplicant() {
+    public Double getPriceMultiplicant() {
         return priceMultiplicant;
     }
 
-    public void setPriceMultiplicant(Long priceMultiplicant) {
+    public void setPriceMultiplicant(Double priceMultiplicant) {
         this.priceMultiplicant = priceMultiplicant;
     }
 
@@ -204,7 +204,7 @@ public class Performance {
         private Hall hall;
         private List<Order> orders;
         private List<Ticket> tickets;
-        private Long priceMultiplicant;
+        private Double priceMultiplicant;
 
         private PerformanceBuilder() {
         }
@@ -258,7 +258,7 @@ public class Performance {
             return this;
         }
 
-        public Performance.PerformanceBuilder withPriceMultiplicant(Long priceMultiplicant) {
+        public Performance.PerformanceBuilder withPriceMultiplicant(Double priceMultiplicant) {
             this.priceMultiplicant = priceMultiplicant;
             return this;
         }

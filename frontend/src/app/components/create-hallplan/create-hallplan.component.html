@@ -2,27 +2,17 @@
   <div class="main">
     <div class="hallplan-container">
       <div class="hallplan-row" *ngFor="let row of rows; let rowIndex = index">
-        <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index"
-                              [rows]="rows"
-                              [disabled]="page !== 0 || viewMode || bookMode"
-                              [sectors]="sectors"
-                              [rowIndex]="rowIndex" [seatIndex]="seatIndex"
-                              [add]="addSeat" [remove]="removeSeat"
-                              [outsideTop]="rowIndex === 0" [outsideLeft]="seatIndex === 0"
-                              [outsideBottom]="rowIndex === rows.length - 1"
-                              [outsideRight]="seatIndex === rows[0].length - 1"
-                              [hallplanElement]="rows[rowIndex][seatIndex]"
-                              [isLastTop]="isLastTopSeat(rowIndex, seatIndex)"
-                              [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
-                              [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)"
-                              [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
-                              [mouseOverHallplanElement]="mouseOverHallplanElement"
-                              [mouseOutHallplanElement]="mouseOutHallplanElement"
-                              [smallerThanMinRowsNumber]="minRowsNumber <= rows.length"
-                              [bookMode]="bookMode"
-                              [alreadyUsed]="isIndexInTickets(rowIndex, seatIndex) && bookMode"
-                              [book]="bookSeat"
-                              [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
+        <app-hallplan-element *ngFor="let seat of this.rows[rowIndex]; let seatIndex = index" [rows]="rows"
+          [disabled]="page !== 0 || viewMode || bookMode" [sectors]="sectors" [rowIndex]="rowIndex"
+          [seatIndex]="seatIndex" [add]="addSeat" [remove]="removeSeat" [outsideTop]="rowIndex === 0"
+          [outsideLeft]="seatIndex === 0" [outsideBottom]="rowIndex === rows.length - 1"
+          [outsideRight]="seatIndex === rows[0].length - 1" [hallplanElement]="rows[rowIndex][seatIndex]"
+          [isLastTop]="isLastTopSeat(rowIndex, seatIndex)" [isLastRight]="isLastRightSeat(rowIndex, seatIndex)"
+          [isLastBottom]="isLastBottomSeat(rowIndex, seatIndex)" [isLastLeft]="isLastLeftSeat(rowIndex, seatIndex)"
+          [mouseOverHallplanElement]="mouseOverHallplanElement" [mouseOutHallplanElement]="mouseOutHallplanElement"
+          [smallerThanMinRowsNumber]="minRowsNumber <= rows.length" [bookMode]="bookMode"
+          [alreadyUsed]="isIndexInTickets(rowIndex, seatIndex) && bookMode" [book]="bookSeat"
+          [smallerThanMinSeatsNumber]="minSeatsNumber <= rows[0].length"></app-hallplan-element>
       </div>
     </div>
   </div>
@@ -39,16 +29,16 @@
   </div>
   <div class="side-bar" *ngIf="page === 1">
     <button *ngIf="shouldShowEdit()" mat-icon-button aria-label="icon button with a add icon" class="edit"
-            (click)="editSector()">
+      (click)="editSector()">
       <mat-icon>edit</mat-icon>
     </button>
     <button *ngIf="shouldShowBin()" mat-icon-button aria-label="icon button with a add icon" class="bin"
-            (click)="removeSector()">
+      (click)="removeSector()">
       <mat-icon>delete</mat-icon>
     </button>
     <h2>Please define your sectors:</h2>
     <div [class]="'sector-wrapper ' + (sector.selected ? 'active' : '')" *ngFor="let sector of sectors; let i = index"
-         (click)="setSelectedSection(i)">
+      (click)="setSelectedSection(i)">
       <div [style]="'background: ' + sector.color" class="color-marker"></div>
       <span>{{sector.name}}</span>
       <span>{{sector.formatPrice()}}</span>
@@ -80,8 +70,7 @@
     <mat-error *ngIf="errorMsg">{{errorMsg}}</mat-error>
 
     <button type="button" mat-icon-button class="back-button" (click)="back()">Back</button>
-    <button type="button" mat-raised-button color="primary" class="next-button" (click)="finish()"
-            [disabled]="!nameControl.valid || !standingControl.valid ||
+    <button type="button" mat-raised-button color="primary" class="next-button" (click)="finish()" [disabled]="!nameControl.valid || !standingControl.valid ||
             (containsStandingPlaces() && standingControl.value === 0)">
       Finish
     </button>
@@ -92,23 +81,23 @@
   </div>
   <div class="side-bar" *ngIf="bookMode && page !== 3">
     <h2>Basket:</h2>
-    <mat-form-field appearance="fill"  *ngIf="containsStandingPlaces()">
+    <mat-form-field appearance="fill" *ngIf="containsStandingPlaces()">
       <mat-label>Standing Seats</mat-label>
       <input matInput type="number" value="0" min="0" [max]="availableStandingPlaces()" [formControl]="standingControl">
     </mat-form-field>
     <div *ngIf="standingControl.value && standingControl.value > 0" class="seat-overview">
       <div>{{getStandingBasket().amount}}x</div>
       <div>{{getStandingBasket().name}}</div>
-      <div>{{getStandingBasket().formatPrice}}</div>
+      <div>€ {{(getStandingBasket().price * priceMultiplicant).toFixed(2)}}</div>
     </div>
     <div *ngFor="let sector of getBookedSeats()" class="seat-overview">
       <div>{{sector.amount}}x</div>
       <div>{{sector.name}}</div>
-      <div>{{sector.formatPrice}}</div>
+      <div>€ {{(sector.price * priceMultiplicant).toFixed(2)}}</div>
     </div>
     <div class="seat-overview">
       <div>Total</div>
-      <div>{{getTotalOfBookedSeats()}}</div>
+      <div>{{getTotalOfBookedSeats(priceMultiplicant)}}</div>
     </div>
     <div *ngIf="getBookedSeats().length === 0">No Seats selected</div>
     <span class="next-button">
@@ -121,4 +110,3 @@
     </span>
   </div>
 </div>
-

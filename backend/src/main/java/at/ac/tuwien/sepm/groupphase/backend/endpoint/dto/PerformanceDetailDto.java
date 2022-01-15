@@ -12,6 +12,7 @@ public class PerformanceDetailDto {
     private EventDto eventDto;
     private ArtistDto artist;
     private HallDto hall;
+    private Double priceMultiplicant;
 
     public Long getId() {
         return id;
@@ -75,6 +76,14 @@ public class PerformanceDetailDto {
 
     public List<TicketDto> getTickets() {
         return tickets;
+    }
+
+    public Double getPriceMultiplicant() {
+        return priceMultiplicant;
+    }
+
+    public void setPriceMultiplicant(Double priceMultiplicant) {
+        this.priceMultiplicant = priceMultiplicant;
     }
 
     @Override

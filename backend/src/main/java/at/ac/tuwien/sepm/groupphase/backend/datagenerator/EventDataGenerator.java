@@ -902,7 +902,7 @@ public class EventDataGenerator {
                 performance.setDuration((long) getRandom(this.durations));
                 performance.setArtist(artist);
                 performance.setHall(hall);
-                performance.setPriceMultiplicant(1L);
+                performance.setPriceMultiplicant(1D);
                 //performanceRepository.save(performance);
 
                 // Saving the event

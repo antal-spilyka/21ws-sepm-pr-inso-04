@@ -65,5 +65,15 @@ public interface HallRepository extends JpaRepository<Hall, Long> {
      */
     List<Hall> getAllBy(Pageable pageable);
 
+    /**
+     * Finds Hall that contains name (LIKE) and has eventPlace (equals).
+     *
+     * @param name of the hall to search for
+     * @return List of corresponding halls
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
+    @Query("SELECT r FROM Hall r WHERE (:name is null OR :name='' OR UPPER(r.name) LIKE UPPER(CONCAT('%', :name, '%'))) AND r.eventPlace.id = :eventPlaceId")
+    List<Hall> findHallWithLocation(@Param("name") String name, @Param("eventPlaceId") Long eventPlaceId, Pageable pageable);
+
 
 }

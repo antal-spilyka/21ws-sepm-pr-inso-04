@@ -195,7 +195,7 @@ public class TicketDataGenerator {
 
                 Order order = new Order();
                 order.setPerformance(performanceRepository.getById(id));
-                order.setPrize(price);
+                order.setPrize(Math.round(price * performanceRepository.getById(id).getPriceMultiplicant() * 100) / 100);
                 order.setDateOfOrder(LocalDateTime.now());
                 order.setBought(bought);
                 order.setUser(user);

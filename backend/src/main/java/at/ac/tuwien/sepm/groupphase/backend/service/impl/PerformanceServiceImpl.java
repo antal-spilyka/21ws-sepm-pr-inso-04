@@ -115,13 +115,14 @@ public class PerformanceServiceImpl implements PerformanceService {
             }
             performanceDto.getEventDto().setPerformances(null);
             Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
+            performance.setStartTime(LocalDateTime.now());
             Performance performancePers = performanceRepository.save(performance);
-            Event event = performancePers.getEvent();
-            event.setDuration(event.getDuration() + performancePers.getDuration());
-            List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
+            Event event = eventRepository.getById(performancePers.getEvent().getId());
+            performancePers.setStartTime(event.getStartTime().plusMinutes(event.getDuration() == 0 ? 0 : event.getDuration()));
+            event.setDuration(event.getDuration() + performancePers.getDuration() + 5);
+            List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<>() : event.getPerformances();
             eventPerformances.add(performancePers);
             event.setPerformances(eventPerformances);
-            eventRepository.save(event);
             return performancePers;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
@@ -299,7 +300,7 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPerformance(performance);
             order.setUser(applicationUser);
             order.setBought(true);
-            order.setPrize(prize);
+            order.setPrize(Math.round(prize * performance.getPriceMultiplicant() * 100) / 100);
             order = orderRepository.save(order);
             orderValidationService.createValidation(order);
             ticketRepository.saveAll(tickets);
@@ -385,10 +386,9 @@ public class PerformanceServiceImpl implements PerformanceService {
             order.setPerformance(performance);
             order.setUser(applicationUser);
             order.setBought(false);
-            order.setPrize(prize);
+            order.setPrize(Math.round(prize * performance.getPriceMultiplicant() * 100) / 100);
             order.setPerformance(performance);
             orderRepository.save(order);
-            System.out.println("gotten here");
             tickets.stream().map(ticket -> {
                 System.out.println(ticket);
                 return ticket;

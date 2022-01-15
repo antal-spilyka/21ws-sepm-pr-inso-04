@@ -68,6 +68,7 @@ public class PerformanceMapper {
         performanceDto.setArtist(artistMapper.entityToDto(performance.getArtist()));
         performanceDto.setHall(hallMapper.entityToDto(performance.getHall()));
         performanceDto.setTickets(ticketMapper.ticketToTicketDto(performance.getTickets()));
+        performanceDto.setPriceMultiplicant(performance.getPriceMultiplicant());
         return performanceDto;
     }
 
@@ -80,6 +81,7 @@ public class PerformanceMapper {
         performanceDto.setDuration(performance.getDuration());
         performanceDto.setArtist(performance.getArtist());
         performanceDto.setHall(performance.getHall());
+        performanceDto.setPriceMultiplicant(performance.getPriceMultiplicant());
         return performanceDto;
     }
 }

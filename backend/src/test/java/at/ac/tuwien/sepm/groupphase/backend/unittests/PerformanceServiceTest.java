@@ -401,7 +401,7 @@ public class PerformanceServiceTest {
 
         PerformanceDto performanceDto = performanceMapper.entityToDto(testPerformance, null);
         performanceDto.setStartTime(LocalDateTime.of(2022, 12, 12, 11, 16, 11));
-        performanceDto.setPriceMultiplicant(1L);
+        performanceDto.setPriceMultiplicant(1D);
 
         assertEquals(listPerformances.get(0), performanceDto);
     }

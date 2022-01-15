@@ -27,6 +27,14 @@ export class HallService {
     return this.httpClient.get<Hall[]>(this.messageBaseUri, {params});
   }
 
+  findHallWithPlace(hallName: string, eventPlaceId: number): Observable<Hall[]> {
+    let params = new HttpParams();
+    params = params.set('name', hallName);
+    params = params.set('eventPlaceId', eventPlaceId);
+    console.log(eventPlaceId);
+    return this.httpClient.get<Hall[]>(this.messageBaseUri + '/eventplaces', {params});
+  }
+
   /**
    * Persists new room.
    *

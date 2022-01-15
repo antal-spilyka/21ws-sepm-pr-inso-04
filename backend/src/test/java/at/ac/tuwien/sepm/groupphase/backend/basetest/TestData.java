@@ -175,7 +175,7 @@ public interface TestData {
         null,
         new Artist(),
         new Hall(),
-        10L
+        10D
     );
 
     PerformanceSearchDto performanceToFind = new PerformanceSearchDto(

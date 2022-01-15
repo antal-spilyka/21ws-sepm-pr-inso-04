@@ -29,6 +29,7 @@ export class CreateHallplanComponent implements OnInit {
   @Input() hallId: number;
   @Input() performanceId?: number;
   @Input() tickets?: Ticket[];
+  @Input() priceMultiplicant: number;
 
   rows: IHallplanElement[][] = [];
   sectors: Sector[] = [
@@ -181,9 +182,9 @@ export class CreateHallplanComponent implements OnInit {
     }, []);
   };
 
-  getTotalOfBookedSeats() {
+  getTotalOfBookedSeats(priceMultiplier: number) {
     return '€' + (
-      this.getBookedSeats().reduce((acc, seat) => acc + (seat.price * seat.amount), 0)
+      this.getBookedSeats().reduce((acc, seat) => acc + (seat.price * seat.amount * this.priceMultiplicant), 0)
     ).toFixed(2);
   }
 
@@ -300,7 +301,8 @@ export class CreateHallplanComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       console.log(result);
-      this.sectors[sectorIndex] = this.sectors[sectorIndex].withColor(result.color).withName(result.name).withPrice(result.price);
+      this.sectors[sectorIndex] =
+        this.sectors[sectorIndex].withColor(result.color).withName(result.name).withPrice(result.price);
     });
   }
 
@@ -450,6 +452,22 @@ export class CreateHallplanComponent implements OnInit {
     } else if (error.error.message === 'No message available') {
       // If no detailed error message is provided, fall back to the simple error name
       this.errorMessage = error.error.error;
+    } else if (error.error === 'A Hallplan element is already sold') {
+      this.getBookedSeats().forEach(seat => {
+        seat.sectorSeats.forEach(sectorSeat => {
+          this.rows[sectorSeat.rowIndex][sectorSeat.seatIndex].booked = false;
+        });
+      });
+      this.performanceService.getPerformanceById(this.performanceId).subscribe({
+        next: next => {
+          this.tickets = next.tickets.map(ticket => ({
+            ...ticket,
+            seatIndex: ticket.seatIndex != null ? ticket.seatIndex + 1 : undefined,
+            rowIndex: ticket.rowIndex != null ? ticket.rowIndex + 1 : undefined,
+          }));
+        }
+      });
+      this.errorMessage = error.error;
     } else {
       this.errorMessage = error.error.message ? error.error.message : error.error;
     }

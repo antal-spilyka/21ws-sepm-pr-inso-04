@@ -38,8 +38,7 @@ export class CreateArtistComponent implements OnInit {
     artistName: [null, Validators.required],
     artistDescription: null,
     hallName: [null, Validators.required],
-    startTime: [this.now[0] + ':' + this.now[1], Validators.required],
-    priceMultiplicant: [null, Validators.required]
+    priceMultiplicant: [1, Validators.required]
   });
 
   constructor(
@@ -57,7 +56,7 @@ export class CreateArtistComponent implements OnInit {
     this.halls = this.form.get('hallName').valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(name => this.hallService.findHall(name)
+      switchMap(name => this.hallService.findHallWithPlace(name, this.event.eventPlace.id)
       )
     );
     this.form.controls.artistDescription.disable();
@@ -69,17 +68,13 @@ export class CreateArtistComponent implements OnInit {
   clearForm() {
     this.formDirective.resetForm();
     this.form.reset();
-    this.form.controls.startTime.setValue(this.now[0] + ':' + this.now[1]);
+    this.form.controls.priceMultiplicant.setValue(1);
   }
 
   async addPerformance(formDirective: FormGroupDirective) {
     this.formDirective = formDirective;
     if (this.form.invalid) {
       this.setErrorFlag('Please fill out the form.');
-      return;
-    }
-    if(new Date() > new Date(this.form.value.startTime)) {
-      this.setErrorFlag('The start time must be in the future');
       return;
     }
     if(((!this.selectedArtist || this.selectedArtist.bandName !== this.form.value.artistName) && !this.isNewArtist) ||
@@ -135,7 +130,6 @@ export class CreateArtistComponent implements OnInit {
   async submitPerformance() {
     const performance = {
       name: this.form.value.name,
-      startTime: this.form.value.startTime,
       duration: this.form.value.duration,
       artist: this.selectedArtist,
       hall: this.selectedHall,

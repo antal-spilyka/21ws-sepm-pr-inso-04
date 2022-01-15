@@ -11,12 +11,12 @@ public class PerformanceDto {
     private EventDto eventDto;
     private ArtistDto artist;
     private HallDto hall;
-    private Long priceMultiplicant;
+    private Double priceMultiplicant;
 
     public PerformanceDto() {}
 
     public PerformanceDto(Long id, String name, LocalDateTime startTime, Long duration,
-                          EventDto eventDto, ArtistDto artist, HallDto hall, Long priceMultiplicant) {
+                          EventDto eventDto, ArtistDto artist, HallDto hall, Double priceMultiplicant) {
         this.id = id;
         this.name = name;
         this.startTime = startTime;
@@ -83,11 +83,11 @@ public class PerformanceDto {
         this.hall = hall;
     }
 
-    public Long getPriceMultiplicant() {
+    public Double getPriceMultiplicant() {
         return priceMultiplicant;
     }
 
-    public void setPriceMultiplicant(Long priceMultiplicant) {
+    public void setPriceMultiplicant(Double priceMultiplicant) {
         this.priceMultiplicant = priceMultiplicant;
     }
 
