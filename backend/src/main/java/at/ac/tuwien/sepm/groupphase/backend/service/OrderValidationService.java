@@ -10,25 +10,25 @@ import org.springframework.stereotype.Service;
 public interface OrderValidationService {
 
     /**
-     * checks if an order is valid.
+     * Checks if an order is valid.
      *
      * @param orderValidationInquiryDto contains information required to validate
-     * @return OrderValidationDto containing information about order and it's validity
+     * @return OrderValidationDto containing information about order and its validity
      */
     OrderValidationDto validate(OrderValidationInquiryDto orderValidationInquiryDto);
 
     /**
-     * creates validation entry on order buy.
+     * Creates validation entry on order buy.
      *
      * @param order to be validated in the future
      */
     void createValidation(Order order);
 
     /**
-     * generate validation QR code.
+     * Generate validation QR code.
      *
      * @param id of the order
-     * @return byte[] representing QR code
+     * @return CodeReturnDto with the generated code
      */
     CodeReturnDto generateCode(Long id);
 }
