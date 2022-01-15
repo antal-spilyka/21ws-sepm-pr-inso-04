@@ -189,7 +189,6 @@ public class EventServiceImpl implements EventService {
                     durationCounter += 5 + performanceDto.getDuration();
                     performanceDto.setEventDto(eventDto);
                     temp.add(performanceDto);
-
                 }
                 eventDto.setDuration(durationCounter);
             }

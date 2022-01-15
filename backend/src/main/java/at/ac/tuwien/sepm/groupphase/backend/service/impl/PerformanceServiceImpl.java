@@ -115,13 +115,18 @@ public class PerformanceServiceImpl implements PerformanceService {
             }
             performanceDto.getEventDto().setPerformances(null);
             Performance performance = performanceMapper.dtoToEntity(performanceDto, eventMapper.dtoToEntity(performanceDto.getEventDto()));
+            performance.setStartTime(LocalDateTime.now());
             Performance performancePers = performanceRepository.save(performance);
-            Event event = performancePers.getEvent();
-            event.setDuration(event.getDuration() + performancePers.getDuration());
-            List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<Performance>() : event.getPerformances();
+            Event event = eventRepository.getById(performancePers.getEvent().getId());
+            System.out.println(event.getDuration());
+            System.out.println(event.getDescription());
+            performancePers.setStartTime(event.getStartTime().plusMinutes(event.getDuration() == 0 ? 0 : event.getDuration()));
+            event.setDuration(event.getDuration() + performancePers.getDuration() + 5);
+            List<Performance> eventPerformances = event.getPerformances() == null ? new ArrayList<>() : event.getPerformances();
             eventPerformances.add(performancePers);
             event.setPerformances(eventPerformances);
-            eventRepository.save(event);
+            System.out.println(event.getDuration());
+            System.out.println(event.getDescription());
             return performancePers;
         } catch (PersistenceException e) {
             throw new ServiceException(e.getMessage(), e);
