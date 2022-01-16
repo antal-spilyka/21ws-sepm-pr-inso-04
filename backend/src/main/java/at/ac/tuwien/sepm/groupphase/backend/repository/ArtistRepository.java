@@ -26,6 +26,14 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     @Query("SELECT a FROM Artist a WHERE UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
     List<Artist> findArtist(@Param("name") String name, Pageable pageable);
 
+    /**
+     * Searches for artist that contains name in first-, lastname or bandName.
+     *
+     * @param name     of the artist
+     * @param pageable regulates the number of results
+     * @return list of fitting artists
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
     @Query("SELECT a FROM Artist a WHERE :name is null OR :name='' OR UPPER(a.bandName) LIKE UPPER(CONCAT( '%', :name, '%'))")
     List<Artist> searchArtist(@Param("name") String name, Pageable pageable);
 

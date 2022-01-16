@@ -399,10 +399,5 @@ public class PerformanceServiceImpl implements PerformanceService {
         }
     }
 
-    @Override
-    @Transactional
-    public List<Sector> testPrice(Integer price) {
-        List<Sector> sectors = sectorRepository.getSectorForPrice(price);
-        return sectors;
-    }
+
 }

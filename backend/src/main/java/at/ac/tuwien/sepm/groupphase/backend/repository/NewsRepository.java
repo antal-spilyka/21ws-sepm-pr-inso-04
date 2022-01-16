@@ -19,6 +19,12 @@ public interface NewsRepository extends JpaRepository<News, Long>, JpaSpecificat
      */
     News save(News news);
 
+    /**
+     * Finds all the news which are not older than 7 days.
+     *
+     * @param beforeSevenDays of the date of news
+     * @return all matching news.
+     */
     @Query("SELECT n FROM News n WHERE n.createDate >= :beforeSevenDays")
     List<News> findByCreateDateAfter(@Param("beforeSevenDays") LocalDateTime beforeSevenDays);
 

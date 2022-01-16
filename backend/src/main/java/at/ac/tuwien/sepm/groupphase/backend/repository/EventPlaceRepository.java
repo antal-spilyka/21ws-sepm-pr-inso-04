@@ -27,6 +27,13 @@ public interface EventPlaceRepository extends JpaRepository<EventPlace, String> 
     @Query("SELECT e FROM EventPlace e WHERE UPPER(e.name) LIKE UPPER(CONCAT('%', :name, '%'))")
     List<EventPlace> findEventPlace(@Param("name") String name, Pageable pageable);
 
+    /**
+     * Finds EventPlace that contains address.
+     *
+     * @param address of the eventPlace
+     * @return list of fitting eventplaces
+     * @throws javax.persistence.PersistenceException when unknown error occurs
+     */
     List<EventPlace> findEventPlaceByAddress(Address address);
 
     /**

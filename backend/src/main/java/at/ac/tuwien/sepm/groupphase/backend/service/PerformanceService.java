@@ -40,6 +40,12 @@ public interface PerformanceService {
      */
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
 
+    /**
+     * Finds all performances by time.
+     *
+     * @param generalSearchEventDto to search for.
+     * @return all the performances that meet the search criteria.
+     */
     Stream<PerformanceDto> findGeneralPerformanceByDateTime(GeneralSearchEventDto generalSearchEventDto);
 
     /**
@@ -68,7 +74,6 @@ public interface PerformanceService {
      */
     void buySeats(BasketDto basket, Long performanceId, Principal principal);
 
-    List<Sector> testPrice(Integer price);
 
     /**
      * Lets users reserve seats of a performance.

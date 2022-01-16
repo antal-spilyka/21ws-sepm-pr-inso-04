@@ -27,13 +27,19 @@ public interface EventService {
     Event saveEvent(EventDto eventDto);
 
     /**
-     * Finds all event which meet the criteria from dto.
+     * Finds all events which meet the criteria from dto.
      *
      * @param eventSearchDto dto for storing the search criteria.
      * @return all events that meet the search criteria.
      */
     List<Event> findEvents(EventSearchDto eventSearchDto);
 
+    /**
+     * Finds all events which meet the criteria from dto.
+     *
+     * @param generalSearchEventDto dto for storing the search criteria.
+     * @return all events that meet the search criteria.
+     */
     List<Event> findGeneralEvents(GeneralSearchEventDto generalSearchEventDto);
 
     /**
@@ -52,6 +58,12 @@ public interface EventService {
      */
     Stream<PerformanceDto> getPerformances(Long id);
 
+    /**
+     * Finds the performances of a given location id.
+     *
+     * @param id of the location.
+     * @return all performances that meet the criteria.
+     */
     Stream<PerformanceDto> getPerformancesByLocation(Long id);
 
     /**

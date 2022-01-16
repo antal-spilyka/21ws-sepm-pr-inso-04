@@ -47,6 +47,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEvents(@Param("duration") Integer duration, @Param("description") String description, @Param("category") String category,
                            Pageable pageable);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param generalQuery which suits category or description
+     * @param pageable     of the event
+     * @return all matching events.
+     */
     @Query("SELECT e FROM Event e WHERE :generalQuery is null OR :generalQuery='' OR UPPER(e.description) LIKE " +
         "UPPER(CONCAT( '%', :generalQuery, '%')) OR UPPER(e.category) LIKE UPPER(CONCAT( '%', :generalQuery, '%'))")
     List<Event> findGeneralEvents(@Param("generalQuery") String generalQuery,
@@ -64,8 +71,22 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         "AND (:hallId is null OR :hallId in (a.performances))")
     List<Event> findEventsWithoutDateTime(@Param("eventName") String eventName, @Param("hall") Long hallId);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param name     of the event
+     * @param pageable of the event
+     * @return all matching events.
+     */
     List<Event> findByNameContainsIgnoreCase(String name, Pageable pageable);
 
+    /**
+     * Finds all the events which suit the criteria from parameters.
+     *
+     * @param id       of the address of the event
+     * @param pageable of the event
+     * @return all matching events.
+     */
     @Query("SELECT e FROM Event e WHERE :id=e.eventPlace.address.id")
     List<Event> findEventsByLocation(@Param("id") Long id, Pageable pageable);
 
@@ -77,9 +98,20 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     Boolean existsByName(String name);
 
+    /**
+     * Returns all categories.
+     *
+     * @return all matching events.
+     */
     @Query("SELECT DISTINCT category FROM Event")
     List<String> findDistinctByOrderByCategoryAsc();
 
+    /**
+     * Finds all the events with their number of sold tickets in decreasing order for a specified category.
+     *
+     * @param category of the event
+     * @return all matching events with the number of sold tickets.
+     */
     @Query("SELECT e, COUNT(t) FROM Event e JOIN Performance p ON p.event = e JOIN Ticket t ON t.performance = p WHERE " +
         "p.event IS NOT NULL AND e.category = :category AND t.refunded = FALSE GROUP BY p.event ORDER BY COUNT(t) DESC")
     List<Object[]> findByCategoryEquals(@NonNull @Param("category") String category);
