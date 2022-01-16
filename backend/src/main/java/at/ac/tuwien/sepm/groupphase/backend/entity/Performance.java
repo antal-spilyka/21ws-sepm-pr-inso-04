@@ -166,8 +166,6 @@ public class Performance {
             ", duration=" + duration +
             ", artist=" + artist +
             ", hall=" + hall +
-            ", tickets=" + tickets +
-            ", orders=" + orders +
             ", priceMultiplicant=" + priceMultiplicant +
             '}';
     }

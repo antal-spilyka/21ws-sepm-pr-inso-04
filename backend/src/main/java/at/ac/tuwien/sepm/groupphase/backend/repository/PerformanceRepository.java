@@ -35,10 +35,6 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
         "UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
         "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))" +
         "AND (:price is null OR (:price+10 >= sec.price AND :price-10 <= sec.price))")
-    /*@Query("SELECT distinct p FROM Performance p JOIN Sector s ON sec IN(SELECT h.sectors FROM Hall h WHERE h=p.hall) WHERE (:hall is null OR :hall='' OR " +
-        "UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
-        "AND (:eventName is null OR :eventName='' OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :eventName, '%')))" +
-        "AND (:price is null OR (:price+10 >= (SELECT sec.price FROM Hall h, IN(h.sectors) sec) AND :price-10 <= sec.price))")*/
     List<Performance> findPerformanceByEventAndHall(@Param("eventName") String eventName, @Param("hall") String hall,
                                                     @Param("price") Integer price, Pageable pageable);
 

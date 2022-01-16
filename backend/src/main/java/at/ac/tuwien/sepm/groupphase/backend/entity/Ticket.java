@@ -154,10 +154,8 @@ public class Ticket {
             + ", price=" + price
             + ", typeOfTicket='" + typeOfTicket + '\''
             + ", position=" + position
-            + ", order=" + order
             + ", used=" + used
             + ", sector=" + sector
-            + ", performance=" + performance
             + '}';
     }
 

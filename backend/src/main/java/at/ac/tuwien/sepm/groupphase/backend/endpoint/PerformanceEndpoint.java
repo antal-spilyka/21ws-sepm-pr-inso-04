@@ -65,7 +65,7 @@ public class PerformanceEndpoint {
     @Operation(summary = "Find events by search parameters.")
     @Transactional
     public Stream<PerformanceDto> findEventsByDateTime(@Validated PerformanceSearchDto performanceSearchDto) {
-        LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto.toString());
+        LOGGER.info("GET " + BASE_URL + "/search " + performanceSearchDto);
         return this.performanceService.findPerformanceByDateTime(performanceSearchDto);
     }
 
