@@ -6,9 +6,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.GeneralSearchEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import org.springframework.data.repository.query.Param;
-import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,6 +31,12 @@ public interface EventService {
      */
     List<Event> findEvents(EventSearchDto eventSearchDto);
 
+    /**
+     * Finds all events by general search.
+     *
+     * @param generalSearchEventDto to search for.
+     * @return all the events that meet the search criteria.
+     */
     List<Event> findGeneralEvents(GeneralSearchEventDto generalSearchEventDto);
 
     /**
@@ -52,6 +55,12 @@ public interface EventService {
      */
     Stream<PerformanceDto> getPerformances(Long id);
 
+    /**
+     * Finds the performances with the given location.
+     *
+     * @param id of the location to search for.
+     * @return all performances that meet the criteria.
+     */
     Stream<PerformanceDto> getPerformancesByLocation(Long id);
 
     /**

@@ -40,6 +40,12 @@ public interface PerformanceService {
      */
     Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto);
 
+    /**
+     * Finds all performances by general search.
+     *
+     * @param generalSearchEventDto to search for.
+     * @return all the performances that meet the search criteria.
+     */
     Stream<PerformanceDto> findGeneralPerformanceByDateTime(GeneralSearchEventDto generalSearchEventDto);
 
     /**
