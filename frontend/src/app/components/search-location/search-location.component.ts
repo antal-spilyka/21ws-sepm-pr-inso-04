@@ -29,57 +29,55 @@ export class SearchLocationComponent implements OnInit {
   }
 
   onSubmit(newSearch = true) {
+    if (newSearch) {
+      this.eventLocations = [];
+      this.locationAddresses.clear();
+      this.pageCounter = 0;
+    }
     if (this.detailedSearch === true) {
-      if(newSearch){
-        this.eventLocations = [];
-        this.locationAddresses.clear();
-        this.pageCounter = 0;
-      }
-      this.eventLocationService.findEventLocation(this.searchAddress, this.pageCounter).subscribe(
-        {
-          next: eventLocations => {
-            this.submitted = true;
-            this.eventLocations = this.eventLocations.concat(eventLocations);
-            console.log(this.eventLocations);
-            for (const i of this.eventLocations) {
-              this.eventLocationService.getAddress(i.id).subscribe(
-                {
-                  next: address => {
-                    console.log(address.city);
-                    this.locationAddresses[i.id] = address;
-                  }, error: error => this.handleError(error)
-                }
-              );
-            }
-          }, error: error => this.handleError(error)
-        }
-      );
+      this.loadDetailed();
     } else {
-      if(newSearch){
-        this.eventLocations = [];
-        this.locationAddresses.clear();
-        this.pageCounter = 0;
+      this.loadGeneral();
+    }
+  }
+
+  loadGeneral() {
+    this.eventLocationService.findGeneralEventLocation(this.searchLocation, this.pageCounter).subscribe(
+      {
+        next: eventLocations => {
+          this.submitted = true;
+          this.eventLocations = this.eventLocations.concat(eventLocations);
+          console.log(this.eventLocations);
+          this.loadAddresses();
+        }, error: error => this.handleError(error)
       }
-      this.eventLocationService.findGeneralEventLocation(this.searchLocation, this.pageCounter).subscribe(
+    );
+  }
+  loadAddresses(){
+    for (const i of this.eventLocations) {
+      this.eventLocationService.getAddress(i.id).subscribe(
         {
-          next: eventLocations => {
-            this.submitted = true;
-            this.eventLocations = this.eventLocations.concat(eventLocations);
-            console.log(this.eventLocations);
-            for (const i of this.eventLocations) {
-              this.eventLocationService.getAddress(i.id).subscribe(
-                {
-                  next: address => {
-                    console.log(address.city);
-                    this.locationAddresses[i.id] = address;
-                  }, error: error => this.handleError(error)
-                }
-              );
-            }
+          next: address => {
+            console.log(address.city);
+            this.locationAddresses[i.id] = address;
           }, error: error => this.handleError(error)
         }
       );
     }
+  }
+
+  loadDetailed() {
+    this.eventLocationService.findEventLocation(this.searchAddress, this.pageCounter).subscribe(
+      {
+        next: eventLocations => {
+          this.submitted = true;
+          console.log(this.eventLocations);
+          this.eventLocations = this.eventLocations.concat(eventLocations);
+          console.log(this.eventLocations);
+          this.loadAddresses();
+        }, error: error => this.handleError(error)
+      }
+    );
   }
 
   loadPerformances(eventLocation: Address) {

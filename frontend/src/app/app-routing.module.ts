@@ -5,7 +5,6 @@ import {AuthGuard} from './guards/auth.guard';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {RegisterComponent} from './components/register/register.component';
-import {SearchComponent} from './components/search/search.component';
 import {SearchArtistComponent} from './components/search-artist/search-artist.component';
 import {SearchLocationComponent} from './components/search-location/search-location.component';
 import {SearchEventsComponent} from './components/search-events/search-events.component';

@@ -49,40 +49,41 @@ export class SearchTimeComponent implements OnInit {
       }
     );
   }
-
   onSubmit(newSearch = true) {
-    if (this.detailedSearch === true) {
-      if(newSearch){
-        this.performanceList = [];
-        this.pageCounter = 0;
-      }
-      console.log(this.performanceSearchDto);
-      this.performanceService.findPerformanceByDateTime(this.performanceSearchDto, this.pageCounter).subscribe(
-        {
-          next: performances => {
-            this.submitted = true;
-            console.log(this.performanceList);
-            this.performanceList = this.performanceList.concat(performances);
-            console.log(this.performanceList);
-          }, error: error => this.handleError(error)
-        }
-      );
-    } else{
-      if(newSearch){
-        this.performanceList = [];
-        this.pageCounter = 0;
-      }
-      this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime, this.pageCounter).subscribe(
-        {
-          next: performances => {
-            this.submitted = true;
-            //console.log(this.performanceList);
-            this.performanceList = this.performanceList.concat(performances);
-            console.log(this.performanceList);
-          }, error: error => this.handleError(error)
-        }
-      );
+    if (newSearch) {
+      this.performanceList = [];
+      this.pageCounter = 0;
     }
+    if (this.detailedSearch === true) {
+      this.loadDetailed();
+    } else {
+      this.loadGeneral();
+    }
+  }
+
+  loadDetailed() {
+    this.performanceService.findPerformanceByDateTime(this.performanceSearchDto, this.pageCounter).subscribe(
+      {
+        next: performances => {
+          this.submitted = true;
+          console.log(this.performanceList);
+          this.performanceList = this.performanceList.concat(performances);
+          console.log(this.performanceList);
+        }, error: error => this.handleError(error)
+      }
+    );
+  }
+
+  loadGeneral() {
+    this.performanceService.findGeneralPerformanceByDateTime(this.generalSearchTime, this.pageCounter).subscribe(
+      {
+        next: performances => {
+          this.submitted = true;
+          this.performanceList = this.performanceList.concat(performances);
+          console.log(this.performanceList);
+        }, error: error => this.handleError(error)
+      }
+    );
   }
 
   loadPerformance(performance: Performance) {
@@ -90,10 +91,12 @@ export class SearchTimeComponent implements OnInit {
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
-  moreItems(){
-    this.pageCounter = this.pageCounter+1;
+
+  moreItems() {
+    this.pageCounter = this.pageCounter + 1;
     this.onSubmit(false);
   }
+
   changeDetailed() {
     this.detailedSearch = !this.detailedSearch;
   }

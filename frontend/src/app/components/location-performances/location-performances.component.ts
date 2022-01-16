@@ -23,22 +23,15 @@ export class LocationPerformancesComponent implements OnInit {
     this.route.paramMap.subscribe(paramMap => {
       id = Number(paramMap.get('id'));
       this.id = id;
+      this.loadLocations();
     });
-    this.eventService.findPerformancesByLocation(id, 0).subscribe(
-      {
-        next: performances => {
-          this.performancesList = this.performancesList.concat(performances);
-          console.log(this.performancesList);
-        }, error: error => this.handleError(error)
-      }
-    );
   }
   loadPerformance(performance: Performance){
     if(performance.id){
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
-  loadMore(){
+  loadLocations(){
     this.eventService.findPerformancesByLocation(this.id, this.pageCounter).subscribe(
       {
         next: performances => {
@@ -50,7 +43,7 @@ export class LocationPerformancesComponent implements OnInit {
   }
   moreItems(){
     this.pageCounter = this.pageCounter+1;
-    this.loadMore();
+    this.loadLocations();
   }
   private handleError(error: any) {
     console.log(error);

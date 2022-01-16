@@ -20,22 +20,15 @@ export class ArtistPerformancesComponent implements OnInit {
     this.route.paramMap.subscribe( paramMap => {
       id = Number(paramMap.get('id'));
       this.id = id;
+      this.loadArtists();
     });
-    this.performanceService.findPerformancesByArtist(id, this.pageCounter).subscribe(
-      {
-        next: performances => {
-          this.performancesList = this.performancesList.concat(performances);
-          console.log(this.performancesList);
-        }, error: error => this.handleError(error)
-      }
-    );
   }
   loadPerformance(performance: Performance){
     if(performance.id){
       this.router.navigate([`/performances/${performance.id}`]);
     }
   }
-  loadMore(){
+  loadArtists(){
     this.performanceService.findPerformancesByArtist(this.id, this.pageCounter).subscribe(
       {
         next: performances => {
@@ -47,7 +40,7 @@ export class ArtistPerformancesComponent implements OnInit {
   }
   moreItems(){
     this.pageCounter = this.pageCounter+1;
-    this.loadMore();
+    this.loadArtists();
   }
   private handleError(error: any) {
     console.log(error);

@@ -26,42 +26,44 @@ export class SearchEventsComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
   onSubmit(newSearch = true) {
     if (this.searchEvent.duration < 0) {
       window.alert('Duration cannot be smaller than 0!');
-    } else {
-      if (this.detailedSearch === true) {
-        if(newSearch){
-          this.eventList = [];
-          this.pageCounter = 0;
-        }
-        this.eventService.findEvent(this.searchEvent, this.pageCounter).subscribe(
-          {
-            next: events => {
-              this.submitted = true;
-              console.log(this.eventList);
-              this.eventList = this.eventList.concat(events);
-              console.log(this.eventList);
-            }, error: error => this.handleError(error)
-          }
-        );
-      } else{
-        if(newSearch){
-          this.eventList = [];
-          this.pageCounter = 0;
-        }
-        this.eventService.findGeneralEvent(this.generalSearchEvent, this.pageCounter).subscribe(
-          {
-            next: events => {
-              this.submitted = true;
-              this.eventList = this.eventList.concat(events);
-              console.log(this.eventList);
-            }, error: error => this.handleError(error)
-          }
-        );
-      }
     }
+    if (newSearch) {
+      this.eventList = [];
+      this.pageCounter = 0;
+    }
+    if (this.detailedSearch === true) {
+      this.loadDetailed();
+    } else {
+      this.loadGeneral();
+    }
+  }
+
+  loadGeneral() {
+    this.eventService.findGeneralEvent(this.generalSearchEvent, this.pageCounter).subscribe(
+      {
+        next: events => {
+          this.submitted = true;
+          this.eventList = this.eventList.concat(events);
+          console.log(this.eventList);
+        }, error: error => this.handleError(error)
+      }
+    );
+  }
+
+  loadDetailed() {
+    this.eventService.findEvent(this.searchEvent, this.pageCounter).subscribe(
+      {
+        next: events => {
+          this.submitted = true;
+          console.log(this.eventList);
+          this.eventList = this.eventList.concat(events);
+          console.log(this.eventList);
+        }, error: error => this.handleError(error)
+      }
+    );
   }
 
   loadPerformances(event: EventDto) {
@@ -70,13 +72,15 @@ export class SearchEventsComponent implements OnInit {
     }
   }
 
-  changeDetailed(){
+  changeDetailed() {
     this.detailedSearch = !this.detailedSearch;
   }
-  moreItems(){
-    this.pageCounter = this.pageCounter+1;
+
+  moreItems() {
+    this.pageCounter = this.pageCounter + 1;
     this.onSubmit(false);
   }
+
   vanishError(): void {
     this.errorMessage = null;
     this.error = false;
