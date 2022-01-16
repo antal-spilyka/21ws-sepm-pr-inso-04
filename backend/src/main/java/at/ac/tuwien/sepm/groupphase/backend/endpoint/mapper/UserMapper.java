@@ -35,6 +35,7 @@ public interface UserMapper {
 
     /**
      * Maps a user dto to a user entity.
+     *
      * @param userEditDto to map.
      * @return mapped user entity.
      */
