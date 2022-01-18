@@ -10,34 +10,34 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserMapper {
     /**
-     * Maps ApplicationUser to userDto.
+     * Maps an application user to a user dto.
      *
-     * @param user which has to be mapped to userDto
-     * @return userDto
+     * @param user to map.
+     * @return mapped user dto.
      */
     UserDto applicationUserToUserDto(ApplicationUser user);
 
     /**
-     * Maps paymentInformation to paymentInformationDto.
+     * Maps a payment information to a payment information dto.
      *
-     * @param paymentInformation which has to be mapped to paymentInformationDto
-     * @return paymentInformationDto
+     * @param paymentInformation to map.
+     * @return mapped payment information dto.
      */
     PaymentInformationDto paymentInformationToPaymentInformationDto(PaymentInformation paymentInformation);
 
     /**
-     * Maps paymentInformationDto to paymentInformation.
+     * Maps a payment information dto to a payment information.
      *
-     * @param paymentInformationDto which has to be mapped to paymentInformation
-     * @return paymentInformation
+     * @param paymentInformationDto to map.
+     * @return mapped payment information.
      */
     PaymentInformation paymentInformationDtoToPaymentInformation(PaymentInformationDto paymentInformationDto);
 
     /**
-     * Maps userEditDto to ApplicationUser.
+     * Maps a user dto to a user entity.
      *
-     * @param userEditDto which includes edited user changes to be mapped to ApplicationUser
-     * @return ApplicationUser
+     * @param userEditDto to map.
+     * @return mapped user entity.
      */
     ApplicationUser userEditDtoToApplicationUser(UserEditDto userEditDto);
 }

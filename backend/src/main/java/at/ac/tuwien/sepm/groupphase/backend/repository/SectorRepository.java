@@ -10,4 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, Long> {
+    @Query("SELECT sec FROM Performance p, IN(p.hall.sectors) sec")
+    List<Sector> getSectorForPrice(@Param("price") Integer price);
 }

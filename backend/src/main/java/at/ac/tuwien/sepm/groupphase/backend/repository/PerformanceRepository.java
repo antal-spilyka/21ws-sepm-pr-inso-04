@@ -14,27 +14,25 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
     /**
-     * Finds all the performances in ascending order sorted by id.
+     * Finds all performances in a given order.
      *
-     * @return all matching performances.
+     * @return list of all performances in ascending order.
      */
     List<Performance> findByOrderByIdAsc();
 
     /**
-     * Finds all the performances which suit the criteria from parameters.
+     * Finds all performances by the given date time.
      *
-     * @param dateTimeFrom which is not more than 30 minutes before the performance
-     * @param dateTimeTill which is not more than 30 minutes after the performance
-     * @param eventName    of the performance
-     * @param hall         of the performance
-     * @param price        of the performance
-     * @param pageable     of the event
-     * @return all matching performances.
+     * @param dateTimeFrom start time of the performance.
+     * @param dateTimeTill end time of the performance.
+     * @param eventName name of the event.
+     * @param hall name of the hall.
+     * @param price price of the performance.
+     * @param pageable number of pages.
+     * @return list of all found performances.
      */
     @Query("SELECT distinct p FROM Performance p, IN(p.hall.sectors) sec  WHERE (p.startTime <= :dateTimeTill AND p.startTime >= :dateTimeFrom) " +
         "AND (:hall is null OR :hall='' OR UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
@@ -46,14 +44,15 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
                                                 @Param("price") Integer price,
                                                 Pageable pageable);
 
+
     /**
-     * Finds all the performances which suit the criteria from parameters.
+     * Finds all the performances by the given event and hall.
      *
-     * @param eventName of the performance
-     * @param hall      of the performance
-     * @param price     of the performance
-     * @param pageable  of the event
-     * @return all matching performances.
+     * @param eventName name of the event.
+     * @param hall name of the hall.
+     * @param price price of the performance.
+     * @param pageable number of pages.
+     * @return list of all found performances.
      */
     @Query("SELECT distinct p FROM Performance p, IN(p.hall.sectors) sec  WHERE (:hall is null OR :hall='' OR " +
         "UPPER(p.hall.name) LIKE UPPER(CONCAT( '%', :hall, '%'))) " +
@@ -63,32 +62,32 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
                                                     @Param("price") Integer price, Pageable pageable);
 
     /**
-     * Finds all the performances which suit the criteria from parameters.
+     * Finds performances by a general search query.
      *
-     * @param searchQuery of the performance which is like event name or hall name
-     * @param pageable    of the event
-     * @return all matching performances.
+     * @param searchQuery to search for performances.
+     * @param pageable number of pages.
+     * @return list of all found performances.
      */
     @Query("SELECT p FROM Performance p WHERE :searchQuery is null OR :searchQuery='' OR UPPER(p.hall.name) " +
         "LIKE UPPER(CONCAT( '%', :searchQuery, '%')) OR UPPER(p.event.name) LIKE UPPER(CONCAT( '%', :searchQuery, '%'))")
     List<Performance> findGeneralPerformanceByEventAndHall(@Param("searchQuery") String searchQuery, Pageable pageable);
 
     /**
-     * Finds all the performances for the artist.
+     * Finds performances for a certain artist.
      *
-     * @param id       of the artist performance
-     * @param pageable of the event
-     * @return all matching performances.
+     * @param id of the artist.
+     * @param pageable number of pages.
+     * @return list of all found performances.
      */
     @Query("SELECT p FROM Performance p WHERE p.artist.id=:id")
     List<Performance> findPerformanceForArtist(@Param("id") Long id, Pageable pageable);
 
     /**
-     * Returns whether a performance exists with a specified name in a specified event.
+     * Checks if a performance exists with the given name and event.
      *
-     * @param name  of the performance
-     * @param event of the performance
-     * @return true if performance exists, false otherwise.
+     * @param name of the performance to find.
+     * @param event assigned to the performance.
+     * @return boolean value indicating whether the performance was found or not.
      */
     @Query("SELECT CASE WHEN count(p)> 0 THEN true ELSE false END FROM Performance p WHERE p.name = :name AND p.event = :event")
     Boolean existsByNameAndEvent(@Param("name") String name, @Param("event") Event event);

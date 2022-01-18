@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -160,10 +161,32 @@ public class CustomUserDetailService implements UserService {
         } else if (email == null || userRepository.findUserByEmail(email) == null) {
             throw new NotFoundException("No user found with the given e-mail");
         } else if (principal.getName().equals(email)) {
-            throw new ConflictException("You can not change your own admin rights");
+            throw new ConflictException("You cannot change your own admin rights");
         } else {
             ApplicationUser currentUser = userRepository.findUserByEmail(email);
             currentUser.setAdmin(!currentUser.getAdmin()); // changing the admin rights of the user
+            userRepository.save(currentUser);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void unlock(String email, Principal principal) {
+        if (principal == null || principal.getName() == null) {
+            throw new ConflictException("No administrator found with the given e-mail");
+        } else if (email == null || userRepository.findUserByEmail(email) == null) {
+            throw new NotFoundException("No user found with the given e-mail");
+        } else if (principal.getName().equals(email)) {
+            throw new ConflictException("You cannot unlock your own account");
+        } else {
+            ApplicationUser currentUser = userRepository.findUserByEmail(email);
+            // Currently unlocked
+            if (currentUser.getLockedCounter() < 5) {
+                currentUser.setLockedCounter(5);
+                // Currently locked
+            } else {
+                currentUser.setLockedCounter(0);
+            }
             userRepository.save(currentUser);
         }
     }

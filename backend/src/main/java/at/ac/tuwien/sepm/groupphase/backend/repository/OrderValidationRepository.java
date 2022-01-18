@@ -9,25 +9,26 @@ import org.springframework.stereotype.Repository;
 public interface OrderValidationRepository extends JpaRepository<OrderValidation, Long> {
 
     /**
-     * Saves orderValidation in the repository.
+     * Persists a new order validation.
      *
-     * @param orderValidation for the order
+     * @param orderValidation to save.
+     * @return OrderValidation entity saved in the database.
      */
     OrderValidation save(OrderValidation orderValidation);
 
     /**
-     * Finds orderValidation for an order.
+     * Finds the order validation that belongs to a given order.
      *
-     * @param order of the orderValidation
-     * @return orderValidation for a specific order
+     * @param order to find the validation for.
+     * @return OrderValidation entity found.
      */
     OrderValidation findByOrder(Order order);
 
     /**
-     * Returns whether and orderValidation exists for a specific order.
+     * Find out if a validation exists for a given order.
      *
-     * @param order of the orderValidation
-     * @return true if exists, else false
+     * @param order to find the validation for.
+     * @return boolean value indicating whether the corresponding validation exists.
      */
     boolean existsByOrder(Order order);
 }
