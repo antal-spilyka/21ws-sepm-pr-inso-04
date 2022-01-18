@@ -81,7 +81,7 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed: " + bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
         userService.updateUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
@@ -93,9 +93,23 @@ public class UserEndpoint {
     public ResponseEntity<String> setAdmin(@PathVariable String email, Principal principal) {
         LOGGER.info("PUT /api/v1/users/{}", email);
         userService.setAdmin(email, principal);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Updates the admin rights of an existing user.
+     */
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/{email}/unlock")
+    public ResponseEntity<String> unlock(@PathVariable String email, Principal principal) {
+        LOGGER.info("PUT /api/v1/users/{}/unlock", email);
+        userService.unlock(email, principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Finds all users with the given email.
+     */
     @Secured("ROLE_ADMIN")
     @GetMapping
     public List<UserDto> findUsers(String email) {
@@ -110,6 +124,9 @@ public class UserEndpoint {
         return returnValue;
     }
 
+    /**
+     * Finds the user with the given email.
+     */
     @PermitAll
     @GetMapping("/{email}")
     public UserDto getUser(@PathVariable String email) {
@@ -117,6 +134,9 @@ public class UserEndpoint {
         return this.userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
     }
 
+    /**
+     * Deletes the user with the given email.
+     */
     @PermitAll
     @DeleteMapping("/{email}")
     public void deleteUser(@PathVariable String email) {
@@ -132,6 +152,9 @@ public class UserEndpoint {
         }
     }
 
+    /**
+     * Resets the password of the user with the given email.
+     */
     @PermitAll
     @GetMapping("/{email}/resetPassword")
     public void resetPassword(@PathVariable String email) {
@@ -144,7 +167,7 @@ public class UserEndpoint {
     }
 
     /**
-     * Feature for Admin to add a user.
+     * Feature for admins to add a user.
      */
     @Secured("ROLE_ADMIN")
     @PostMapping("/add")

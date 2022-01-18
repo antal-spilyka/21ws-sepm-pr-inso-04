@@ -64,6 +64,14 @@ public interface UserService extends UserDetailsService {
     void setAdmin(String email, Principal principal);
 
     /**
+     * Unlocks a given user.
+     *
+     * @param email     of the user to change the admin rights for
+     * @param principal to find out the user changing the rights
+     */
+    void unlock(String email, Principal principal);
+
+    /**
      * Updates an existing user.
      *
      * @param user that should be updated with new/old data
