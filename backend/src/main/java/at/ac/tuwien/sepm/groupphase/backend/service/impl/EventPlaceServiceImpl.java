@@ -164,6 +164,7 @@ public class EventPlaceServiceImpl implements EventPlaceService {
 
     @Override
     public AddressDto findAddress(Long id) {
+        LOGGER.debug("Handling in Service (findAddress) {}", id);
         EventPlace eventPlace = eventPlaceRepository.findByIdEquals(id);
         if (eventPlace == null) {
             throw new ServiceException("Event place not found");

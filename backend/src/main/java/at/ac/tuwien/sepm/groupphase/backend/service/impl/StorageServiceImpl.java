@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.StorageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.service.spi.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +26,8 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class StorageServiceImpl implements StorageService {
     private final Path rootLocation = Paths.get("./uploads/");
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public StorageServiceImpl() {
@@ -34,6 +39,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public String store(MultipartFile file) {
+        LOGGER.debug("Storing file");
         String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
         String newFilename;
         try {
@@ -67,6 +73,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public Resource loadAsResource(String filename) {
+        LOGGER.debug("Loading File as Resource");
         try {
             Path file = rootLocation.resolve(filename);
             Resource resource = new UrlResource(file.toUri());

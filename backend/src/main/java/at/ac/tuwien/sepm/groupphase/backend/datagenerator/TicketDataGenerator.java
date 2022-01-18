@@ -105,6 +105,7 @@ public class TicketDataGenerator {
             LOGGER.debug("users already generated");
         } else {
             // Global admin
+            LOGGER.debug("generating users");
             userRepository.save(ApplicationUser.ApplicationUserBuilder.aApplicationUser().withEmail("admin@email.com")
                 .withPassword(passwordEncoder.encode("password")).withAdmin(true).withId(1L).withCity("admin city")
                 .withCountry("country").withDisabled(false).withFirstName("First").withLastName("Last")
@@ -167,6 +168,7 @@ public class TicketDataGenerator {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("tickets already generated");
         } else {
+            LOGGER.debug("generating tickets");
             generateUser();
             List<Ticket> tickets = new ArrayList<>();
             List<Order> orders = new ArrayList<>();

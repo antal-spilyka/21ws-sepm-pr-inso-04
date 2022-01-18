@@ -132,7 +132,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Transactional
     @Override
     public Performance save(PerformanceDto performanceDto, Event event) {
-        LOGGER.debug("Handeling in Service {}", performanceDto);
+        LOGGER.debug("Handling in Service {}", performanceDto);
         try {
             ArtistDto artistDto = performanceDto.getArtist();
             if (artistDto.getId() == null || artistRepository.getById(artistDto.getId()) == null) {
@@ -155,7 +155,7 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     @Transactional
     public Stream<PerformanceDto> findPerformanceByDateTime(PerformanceSearchDto performanceSearchDto) {
-        LOGGER.info("Handling in Service {}", performanceSearchDto);
+        LOGGER.debug("Handling in Service {}", performanceSearchDto);
         try {
             List<Performance> performances;
             if (performanceSearchDto.getStartTime() != null) {
@@ -313,7 +313,6 @@ public class PerformanceServiceImpl implements PerformanceService {
     @Override
     public void reserveSeats(BasketDto basket, Long performanceId, Principal principal) {
         LOGGER.debug("Handling in service {}", basket);
-        LOGGER.info(basket.toString());
         try {
             Performance performance = performanceRepository.getById(performanceId);
             ApplicationUser applicationUser = userRepository.findUserByEmail(principal.getName());

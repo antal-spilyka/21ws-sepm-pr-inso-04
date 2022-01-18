@@ -126,6 +126,7 @@ public class ArtistDataGenerator {
         if (artistRepository.findAll().size() > 0) {
             LOGGER.debug("artists already generated");
         } else {
+            LOGGER.debug("generating artists");
             for (int i = 1; i <= 25; i++) {
                 // Different names to test the search
                 String name = this.artistNames[i - 1];

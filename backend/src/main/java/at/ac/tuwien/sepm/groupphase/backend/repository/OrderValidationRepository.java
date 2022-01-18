@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface OrderValidationRepository extends JpaRepository<OrderValidation, Long> {
 
     /**
-     * Saves ordervalidation in the repository.
+     * Saves orderValidation in the repository.
      *
      * @param orderValidation for the order
      */

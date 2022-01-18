@@ -514,16 +514,6 @@ public class PerformanceServiceTest {
 
     @Test
     public void getPerformance_byExistingId() {
-        /*Performance testPerformance = new Performance(this.performance.getId(), this.performance.getName(), this.performance.getStartTime(),
-            this.performance.getDuration(), this.performance.getEvent(), this.performance.getArtist(), this.performance.getHall());
-        PerformanceDto testPerformanceDto = performanceMapper.entityToDto(this.performance, eventMapper.entityToDto(this.performance.getEvent()));
-        testPerformanceDto.setEventDto(eventMapper.entityToDto(this.event));
-        this.event.getPerformances().add(testPerformanceDto);
-
-        Performance receivedPerformance = performanceService.save(testPerformanceDto);
-        assertEquals(testPerformance.getName(), receivedPerformance.getName());
-        assertEquals(testPerformance.getDuration(), receivedPerformance.getDuration());
-        assertEquals(testPerformance.getArtist(), receivedPerformance.getArtist());*/
         PerformanceDetailDto receivedPerformance = performanceService.findPerformanceById(1L);
         assertNotEquals(receivedPerformance, null);
     }
@@ -541,7 +531,6 @@ public class PerformanceServiceTest {
     @Transactional
     public void getGeneralSearch_for_valid_String() {
         GeneralSearchEventDto searchEventDto = new GeneralSearchEventDto();
-        //searchEventDto.setSearchQuery("TestPerformanceByDateTimeHall");
         searchEventDto.setPage(0);
         Stream<PerformanceDto> foundPerformances = performanceService.findGeneralPerformanceByDateTime(searchEventDto);
         assertFalse(foundPerformances.toList().isEmpty());

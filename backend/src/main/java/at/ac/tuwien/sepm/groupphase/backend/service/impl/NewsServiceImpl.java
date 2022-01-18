@@ -50,16 +50,20 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News save(NewsDto newsDto) {
         LOGGER.debug("Publish new news {}", newsDto);
-        News news = newsRepository.save(newsMapper.dtoToEntity(newsDto));
-        if (newsDto.getPictures() != null) {
-            for (PictureDto pictureDto : newsDto.getPictures()) {
-                Picture picture = new Picture();
-                picture.setNews(news);
-                picture.setUrl(pictureDto.getUrl());
-                pictureRepository.save(picture);
+        try {
+            News news = newsRepository.save(newsMapper.dtoToEntity(newsDto));
+            if (newsDto.getPictures() != null) {
+                for (PictureDto pictureDto : newsDto.getPictures()) {
+                    Picture picture = new Picture();
+                    picture.setNews(news);
+                    picture.setUrl(pictureDto.getUrl());
+                    pictureRepository.save(picture);
+                }
             }
+            return news;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return news;
     }
 
     @Transactional

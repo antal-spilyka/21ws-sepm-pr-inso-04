@@ -154,6 +154,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     @Transactional
     public void setAdmin(String email, Principal principal) {
+        LOGGER.debug("Set Admin: {}", email);
         if (principal == null || principal.getName() == null) {
             throw new ConflictException("No administrator found with the given e-mail");
         } else if (email == null || userRepository.findUserByEmail(email) == null) {
@@ -170,7 +171,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     @Transactional
     public void updateUser(UserEditDto updatedUser) {
-        LOGGER.trace("Update existing user");
+        LOGGER.debug("Update existing user");
         ApplicationUser toUpdateUser = userRepository.findUserByEmail(updatedUser.getEmail());
 
         if (updatedUser.getNewEmail() != null) {
@@ -215,6 +216,7 @@ public class CustomUserDetailService implements UserService {
     // removes all existing paymentInformations of updatedUser to overwrite the new data
     @Transactional
     public void deletePaymentInformations(UserEditDto updatedUser) {
+        LOGGER.debug("DeletePaymentInformations for {}", updatedUser);
         ApplicationUser user = userRepository.findUserByEmail(updatedUser.getEmail());
         if (user == null) {
             throw new NotFoundException("No user found with the given e-mail address");

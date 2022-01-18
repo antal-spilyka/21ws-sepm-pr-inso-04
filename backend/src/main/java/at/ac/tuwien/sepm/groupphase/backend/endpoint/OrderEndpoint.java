@@ -70,7 +70,6 @@ public class OrderEndpoint {
     @PermitAll
     public ResponseEntity<String> setToBought(@RequestBody SetOrderToBoughtDto setOrderToBoughtDto) {
         LOGGER.info("PUT " + BASE_URL + "/{}", setOrderToBoughtDto);
-
         orderService.setOrderToBought(setOrderToBoughtDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -79,7 +78,6 @@ public class OrderEndpoint {
     @PermitAll
     public ResponseEntity<String> setRefund(@RequestBody OrderRefundDto orderRefundDto) {
         LOGGER.info("PUT " + BASE_URL + "refund: {}", orderRefundDto);
-
         orderService.refund(orderRefundDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -87,7 +85,7 @@ public class OrderEndpoint {
     @PostMapping("/validation/{id}")
     @PermitAll
     public OrderValidationDto validateOrder(@PathVariable Long id, @RequestBody ValidOrderInquiryDto validOrderInquiryDto) {
-        LOGGER.info("GET " + BASE_URL + "/validation: {}, {}", id, validOrderInquiryDto.getHash());
+        LOGGER.info("POST " + BASE_URL + "/validation: {}, {}", id, validOrderInquiryDto.getHash());
         OrderValidationInquiryDto orderValidationInquiryDto = new OrderValidationInquiryDto();
         orderValidationInquiryDto.setId(id);
         orderValidationInquiryDto.setHash(validOrderInquiryDto.getHash());
@@ -101,7 +99,6 @@ public class OrderEndpoint {
         LOGGER.info("GET " + BASE_URL + "/validation code: {}", id);
         OrderValidationInquiryDto orderValidationInquiryDto = new OrderValidationInquiryDto();
         orderValidationInquiryDto.setId(id);
-
         CodeReturnDto codeReturnDto = orderValidationService.generateCode(id);
         return codeReturnDto;
     }

@@ -38,6 +38,7 @@ public class SectorMapper {
     }
 
     public SectorDto entityToDto(Sector sector) {
+        LOGGER.trace("Mapping {}", sector);
         SectorDto sectorDto = new SectorDto();
         sectorDto.setId(sector.getId());
         sectorDto.setName(sector.getName());

@@ -152,22 +152,30 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<String> findDistinctByOrderByCategoryAsc() {
         LOGGER.debug("get all categories");
-        return eventRepository.findDistinctByOrderByCategoryAsc();
+        try {
+            return eventRepository.findDistinctByOrderByCategoryAsc();
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
     }
 
     @Transactional
     @Override
     public List<TopTenEventsDto> findByCategoryEquals(String category) {
-        //LOGGER.info("get top ten events by category {}", category);
-        List<TopTenEventsDto> topTenEvents = new ArrayList<>();
-        for (Object[] obj : this.eventRepository.findByCategoryEquals(category)) {
-            TopTenEventsDto currentTopTenEvent = new TopTenEventsDto();
-            currentTopTenEvent.setEvent(this.eventMapper.entityToDto((Event) obj[0]));
-            currentTopTenEvent.setTicketsSold((long) obj[1]);
-            topTenEvents.add(currentTopTenEvent);
-            LOGGER.info("here " + currentTopTenEvent);
+        LOGGER.debug("get top ten events by category {}", category);
+        try {
+            List<TopTenEventsDto> topTenEvents = new ArrayList<>();
+            for (Object[] obj : this.eventRepository.findByCategoryEquals(category)) {
+                TopTenEventsDto currentTopTenEvent = new TopTenEventsDto();
+                currentTopTenEvent.setEvent(this.eventMapper.entityToDto((Event) obj[0]));
+                currentTopTenEvent.setTicketsSold((long) obj[1]);
+                topTenEvents.add(currentTopTenEvent);
+                LOGGER.debug("Current Event " + currentTopTenEvent);
+            }
+            return topTenEvents;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
-        return topTenEvents;
     }
 
     @Transactional

@@ -806,6 +806,7 @@ public class EventDataGenerator {
         if (eventPlaceRepository.findAll().size() > 0) {
             LOGGER.debug("event places already generated");
         } else {
+            LOGGER.debug("generating event places");
             for (int i = 1; i <= 25; i++) {
                 final String name = this.names[i - 1];
                 Address address = new Address((long) i,
@@ -831,6 +832,7 @@ public class EventDataGenerator {
         if (eventRepository.findAll().size() > 0) {
             LOGGER.debug("events already generated");
         } else {
+            LOGGER.debug("generating events");
             this.setArray(this.durations, 0, 150);
             this.setArray(this.ids, 0, 25);
             this.setArray(this.days, 0, 28);

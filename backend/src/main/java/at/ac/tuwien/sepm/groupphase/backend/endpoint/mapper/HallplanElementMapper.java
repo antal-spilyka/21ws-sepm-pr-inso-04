@@ -35,6 +35,7 @@ public class HallplanElementMapper {
     }
 
     public List<HallplanElement> dtoToEntity(HallplanElementDto[][] rowsDto, List<Sector> sectors) {
+        LOGGER.trace("Mapping: dtoToEntity (HallplanElementDto[][] rowsDto, List<Sector> sectors)");
         List<HallplanElement> rows = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < rowsDto.length; rowIndex++) {
             for (int seatIndex = 0; seatIndex < rowsDto[rowIndex].length; seatIndex++) {

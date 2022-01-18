@@ -80,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void setOrderToBought(SetOrderToBoughtDto setOrderToBoughtDto) {
+        LOGGER.debug("Set Order to bought");
         Optional<Order> optionalOrder = orderRepository.findById(setOrderToBoughtDto.getOrderId());
         if (optionalOrder.isEmpty()) {
             throw new ServiceException("No matching Order found");
@@ -101,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void refund(OrderRefundDto orderRefundDto) {
+        LOGGER.debug("Refund");
         ticketRepository.refund(orderRefundDto.getOrderId());
         orderRepository.refund(orderRefundDto.getOrderId());
     }

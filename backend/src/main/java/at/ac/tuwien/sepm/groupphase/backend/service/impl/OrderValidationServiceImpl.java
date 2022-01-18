@@ -64,6 +64,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     @Transactional
     @Override
     public OrderValidationDto validate(OrderValidationInquiryDto orderValidationInquiryDto) {
+        LOGGER.debug("Validating");
         try {
             Order order = orderRepository.getById(orderValidationInquiryDto.getId());
 
@@ -106,6 +107,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
 
     @Override
     public void createValidation(Order order) {
+        LOGGER.debug("Create Validation");
         byte[] array = new byte[7];
         new Random().nextBytes(array);
         String generatedString = new String(array, Charset.forName("UTF-8"));
@@ -126,7 +128,7 @@ public class OrderValidationServiceImpl implements OrderValidationService {
     @Override
     public CodeReturnDto generateCode(Long id) {
         try {
-            LOGGER.info("generating QR code.");
+            LOGGER.debug("generating QR code.");
             Order order = orderRepository.getById(id);
             if (!order.isBought() || order.isRefunded()) {
                 throw new ConflictException("Order wasn't bought or was refunded!");
