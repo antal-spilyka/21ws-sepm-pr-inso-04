@@ -18,6 +18,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeenNewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,10 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.Principal;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
@@ -397,5 +395,56 @@ public class UserServiceTest implements TestData {
             () -> assertNotNull(userRepository.findByEmailContains(user3.getEmail()))
 
         );
+    }
+
+    @Test
+    public void lockUnlockedUser_thenUserLocked() {
+        UserEditDto user1 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user1);
+        ApplicationUser user = userRepository.findUserByEmail(user1.getEmail());
+        assertTrue(user.getLockedCounter() < 5); // user unlocked
+        userService.unlock(user.getEmail(), () -> "admin@email.com");
+        ApplicationUser userLocked = userRepository.findUserByEmail(user1.getEmail());
+        assertEquals(5, userLocked.getLockedCounter()); // user locked
+    }
+
+    @Test
+    public void unlockLockedUser_thenUserUnlocked() {
+        UserEditDto user1 = UserEditDto.UserEditDtoBuilder.aUserDto()
+            .withEmail(newUser1.getEmail())
+            .withPassword("testPassword")
+            .withFirstName("test")
+            .withLastName("person")
+            .withSalutation("mr")
+            .withPhone("+430101011010")
+            .withAdmin(true)
+            .withDisabled(false)
+            .withCountry("Austria")
+            .withCity("Vienna")
+            .withStreet("Test Street")
+            .withZip("12345")
+            .build();
+        userService.createUser(user1);
+        ApplicationUser user = userRepository.findUserByEmail(user1.getEmail());
+        assertTrue(user.getLockedCounter() < 5); // user unlocked
+        userService.unlock(user.getEmail(), () -> "admin@email.com");
+        ApplicationUser userLocked = userRepository.findUserByEmail(user1.getEmail());
+        assertEquals(5, userLocked.getLockedCounter()); // user locked
+        userService.unlock(user.getEmail(), () -> "admin@email.com");
+        ApplicationUser userUnlocked = userRepository.findUserByEmail(user1.getEmail());
+        assertEquals(0, userUnlocked.getLockedCounter()); // user locked
     }
 }
